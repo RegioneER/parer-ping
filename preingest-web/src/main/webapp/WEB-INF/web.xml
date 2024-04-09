@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <filter>
+        <filter-name>Charset filter</filter-name>
+        <filter-class>it.eng.spagoCore.util.CharsetFilter</filter-class>
+        <init-param>
+            <param-name>requestEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>Charset filter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <!-- SSO CONFIGURATION -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>*.html</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/saml/*</url-pattern>
+        <url-pattern>/detail/*</url-pattern>
+        <!-- tutto quello che richiede pagine html o jsp viene rediretto al filtro di spring security: springSecurityFilterChain. -->
+    </filter-mapping>   
+    
+    <!-- UUID filter logging -->
+    <filter>
+        <filter-name>UUID Logger filter</filter-name>
+        <filter-class>it.eng.spagoCore.util.UUIDLoggerFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UUID Logger filter</filter-name>
+        <url-pattern>/StatusMonitor</url-pattern>
+        <url-pattern>/StatusMonitorHost</url-pattern>
+    </filter-mapping>
+	 
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:/security/securityContext.xml
+        </param-value>
+    </context-param>
+    <!-- SSO CONFIGURATION FINE -->
+    <listener>
+        <listener-class>it.eng.sacerasi.web.util.AuditSessionListener</listener-class>
+    </listener>
+    
+    <servlet>
+        <servlet-name>ConfigServlet</servlet-name>
+        <servlet-class>it.eng.spagoCore.configuration.ConfigServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>SpringServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckFTPDirServlet</servlet-name>
+        <servlet-class>it.eng.sacerasi.test.CheckFTPDirTesterServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StatusMonitorSrvlt</servlet-name>
+        <servlet-class>it.eng.sacerasi.restws.StatusMonitorSrvlt</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StatusMonitorHostSrvlt</servlet-name>
+        <servlet-class>it.eng.sacerasi.restws.StatusMonitorHostSrvlt</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringServlet</servlet-name>
+        <url-pattern>*.html</url-pattern>
+        <url-pattern>*.json</url-pattern>
+        <url-pattern>/detail/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckFTPDirServlet</servlet-name>
+        <url-pattern>/CheckFTPDirServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatusMonitorSrvlt</servlet-name>
+        <url-pattern>/StatusMonitor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatusMonitorHostSrvlt</servlet-name>
+        <url-pattern>/StatusMonitorHost</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <http-only>${web.session-config.cookie-config.http-only}</http-only>
+            <secure>${web.session-config.cookie-config.secure}</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>JSP webapp</web-resource-name>
+            <url-pattern>/jsp/*</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint/>
+    </security-constraint>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/jsp/login/notAuthorized.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/jsp/login/notAuthorized.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/jsp/notAllowedError.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/jsp/genericError.jsp</location>
+    </error-page>
+</web-app>

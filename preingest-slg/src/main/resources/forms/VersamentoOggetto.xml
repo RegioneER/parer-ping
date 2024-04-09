@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Versamento oggetto" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
+    
+    <Section Name="OggettoDaTrasformareSection" Description="" Legend="Oggetto da trasformare" LoadOpened="false" ShowButton="true" />
+
+    <Fields Name="VersamentoOggettoDetail" Description="Versamento oggetto" >
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers" Required="true" Readonly="true"/>
+        <Input Type="STRING" Description="Versatore" Name="nm_vers" Required="true" Readonly="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="nm_tipo_object" Required="true"/>
+        <ComboBox Type="STRING" Description="Priorità trasformazione" Name="ti_priorita"/>
+        <ComboBox Type="STRING" Description="Priorità di versamento" Name="ti_priorita_versamento" AddBlank="false"/>
+        <TextArea Type="STRING" Description="Descrizione oggetto" Name="ds_object" MaxLength="1024" Cols="1000" Rows="10"/>
+        <Input Type="STRING" Description="Hash del file" Name="ds_hash_file_vers" />
+        <Input Type="STRING" Description="Codice per identificare il versatore per cui generare oggetti" Name="cd_vers_gen" />
+        <ComboBox Type="STRING" Description="Tipo gestione oggetti 'figli'" Name="ti_gest_oggetti_figli" />
+        
+        <Input Type="FILE" Description="File" Name="file_to_upload" MaxLength="100"/>
+        
+        <ComboBox Type="STRING" Description="Versione Indice oggetto" Name="cd_versione_xml" />
+
+        <Input Type="FILE" Description="Indice oggetto" Name="xml_to_upload" MaxLength="100"/>
+        
+        <!--FTP-->
+        <ComboBox Name="fl_trasm_ftp" Description="File trasmesso via FTP" Type="STRING" Trigger="true" Required="true" />
+        <Input Type="STRING" Description="Path area FTP" Name="ds_path_ftp" Readonly="true"/>
+        <Input Type="STRING" Description="Nome oggetto" Name="cd_key_object" Hidden="true" MaxLength="95"/>
+        
+        <!-- Oggetto da trasformare-->
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="nm_ambiente_vers_padre" Trigger="true" />
+        <ComboBox Type="INTEGER" Description="Versatore" Name="nm_vers_padre" Trigger="true" />
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="nm_tipo_object_padre" Trigger="true"/>
+        <ComboBox Type="INTEGER" Description="Chiave" Name="cd_key_object_padre" Trigger="true"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_object_padre" Readonly="true"/>
+        
+        <Input Type="INTEGER" Description="Num. oggetti generati" Name="ni_tot_object_trasf" />
+        <Input Type="INTEGER" Description="Progressivo oggetto generato da trasformazione" Name="pg_oggetto_trasf" />
+        
+        <Button Name="versaOggetto" Description="Versa oggetto in Ping" Type="STRING" />
+        <Button Name="nuovoVersamento" Description="Nuovo versamento" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="FiltriVersamentiOggetto" Description="Ricerca oggetto" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="nm_ambiente_vers" Trigger="true" Required="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Versatore" Name="nm_vers" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="nm_tipo_object"  WithSearchComp="true"/>
+        <Input Type="INTEGER" Description="Id oggetto" Name="id_object"/>
+        <Input Name="dt_vers_da" Description="Data di versamento da" Type="DATE" />
+        <Input Name="dt_vers_a" Description="Data di versamento a" Type="DATE" />
+        <Input Type="STRING" Description="Nome oggetto" Name="cd_key_object" />                
+        <Input Type="STRING" Description="Descrizione oggetto" Name="ds_object" MaxLength="1024" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_esterno" />
+        <MultiSelect Type="STRING" Description="Dettaglio stato" Name="ti_stato_object" />
+        <MultiSelect Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+        <Input Type="STRING" Description="Note" Name="note" />    
+        
+        <Button Name="ricercaVersamentiOggetto" Description="Ricerca versamenti oggetto" Type="STRING"/>
+    </Fields>
+    
+    <List Name="VersamentiOggettoList" Description="" hideInsertButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="nm_versatore" Description="Versatore" Type="STRING" />
+        <Input Name="cd_key_object" Description="Nome oggetto" Type="STRING" />
+        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="ti_vers_file" Description="Categoria oggetto" Type="STRING" />
+        <Input Name="ds_object" Description="Descrizione oggetto" Type="STRING" />
+        <Input Name="dt_vers" Description="Data versamento" Type="DATE" />
+        <Input Name="ti_stato_esterno" Description="Stato" Type="STRING" />
+        <Input Name="ti_stato_object" Description="Dettaglio stato" Type="STRING" />
+        <Input Name="ni_byte_file_vers" Description="Size" Type="INTEGER" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
+        <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
+        <Input Name="note" Description="Note" Type="STRING" />
+        <Input Name="nm_userid_vers" Description="Utente" Type="STRING" />
+    </List>
+</Form>

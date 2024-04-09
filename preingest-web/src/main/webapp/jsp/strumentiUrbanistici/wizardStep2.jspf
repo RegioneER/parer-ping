@@ -1,0 +1,257 @@
+                /*****
+                    STEP 2 del wizard
+                ******/
+                
+                    function formatFileSize(bytes,decimalPoint) {
+                       if(bytes == 0) return '0 Bytes';
+                       var k = 1000,
+                           dm = decimalPoint || 2,
+                           sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                           i = Math.floor(Math.log(bytes) / Math.log(k));
+                       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+                    }
+
+                    function inizializzaRiga(numero, bodyTable, nomeTipoDoc, nmFileOrig, flEsitoVerifica, dsErr, dimensione, dataDoc) {
+                        var giaInserito=false;
+                        if (nmFileOrig!='') {
+                            giaInserito=true;
+                        } 
+                        var rigaNuova = '<TD id="filename_' + numero + '">';
+                        if (giaInserito) {
+                            rigaNuova+= '<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + nmFileOrig + '" download id="download" class="DownloadSU"></a>' + nmFileOrig;
+                        } else {
+                            rigaNuova+='File non presente';
+                        }
+                        rigaNuova+='</TD>' +
+                                '<TD id="tipo_' + numero + '">'+nomeTipoDoc+'</TD>';
+                        if (giaInserito) {
+                            rigaNuova+='<TD id="bottone_' + numero + '"><center><input class="pulsanteUpload" id="rimuovi_' + numero + '" type="button" value="Rimuovi file"/></center></TD>';                       
+                        } else {
+                            rigaNuova+='<TD id="bottone_' + numero + '"><center><input class="pulsanteUpload" id="browse_' + numero + '" type="button" value="Carica"/></center></TD>';
+                        }                   
+                        rigaNuova+='<TD><DIV id="avanz_' + numero + '">';
+                        if (giaInserito) {
+                            rigaNuova+='100%'; 
+                        } 
+                        /*else {
+                            rigaNuova+='0%';
+                        }*/
+                        rigaNuova+='</DIV></TD><TD id="stato_' + numero + '">';
+                        if (giaInserito) {
+                            if (flEsitoVerifica) {
+                                rigaNuova+='completata ok';
+                            } else if (dsErr!=null) {
+                                rigaNuova+=dsErr; 
+                            } else {
+                                rigaNuova+='&nbsp;';
+                            }
+                        } else {
+                            rigaNuova+='&nbsp;';
+                        }
+                        rigaNuova+='</TD><TD id="dimensione_' + numero + '">';
+                        if (dimensione!=null) {
+                            rigaNuova+=dimensione;
+                        }
+                        rigaNuova+='</TD>';
+                        rigaNuova+='<TD id="dataDoc_' + numero + '">';
+                        if (dataDoc!=null) {
+                            rigaNuova+=dataDoc;
+                        }
+                        rigaNuova+='</TD>';
+
+                        if (parerUploader[numero] == null) {
+                            $('#' + bodyTable).append('<TR id="riga_' + numero + '" >' + rigaNuova + '</TR>');
+                            
+                            // Attiva la progress bar e se non è caricato lo mette allo 0% altrimenti lo lascia di default al 100%
+                            $('#avanz_'+ numero ).progressbar();
+                            // Se tolgo questo controllo da qui la barra mi rimane azzurra all'inizio della form
+                            if (!giaInserito) {
+                                $('#avanz_'+ numero ).width(0);
+                            } else {
+                                $('#avanz_'+ numero ).width("100%");
+                            }
+                            
+                            if (giaInserito) {
+                                // Aggiunge l'handler per il click sul tasto rimuovi.
+                                $('#rimuovi_' + numero).click(function () {
+                                    var nomeFile=$('#filename_'+numero).text();
+                                    var nmTipoDocumento=$('#tipo_'+numero).text();
+                                    $.ajaxSetup({async: false});
+                                    $.post("StrumentiUrbanistici.html", {operation: "rimuoviFile", nmFileOrig: nomeFile}).done(function (data) {
+                                        var object = data.map[0];
+                                        if (object.codice==0) {
+                                            inizializzaRiga(numero, bodyTable, nmTipoDocumento, '', false, null, null, null); 
+                                            determinaNavigabilita();
+                                        } else {
+                                            alert("Errore: "+object.messaggio);
+                                        }
+                                   });
+                                   $.ajaxSetup({async: true});
+                                });
+                            }
+                        } else {
+                            var vecchioTipoDoc=$('#tipo_' + numero).text();
+                            $('#riga_' + numero).empty().append(rigaNuova);
+                            $('#tipo_' + numero).html(vecchioTipoDoc);
+                            // Attiva la progress bar
+                            $('#avanz_'+ numero ).progressbar();                        
+                            $('#avanz_'+ numero ).progressbar('value', 0);                        
+                            if (!giaInserito) {
+                                $('#avanz_'+ numero ).width(0);
+                            } 
+                        }
+
+                        parerUploader[numero] = new plupload.Uploader({
+                            browse_button: (giaInserito?null:'browse_' + numero),
+                            url: 'MultipartFileUploadToS3Servlet',
+                            runtimes: 'html5,html4',
+                            max_file_size: '15gb',
+                            unique_names: false,
+                            container: 'container-per-plupload',
+                            chunk_size: '20mb',
+                            prevent_duplicates: true,
+                            multi_selection: false,
+                            filters: [
+                                {title: "Zip files", extensions: "zip"}
+                            ],
+                            resize: {width: 300, height: 200, quality: 90},
+                            preinit: {
+                                UploadFile: function (up, file) {
+                                    var nmTipoDocumento = $("#tipo_" + numero).text();
+                                    up.setOption('multipart_params', {'nmTipoDocumento': nmTipoDocumento, 'idSessione':up.id, 'dimensione':file.origSize});
+                                    determinaNavigabilita();
+                                },
+                                UploadProgress: function (up, file) {
+                                    $('#avanz_' + numero).html(file.percent + '%');
+                                    $('#avanz_'+ numero ).progressbar('value',file.percent);
+                                    var sizeParent=$('#avanz_'+ numero ).parent().width();
+                                    $('#avanz_'+ numero ).width((sizeParent/100)*file.percent);
+                                },
+                                BeforeUpload: function (up, file) {
+                                },
+                                FileUploaded: function (up, file, result) {
+                                    var esito=jQuery.parseJSON(result.response);
+                                    if (esito.error) {
+                                        alert('Attenzione:'+esito.error.message);
+                                        up.splice();
+                                        var nmTipoDocumento=$('#tipo_'+numero).text();
+                                        inizializzaRiga(numero, bodyTable, nmTipoDocumento, '', false, null, null, null); 
+                                        determinaNavigabilita();
+                                    } else {
+                                        $('#avanz_'+ numero ).width("100%");
+                                    }
+                                },
+                                UploadComplete: function (up, files) {
+                                    plupload.each(files, function (file) {
+                                        $('#bottone_' + numero).empty();
+                                        $('#bottone_' + numero).append('<center><input class="pulsanteUpload" id="rimuovi_' + numero + '" type="button" value="Rimuovi file"/></center>');
+                                        var nmTipoDoc=$('#tipo_' + numero).text();
+                                        $('#rimuovi_' + numero).click(function () {
+                                            $.ajaxSetup({async: false});
+                                            $.post("StrumentiUrbanistici.html", {operation: "rimuoviFile", nmFileOrig: file.name}).done(function (data) {
+                                                inizializzaRiga(numero, bodyTable, nmTipoDoc, '', false, null, null, null);   
+                                                determinaNavigabilita();
+                                            });
+                                            $.ajaxSetup({async: true});
+                                        });
+                                        $('#filename_' + numero).html('<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + file.name + '" download id="download" class="DownloadSU"></a>' + file.name);
+                                        $('#dimensione_' + numero).html(formatFileSize(file.size, 2));
+                                        $('#dataDoc_' + numero).html((new Date()).toLocaleDateString());
+                                        determinaNavigabilita();
+                                    });
+
+                                },
+                                Error: function (up, err) {
+                                    if (err.code==-601) {
+                                        alert(errori['PING-ERRSU11']);
+                                    } else {
+                                        if (errori!=null) {
+                                            alert(errori['PING-ERRSU13']);
+                                        }
+                                    }
+                                    console.log("\nError #" + err.code + ": " + err.message);
+                                },
+                                FilesAdded: function (up, files) {
+                                    plupload.each(files, function (file) {
+                                        if (verificaFileGiaSelezionato(file.name)==true) {
+                                            alert(errori['PING-ERRSU09']);
+                                        } else {
+                                            if ( (/[^a-z0-9\.\s\-\_\(\)]/gi.test(file.name)) ) {  // qualsiasi cosa di diverso da a-zA-Z0-9, dot, hypen, space, underscore and parenthesys non è permesso!
+                                                alert(errori['PING-ERRSU08']);
+                                                up.splice();
+                                            } else if (file.name.length > 84) { // E nemmeno una lunghezza complessiva maggiore di 80 caratteri.
+                                                alert(errori['PING-ERRSU21']);
+                                                up.splice();
+                                            } else {
+                                                var scelta = confirm("Sei sicuro di voler lanciare il caricamento del file [" + file.name + "]?");
+                                                if (scelta == true) {
+                                                    $('#filename_' + numero).html(file.name);
+                                                    up.start();
+                                                    $('#browse_' + numero).remove();
+                                                    $('#bottone_' + numero).append('<center>in corso...</center>');
+                                                } else {
+                                                    up.splice();
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                        parerUploader[numero].init();
+                    }
+
+                    function verificaFileGiaSelezionato(fileSelezionato) {
+                        var fileEsiste=false;
+                        var t=0;
+
+                        for (t=0; t<parerUploader.length; t++) {
+                            var nomeFile=$("#filename_" + t).text();
+                            if ( nomeFile===fileSelezionato ) {
+                                fileEsiste=true;
+                                break;
+                            }
+                        }
+                        return fileEsiste;
+                    }
+                    
+                    function determinaNavigabilita() {
+                        var uploadInProgress=false;
+                        for(var t=0; t<parerUploader.length; t++) {
+                            // Se un uploader sta caricando...
+                            if (parerUploader[t].state==2) {
+                                uploadInProgress=true;
+                                break;
+                            }
+                        }
+                        if(uploadInProgress) {
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Next__UploadDocumentisubmit').css('display','none');
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Prev__UploadDocumentisubmit').css('display','none');
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Cancel__UploadDocumentisubmit').css('display','none');
+                        } else {
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Next__UploadDocumentisubmit').css('display','block');
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Prev__UploadDocumentisubmit').css('display','block');
+                            $('#operation__wizardNavigationOnClick__InserimentoWizard__Cancel__UploadDocumentisubmit').css('display','block');
+                        }
+
+                    }
+                    // Carica gli errori da mostrare a video durante gli upload
+                    $.post("StrumentiUrbanistici.html", {operation: "getErroriJson", codErroreLike: 'PING-ERRSU'}).done(function (data) {
+                        errori=data.map[0];   
+                    });
+                    
+                    <c:set var="count" value="0" scope="page" />
+                    // Costruisce le righe obbligatorie      
+                    <c:forEach var="doc" items="${LISTA_DOC_UPLOAD_OBB}" >
+                        inizializzaRiga(<c:out value="${count}" />, 'body-table-obbligatori','<c:out value="${doc.nmTipoDocumento}" />', '<c:out value="${doc.nmFileOrig}" />', <c:out value="${doc.flEsitoVerifica}" />, '<c:out value="${doc.dsErr}" />', '<c:out value="${doc.dimensioneStringa}" />','<c:out value="${doc.dataDoc}" />');
+                        <c:set var="count" value="${count + 1}" scope="page"/>
+                    </c:forEach>
+
+                    // Costruisce le righe opzionali   
+                    <c:forEach var="doc" items="${LISTA_DOC_UPLOAD_FAC}" >
+                        inizializzaRiga(<c:out value="${count}" />, 'body-table-opzionali','<c:out value="${doc.nmTipoDocumento}" />', '<c:out value="${doc.nmFileOrig}" />', <c:out value="${doc.flEsitoVerifica}" />, '<c:out value="${doc.dsErr}" />', '<c:out value="${doc.dimensioneStringa}" />', '<c:out value="${doc.dataDoc}" />');
+                        <c:set var="count" value="${count + 1}" scope="page"/>
+                    </c:forEach>
+
+                    determinaNavigabilita();

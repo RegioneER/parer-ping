@@ -1,0 +1,7 @@
+Nota Bene
+=========
+
+Questi file XSD sono relativi ai file XML di versamento, di recupero e di versamento Multimedia.
+La loro gestione in Java (realizzata tramite Castor) è nel file Parer-xml.jar che fa parte 
+della distribuzione di SACER.
+

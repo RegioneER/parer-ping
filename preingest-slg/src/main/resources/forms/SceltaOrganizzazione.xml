@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Scelta Versatore" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema"
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd">
+    
+    <Fields Name="Versatori" Description="Scelta versatore" >
+        <ComboBox Name="nm_ambiente_vers" Description="Ambiente" Type="INTEGER" Trigger="true" WithSearchComp="true" />
+        <ComboBox Name="nm_vers" Description="Versatore" Type="INTEGER" WithSearchComp="true" />
+        <Button Secure="false" Name="selezionaVersatore" Description="Seleziona" Type="STRING"/>
+    </Fields>
+    
+</Form>

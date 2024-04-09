@@ -1,0 +1,1042 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is Monitoraggio... the last frontier of the Sacer Async features! -->
+<Form Description="Sezione Monitoraggio" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd">
+ 
+    <!-- Lista riepilogo per versatore -->
+    <List Name="RiepilogoVersatoriList" Description="Riepilogo per versatore" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="STRING" Description="Versatore" Name="nm_vers"/> 
+        <CheckBox Type="STRING" Description="Versamenti falliti, non risolti e non verificati" Name="fl_ses_err_noris_nover" Readonly="true"/>
+        <CheckBox Type="STRING" Description="Oggetti in warning" Name="fl_obj_warn" Readonly="true"/>
+        <CheckBox Type="STRING" Description="Ritardi notifica file" Name="fl_ses_notif_delay" Readonly="true"/> 
+        <CheckBox Type="STRING" Description="Registrazioni in coda di versamento a SACER non risolte e non verificate" Name="fl_ses_regcoda_noris_nover" Readonly="true"/> 
+        <CheckBox Type="STRING" Description="Ritardi in preparazione XML o registrazione in coda" Name="fl_ses_prepXML_regCoda_delay" Readonly="true"/> 
+        <CheckBox Type="STRING" Description="Versamenti a SACER falliti, non risolti e non verificati" Name="fl_ses_vers_sacer_noris_nover" Readonly="true"/> 
+        <CheckBox Type="STRING" Description="Ritardi in versamento SACER" Name="fl_ses_vers_sacer_delay" Readonly="true"/> 
+    </List>
+ 
+    <!-- Filtri riepilogo versamenti -->
+    <Fields Name="FiltriRiepilogoVersamenti" Description="Filtri riepilogo versamenti" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_vers" Trigger="true" Required="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="id_tipo_object"  WithSearchComp="true"/>
+        <Input Type="INTEGER" Description="Id oggetto" Name="id_object" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object" />
+        <Button Name="generaRiepilogoVersamenti" Description="Genera Riepilogo" Type="STRING" />
+    </Fields> 
+ 
+    <Section Name="OggettiInCorsoDiVersamento" Description="" Legend="Oggetti in corso di versamento" LoadOpened="false"/>
+    <Section Name="OggettiInCorsoDiTrasformazione" Description="" Legend="Oggetti in corso di trasformazione" LoadOpened="false"/>
+    <Section Name="InviiOggettiFalliti" Description="" Legend="Invii oggetti falliti" isLoadOpened="false" />
+    <Section Name="NotificheFileFallite" Description="" Legend="Notifiche file fallite" isLoadOpened="false" />
+    <Section Name="PreparazioniXmlFallite" Description="" Legend="Preparazioni XML fallite" isLoadOpened="false" />
+    <Section Name="RegistrazioniInCodaFallite" Description="" Legend="Registrazioni in coda fallite" isLoadOpened="false" />
+    <Section Name="VersamentiASacerFalliti" Description="" Legend="Versamenti a SACER falliti" isLoadOpened="false" />
+    <Section Name="TrasformazioniFallite" Description="" Legend="Trasformazioni fallite" isLoadOpened="false" />
+    <Section Name="VersamentiAPingFalliti" Description="" Legend="Versamenti a Pre-Ingest falliti" isLoadOpened="false" />
+    <Section Name="OggettiAnnullatiOInCorso" Description="" Legend="Oggetti annullati o in corso di annullamento" isLoadOpened="false" />
+ 
+    <!-- Riepilogo oggetti versati -->
+    <Fields Name="RiepilogoOggettiVersati" Description="Riepilogo oggetti versati" >
+        <!-- Oggetti versati con successo -->
+        <!-- Oggetti versati -->
+        <Input Type="INTEGER" Description="Oggetti versati oggi" Name="ni_chiuso_ok_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Oggetti versati negli ultimi 7 giorni" Name="ni_chiuso_ok_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Oggetti versati in totale" Name="ni_chiuso_ok_tot" GroupingDecimal="true" />
+        <!--Versamenti con chiave duplicata--> 
+        <Input Type="INTEGER" Description="Versamenti con chiave duplicata oggi" Name="ni_chiave_dup_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versamenti con chiave duplicata negli ultimi 7 giorni" Name="ni_chiave_dup_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versamenti con chiave duplicata totale" Name="ni_chiave_dup_tot" GroupingDecimal="true" />
+        <!-- Oggetti in corso di versamento -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_corso_vers_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_corso_vers_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_corso_vers_tot_tot" GroupingDecimal="true" />
+        <!-- In attesa file -->
+        <Input Type="INTEGER" Description="In attesa file oggi" Name="ni_in_attesa_file_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa file negli ultimi 7 giorni" Name="ni_in_attesa_file_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa file totale" Name="ni_in_attesa_file_tot" GroupingDecimal="true" />
+        <!-- In attesa preparazione XML vers a SACER -->
+        <Input Type="INTEGER" Description="In attesa preparazione XML vers a SACER oggi" Name="ni_in_attesa_prep_xml_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa preparazione XML vers a SACER negli ultimi 7 giorni" Name="ni_in_attesa_prep_xml_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa preparazione XML vers a SACER totale" Name="ni_in_attesa_prep_xml_tot" GroupingDecimal="true" />
+        <!-- In attesa di entrare in coda di versamento -->
+        <Input Type="INTEGER" Description="In attesa di entrare in coda di versamento oggi" Name="ni_in_attesa_coda_vers_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di entrare in coda di versamento negli ultimi 7 giorni" Name="ni_in_attesa_coda_vers_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di entrare in coda di versamento totale" Name="ni_in_attesa_coda_vers_tot" GroupingDecimal="true" />
+        <!-- In coda per essere versati --> 
+        <Input Type="INTEGER" Description="In attesa di essere versati oggi" Name="ni_coda_vers_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di essere versati negli ultimi 7 giorni" Name="ni_coda_vers_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di essere versati totale" Name="ni_coda_vers_tot" GroupingDecimal="true" />
+        <!-- Versati parzialmente -->
+        <Input Type="INTEGER" Description="Versati parzialmente oggi" Name="ni_vers_parz_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati parzialmente negli ultimi 7 giorni" Name="ni_vers_parz_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati parzialmente totale" Name="ni_vers_parz_tot" GroupingDecimal="true" />
+        <!-- In warning -->
+        <Input Type="INTEGER" Description="In warning oggi" Name="ni_war_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In warningi negli ultimi 7 giorni" Name="ni_war_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In warning totale" Name="ni_war_tot" GroupingDecimal="true" />
+        <!-- Oggetti da non versare -->
+        <!-- -->
+        <Input Type="INTEGER" Description="Oggetti da non versare oggi" Name="ni_chiuso_war_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Oggetti da non versare negli ultimi 7 giorni" Name="ni_chiuso_war_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Oggetti da non versare totale" Name="ni_chiuso_war_tot" GroupingDecimal="true" />
+        <!-- Oggetti in corso di trasformazione -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_corso_trasf_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_corso_trasf_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_corso_trasf_tot_tot" GroupingDecimal="true" />
+        <!-- In attesa file -->
+        <Input Type="INTEGER" Description="In attesa file oggi" Name="ni_in_attesa_file_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa file negli ultimi 7 giorni" Name="ni_in_attesa_file_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa file totale" Name="ni_in_attesa_file_trasf_tot" GroupingDecimal="true" />
+        <!-- In attesa di trasformazione -->
+        <Input Type="INTEGER" Description="In attesa di trasformazione oggi" Name="ni_in_attesa_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di trasformazione negli ultimi 7 giorni" Name="ni_in_attesa_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In attesa di trasformazione totale" Name="ni_in_attesa_trasf_tot" GroupingDecimal="true" />
+        <!-- Trasformazioni in corso -->
+        <Input Type="INTEGER" Description="Trasformazioni in corso oggi" Name="ni_in_running_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazioni in corso negli ultimi 7 giorni" Name="ni_in_running_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazioni in corso totale" Name="ni_in_running_trasf_tot" GroupingDecimal="true" />
+        <!--Trasformazione bloccata-->
+        <Input Type="INTEGER" Description="Trasformazione bloccata oggi" Name="ni_trasf_bloccata_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazione bloccata negli ultimi 7 giorni" Name="ni_trasf_bloccata_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazione bloccata totale" Name="ni_trasf_bloccata_tot" GroupingDecimal="true" />
+        <!-- Trasformazioni in warning -->
+        <Input Type="INTEGER" Description="Trasformazioni in warning oggi" Name="ni_in_warning_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazioni in warning negli ultimi 7 giorni" Name="ni_in_warning_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformazioni in warning totale" Name="ni_in_warning_trasf_tot" GroupingDecimal="true" />
+        <!-- Preparazione oggetti -->
+        <Input Type="INTEGER" Description="Preparazione oggetti oggi" Name="ni_in_creatingobjs_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Preparazione oggetti negli ultimi 7 giorni" Name="ni_in_creatingobjs_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Preparazione oggetti totale" Name="ni_in_creatingobjs_trasf_tot" GroupingDecimal="true" />
+        <!--Trasformati-->
+        <Input Type="INTEGER" Description="Trasformati oggi" Name="ni_trasformati_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformati negli ultimi 7 giorni" Name="ni_trasformati_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformati totale" Name="ni_trasformati_tot" GroupingDecimal="true" />
+        <!--Trasformati con chiave duplicata--> 
+        <Input Type="INTEGER" Description="Trasformati con chiave duplicata oggi" Name="ni_trasformati_chiave_dup_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformati con chiave duplicata negli ultimi 7 giorni" Name="ni_trasformati_chiave_dup_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Trasformati con chiave duplicata totale" Name="ni_trasformati_chiave_dup_tot" GroupingDecimal="true" />
+        <!--Versati a PreIngest-->
+        <Input Type="INTEGER" Description="Versati a PreIngest oggi" Name="ni_vers_ping_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati a PreIngest negli ultimi 7 giorni" Name="ni_vers_ping_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati a PreIngest totale" Name="ni_vers_ping_tot" GroupingDecimal="true" />
+        <!--Versamento a PreIngest bloccato-->
+        <Input Type="INTEGER" Description="Versamento a PreIngest bloccato oggi" Name="ni_vers_ping_bloccato_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versamento a PreIngest bloccato negli ultimi 7 giorni" Name="ni_vers_ping_bloccato_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versamento a PreIngest bloccato totale" Name="ni_vers_ping_bloccato_tot" GroupingDecimal="true" />
+        <!--Problemi nella preparazione SIP--> 
+        <Input Type="INTEGER" Description="Problemi nella preparazione SIP oggi" Name="ni_problema_prep_sip_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Problemi nella preparazione SIP negli ultimi 7 giorni" Name="ni_problema_prep_sip_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Problemi nella preparazione SIP totale" Name="ni_problema_prep_sip_tot" GroupingDecimal="true" />
+        <!--In corso di versamento a Sacer-->
+        <Input Type="INTEGER" Description="In corso di versamento a Sacer oggi" Name="ni_in_corso_vers_sacer_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di versamento a Sacer negli ultimi 7 giorni" Name="ni_in_corso_vers_sacer_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di versamento a Sacer totale" Name="ni_in_corso_vers_sacer_tot" GroupingDecimal="true" />
+        <!--Problemi nel versamento a Sacer--> 
+        <Input Type="INTEGER" Description="Problemi nel versamento a Sacer oggi" Name="ni_problema_vers_sacer_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Problemi nel versamento a Sacer negli ultimi 7 giorni" Name="ni_problema_vers_sacer_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Problemi nel versamento a Sacer totale" Name="ni_problema_vers_sacer_tot" GroupingDecimal="true" />
+        <!--Versati a Sacer--> 
+        <Input Type="INTEGER" Description="Versati a Sacer oggi" Name="ni_vers_sacer_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati a Sacer negli ultimi 7 giorni" Name="ni_vers_sacer_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Versati a Sacer totale" Name="ni_vers_sacer_tot" GroupingDecimal="true" />
+        <!--Versati a Sacer (CHIUSO_ERR)--> 
+<!--        <Input Type="INTEGER" Description="Chiusi in errore oggi" Name="ni_err_vers_sacer_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Chiusi in errore negli ultimi 7 giorni" Name="ni_err_vers_sacer_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Chiusi in errore totale" Name="ni_err_vers_sacer_tot" GroupingDecimal="true" />-->
+    </Fields>
+ 
+    <!-- Riepilogo invii oggetti falliti -->
+    <Fields Name="RiepilogoInviiOggettiFalliti" Description="Riepilogo invii oggetti falliti" >
+        <!-- Invii oggetti falliti -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_fall_tot_tot" GroupingDecimal="true" />
+        <!-- Risolti -->
+        <Input Type="INTEGER" Description="Risolti oggi" Name="ni_ogg_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti negli ultimi 7 giorni" Name="ni_ogg_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti totale" Name="ni_ogg_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_ogg_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_ogg_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_ogg_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In warning -->
+        <Input Type="INTEGER" Description="In warning oggi" Name="ni_ogg_fall_war_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In warning negli ultimi 7 giorni" Name="ni_ogg_fall_war_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In warning totale" Name="ni_ogg_fall_war_ver_tot" GroupingDecimal="true" />
+        <!-- Da non versare -->
+        <Input Type="INTEGER" Description="Da non versare oggi" Name="ni_ogg_fall_novers_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Da non versare negli ultimi 7 giorni" Name="ni_ogg_fall_novers_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Da non versare totale" Name="ni_ogg_fall_novers_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_ogg_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_ogg_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_ogg_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolti e verificati -->
+        <Input Type="INTEGER" Description="Non risolti e verificati oggi" Name="ni_ogg_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati negli ultimi 7 giorni" Name="ni_ogg_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati totale" Name="ni_ogg_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolti e non verificati -->
+        <Input Type="INTEGER" Description="Non risolti e non verificati oggi" Name="ni_ogg_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati negli ultimi 7 giorni" Name="ni_ogg_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati totale" Name="ni_ogg_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo notifiche file fallite -->
+    <Fields Name="RiepilogoNotificheFileFallite" Description="Riepilogo notifiche file fallite" >
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_not_file_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_not_file_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_not_file_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolte -->
+        <Input Type="INTEGER" Description="Risolte oggi" Name="ni_not_file_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte negli ultimi 7 giorni" Name="ni_not_file_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte totale" Name="ni_not_file_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione e verificate -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_not_file_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_not_file_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_not_file_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_not_file_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_not_file_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_not_file_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolte e verificate -->
+        <Input Type="INTEGER" Description="Non risolte e verificate oggi" Name="ni_not_file_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate negli ultimi 7 giorni" Name="ni_not_file_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate totale" Name="ni_not_file_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolte e non verificate -->
+        <Input Type="INTEGER" Description="Non risolte e non verificate oggi" Name="ni_not_file_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate negli ultimi 7 giorni" Name="ni_not_file_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate totale" Name="ni_not_file_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo preparazioni XML fallite -->
+    <Fields Name="RiepilogoPreparazioniXMLFallite" Description="Riepilogo preparazioni XML fallite" >
+        <!-- Preparazioni XML fallite -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_prep_xml_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_prep_xml_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_prep_xml_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolte -->
+        <Input Type="INTEGER" Description="Risolte oggi" Name="ni_prep_xml_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte negli ultimi 7 giorni" Name="ni_prep_xml_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte totale" Name="ni_prep_xml_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_prep_xml_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_prep_xml_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_prep_xml_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_prep_xml_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_prep_xml_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_prep_xml_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolte e verificate -->
+        <Input Type="INTEGER" Description="Non risolte e verificate oggi" Name="ni_prep_xml_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate negli ultimi 7 giorni" Name="ni_prep_xml_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate totale" Name="ni_prep_xml_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolte e non verificate -->
+        <Input Type="INTEGER" Description="Non risolte e non verificate oggi" Name="ni_prep_xml_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate negli ultimi 7 giorni" Name="ni_prep_xml_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate totale" Name="ni_prep_xml_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo registrazioni in coda fallite -->
+    <Fields Name="RiepilogoRegistrazioniCodaFallite" Description="Riepilogo registrazioni in coda fallite" >
+        <!-- Registrazioni in coda fallite -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_reg_coda_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_reg_coda_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_reg_coda_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolte e verificate -->
+        <Input Type="INTEGER" Description="Risolte oggi" Name="ni_reg_coda_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte negli ultimi 7 giorni" Name="ni_reg_coda_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte totale" Name="ni_reg_coda_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione e verificate -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_reg_coda_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_reg_coda_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_reg_coda_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_reg_coda_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_reg_coda_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_reg_coda_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolte e verificate -->
+        <Input Type="INTEGER" Description="Non risolte e verificate oggi" Name="ni_reg_coda_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate negli ultimi 7 giorni" Name="ni_reg_coda_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate totale" Name="ni_reg_coda_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolte e non verificate -->
+        <Input Type="INTEGER" Description="Non risolte e non verificate oggi" Name="ni_reg_coda_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate negli ultimi 7 giorni" Name="ni_reg_coda_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate totale" Name="ni_reg_coda_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields> 
+ 
+    <!-- Riepilogo versamenti a SACER falliti -->
+    <Fields Name="RiepilogoVersamentiSacerFalliti" Description="Riepilogo versamenti a SACER falliti" >
+        <!-- Versamenti a SACER falliti -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_vers_sacer_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_vers_sacer_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_vers_sacer_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolti -->
+        <Input Type="INTEGER" Description="Risolti oggi" Name="ni_vers_sacer_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti negli ultimi 7 giorni" Name="ni_vers_sacer_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti totale" Name="ni_vers_sacer_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_vers_sacer_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_vers_sacer_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_vers_sacer_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_vers_sacer_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_vers_sacer_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_vers_sacer_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolti e verificati -->
+        <Input Type="INTEGER" Description="Non risolti e verificati oggi" Name="ni_vers_sacer_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati negli ultimi 7 giorni" Name="ni_vers_sacer_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati totale" Name="ni_vers_sacer_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolti e non verificati -->
+        <Input Type="INTEGER" Description="Non risolti e non verificati oggi" Name="ni_vers_sacer_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati negli ultimi 7 giorni" Name="ni_vers_sacer_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati totale" Name="ni_vers_sacer_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo trasformazioni fallite -->
+    <Fields Name="RiepilogoTrasformazioniFallite" Description="Riepilogo trasformazioni fallite" >
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_trasf_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_trasf_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_trasf_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolti -->
+        <Input Type="INTEGER" Description="Risolti oggi" Name="ni_trasf_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti negli ultimi 7 giorni" Name="ni_trasf_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti totale" Name="ni_trasf_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_trasf_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_trasf_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_trasf_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_trasf_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_trasf_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_trasf_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolti e verificati -->
+        <Input Type="INTEGER" Description="Non risolti e verificati oggi" Name="ni_trasf_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati negli ultimi 7 giorni" Name="ni_trasf_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati totale" Name="ni_trasf_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolti e non verificati -->
+        <Input Type="INTEGER" Description="Non risolti e non verificati oggi" Name="ni_trasf_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati negli ultimi 7 giorni" Name="ni_trasf_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati totale" Name="ni_trasf_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo Versamenti a PreIngest falliti -->
+    <Fields Name="RiepilogoVersamentiPingFalliti" Description="Riepilogo trasformazioni fallite" >
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_vers_ping_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_vers_ping_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_vers_ping_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolti -->
+        <Input Type="INTEGER" Description="Risolti oggi" Name="ni_vers_ping_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti negli ultimi 7 giorni" Name="ni_vers_ping_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolti totale" Name="ni_vers_ping_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_vers_ping_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_vers_ping_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_vers_ping_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_vers_ping_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_vers_ping_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_vers_ping_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolti e verificati -->
+        <Input Type="INTEGER" Description="Non risolti e verificati oggi" Name="ni_vers_ping_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati negli ultimi 7 giorni" Name="ni_vers_ping_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e verificati totale" Name="ni_vers_ping_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolti e non verificati -->
+        <Input Type="INTEGER" Description="Non risolti e non verificati oggi" Name="ni_vers_ping_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati negli ultimi 7 giorni" Name="ni_vers_ping_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolti e non verificati totale" Name="ni_vers_ping_fall_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+    
+    <!-- Riepilogo oggetti annullati o in corso di annullamento -->
+    <Fields Name="RiepilogoOggettiAnnullatiInCorso" Description="Riepilogo oggetti annullati o in corso di annullamento" >
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_annul_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_annul_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_annul_tot_tot" GroupingDecimal="true" /> 
+        <!-- In corso di annullamento -->
+        <Input Type="INTEGER" Description="In corso di annullamento oggi" Name="ni_ogg_corso_annul_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di annullamento negli ultimi 7 giorni" Name="ni_ogg_corso_annul_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di annullamento totale" Name="ni_ogg_corso_annul_tot" GroupingDecimal="true" />
+        <!-- Annullati -->
+        <Input Type="INTEGER" Description="Annullati oggi" Name="ni_ogg_annul_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Annullati negli ultimi 7 giorni" Name="ni_ogg_annul_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Annullati totale" Name="ni_ogg_annul_tot" GroupingDecimal="true" />
+    </Fields>
+ 
+    <!-- Riepilogo oggetti derivanti da versamenti falliti -->
+    <Fields Name="RiepilogoOggettiDerivantiVersamentiFalliti" Description="Riepilogo oggetti derivanti da versamenti falliti" >
+        <Input Type="INTEGER" Description="Totale" Name="ni_ogg_der_vers_fall_tot_tot" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili" Name="ni_ogg_der_vers_fall_norisolub_tot" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Verificati" Name="ni_ogg_der_vers_fall_ver_tot" GroupingDecimal="true" /> 
+        <Input Type="INTEGER" Description="Non verificati" Name="ni_ogg_der_vers_fall_nover_tot" GroupingDecimal="true" /> 
+    </Fields>
+ 
+    <!-- Filtri oggetti -->
+    <Fields Name="FiltriOggetti" Description="Filtri oggetti" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_vers" Trigger="true" Required="true" />
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers" Trigger="true" WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="id_tipo_object" WithSearchComp="true"/>
+        <ComboBox Type="STRING" Description="Periodo vers." Name="periodo_vers" />
+        <Input Type="DATE" Description="Giorno stato corrente da" Name="giorno_vers_da"/>
+        <Input Type="INTEGER" Description="Ora" Name="ore_vers_da" MaxLength="2"/>
+        <Input Type="INTEGER" Description="Ora" Name="minuti_vers_da" MaxLength="2"/>
+        <Input Type="DATE" Description="Giorno stato corrente a" Name="giorno_vers_a"/>  
+        <Input Type="INTEGER" Description="Ora" Name="ore_vers_a" MaxLength="2"/>
+        <Input Type="INTEGER" Description="Ora" Name="minuti_vers_a" MaxLength="2"/>
+        <MultiSelect Type="STRING" Description="Stato oggetto" Name="ti_stato" />
+        <Input Type="STRING" Description="Registro" Name="cd_registro_unita_doc_sacer" />
+        <Input Type="INTEGER" Description="Anno" Name="aa_unita_doc_sacer" />
+        <Input Type="STRING" Description="Numero" Name="cd_key_unita_doc_sacer" />
+        <Input Type="INTEGER" Description="Id oggetto" Name="id_object" />
+        <Input Type="STRING" Description="Chiave" Name="filtri_oggetti_cd_key_object" />
+        <MultiSelect Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+        <Button Name="ricercaOggetti" Description="Ricerca" Type="STRING" />
+    </Fields> 
+ 
+    <Section Name="ChiaveUDListaOggettiSection" Description="" Legend="Chiave UD" LoadOpened="true"/>
+ 
+    <List Name="OggettiList" Description="Lista oggetti" hideInsertButton="true" hideDeleteButton="true" >
+        <!--<Link Name="unitaDoc" Tooltip="Dettaglio unità documentaria" Description="" Type="STRING" Target="UnitaDocumentariaList" />
+        <Link Name="vol" Tooltip="Dettaglio volume" Description="" Type="STRING" Target="VolumeList" /> -->
+        <Input Type="INTEGER" Description="Oggetto" Name="id_object"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_info_object"/>
+        <Input Type="STRING" Description="Trasformazione utilizzata" Name="trasformazione_utilizzata"/>
+        <Input Type="STRING" Description="Stato" Name="ti_stato_object_vis"/>
+        <Input Type="DATETIME" Description="Data stato corrente" Name="dt_stato_cor"/>        
+        <Input Type="INTEGER" Description="Size" Name="ni_size_file_vers" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
+        <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
+        <Input Type="STRING" Description="Stato verifica hash" Name="ti_stato_verifica_hash"/>
+        <Input Type="STRING" Description="Note" Name="note"/>
+    </List>
+ 
+    <!-- Dettaglio oggetto -->
+    <Fields Name="OggettoDetail" Description="Dettaglio oggetto" >
+        <Input Type="INTEGER" Description="Id oggetto" Name="id_object"/>
+        <Input Type="INTEGER" Description="Id oggetto padre" Name="id_object_padre" Hidden="true"/>
+        <Input Type="INTEGER" Description="Id oggetto trasf" Name="id_object_trasf" Hidden="true"/>
+        <Input Type="INTEGER" Description="Id vers" Name="id_vers" Hidden="true"/>
+        <Input Type="INTEGER" Description="Id vers padre" Name="id_vers_padre" Hidden="true"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_info_object" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_object" />
+        <CheckBox Type="STRING" Description="Annullamento in timeout" Name="fl_rich_annul_timeout" />
+        <Input Type="STRING" Description="Esito annullamento" Name="ds_esito_annullamento"/>
+        <Input Type="STRING" Description="Stato verifica hash" Name="ti_stato_verifica_hash"/>
+        <Input Type="STRING" Description="Codice per identificare il versatore per cui generare oggetti" Name="cd_vers_gen"/>
+        <Input Type="STRING" Description="Trasformazione utilizzata" Name="cd_trasf"/>
+        <Input Type="STRING" Description="Id. server di trasformazione" Name="nm_ks_instance"/>
+        <Input Type="STRING" Description="Versione trasformazione utilizzata" Name="cd_versione_trasf"/>
+        <ComboBox Name="ti_priorita" Description="Priorità trasformazione" Type="STRING" />
+        <ComboBox Name="ti_priorita_versamento" Description="Priorità versamento" Type="STRING" AddBlank="false" />
+        <Input Type="INTEGER" Description="Num. UD attese" Name="ni_unita_doc_attese" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD da vers." Name="ni_unita_doc_da_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate" Name="ni_unita_doc_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate OK" Name="ni_unita_doc_vers_OK" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate KO" Name="ni_unita_doc_vers_err" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate con timeout" Name="ni_unita_doc_vers_timeout" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Tipo storage" Name="ti_conservato_su_os" />
+        <Link Tooltip="Dettaglio oggetto generato da trasformazione" Target="loadDettaglioOggettoTrasf" 
+              isTargetList="false" Name="pg_oggetto_trasf" Description="Progr. oggetto generato da trasformazione" Type="INTEGER"/>
+        <Input Type="STRING" Description="Note" Name="note" />
+        
+        <!-- Oggetto da trasformare -->
+        <ComboBox Name="ti_gest_oggetti_figli" Description="Tipo gestione oggetti 'figli'" Type="STRING" />
+        
+        <Input Name="nm_ambiente_vers_padre" Description="Ambiente padre" Type="STRING" />
+        <Input Name="nm_vers_padre" Description="Versatore padre" Type="STRING" />
+        <Input Name="cd_key_object_padre" Description="Chiave" Type="STRING" />
+        <Input Name="nm_tipo_object_padre" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="ds_object_padre" Description="Descrizione" Type="STRING" />
+        <Input Name="ni_tot_object_trasf" Description="Num. oggetti generati" Type="INTEGER" GroupingDecimal="true"/>
+        <Input Name="ti_stato_object_padre" Description="Stato" Type="STRING" />
+        <Input Name="dt_stato_cor_padre" Description="Data registrazione stato" Type="DATETIME" />
+        <!-- Info su ultima sessione -->
+        <Input Type="DATETIME" Description="Data inizio vers" Name="dt_apertura"/>
+        <Input Type="DATETIME" Description="Data fine vers" Name="dt_chiusura"/>
+        <CheckBox Type="STRING" Description="Forzatura warning" Name="fl_forza_warning"/>
+        <CheckBox Type="STRING" Description="Sessione Forzata" Name="fl_forza_accettazione"/>
+        <Input Type="STRING" Description="Motivo forzatura" Name="dl_motivo_forza_accettazione"/>
+        <Input Type="STRING" Description="Motivo chiusura warning" Name="dl_motivo_chiuso_warning"/>
+        <!-- XML versato -->
+        <Input Type="STRING" Description="Versione" Name="cd_versione_xml_vers"/>
+        <TextArea Name="bl_xml" Description="XML" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+        
+        <!-- Report di trasformazione -->
+        <TextArea Name="report_xml" Description="XML" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+
+        <ComboBox Name="ti_stato_popup" Description="Stato da assegnare all'oggetto" Type="STRING" AddBlank="false" />
+        <Input Name="ti_recupero" Description="Tipo di recupero" Type="STRING" Hidden="true" Readonly="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto"  Name="id_tipo_object" AddBlank="false"/>
+        
+        <!-- SUE26200 -->
+        <ComboBox Type="STRING" Description=""  Name="ti_annullamento_ud" AddBlank="false"/>
+    </Fields>
+    
+    <ButtonList Name="OggettoDetailButtonList" Description="">
+        <Button Name="downloadXMLOggetto" Description="Download XML oggetto" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="downloadFileOggettoObjDetail" Description="Download file di un oggetto" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="oggettoDaTrasformareObjDetail" Description="Oggetto da trasformare" Type="STRING" />
+        <Button Name="recuperoErrTrasformazione" Description="Recupero errori di traformazione" Type="STRING" />
+        <Button Name="modificaTipoOggetto" Description="Modifica il tipo oggetto" Type="STRING" />
+        <Button Name="recuperoErrVersamentoPing" Description="Recupero errori di versamento a Ping" Type="STRING" />
+        <Button Name="recuperoChiusErrVersamento" Description="Riporta in attesa scheduler" Type="STRING" />
+        <Button Name="annullaOggettoDetail" Description="Annulla oggetto" Type="STRING" />
+        <Button Name="annullaVersamentiUDDetail" Description="Annulla versamenti unità documentarie" Type="STRING" />
+        <Button Name="settaDaTrasformareDetail" Description="Set ANNULLATO in DA TRASFORMARE" Type="STRING" />
+        <Button Name="settaErroreTrasformazioneDetail" Description="Set ERRORE TRASFORMAZIONE" Type="STRING" />
+        <Button Name="verificaAnnullamento" Description="Verifica annullamento terminato" Type="STRING" />
+        <Button Name="accettaAnnullamentoFallito" Description="Accetta annullamento fallito" Type="STRING" />
+        <Button Name="filtraUnitaDocObj" Description="Filtra unità documentarie" Type="STRING" />
+        <Button Name="settaChiusoErrVersamento" Description="Set CHIUSO ERR VERS" Type="STRING" />
+    </ButtonList>
+ 
+    <Section Name="InfoUltimaSessioneSection" Description="" Legend="Info su ultima sessione" LoadOpened="true"/>
+    <Section Name="OggettoDaTrasformareObjDetailSection" Description="" Legend="Oggetto da trasformare" LoadOpened="true"/>
+    
+    <!-- Studio DICOM -->
+    <Fields Name="StudioDICOM" Description="Studio DICOM" >
+        <Input Type="STRING" Description="Versione" Name="cd_versione_dati_spec_dicom"/>
+        <Input Type="STRING" Description="AET" Name="cd_AET_nodo_dicom"/>
+        <Input Type="STRING" Description="UID studio" Name="ds_study_instance_UID" />
+        <Input Type="DATETIME" Description="Data" Name="dt_study_date" />
+        <Input Type="STRING" Description="Accession num." Name="ds_accession_number" />
+        <Input Type="INTEGER" Description="Num. serie" Name="ni_study_related_series" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. immagini" Name="ni_study_related_images" GroupingDecimal="true" />
+        <Input Type="STRING" Description="ID paziente" Name="cd_patient_id" />
+        <Input Type="STRING" Description="Emesso da" Name="cd_patient_id_issuer" />
+        <Input Type="STRING" Description="Paziente" Name="ds_patient_name" />
+        <Input Type="DATE" Description="Nato il" Name="dt_patient_birth_date" />
+        <Input Type="STRING" Description="Sesso" Name="ti_patient_sex" />
+        <Input Type="STRING" Description="Lista SOP CLASS" Name="dl_lista_sop_class" />
+        <Input Type="STRING" Description="Lista modality" Name="dl_lista_modality_in_study" />
+        <Input Type="STRING" Description="Istituzione" Name="ds_istitution_name" />
+        <Input Type="STRING" Description="Medico" Name="ds_ref_physician_name" />
+        <Input Type="STRING" Description="Descrizione studio" Name="dl_study_description" />
+        <Input Type="STRING" Description="ID studio" Name="ds_study_id" />
+        <Input Type="DATETIME" Description="Data presa in carico" Name="dt_presa_in_carico" />
+        <Input Type="STRING" Description="Valore" Name="ds_dcm_hash" />
+        <Input Type="STRING" Description="Encoding" Name="cd_encoding_dcm_hash" />
+        <Input Type="STRING" Description="Algoritmo di calc." Name="ti_algo_dcm_hash" />
+        <Input Type="STRING" Description="Contenuto" Name="bl_dcm_hash_txt" />
+        <Input Type="STRING" Description="Valore" Name="ds_global_hash" />
+        <Input Type="STRING" Description="Encoding" Name="cd_encoding_global_hash" />
+        <Input Type="STRING" Description="Algoritmo di calc." Name="ti_algo_global_hash" />
+        <Input Type="STRING" Description="Contenuto" Name="bl_global_hash_txt" />
+        <Input Type="STRING" Description="Valore" Name="ds_file_hash" />
+        <Input Type="STRING" Description="Encoding" Name="cd_encoding_file_hash" />
+        <Input Type="STRING" Description="Algoritmo di calc." Name="ti_algo_file_hash" />
+    </Fields>
+ 
+    <Section Name="DCMHashSection" Description="" Legend="DCM Hash" LoadOpened="false" ShowButton="true"/>
+    <Section Name="GLOBALHashSection" Description="" Legend="GLOBAL Hash" LoadOpened="false" ShowButton="true"/>
+    <Section Name="FileHashSection" Description="" Legend="File Hash" LoadOpened="false" ShowButton="true"/>
+    <Section Name="NumUdSection" Description="" Legend="" LoadOpened="true" ShowButton="false"/>
+ 
+    <!-- Lista file -->
+    <List Name="FileList" Description="Lista file" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true" hideDetailButton="true">
+        <Input Type="STRING" Description="Nome" Name="nm_file_object" />
+        <Input Type="STRING" Description="Tipo" Name="nm_tipo_file_object" />
+        <Input Type="INTEGER" Description="Size" Name="ni_size_file_vers" GroupingDecimal="true" />
+        <Input Type="STRING" Description="File hash" Name="ds_hash_file_vers" />
+        <Input Type="STRING" Description="Encoding" Name="cd_encoding_hash_file_vers" />
+        <Input Type="STRING" Description="Algoritmo di calc." Name="ti_algo_hash_file_vers" />
+        <Input Type="STRING" Description="Percorso" Name="cd_file_path" />
+    </List>
+ 
+    <!-- Lista unità doc. -->
+    <List Name="OggettoDetailUnitaDocList" Description="Lista unità doc." hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Id unità doc." Name="id_unita_doc_object" Hidden="true" />
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="Chiave" Name="chiave_ud" />
+        <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_unita_doc_object" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+    </List>
+ 
+    <!-- Dettaglio unità doc. -->
+    <Fields Name="UnitaDocDetail" Description="Dettaglio unità documentaria" >
+        <Input Type="INTEGER" Description="Id unità doc." Name="id_unita_doc_object" Hidden="true"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_info_object" />
+        <Input Type="STRING" Description="Stato oggetto" Name="ti_stato_object" />
+        <Input Type="STRING" Description="Chiave unità doc." Name="chiave_ud" />
+        <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Stato unità doc." Name="ti_stato_unita_doc_object" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+        <CheckBox Type="STRING" Description="Versamento simulato" Name="fl_vers_simulato" Readonly="true"/>
+        <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
+        <TextArea Name="bl_xml_indice_sacer" Description="XML indice" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
+        <Button Name="downloadXMLUnitaDocObject" Description="Download XML unità documentaria" Type="STRING" DisableHourGlass="true"/> 
+    </Fields>
+ 
+    <!-- Lista versamenti -->
+    <List Name="OggettoDetailSessioniList" Description="Lista versamenti" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest" />
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato" />
+        <Input Type="DATETIME" Description="Data registrazione stato" Name="ts_reg_stato" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err" />
+        <Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif" Readonly="true"/>
+        <CheckBox Type="STRING" Description="Non risolubile" Name="fl_non_risolub" Readonly="true"/>
+        <Input Type="STRING" Description="note" Name="note" />
+        <Link Name="scaricaReport" Description="Report" Type="STRING" Target="scaricaReport" Tooltip="Scarica report" isTargetList="false"/>
+    </List>
+ 
+    <!-- Lista oggetti con stesso DCM hash dell'oggetto in dettaglio -->
+    <List Name="OggettoDetailOggettiDCMHashList" Description="Lista oggetti con stesso DCM hash dell'oggetto" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Oggetto" Name="id_object" />
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object" />
+        <Input Type="DATETIME" Description="Data vers." Name="dt_vers"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_info_object" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_object" />
+    </List>
+    
+    <!-- Lista degli oggetti generati da trasformazione -->
+    <List Name="OggettoDetailOggettiTrasfList" Description="Lista oggetti generati da trasformazione" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Name="nm_ambiente_vers_trasf" Description="Ambiente versatore" Type="STRING" />
+        <Input Name="nm_vers_trasf" Description="Versatore" Type="STRING" />
+        <Input Name="pg_oggetto_trasf" Description="Progressivo" Type="INTEGER"/>
+        <Input Name="cd_key_object_trasf" Description="Chiave" Type="STRING" />
+        <Input Name="nm_tipo_object_trasf" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="ds_path" Description="Path" Type="STRING" />
+        <Input Name="ds_object_trasf" Description="Descrizione" Type="STRING" />
+        <Input Name="ti_stato_trasf" Description="Stato in Ping" Type="STRING" />
+        <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
+        <Input Name="cd_err" Description="Codice errore" Type="STRING" />
+        <Input Name="dl_err" Description="Descrizione errore" Type="STRING" />
+        <Link Name="showOggettoVersatoAPing" Description="Oggetto versato a PING" Type="STRING" Tooltip="Visualizza oggetto" 
+              isTargetList="false" VisibilityProperty="fl_versato_ping" Target="showOggettoVersatoAPing"/>
+    </List>
+    
+    <!-- Lista stati versamenti -->
+    <List Name="OggettoDetailStatiVersamentiList" Description="Lista stati versamenti">
+        <Input Name="id_sessione_ingest" Description="Sessione" Type="INTEGER" />
+        <Input Name="ti_stato" Description="Stato" Type="STRING" />
+        <Input Name="ts_reg_stato" Description="Data registrazione stato" Type="DATETIME" />
+    </List>
+    
+    <Fields Name="XmlAnnulRich" Description="" >
+        <!--XML di richiesta annullamento-->
+        <Input Type="DATE" Description="Data invio richiesta" Name="dt_reg_xml_annul"/>
+        <TextArea Name="bl_xml_annul" Description="XML di richiesta" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+    </Fields>
+    
+    <Fields Name="XmlAnnulRisp" Description="" >
+        <!--XML di risposta annullamento-->
+        <Input Type="DATE" Description="Data risposta richiesta" Name="dt_reg_xml_annul"/>
+        <TextArea Name="bl_xml_annul" Description="XML di risposta richiesta" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+    </Fields>
+    
+    <Fields Name="FiltriUnitaDocObj" Description="">
+        <!--Filtri per unità documentaria-->
+        <ComboBox Type="STRING" Description="Registro" Name="cd_registro_unita_doc_sacer" />
+        <ComboBox Type="INTEGER" Description="Anno" Name="aa_unita_doc_sacer"/>
+        <Input Type="STRING" Description="Numero" Name="cd_key_unita_doc_sacer" />
+        <ComboBox Type="STRING" Description="Stato" Name="ti_stato_unita_doc_object" />
+        <ComboBox Type="STRING" Description="Errore" Name="cd_concat_dl_err_sacer" />
+    </Fields>
+ 
+    <Tab Name="OggettoTabs" Description="Dettaglio oggetto tabs">
+        <TabElement Name="DettaglioOggetto" Description="Dettaglio oggetto" />
+        <TabElement Name="OggettoXMLVersato" Description="XML versato" />
+        <TabElement Name="ReportTrasformazione" Description="Report di trasformazione" />
+        <TabElement Name="StudioDICOM" Description="Studio DICOM" />
+        <TabElement Name="XMLRichAnnul" Description="XML di richiesta annullamento" />
+        <TabElement Name="XMLRispAnnul" Description="XML di risposta richiesta annullamento" />
+        <TabElement Name="FiltriUnitaDocObj" Description="Filtri per unità documentarie" />
+    </Tab>
+    
+    <Tab Name="OggettoSubTabs" Description="Dettaglio oggetto sottotabs">
+        <TabElement Name="ListaUnitaDoc" Description="Lista unità documentarie" />
+        <TabElement Name="ListaFile" Description="Lista file" />
+        <TabElement Name="ListaVersamenti" Description="Lista versamenti" />
+        <TabElement Name="ListaOggetti" Description="Lista oggetti con stesso DCM hash" />
+        <TabElement Name="ListaOggettiTrasf" Description="Lista oggetti generati da trasformazione" />
+        <TabElement Name="ListaStatiVersamenti" Description="Lista stati versamenti" />
+    </Tab>
+ 
+    <!-- Filtri versamenti falliti -->
+    <Fields Name="FiltriVersamenti" Description="Filtri versamenti" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_vers" Trigger="true" Required="true"/>
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers" Trigger="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="id_tipo_object" />
+        <MultiSelect Type="STRING" Description="Stato dei versamenti falliti" Name="versamento_ti_stato" Trigger="true"/>
+        <ComboBox Type="STRING" Description="Stato risoluzione" Name="versamento_ti_stato_risoluz" />
+        <ComboBox Type="STRING" Description="Periodo vers." Name="periodo_vers" />
+        <Input Type="DATE" Description="Giorno stato corrente da" Name="giorno_vers_da"/>
+        <Input Type="INTEGER" Description="Ora" Name="ore_vers_da" MaxLength="2"/>
+        <Input Type="INTEGER" Description="Ora" Name="minuti_vers_da" MaxLength="2"/>
+        <Input Type="DATE" Description="Giorno stato corrente a" Name="giorno_vers_a"/>  
+        <Input Type="INTEGER" Description="Ora" Name="ore_vers_a" MaxLength="2"/>
+        <Input Type="INTEGER" Description="Ora" Name="minuti_vers_a" MaxLength="2"/>
+        <ComboBox Type="STRING" Description="Classe di errore" Name="classe_errore" Trigger="true"/>
+        <ComboBox Type="STRING" Description="Errore" Name="cd_err" />
+        <ComboBox Type="STRING" Description="Verificato" Name="versamento_fl_verif" />
+        <ComboBox Type="STRING" Description="Non risolubile" Name="versamento_fl_non_risolub" />
+    </Fields>
+ 
+    <!-- Lista versamenti falliti -->
+    <List Name="VersamentiList" Description="Monitoraggio - Lista versamenti falliti" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest" />
+        <Input Type="DATETIME" Description="Data stato corrente" Name="dt_stato_cor" />
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object" />
+        <Input Type="STRING" Description="Descrizione" Name="info" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato" />
+        <Input Type="STRING" Description="Errore" Name="cd_err" />
+        <Input Type="STRING" Description="Descrizione" Name="dl_err" />
+        <Input Type="STRING" Description="Stato risoluzione" Name="ti_stato_risoluz" />
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif" />
+        <CheckBox Type="STRING" Description="Non risolubile" Name="fl_non_risolub" />
+    </List>
+ 
+    <!-- Dettaglio versamento fallito -->
+    <Fields Name="VersamentoDetail" Description="Monitoraggio - Dettaglio versamento" >
+        <Input Type="INTEGER" Description="id object" Name="id_object" Hidden="true"/>
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest"/>
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura"/> 
+        <Input Type="DATETIME" Description="Data chiusura" Name="dt_chiusura"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <!-- <Input Type="STRING" Description="Tipo oggetto" Name="nm_key_object" Hidden="true" /> -->
+        <Input Type="STRING" Description="Descrizione" Name="info"/>
+        <Input Type="STRING" Description="Stato corrente" Name="ti_stato"/>
+        <Input Type="DATETIME" Description="Data stato corrente" Name="dt_stato_cor"/>
+        <Input Type="STRING" Description="Codice per identificare il versatore per cui generare oggetti" Name="cd_vers_gen"/>
+        <Input Type="STRING" Description="Trasformazione utilizzata" Name="cd_trasf"/>
+        <Input Type="STRING" Description="Versione trasformazione utilizzata" Name="cd_versione_trasf"/>
+        <Input Type="STRING" Description="Stato verifica hash" Name="ti_stato_verifica_hash"/>
+        <Input Type="STRING" Description="Errore" Name="errore"/>
+        <Input Type="STRING" Description="Stato risoluzione" Name="ti_stato_risoluz"/>
+        <Input Type="STRING" Description="Note" Name="note" />
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif"/>
+        <CheckBox Type="STRING" Description="Non risolubile" Name="fl_non_risolub"/>
+        <CheckBox Type="STRING" Description="Forzatura warning" Name="fl_forza_warning" Readonly="true"/>
+        <CheckBox Type="STRING" Description="Forzatura accettazione" Name="fl_forza_accettazione" Readonly="true"/>
+        <Input Type="STRING" Description="Motivo forzatura accettazione" Name="dl_motivo_forza_accettazione"/>
+        <Input Type="STRING" Description="Motivo chiusura warning" Name="dl_motivo_chiuso_warning"/>
+        <Input Type="INTEGER" Description="Num. UD attese" Name="ni_unita_doc_attese" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD da vers." Name="ni_unita_doc_da_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate" Name="ni_unita_doc_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate OK" Name="ni_unita_doc_vers_OK" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate KO" Name="ni_unita_doc_vers_err" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. UD versate con timeout" Name="ni_unita_doc_vers_timeout" GroupingDecimal="true" />
+        <Input Name="pg_oggetto_trasf" Description="Progressivo oggetto generato" Type="INTEGER" />
+        <!-- Oggetto da trasformare -->
+        <Input Name="ti_gest_oggetti_figli" Description="Tipo gestione oggetti 'figli'" Type="STRING" />
+        <Input Name="nm_ambiente_vers_padre" Description="Ambiente padre" Type="STRING" />
+        <Input Name="nm_vers_padre" Description="Versatore padre" Type="STRING" />
+        <Input Name="cd_key_object_padre" Description="Chiave" Type="STRING" />
+        <Input Name="ni_tot_object_trasf" Description="Numero totale oggetti figli" Type="INTEGER" GroupingDecimal="true"/>
+        
+        <!-- Report di trasformazione -->
+        <TextArea Name="report_xml" Description="XML" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+        
+        <Input Type="STRING" Description="Versione" Name="cd_versione_xml_vers"/>
+        <TextArea Name="bl_xml" Description="" Type="STRING" Rows="50" Cols="50" MaxLength="100000" />
+        <Button Name="downloadXMLVersamento" Description="Download XML versamento" Type="STRING" DisableHourGlass="true"/> 
+        <Button Name="dettaglioOggetto" Description="Dettaglio oggetto" Type="STRING" />
+        <Input Type="STRING" Description="Warning" Name="warning"/> 
+    </Fields>
+    
+    <!--Filtri per unità documentaria-->
+    <Fields Name="FiltriUnitaDocVers" Description="">
+        <ComboBox Type="STRING" Description="Ambiente" Name="nm_ambiente" Trigger="true" />
+        <ComboBox Type="STRING" Description="Ente" Name="nm_ente" Trigger="true" />
+        <ComboBox Type="STRING" Description="Struttura" Name="nm_strut" />
+        <ComboBox Type="STRING" Description="Struttura non definita" Name="fl_struttura_non_definita" />
+        <ComboBox Type="STRING" Description="Registro" Name="cd_registro_unita_doc_sacer" />
+        <ComboBox Type="INTEGER" Description="Anno" Name="aa_unita_doc_sacer"/>
+        <Input Type="STRING" Description="Numero" Name="cd_key_unita_doc_sacer" />
+        <ComboBox Type="STRING" Description="Stato" Name="ti_stato_unita_doc_object" />
+        <ComboBox Type="STRING" Description="Errore" Name="cd_concat_dl_err_sacer" />
+        <ComboBox Type="STRING" Description="Versamento a Sacer simulato" Name="fl_vers_simulato" />
+    </Fields>
+ 
+    <!-- Lista unità documentarie da versamenti falliti -->
+    <List Name="UnitaDocDaVersamentiFallitiList" Description="Monitoraggio - Lista unità documentarie" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="Chiave" Name="chiave_ud" />
+        <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_unita_doc_sessione" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+    </List>
+    
+    <!-- Lista stati versamenti -->
+    <List Name="StatiVersamentiList" Description="Lista stati versamenti">
+        <Input Name="ti_stato" Description="Stato" Type="STRING" />
+        <Input Name="ts_reg_stato" Description="Data registrazione stato" Type="DATETIME" />
+    </List>
+ 
+    <Tab Name="VersamentoTabs" Description="Dettaglio versamento tabs">
+        <TabElement Name="DettaglioVersamento" Description="Dettaglio versamento" />
+        <TabElement Name="VersamentoXMLVersato" Description="XML versato" />
+        <TabElement Name="FiltriUnitaDocVers" Description="Filtri per unità documentarie" />
+        <TabElement Name="ReportTrasformazionePerVersamneto" Description="Report di trasformazione" />
+    </Tab>
+    
+    <Tab Name="VersamentoSubTabs" Description="">
+        <TabElement Name="UnitaDocListTab" Description="Lista unità documentarie" />
+        <TabElement Name="StatiListTab" Description="Lista stati" />
+    </Tab>
+ 
+    <ButtonList Name="versamentiButtonList" Description="Bottoni versamenti">
+        <Button Name="ricercaVersamentiFalliti" Description="Ricerca" Type="STRING" />
+        <Button Name="impostaVerificatoNonRisolubile" Description="Imposta versamenti verificati / non risolubili" Type="STRING" />
+        <Button Name="impostaTuttiVerificato" Description="Imposta TUTTI i versamenti come verificati" Type="STRING" />
+        <Button Name="impostaTuttiNonRisolubile" Description="Imposta TUTTI i versamenti non risolubili" Type="STRING" />
+        <Button Name="filtraUnitaDocVers" Description="Filtra unità documentarie" Type="STRING" />
+    </ButtonList>
+    
+    <!--Dettaglio unita documentaria da versamento-->
+    <Fields Name="UnitaDocVersamentoDetail" Description="">
+        <Input Type="INTEGER" Description="Id unità doc." Name="id_unita_doc_sessione" Hidden="true"/>
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest"/> 
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura"/>
+        <Input Type="DATETIME" Description="Data chiusura" Name="dt_chiusura"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object" /> 
+        <Input Type="STRING" Description="Descrizione" Name="ds_object" />
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="Chiave unità doc." Name="chiave_ud" />
+        <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Stato unità doc." Name="ti_stato_unita_doc_object" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+        <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
+        <TextArea Name="bl_xml_indice_sacer" Description="XML indice" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/>
+        
+        <Button Name="downloadXMLUnitaDocVers" Description="Download XML unità documentaria" Type="STRING" DisableHourGlass="true"/>
+    </Fields>
+ 
+    <!-- Filtri oggetti derivanti da versamenti falliti -->
+    <Fields Name="FiltriOggettiDerVersFalliti" Description="Filtri oggetti derivanti da versamenti falliti" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_vers" Trigger="true" Required="true"/>
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers" Trigger="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto" Name="id_tipo_object" />
+        <ComboBox Type="STRING" Description="Verificato" Name="oggetti_der_fl_verif" Trigger="true" />
+        <ComboBox Type="STRING" Description="Non risolubile" Name="oggetti_der_fl_non_risolub" Trigger="true" />
+        <ComboBox Type="STRING" Description="Vers. a SACER da recuperare" Name="oggetti_der_fl_vers_sacer_da_recup"/>
+    </Fields>
+ 
+    <!-- Lista oggetti derivanti da versamenti falliti -->
+    <List Name="OggettiDaVersamentiFallitiList" Description="Monitoraggio - Lista oggetti derivanti da versamenti falliti" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_object" />
+        <Input Type="DATETIME" Description="Data primo versamento" Name="dt_first_ses_err"/>
+        <Input Type="DATETIME" Description="Data ultimo versamento" Name="dt_last_ses_err"/>
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif" Readonly="true" />
+        <CheckBox Type="STRING" Description="Non risolubile" Name="fl_non_risolub" Readonly="true" />
+        <CheckBox Type="STRING" Description="Vers. a SACER da recuperare" Name="fl_vers_sacer_da_recup" Readonly="true" />
+    </List>
+ 
+    <!-- Dettaglio oggetto derivante da versamenti falliti -->
+    <Fields Name="OggettoDaVersamentiFallitiDetail" Description="Monitoraggio - Dettaglio oggetto derivante da versamenti falliti" >
+        <Input Type="INTEGER" Description="Id vers" Name="id_vers" Hidden="true"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_object"/>
+        <Input Type="STRING" Description="Codice per identificare il versatore per cui generare oggetti" Name="cd_vers_gen"/>
+        <Input Type="STRING" Description="Trasformazione utilizzata" Name="cd_trasf"/>
+        <Input Type="STRING" Description="Versione trasformazione utilizzata" Name="cd_versione_trasf"/>
+        <Input Name="ti_gest_oggetti_figli" Description="Tipo gestione oggetti 'figli'" Type="STRING" />
+        <CheckBox Type="STRING" Description="Verificato" Name="oggetto_fl_verif"/>
+        <CheckBox Type="STRING" Description="Non risolubile" Name="oggetto_fl_non_risolub"/>
+        <CheckBox Type="STRING" Description="Vers. a SACER da recuperare" Name="fl_vers_sacer_da_recup"/>
+        <Input Type="DATETIME" Description="Data prima sessione" Name="dt_first_ses_err"/>
+        <Input Type="DATETIME" Description="Data ultima sessione" Name="dt_last_ses_err"/>
+    </Fields>
+ 
+    <!-- Lista versamenti falliti da oggetto derivante da versamenti falliti-->
+    <List Name="OggettoDaVersamentiFallitiDetailVersamentiList" Description="Monitoraggio - Lista versamenti falliti da oggetto derivante da versamenti falliti" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest" />
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura" />
+        <Input Type="DATETIME" Description="Data chiusura" Name="dt_chiusura" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato" />
+        <!--<Input Type="STRING" Description="Tipo errore" Name="ti_err" />-->
+        <Input Type="STRING" Description="Codice errore" Name="cd_err" />
+        <Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif" />
+        <CheckBox Type="STRING" Description="Non risolubile" Name="fl_non_risolub" />
+    </List>
+ 
+    <ButtonList Name="oggettiDerVersFallitiButtonList" Description="Bottoni oggetti derivanti da versamenti falliti">
+        <Button Name="ricercaOggettiDaVersamentiFalliti" Description="Ricerca" Type="STRING" />
+        <Button Name="impostaVerificNonRisolubOggettiDaVersFalliti" Description="Imposta versamenti verificati / non risolubili" Type="STRING" />
+        <Button Name="impostaTuttiNonRisolubOggettiDaVersFalliti" Description="Imposta TUTTI i versamenti non risolubili" Type="STRING" />
+        <Button Name="impostaTuttiVerificOggettiDaVersFalliti" Description="Imposta TUTTI i versamenti come verificati" Type="STRING" />
+        <Button Name="annullaOggettoDerVersFalliti" Description="Annulla oggetto" Type="STRING" />
+        <Button Name="annullaVersamentiUDDerVersFalliti" Description="Annulla versamenti unità documentarie" Type="STRING" />
+    </ButtonList>
+ 
+    <!-- Sessione errata -->
+    <Fields Name="SessioniErrateDetail" Description="Sessione errata" >
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest"/> 
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura"/>
+        <Input Type="DATETIME" Description="Data chiusura" Name="dt_chiusura"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Chiave oggetto" Name="cd_key_object" /> 
+        <Input Type="STRING" Description="Descrizione oggetto" Name="info_ogg" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err"/> 
+        <Input Type="STRING" Description="Descrizione errore" Name="dl_err"/>
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif"/>
+        <CheckBox Type="STRING" Description="Forzatura Warning" Name="fl_forza_warning"/>
+        <CheckBox Type="STRING" Description="Sessione Forzata" Name="fl_forza_accettazione"/>
+        <Input Type="STRING" Description="Motivo Forzatura" Name="dl_motivo_forza_accettazione"/>
+        <Input Type="STRING" Description="Motivo Chiusura Warning" Name="dl_motivo_chiuso_warning"/>
+  
+        <Input Type="STRING" Description="Versione XML" Name="cd_versione_xml_vers"/>
+        <TextArea Name="bl_xml" Description="XML" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
+        <!-- MaxLength="100000" -->
+        <Button Name="downloadXmlSessione" Description="Download Xml Versione" Type="STRING" /> 
+  
+    </Fields>
+ 
+    <!-- Filtro sessione e bottone -->
+    <Fields Name="FiltriSessione" Description="Filtri Sessione" >
+        <ComboBox Type="STRING" Description="Sessione errata verificata" Name="fl_sessione_err_verif" />
+        <Button Name="cercaSessioniErrate" Description="Cerca" Type="STRING" />
+        <Button Name="calcolaStrutturaVersante" Description="Calcola struttura versante" Type="STRING" />
+    </Fields>
+ 
+    <!-- Lista sessioni errate -->
+    <List Name="SessioniErrateList" Description="Lista sessioni errate" hideInsertButton="true" hideDeleteButton="true" >
+        <Input Type="INTEGER" Description="Sessione" Name="id_sessione_ingest"/> 
+        <Input Type="DATETIME" Description="Data apertura" Name="dt_apertura"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore" />
+        <Input Type="STRING" Description="Chiave oggetto" Name="cd_key_object" />
+        <Input Type="STRING" Description="Descrizione oggetto" Name="info_ogg" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err"/> 
+        <Input Type="STRING" Description="Descrizione errore" Name="dl_err"/>
+        <CheckBox Type="STRING" Description="Verificato" Name="fl_verif"/>
+    </List>
+ 
+    <!-- Bottoni per salvare i flag di verifica del versamento e della sessione -->
+    <ButtonList Name="salvaVerificaButtonList" Description="Bottoni Salva Verifica">
+        <!--<Button Name="salvaVerificaVersamento" Description="Salva verifica versamento" Type="STRING" /> -->
+        <!-- <Button Name="salvaVerificaVersamentoDaDocDerVersFalliti" Description="Salva verifica versamento" Type="STRING" /> -->
+        <Button Name="impostaVerificato" Description="Imposta sessioni verificate" Type="STRING" />
+    </ButtonList>
+ 
+    <!-- Filtri schedulazioni job -->
+    <Fields Name="FiltriJobSchedulati" Description="Filtri Schedulazioni Job" >
+        <ComboBox Type="STRING" Description="Job" Name="nm_job" Required="true" /> 
+        <Input Type="DATE" Description="Data schedulazione da" Name="dt_reg_log_job_da" Required="true"/> 
+        <Input Type="INTEGER" Description="Orario" Name="ore_dt_reg_log_job_da" MaxLength="2"/>  
+        <Input Type="INTEGER" Description="Orario" Name="minuti_dt_reg_log_job_da" MaxLength="2"/> 
+        <Input Type="DATE" Description="Data schedulazione a" Name="dt_reg_log_job_a" /> 
+        <Input Type="INTEGER" Description="Orario" Name="ore_dt_reg_log_job_a" />  
+        <Input Type="INTEGER" Description="Orario" Name="minuti_dt_reg_log_job_a" /> 
+        <Button Name="ricercaJobSchedulati" Description="Ricerca" Type="STRING" />
+        <Button Name="pulisciJobSchedulati" Description="Pulisci" Type="STRING" />
+        <Button Name="gestioneJobPage" Description="Gestione Job" Type="STRING" />        
+    </Fields>
+ 
+    <!-- Stato job -->
+    <Fields Name="InformazioniJob" Description="Stato Job" > 
+        <Button Name="startJobSchedulati" Description="Start" Type="STRING" />
+        <Button Name="stopJobSchedulati" Description="Stop" Type="STRING" />
+        <Button Name="esecuzioneSingolaJobSchedulati" Description="Esecuzione singola" Type="STRING" />
+        <CheckBox Type="STRING" Description="Attivo" Name="attivo" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Input Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" /> 
+        <Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" /> 
+    </Fields>
+ 
+    <!-- Lista schedulazioni job -->
+    <List Name="JobSchedulatiList" Description="Lista Schedulazioni Job" hideDetailButton="true" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="DATETIME" Description="Data inizio" Name="dt_reg_log_job_ini"/> 
+        <Input Type="DATETIME" Description="Data fine" Name="dt_reg_log_job_fine"/>
+        <Input Type="STRING" Description="Durata (gg-hh:mm:ss)" Name="durata"/> 
+        <Input Type="STRING" Description="Errore" Name="dl_msg_err"/> 
+    </List>
+ 
+    <!-- Filtri replica schedulazioni -->
+    <Fields Name="FiltriReplicaOrg" Description="Ricerca repliche organizzazioni" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_vers" Trigger="true" />
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers" />
+        <ComboBox Type="STRING" Description="Tipo operazione" Name="ti_oper_replic" />
+        <ComboBox Type="STRING" Description="Stato replica" Name="ti_stato_replic" />
+        <Button Name="ricercaRepliche" Description="Ricerca repliche organizzazioni" Type="STRING" />
+        <Button Name="pulisciRepliche" Description="Pulisci filtri" Type="STRING" />
+    </Fields>
+
+    <!-- Lista replica utenti -->
+    <List Name="ReplicaOrgList" Description="Lista replica organizzazioni" hideDetailButton="true" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente"/>
+        <Input Type="STRING" Description="Versatore" Name="nm_vers"/>
+        <Input Type="STRING" Description="Tipo operazione" Name="ti_oper_replic"/>
+        <Input Type="DATETIME" Description="Data" Name="dt_log_organiz_da_replic" />
+        <Input Type="STRING" Description="Stato replica" Name="ti_stato_replic"/>
+        <Input Type="STRING" Description="Errore" Name="errore"/>
+    </List>
+    
+    <!-- Dettaglio oggetto generato da trasformazione-->
+    <Section Name="OggettoDaTrasformareSection" Description="" Legend="Oggetto da trasformare" LoadOpened="true"/>
+    <Section Name="OggettoTrasformatoSection" Description="" Legend="Oggetto generato da trasformazione" LoadOpened="true"/>
+    <!-- Oggetto da trasformare -->
+    <Fields Name="OggettoGeneratoTrasfDetail" Description="Dettaglio oggetto generato da trasformazione" >
+        <!--Oggetto da trasformare-->
+        <Input Name="id_object_da_trasf" Description="Id" Type="INTEGER" Hidden="true" />
+        <Input Name="id_vers_trasf" Description="ID Versatore trasf" Type="INTEGER" Hidden="true" />
+        <Input Name="id_vers_da_trasf" Description="ID Versatore da trasf" Type="INTEGER" Hidden="true" />
+        
+        <Input Name="nm_ambiente_vers_da_trasf" Description="Ambiente" Type="STRING" />
+        <Input Name="nm_vers_da_trasf" Description="Versatore" Type="STRING" />
+        <Input Name="cd_key_object_da_trasf" Description="Chiave" Type="STRING" />
+        <Input Name="nm_tipo_object_da_trasf" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="ds_object_da_trasf" Description="Descrizione" Type="STRING" />
+        <Input Name="ni_tot_object_trasf" Description="Num. oggetti generati" Type="INTEGER" GroupingDecimal="true"/>
+        <Input Name="ti_stato_object_da_trasf" Description="Stato" Type="STRING" />
+        <Input Name="dt_stato_cor_da_trasf" Description="Data registrazione stato" Type="DATETIME" />
+        <!--Oggetto generato da trasformazione-->
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers_trasf" />
+        <Input Type="STRING" Description="Versatore" Name="nm_vers_trasf" />
+        <Input Type="INTEGER" Description="Progressivo" Name="pg_oggetto_trasf" />
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object_trasf" />
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object_trasf" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_object_trasf" />
+        <Input Type="STRING" Description="Path" Name="ds_path" />
+        <Input Type="STRING" Description="Hash file" Name="ds_hash_file_vers" />
+        <Input Type="STRING" Description="Algoritmo calcolo hash" Name="ti_algo_hash_file_vers" />
+        <Input Type="STRING" Description="Encoding hash" Name="cd_encoding_hash_file_vers" />
+        <Input Type="STRING" Description="Stato in Ping" Name="ti_stato_trasf" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err" />
+        <Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+        
+        <Button Name="downloadFileOggettoObjGenTrasf" Description="Download" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="oggettoDaTrasformareObjGenTrasf" Description="Oggetto da trasformare" Type="STRING" />
+        <Button Name="oggettoVersatoPingObjGenTrasf" Description="Oggetto versato a PING" Type="STRING" />
+    </Fields>
+ 
+</Form>

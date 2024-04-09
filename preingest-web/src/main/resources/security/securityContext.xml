@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="org.springframework.security.saml"/>
+    
+    <security:http security="none" pattern="/rest/**" />
+    
+    <!-- *** AGGIUNTA PER SPID *** -->
+    <!-- samlRelayState DEVE essere definito prima dell'import che lo usa altrimenti non funziona nulla! -->
+    <!-- Serve per far funzionare l'integrazione con FEDERA -->
+    <bean id="spEntityId" class="java.lang.String">
+        <constructor-arg value="#{ systemProperties['sacerping-sp-identity-id'] }"/>
+    </bean>
+    <!-- Estrae dall'entityId la parte dell'url del server e della porta escludendo l'ultimo slash -->
+    <bean id="serverUrl" class="java.lang.String">
+        <constructor-arg value="#{ spEntityId.substring(0, spEntityId.indexOf('/',9) ) }"/>
+    </bean>
+    <!-- Deve controllare che nell'entityId viene tornato così com'è altrimenti se c'è un alias lo toglie! -->
+    <bean id="urlRitorno" class="java.lang.String">
+        <constructor-arg value="#{  (spEntityId).indexOf('/saml/metadata')>0 ? (spEntityId).substring(0, (spEntityId).indexOf('/saml/metadata') ) : (spEntityId) }"/>
+    </bean>
+    <!-- Url di ritorno encodata in Base64 lo vuole federa! -->
+    <bean id="samlRelayState" class="java.lang.String">
+        <constructor-arg value="#{ T(java.util.Base64).getEncoder().encodeToString( ( urlRitorno  ).getBytes()) }"/>
+    </bean>
+    <!-- SpagoLite User detail bean Spostato qui e viene usato nel baseContext.xml -->
+    <bean id="sliteUserDetail" class="it.eng.sacerasi.web.security.SacerPingSAMLUserDetail" />
+    <!-- *** FINE AGGIUNTA PER SPID -->
+        
+    <!-- common settings -->
+    <import resource="classpath:security/baseSecurityContext.xml"/>
+    
+    <!-- Central storage of cryptographic keys -->
+    <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
+        <constructor-arg value="file:///#{systemProperties['sacerping-jks-path']}" />
+        <constructor-arg type="java.lang.String" value="#{systemProperties['sacerping-key-manager-pass']}" />
+        <constructor-arg>
+            <map>
+                <entry key="#{systemProperties['sacerping-store-key-name']}" value="#{systemProperties['sacerping-key-manager-pass']}" />
+            </map>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String" value="sacerping" />
+    </bean>
+
+    
+    <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
+    <!-- Do no forget to call iniitalize method on providers -->
+    <bean id="metadata" class="it.eng.spagoLite.security.saml.ReloadableCachingMetadataManager">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
+                            <!-- URL containing the metadata -->
+                            <constructor-arg>
+                                <value type="java.lang.String">#{systemProperties['fed-metadata-url']}</value>
+                            </constructor-arg>
+                            <!-- Timeout per la connessione durante una richiesta di metadati (in ms) -->
+                            <constructor-arg>
+                                <value type="int">#{systemProperties['sacerping-timeout-metadata']}</value>
+                            </constructor-arg>
+                            <constructor-arg>
+                                <value type="java.lang.String">#{systemProperties['sacerping-temp-file']}</value>
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool" />
+                        </bean>
+                    </constructor-arg>
+                    <!-- 
+                         Java Cert Store contentente:
+                          - il certificato della federazione 
+                          - la coppia di chiavi pubblica e privata di sacerping
+                    -->
+                    <constructor-arg>
+                        <map>
+                            <entry key="#{systemProperties['sacerping-sp-identity-id']}">
+                                <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                                    <property name="local" value="true"/>
+                                    <property name="alias" value="sacerping"/>
+                                    <property name="securityProfile" value="pkix"/>
+                                    <property name="sslSecurityProfile" value="pkix"/>
+                                    <property name="signingKey" value="#{systemProperties['sacerping-store-key-name']}"/>
+                                    <property name="encryptionKey" value="#{systemProperties['sacerping-store-key-name']}"/>
+                                    <property name="requireArtifactResolveSigned" value="true"/>
+                                    <property name="requireLogoutRequestSigned" value="true"/>
+                                    <property name="requireLogoutResponseSigned" value="false"/>
+                                    <!-- **** CAMBIATI QUESTI !!!! *** -->
+                                    <!-- <property name="idpDiscoveryEnabled" value="false"/> -->
+                                    <!-- RIPRISTINARE l'Altro file security context.xml che legge il flag dall'application server -->
+                                    <!-- <property name="idpDiscoveryEnabled" value="false"/> -->
+                                    <property name="idpDiscoveryEnabled" value="#{ systemProperties['discovery-service-enabled'] == null ? 'false' :  systemProperties['discovery-service-enabled'] }"/>
+                                    
+                                    <!-- <property name="idpDiscoveryURL" value="#{serverUrl}/discovery/DS?return=#{urlRitorno}"/> -->
+                                    <!-- ************************************** -->
+                                </bean>
+                            </entry>
+                            <entry key="#{systemProperties['idp-identity-id']}">
+                                <bean class="org.springframework.security.saml.metadata.ExtendedMetadata"/>
+                            </entry>
+                        </map>
+                    </constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+        <!-- OPTIONAL used when one of the metadata files contains information about this service provider -->
+        <property name="hostedSPName" value="#{systemProperties['sacerping-sp-identity-id']}"/>
+        <!-- OPTIONAL property: can tell the system which IDP should be used for authenticating user by default. -->
+        <property name="defaultIDP" value="#{systemProperties['idp-identity-id']}" />
+        <!-- Intervallo di refresh dei metadati -->
+        <property name="refreshCheckInterval" value="#{systemProperties['sacerping-refresh-check-interval']}"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Trasformazioni" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
+
+    <!--TRASFORMAZIONI -->
+    <Section Name="InserimentoTrasformazioniSection" Description="Inserimento trasformazione" Legend="Inserimento di una nuova trasformazione" LoadOpened="true"/>
+    
+    <!-- Inserimento trasformazioni -->
+    <Fields Name="InserisciTrasformazione" Description="Inserisci trasformazione" >
+        <Input Type="STRING" Description="Nome" Name="trans_name" MaxLength="95"/>
+        <TextArea Type="STRING" Description="Descrizione" Name="trans_description" MaxLength="3990" />
+        <Input Type="STRING" Description="Versione" Name="trans_version" MaxLength="95" />
+        <TextArea Type="STRING" Description="Descrizione della versione" Name="trans_version_description" MaxLength="3990" />
+        <Input Name="dt_istituz" Description="Data di inizio validità" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_ist" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_ist" MaxLength="2"/>
+        <Input Name="dt_soppres" Description="Data di fine validità" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_sop" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_sop" MaxLength="2"/>
+        <Input Type="STRING" Description="Identificativo trasformazione" Name="cd_kettle_id"/>
+        <CheckBox Name="trans_enabled" Description="Trasformazione attiva" Type="STRING"/>
+        <Input Name="trans_blob" Description="Pacchetto della trasformazione" Type="FILE"/>
+    </Fields>
+    
+    <Section Description="DETTAGLIO TRASFORMAZIONE" Legend="Dettaglio Trasformazione" LoadOpened="true" Name="TrasformazioneSection" ShowButton="true"/>
+    
+    <Fields Description="Dettaglio Trasformazione" Name="TransformationDetail">
+        <Input Name="id_trasf" Description="Id" Type="INTEGER" Hidden="true"/>
+        <Input Name="cd_trasf" Description="Nome" Type="STRING" MaxLength="95"/>
+        <TextArea Name="ds_trasf" Description="Descrizione" Type="STRING" Rows="5" Cols="20" MaxLength="3990"  />
+        <Input Name="cd_versione_cor" Description="Versione" Type="STRING" MaxLength="95"/>
+        <TextArea Name="ds_versione_cor" Description="Commento alla versione" Type="STRING" Rows="5" Cols="20" MaxLength="3990"/>
+        <Input Name="dt_istituz" Description="Data di inizio validità" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_ist" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_ist" MaxLength="2"/>
+        <Input Name="dt_soppres" Description="Data di fine validità" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_sop" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_sop" MaxLength="2"/>
+        <Input Type="STRING" Description="Identificativo trasformazione" Name="cd_kettle_id"/>
+        <CheckBox Name="fl_attiva" Description="Abilitata" Type="STRING"/>
+        <Input Name="trans_blob" Description="Pacchetto della trasformazione" Type="FILE"/>
+        
+        <Button Name="insertNewVersion" Description="Inserisci nuova versione" Type="STRING"/>
+        <Button Name="downloadPkg" Description="Scarica pacchetto" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="insertParametersSet" Description="Crea nuovo set di parametri" Type="STRING"/>
+        <Button Name="insertDefaultParametersSet" Description="Crea set parametri standard" Type="STRING"/>
+        <Button Name="updateParametersSets" Description="Aggiorna i set dei parametri" Type="STRING"/>
+    </Fields>
+    
+    <Section Description="Gestione trasformazioni" Legend="Gestione trasformazioni" LoadOpened="true" Name="RicercaTrasformazioneSection" ShowButton="true"/>
+    
+    <Fields Name="FiltriRicercaTrasformazioni" Description="Ricerca trasformazioni">
+        <Input Name="cd_trasf_search" Description="Nome" Type="STRING" />
+        <Input Name="ds_transf_search" Description="Descrizione" Type="STRING" />
+        <Input Name="cd_versione_cor_search" Description="Versione corrente" Type="STRING"/>
+        <Input Name="ds_versione_cor_search" Description="Descrizione versione" Type="STRING"/>
+        <Input Name="dt_istituz_search" Description="Data inizio validità trasformazione" Type="DATE" />
+        <Input Name="dt_soppres_search" Description="Data fine validità trasformazione" Type="DATE" />
+        <ComboBox Name="fl_attiva_search" Description="Abilitata" Type="STRING" />
+        
+        <Button Name="ricercaTrasformazione" Description="Ricerca trasformazione" Type="STRING"/>
+    </Fields>
+    
+    <List Name="TrasformazioniList" Description="">
+        <Input Name="cd_trasf" Description="Nome" Type="STRING" />
+        <Input Name="ds_trasf" Description="Descrizione" Type="STRING" />
+        <Input Name="cd_versione_cor" Description="Versione corrente" Type="STRING" />
+        <Input Name="ds_versione_cor" Description="Descrizione versione" Type="STRING" />
+        <Input Name="dt_istituz" Description="Data inizio" Type="DATETIME" />
+        <Input Name="dt_soppres" Description="Data fine" Type="DATETIME" />
+        <Input Type="STRING" Description="Identificativo trasformazione" Name="cd_kettle_id"/>
+        <CheckBox Name="fl_attiva" Description="Abilitata" Type="STRING" Readonly="true"/>
+    </List>
+    
+    <Section Description="Inserimento nuova versione" Legend="Inserimento nuova versione" LoadOpened="true" Name="InserimentoNuovaVersioneSection" ShowButton="true"/>
+    <Fields Name="InserimentoNuovaVersione" Description="Inserimento nuova versione">
+        <Input Name="id_storico_trasf" Description="Id" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_trasf" Description="Id trasformazione corrente" Type="INTEGER" Hidden="true"/>
+        <Input Name="cd_trasf" Description="Nome" Type="STRING" MaxLength="95" Readonly="true"/>
+        <Input Name="cd_versione_cor" Description="Versione" Type="STRING" MaxLength="95"/>
+        <TextArea Name="ds_versione_cor" Description="Commento alla versione" Type="STRING" Rows="5" Cols="20" MaxLength="3990"/>
+        <Input Name="dt_istituz" Description="Data di attivazione" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_ist" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_ist" MaxLength="2"/>
+        <Input Name="dt_soppres" Description="Data di fine validità" Type="DATE" />
+        <Input Type="STRING" Description="Ora" Name="ore_dt_sop" MaxLength="2"/>
+        <Input Type="STRING" Description="Ora" Name="minuti_dt_sop" MaxLength="2"/>
+        <CheckBox Name="fl_attiva" Description="Abilitata" Type="STRING"/>
+        <Input Name="trans_blob" Description="Pacchetto della trasformazione" Type="FILE"/>
+    </Fields>
+    
+    <List Name="VersionsList" Description="">
+        <Input Name="cd_versione" Description="Versione" Type="STRING" />
+        <Input Name="ds_versione" Description="Descrizione versione" Type="STRING"/>
+        <Input Name="dt_istituz" Description="Data di attivazione" Type="DATETIME" />
+        <Input Name="dt_soppres" Description="Data di fine validità" Type="DATETIME" />
+        <Link Name="scaricaTrasformazione" Description="Pacchetto" Type="STRING" Target="scaricaTrasformazione" Tooltip="Scarica trasformazione" isTargetList="false"/>
+    </List>
+    
+    <List Name="TipiOggettoList" Description="">
+        <Input Name="cd_ambiente" Description="Ambiente" Type="STRING" />
+<!--        <Input Name="cd_versatore" Description="Versatore" Type="STRING"/>
+        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />-->
+        <Link Name="cd_versatore" Description="Versatore" Type="STRING" Target="vaiAlVersatore" Tooltip="Vai al versatore" isTargetList="false"/>
+        <Link Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" Target="vaiAlTipoOggetto" Tooltip="Vai al tipo oggetto" isTargetList="false"/>
+    </List>
+    
+    <Section Description="Versioni precedenti" Legend="Versioni precedenti" LoadOpened="true" Name="VersioniListSection" ShowButton="false"/>
+    <Section Description="Set di parametri" Legend="Set di parametri" LoadOpened="true" Name="ParametersListSection" ShowButton="false"/>
+    <Section Description="Tipi oggetto associati" Legend="Tipi oggetto associati" LoadOpened="true" Name="TipiOggettoListSection" ShowButton="false"/>
+
+    <!-- SET PARAMETRI -->
+    <Section Description="INSERIMENTO SET PARAMETRI" Legend="Inserimento set di parametri" LoadOpened="true" Name="InserimentoSetParametriSection" ShowButton="true"/>
+    <Fields Name="InserimentoSetParametri" Description="Inserimento set di parametri">
+        <Input Name="nm_set_param_trasf" Description="Nome" Type="STRING" MaxLength="95"/>
+        <Input Name="ds_set_param_trasf" Description="Descrizione" Type="STRING" MaxLength="250"/>
+        <ComboBox Name="fl_set_param_ark" Description="Tipologia" Type="STRING" AddBlank="false"/>
+    </Fields>
+    
+    <Section Description="DETTAGLIO SET PARAMETRI" Legend="Dettaglio Set di parametri" LoadOpened="true" Name="ParametersSetSection" ShowButton="true"/>
+    <Fields Name="ParametersSetDetail" Description="Dettaglio Set di parametri">
+        <Input Name="id_set_param_trasf" Description="Id" Type="INTEGER" Hidden="true"/>
+        <Input Name="nm_set_param_trasf" Description="Nome" Type="STRING" MaxLength="95"/>
+        <Input Name="ds_set_param_trasf" Description="Descrizione" Type="STRING" MaxLength="250"/>
+        <ComboBox Name="fl_set_param_ark" Description="Tipologia" Type="STRING" AddBlank="false"/>
+        <Input Name="nm_xfo_trasf" Description="Trasformazione di appartenenza" Type="STRING"/>
+        
+        <Button Name="addParameter" Description="Aggiungi un parametro" Type="STRING"/>
+        <Button Name="updateParametersSetsFromSetDetail" Description="Aggiorna i set parametri" Type="STRING"/>
+    </Fields>
+    
+    <List Name="ParametersSetList" Description="">
+        <Input Name="nm_set_param_trasf" Description="Nome" Type="STRING" />
+        <Input Name="ds_set_param_trasf" Description="Descrizione" Type="STRING" />
+        <ComboBox Name="fl_set_param_ark" Description="Tipologia" Type="STRING" AddBlank="false"/>
+    </List>
+    
+    <!-- PARAMETRI -->
+    <Fields Name="InserimentoParametro" Description="Aggiungi un parametro">
+        <ComboBox Name="nm_param_trasf" Description="Nome" Type="STRING" AddBlank="false" MaxLength="250"/>
+        <Input Name="ds_param_trasf" Description="Descrizione" Type="STRING" MaxLength="250"/>
+        <ComboBox Name="ti_param_trasf" Description="Tipo" Type="STRING" AddBlank="false"/>
+        <Input Name="ds_valore_trasf" Description="Valore di default" Type="STRING" MaxLength="1000"/>
+    </Fields>
+    
+    <List Name="ParametersList" Description="">
+        <Input Name="nm_param_trasf" Description="Nome" Type="STRING" />
+        <Input Name="ds_param_trasf" Description="Descrizione" Type="STRING" />
+        <ComboBox Name="ti_param_trasf" Description="Tipo" Type="STRING" AddBlank="false"/>
+        <Input Name="ds_valore_param" Description="Valore di default" Type="STRING"/>
+    </List>
+    
+    <!-- MEV 16170 -->
+    <Section Description="Monitoraggio server trasformazioni" Legend="Monitoraggio server trasformazioni" LoadOpened="true" Name="MonitoraggioServerTrasformazioniSection" ShowButton="true"/>
+    <Fields Name="MonitoraggioServerTrasformazioniDetail" Description="Monitoraggio server trasformazioni">
+        <ComboBox Name="fl_set_server" Description="Server selezionato" Type="STRING" AddBlank="false"/>
+        <Button Name="updateKettleServersStatus" Description="Aggiorna" Type="STRING"/>
+    </Fields>
+    
+    <Section Description="Trasformazioni in corso" Legend="Trasformazioni in corso" LoadOpened="true" Name="MonitoraggioServerTrasformazioniInCorsoSection" ShowButton="true"/>
+    <List Name="StatoTrasformazioniInCorsoList" Description="" hideInsertButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="cd_key_object" Description="Nome oggetto" Type="STRING" />
+        <Input Name="nm_versatore" Description="Versatore" Type="STRING" />
+        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="nm_trasf" Description="Nome trasformazione" Type="STRING" />
+        <Input Name="ds_stato_trasf" Description="Stato trasformazione" Type="STRING" />
+        <Input Name="dt_inizio_trasf" Description="Data inizio trasformazione" Type="DATETIME" />
+        <Input Name="dt_fine_trasf" Description="Data fine " Type="DATETIME" />
+    </List>
+    
+    <Section Description="Trasformazioni in coda" Legend="Trasformazioni in coda" LoadOpened="true" Name="MonitoraggioServerTrasformazioniInCodaSection" ShowButton="true"/>
+    <List Name="StatoTrasformazioniInCodaList" Description="" hideInsertButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="cd_key_object" Description="Nome oggetto" Type="STRING" />
+        <Input Name="nm_versatore" Description="Versatore" Type="STRING" />
+        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="nm_trasf" Description="Nome trasformazione" Type="STRING" />
+        <Input Name="ds_stato_trasf" Description="Stato trasformazione" Type="STRING" />
+        <Input Name="dt_inizio_trasf" Description="Data inizio trasformazione" Type="DATETIME" />
+        <Input Name="dt_fine_trasf" Description="Data fine " Type="DATETIME" />
+    </List>
+    
+    <Section Description="Storico delle trasformazioni" Legend="Storico delle trasformazioni" LoadOpened="true" Name="MonitoraggioServerStoricoTrasformazioniSection" ShowButton="true"/>
+    <List Name="StatoTrasformazioniStoricoList" Description="" hideInsertButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="cd_key_object" Description="Nome oggetto" Type="STRING" />
+        <Input Name="nm_versatore" Description="Versatore" Type="STRING" />
+        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />
+        <Input Name="nm_trasf" Description="Nome trasformazione" Type="STRING" />
+        <Input Name="ds_stato_trasf" Description="Stato trasformazione" Type="STRING" />
+        <Input Name="dt_inizio_trasf" Description="Data inizio trasformazione" Type="DATETIME" />
+        <Input Name="dt_fine_trasf" Description="Data fine trasformazione" Type="DATETIME" />
+    </List>
+    
+</Form>

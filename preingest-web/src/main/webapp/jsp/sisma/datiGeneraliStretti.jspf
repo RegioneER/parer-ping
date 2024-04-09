@@ -1,0 +1,40 @@
+<slf:section name="<%=SismaForm.DatiGeneraliSismaSection.NAME%>" styleClass="importantContainer containerLeft w70">  
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.SOGGETTO_ATTUATORE_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.NATURA_SOGGETTO_ATTUATORE_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DS_TIPO_FINANZIAMENTO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30"  />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.CODICE_INTERVENTO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DENOMINAZIONE_INTERVENTO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.ENTE_PROPRIETARIO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.NATURA_ENTE_PROPRIETARIO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.UBICAZIONE_COMUNE_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.UBICAZIONE_PROVINCIA_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.TI_ATTO_OUT %>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.ANNO_OUT %>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.NUMERO_OUT %>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.CD_KEY_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DS_FASE_SISMA_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DS_STATO_PROGETTO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.OGGETTO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DT_CREAZIONE_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.TI_STATO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />                           
+    <sl:newLine />
+    <slf:lblField name="<%=SismaForm.DatiGeneraliOutput.DT_STATO_OUT%>" width="w100" controlWidth="w70" labelWidth="w30" />
+    <sl:newLine />
+</slf:section> 

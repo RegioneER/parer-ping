@@ -1,0 +1,656 @@
+<Form Description="Amministrazione" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
+ 
+    <!-- Sezioni Visualizzazione -->
+    <Section Name="ambientePing" Description="" Legend="Dettaglio Ambiente" ShowButton="false" LoadOpened="true"/>
+    <Section Name="gestioneAmbienti" Description="" Legend="Gestione Ambienti" ShowButton="false" LoadOpened="true"/>
+    <Section Name="gestioneVersatori" Description="" Legend="Gestione Versatori" ShowButton="false" LoadOpened="true"/>
+    <Section Name="filtriRicercaCode" Description="" Legend="Filtri ricerca code" ShowButton="false" LoadOpened="true"/>
+    <Section Name="corrispondenzaSacer" Description="" Legend="Struttura corrispondente in Sacer" ShowButton="false" LoadOpened="true" />
+    <Section Name="utenteSacer" Description="" Legend="Utente versatore in Sacer" ShowButton="false" LoadOpened="true" />
+    <Section Name="versatoriPingRic" Description="" Legend="Versatori" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatoriPingNoTitle" Description="" Legend="" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatoriPing" Description="" Legend="Dettaglio Versatore" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatore" Description="" Legend="Versatore" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatoreCorrenteSection" Description="" Legend="Versatore corrente" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatoreTrasfSection" Description="" Legend="Versatore per cui generare oggetti" ShowButton="false" LoadOpened="true"/>
+    <Section Name="corrispondenzaVersatoriPing" Description="" Legend="Corrispondenza Versatori Sacer" ShowButton="false" LoadOpened="true"/>
+    <Section Name="tipoObjPing" Description="" Legend="Tipo Oggetto" ShowButton="false" LoadOpened="true"/>
+    <Section Name="tipoFileObjPing" Description="" Legend="Tipo File Oggetto" ShowButton="false" LoadOpened="true"/>
+    <Section Name="tipoFileObjXsd" Description="" Legend="Tipo File" ShowButton="false" LoadOpened="true"/>
+    <Section Name="sopClassDicom" Description="" Legend="Dettaglio SOP Class" ShowButton="false" LoadOpened="true"/>
+    <Section Name="xsdDati" Description="" Legend="Dettaglio Xsd Dati" ShowButton="false" LoadOpened="true"/>
+    <Section Name="attribDati" Description="" Legend="Dettaglio Attributo" ShowButton="false" LoadOpened="true"/>
+    <Section Name="configurazioneInSacer" Description="" Legend="Configurazione in Sacer" ShowButton="false" LoadOpened="true"/>
+    <Section Name="statoVersamentoOggettoSection" Description="" Legend="Stato Versamento Oggetto" ShowButton="false" LoadOpened="true"/>
+    <Section Name="tipoOggettoDaTrasfSection" Description="" Legend="Tipo oggetto da trasformare" ShowButton="false" LoadOpened="true"/>
+    <Section Name="versatoreSection" Description="" Legend="Versatore per cui si generano oggetti" ShowButton="false" LoadOpened="true"/>
+    <Section Name="parametriSection" Description="" Legend="Set parametri" ShowButton="false" LoadOpened="true"/>
+    <Section Name="valoreParametriSection" Description="" Legend="Valore parametri" ShowButton="false" LoadOpened="true"/>
+    <Section Name="caricaParametriSection" Description="" Legend="Carica parametri da file" ShowButton="false" LoadOpened="true"/>
+    <Section Name="nomeAmbienteSection" Description="" Legend="Ambiente" ShowButton="false" LoadOpened="true"/>
+    <Section Name="nomeVersatoreSection" Description="" Legend="Versatore" ShowButton="false" LoadOpened="true"/>
+    <Section Name="nomeTipoOggettoSection" Description="" Legend="Tipo oggetto" ShowButton="false" LoadOpened="true"/>
+    
+    <Section Name="enteSiamSection" Description="" Legend="Enti di appartenenza" ShowButton="false" LoadOpened="true"/>
+    <Section Name="enteConvenzionatoSection" Description="" Legend="Ente convenzionato" ShowButton="false" LoadOpened="true"/>
+    <Section Name="fornitoreEsternoSection" Description="" Legend="Fornitore esterno/soggetto attuatore" ShowButton="false" LoadOpened="true"/>
+    <Section Name="dateEntiSection" Description="" Legend="" ShowButton="false" LoadOpened="true"/>
+    <Section Name="precedentiAppartenenzeAmbientiSection" Description="" Legend="Precedenti appartenenze ad ambienti" ShowButton="false" LoadOpened="true"/>
+
+    <Section Name="ambienteSection" Description="" Legend="Ambiente" ShowButton="false" LoadOpened="true" />
+    <Section Name="pathFtpSection" Description="" Legend="Path ftp" ShowButton="false" LoadOpened="true" />
+    <Section Name="corrispondenzaSacerSection" Description="" Legend="Corrispondenza in Sacer" ShowButton="false" LoadOpened="true" />
+    <Section Name="corrispondenzaSacerTipoObjSection" Description="" Legend="Corrispondenza in Sacer" ShowButton="false" LoadOpened="true" />
+ 
+    <Tab Name="VersTab" Description="Vers Tab">
+        <TabElement Name="PigTipoObject" Description="Tipi Oggetto" /> 
+        <TabElement Name="PigSopClassDicomVers" Description="Lista Sop Class" /> 
+        <!--<TabElement Name="CorrispondenzeSacerVersTab" Description="Corrispondenze in SACER" />-->
+    </Tab>
+    
+    <Tab Name="TipoObjTab" Description="Tab Tipo Obj">
+        <TabElement Name="PigTipoFileObject" Description="Tipo File" /> 
+        <TabElement Name="PigXsdDatiSpec" Description="Versioni XSD" /> 
+        <!--<TabElement Name="CorrispondenzeSacerTipoOggettoTab" Description="Corrispondenze in SACER" />-->
+        <TabElement Name="VersatoriGenerazioneOggettiTab" Description="Versatori per cui si generano oggetti" />        
+    </Tab>
+    
+    <Tab Name="TipoFileObjTab" Description="Tab Tipo File Obj">
+        <TabElement Name="XsdAssociatiTab" Description="Lista Xsd associati" />
+    </Tab>
+
+    <Fields Name="VisAmbienteVers" Description="Visualizza Ambienti" >
+        <Input Type="STRING" Description="Nome" Name="nm_ambiente_vers" />
+        <Button Name="visAmbienteButton" Description="Ricerca" Type="STRING"/>
+    </Fields>
+  
+    <Fields Name="VisVers" Description="Filtri versatore" >
+        <Input Type="STRING" Description="Nome" Name="nm_vers" />
+        <Input Type="INTEGER" Description="Id Versatore" Name="id_vers" />
+        <ComboBox Type="STRING" Description="Ambiente" Name="nm_ambiente_vers"  WithSearchComp="true"/>
+        <ComboBox Type="STRING" Description="Tipo versatore" Name="nm_tipo_versatore" />
+        <ComboBox Type="INTEGER" Description="Ambiente Sacer" Name="nm_ambiente_sacer" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Ente Sacer" Name="nm_ente_sacer" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Struttura Sacer" Name="nm_strut_sacer"  WithSearchComp="true"/>
+        <ComboBox Type="STRING" Description="UserID Sacer" Name="nm_userid_sacer"  WithSearchComp="true"/> 
+        <ComboBox Type="STRING" Description="Ambiente" Name="nm_ambiente_ente_convenz" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="STRING" Description="Ente" Name="nm_ente_convenz" WithSearchComp="true"/>
+        <Button Name="visVersButton" Description="Ricerca" Type="STRING"/>
+        <Button Name="importaVersatoreButton" Description="Importa versatore" Type="STRING"/>
+    </Fields>
+ 
+    <Fields Name="VisSopClass" Description="Visualizza Sop Class" >
+        <Input Type="STRING" Description="Codice Sop Class" Name="cd_sop_class_dicom" />
+        <Input Type="STRING" Description="Descrizione Sop Class" Name="ds_sop_class_dicom" />
+        <Button Name="visSopClassButton" Description="Ricerca" Type="STRING"/>
+    </Fields>
+ 
+    <Fields Name="AmbienteVers" Description="Dettaglio Ambiente" >
+        <Input Type="INTEGER" Description="Id ambiente versatore" Name="id_ambiente_vers" Hidden="true" />
+        <Input Type="STRING" Description="*Nome" Name="nm_ambiente_vers" />
+        <Input Type="STRING" Description="*Descrizione" Name="ds_ambiente_vers" />
+        <TextArea Name="ds_note" Description="Note" Type="STRING" Rows="10" Cols="10" MaxLength="254"/> 
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val" Required="true"/>
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" Required="true"/>
+        <ComboBox Name="id_ambiente_ente_convenz" Description="Ambiente ente gestore" Type="INTEGER" Trigger="true" Required="true"/>
+        <ComboBox Name="id_ente_gestore" Description="Ente gestore" Type="INTEGER" Trigger="true" Required="true"/>
+        <Input Name="nm_ente_gestore" Description="Ente gestore" Type="STRING" Readonly="true" Required="true" />
+        <ComboBox Name="id_ente_conserv" Description="Ente conservatore" Type="INTEGER" Required="true" />
+        <Input Name="nm_ente_conserv" Description="Ente conservatore" Type="STRING" Readonly="true" Required="true"/>
+        <Button Name="logEventiAmbiente" Description="Log eventi" Type="STRING"/>
+    </Fields>
+ 
+    <Fields Name="Vers" Description="Dettaglio Versatore" >
+        <Input Type="INTEGER" Description="Id versatore" Name="id_vers" Readonly="true"/>
+        <ComboBox Type="STRING" Description="*Tipologia" Name="tipologia" Trigger="true" />
+        <Input Type="STRING" Description="*Nome" Name="nm_vers" Trigger="true" />
+        <Input Type="STRING" Description="*Descrizione" Name="ds_vers" />
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val_vers" />
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val_vers" />
+        <ComboBox Type="INTEGER" Description="*Ambiente" Name="id_ambiente_vers" Trigger="true"/>        
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers" />
+        <Input Type="DATE" Description="Appartenenza all'ambiente da" Name="dt_ini_val_appart_ambiente" Required="true"/>
+        <Input Type="DATE" Description="a" Name="dt_fin_val_appart_ambiente" Required="true"/>
+        
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_ente_convenz_ec" Trigger="true" WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Ente convenzionato" Name="id_ente_convenz_ec" Trigger="true" WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Fornitore esterno" Name="id_ente_convenz_fe" Trigger="true" WithSearchComp="true"/>
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val_appart_ente_siam" />
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val_appart_ente_siam" />
+        <CheckBox Type="STRING" Description="Archivio restituito" Name="fl_archivio_restituito" />
+        <CheckBox Type="STRING" Description="Cessato" Name="fl_cessato" />
+        
+        <Input Type="STRING" Description="Input" Name="ds_path_input_ftp" Readonly="true" />
+        <Input Type="STRING" Description="Output" Name="ds_path_output_ftp" Readonly="true" />
+        <Input Type="STRING" Description="Trasformazioni" Name="ds_path_trasf" Readonly="true" />
+        
+        <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Trigger="true"  WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Ambiente/Ente/struttura Sacer" Name="id_organiz_iam"  WithSearchComp="true"/>
+        
+        <Button Name="associaSopClassButton" Description="Associa SOP Class" Type="STRING"/>
+        <TextArea Name="bl_xml_vers" Description="Xml importazione" Type="STRING" Rows="20" Cols="100" MaxLength="10000" />
+        <Button Name="cessaVersatore" Description="Cessazione versatore" Type="STRING"/>
+        <Button Name="esportaVersatore" Description="Esporta versatore" Type="STRING"/>
+        <Button Name="importaVersatore" Description="Importa versatore" Type="STRING"/>
+        <Button Name="duplicaVersatore" Description="Duplica versatore" Type="STRING"/>
+        <Button Name="logEventi" Description="Log eventi" Type="STRING"/>
+        <Input Name="ds_file_xml_versatore" Description="File xml contenente la configurazione del versatore" Type="FILE" Required="true"/>
+        <Input Type="STRING" Description="Stato cartelle versatore" Name="ti_stato_cartelle"/>
+    </Fields>
+    
+    <List Name="EnteConvenzOrgList" Description="Enti di appartenenza" >
+        <Input Name="id_ente_convenz_org" Description="ID" Type="INTEGER" Hidden="true"/>
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_ente_convenz" />
+        <Input Type="STRING" Description="Ente" Name="nm_ente_siam" />
+        <Input Type="STRING" Description="Ambito territoriale" Name="ds_tree_cd_ambito_territ" />
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val" Required="true"/>
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" Required="true"/>        
+    </List>
+    
+    <Fields Name="EnteConvenzionato" Description="Ente convenzionato"  WithSearchComp="true">
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_ente_convenz" />
+        <ComboBox Type="INTEGER" Description="Ente convenzionato" Name="id_ente_convenz" />
+        <CheckBox Type="STRING" Description="Convenzionato" Name="convenzionato" Readonly="true"/>
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val" Required="true"/>
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" Required="true"/>
+    </Fields>
+    
+    <Fields Name="FornitoreEsterno" Description="Fornitore esterno" >
+        <ComboBox Type="INTEGER" Description="Fornitore esterno" Name="id_ente_convenz" />
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val" Required="true"/>
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" Required="true"/>
+    </Fields>
+    
+    <Fields Name="VersatoreCorrente" Description="" >
+        <Input Type="INTEGER" Description="Id" Name="id_vers_da_trasf" Readonly="true" Alias="id_vers"/>
+        <Input Type="STRING" Description="Nome" Name="nm_vers_da_trasf" Readonly="true" Alias="nm_vers"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_vers_da_trasf" Readonly="true" Alias="ds_vers"/>
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers_da_trasf" Readonly="true" Alias="nm_ambiente_vers"/>
+    </Fields>
+    
+    <Fields Name="VersatoreTrasf" Description="Dettaglio versatore per cui generare oggetti" >
+        <ComboBox Type="INTEGER" Description="Ambiente" Name="nm_ambiente_vers_trasf" Trigger="true" Required="true" Alias="id_ambiente_vers"/>
+        <ComboBox Type="INTEGER" Description="Nome" Name="nm_vers_trasf" Trigger="true" Required="true" Alias="id_vers"/>
+        <Input Type="STRING" Description="Descrizione" Name="ds_vers_trasf" Readonly="true" Alias="ds_vers"/>
+    </Fields>
+ 
+    <!--    <Fields Name="CorrispondenzaSacerVersatoreDetail" Description="Dettaglio corrispondenza Sacer per versatore" >
+        <Input Type="INTEGER" Description="Id corrispondenza" Name="id_dich_vers_sacer" Hidden="true" />
+        <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Required="true" Trigger="true" />
+        <ComboBox Type="INTEGER" Description="Ambiente/Ente/Struttura Sacer" Name="id_organiz_iam" Required="true" />
+        <Input Type="STRING" Description="User Sacer" Name="nm_userid_sacer" Required="true"/>
+        <Input Type="PASSWORD" Description="Password user Sacer" Name="cd_password_sacer" Required="true"/>
+    </Fields>-->
+ 
+    <!-- Vanno creati i bottoni la gestione in caso javascript sia disattivato -->
+    <ButtonList Name="VersatoreCustomMessageButtonList" Description="MessageBox" >  
+        <Button Secure="false" Name="confermaModificheVersatore" Description="Si" Type="STRING" />
+        <Button Secure="false" Name="annullaModificheVersatore" Description="No" Type="STRING" />
+    </ButtonList>
+ 
+    <Fields Name="TipoObject" Description="Dettaglio Tipo Oggetto" >
+        <Input Type="INTEGER" Description="Id tipo oggetto" Name="id_tipo_object" Hidden="true" />
+        <Input Type="STRING" Description="Nome" Name="nm_vers" />
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers" />
+        <Input Type="STRING" Description="*Nome" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="*Descrizione" Name="ds_tipo_object" />
+        <ComboBox Type="STRING" Description="*Categoria oggetto" Name="ti_vers_file" Trigger="true" />
+        <ComboBox Type="STRING" Description="Tipo Calcolo Unità Documentaria" Name="ti_calc_key_unita_doc" />
+        <ComboBox Type="STRING" Description="*Controllo Hash" Name="fl_contr_hash" />
+        <Input Type="STRING" Description="Nome Registro in Sacer" Name="cd_registro_unita_doc_sacer" />
+        <Input Type="STRING" Description="Nome Tipologia Unità Documentaria in Sacer" Name="nm_tipo_unita_doc_sacer" />
+        <ComboBox Type="STRING" Description="Forza Accettazione" Name="fl_forza_accettazione_sacer" />
+        <ComboBox Type="STRING" Description="Forza Conservazione" Name="fl_forza_conservazione" />
+        <ComboBox Type="STRING" Description="Forza Collegamento" Name="fl_forza_collegamento" />
+        <ComboBox Type="STRING" Description="Tipo Conservazione" Name="ti_conservazione" />
+        <ComboBox Name="id_trasf" Description="Trasformazione" Type="INTEGER" Trigger="true" />
+        <ComboBox Name="ti_priorita" Description="Priorità trasformazione" Type="STRING" />
+        <ComboBox Name="ti_priorita_versamento" Description="Priorità versamento" Type="STRING" AddBlank="false" />
+        <Input Name="ds_reg_exp_cd_vers" Description="Regular expression" Type="STRING"/>
+        
+        <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Trigger="true" WithSearchComp="true" />
+        <ComboBox Type="INTEGER" Description="Ambiente/Ente/struttura Sacer" Name="id_organiz_iam" WithSearchComp="true"/>
+        
+        <Button Name="logEventiTipoOggetto" Description="Log eventi" Type="STRING"/>
+        <ComboBox Type="STRING" Description="Nascosto su pagine versamento" Name="fl_no_visib_vers_ogg" />
+        <ComboBox Type="STRING" Description="Creare Tipo File automaticamente" Name="fl_crea_tipofile" AddBlank="false" />
+    </Fields>
+    
+    <!--    <Fields Name="CorrispondenzaSacerTipoOggettoDetail" Description="Dettaglio corrispondenza Sacer per tipo oggetto" >
+        <Input Type="INTEGER" Description="Id corrispondenza" Name="id_dich_vers_sacer_tipo_obj" Hidden="true" />
+        <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Required="true" Trigger="true" />
+        <ComboBox Type="INTEGER" Description="Ambiente/Ente/Struttura Sacer" Name="id_organiz_iam" Required="true"/>
+        <Input Type="STRING" Description="User Sacer" Name="nm_userid_sacer" Required="true"/>
+        <Input Type="PASSWORD" Description="Password user Sacer" Name="cd_password_sacer" Required="true"/>
+    </Fields>-->
+    
+    <Fields Name="VersatoreGenerazioneOggettiDetail" Description="Dettaglio versatore per cui si generano oggetti" >
+        <Input Type="INTEGER" Description="Id vers tipo object da trasf" Name="id_vers_tipo_object_da_trasf" Hidden="true" />        
+        <Input Type="STRING" Description="Versatore" Name="versatore_trasf" Required="true"/>
+        <Input Type="INTEGER" Description="Id Tipo oggetto da trasformare" Name="id_tipo_object_da_trasf" Hidden="true" />
+        <Input Type="STRING" Description="Tipo oggetto da trasformare" Name="nm_tipo_object_da_trasf" Required="true"/>
+        <Input Type="STRING" Description="Trasformazione" Name="cd_trasf" Required="true"/>
+        <ComboBox Type="INTEGER" Description="Versatore" Name="id_vers_gen" Required="true" Trigger="true" WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Tipo oggetto generato" Name="id_tipo_object_gen" Required="true" />
+        <Input Type="STRING" Description="Codice con cui identificare il versatore" Name="cd_vers_gen" Required="true"/>
+    </Fields>
+ 
+    <Fields Name="TipoFileObject" Description="Dettaglio Tipo File Oggetto" >
+        <Input Type="INTEGER" Description="Id" Name="id_tipo_file_object" Hidden= "true"/>
+        <Input Type="STRING" Description="Nome" Name="nm_vers" />
+        <Input Type="STRING" Description="Nome" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="*Nome" Name="nm_tipo_file_object" />
+        <Input Type="STRING" Description="*Descrizione" Name="ds_tipo_file_object" />
+        <Input Type="STRING" Description="Nome Tipo Documento" Name="nm_tipo_doc_sacer" />
+        <Input Type="STRING" Description="Versamento Sacer" Name="fl_vers_sacer_asinc" />
+        <ComboBox Type="STRING" Description="Tipo Documento" Name="ti_doc_sacer" />
+        <Input Type="STRING" Description="Tipo Struttura Documento" Name="nm_tipo_strut_doc_sacer" />
+        <Input Type="STRING" Description="Tipo Componente" Name="nm_tipo_comp_doc_sacer" />
+        <Input Type="STRING" Description="Formato versato" Name="nm_fmt_file_vers_sacer" />
+        <ComboBox Type="STRING" Description="Verifica Firma Formato" Name="fl_ver_firma_fmt_sacer" Trigger="true" />
+        <Input Type="STRING" Description="Formato calcolato" Name="nm_fmt_file_calc_sacer" />
+        <Input Type="STRING" Description="Formato di Rappresentazione Esteso" Name="ds_fmt_rappr_esteso_calc_sacer" />
+        <Input Type="STRING" Description="Formato di Rappresentazione" Name="ds_fmt_rappr_calc_sacer" />
+        <ComboBox Type="STRING" Description="Calcolo Hash in Sacer" Name="fl_calc_hash_sacer" />
+        <ComboBox Type="STRING" Description="Tipo Calcolo Hash" Name="ti_calc_hash_sacer" />
+        <Input Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+    </Fields>
+  
+    <Fields Name="SopClass" Description="Dettaglio Sop Class" >
+        <Input Type="STRING" Description="Codice Sop Class" Name="cd_sop_class_dicom" />
+        <Input Type="STRING" Description="Descrizione Sop Class" Name="ds_sop_class_dicom" />
+    </Fields>
+ 
+    <Fields Name="SopClassVers" Description="Dettaglio Sop Class Vers" >
+        <Input Type="STRING" Description="Id Sop Class" Name="id_sop_class_dicom" />
+        <Input Type="STRING" Description="Id Vers" Name="id_vers" />
+    </Fields>
+ 
+    <Fields Name="XsdDatiSpec" Description="Dettaglio Xsd Dati Spec" >
+        <Input Type="STRING" Description="*Codice Versione" Name="cd_versione_xsd" MaxLength="100"/>
+        <Input Type="DATE" Description="Data Versione Xsd" Name="dt_versione_xsd" />
+        <Input Type="STRING" Description="Ultimo File Inserito" Name="file_xsd" />
+        <Button Name="scaricaXsdButton" Description="Scarica XSD" Type="STRING" />
+        <Button Name="caricaXsdButton" Description="Carica XSD" Type="STRING" />
+        <TextArea Name="bl_xsd" Description="Dettaglio XSD" Type="STRING" Rows="20" Cols="100" MaxLength="10000" />
+    </Fields>
+ 
+    <Fields Name="AttribDatiSpec" Description="Attrib Dati Spec" >
+        <Input Type="INTEGER" Description="Numero Ordine Attributo" Name="ni_ord" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Nome" Name="nm_attrib_dati_spec" MaxLength="100"/>
+        <Input Type="STRING" Description="Colonna" Name="nm_col_dati_spec" />
+        <ComboBox Type="STRING" Description="Tipo" Name="ti_datatype_col" />
+        <Input Type="STRING" Description="Codice tipo dato" Name="cd_datatype_xsd" />
+        <CheckBox Type="STRING" Description="Diario" Name="fl_filtro_diario" />
+        <CheckBox Type="STRING" Description="Versamento in Sacer" Name="fl_vers_sacer" />
+    </Fields>
+ 
+    <Fields Name="VisCoda" Description="Visualizza messaggi in Coda" >
+        <ComboBox Type="STRING" Description="Nome coda" Name="nm_coda" Required="true" />
+        <ComboBox Type="STRING" Description="Tipo selettore" Name="tipo_selettore" />
+        <Button Name="visCodaButton" Description="Ricerca" Type="STRING"/>
+        <Button Name="inviaSelezionati" Description="Invia selezionati" Type="STRING"/>
+        <Button Name="inviaTutti" Description="Invia tutti" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="SetParametriVersatoreDetail" Description="Dettaglio set parametri versatore" >
+        <Input Type="STRING" Description="Set parametri" Name="nm_set_param_trasf" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_set_param_trasf" /> 
+        <Button Name="eliminaSetParametriVersatore" Description="Reset tutti i valori parametri" Type="STRING"/> 
+        
+        <Input Name="ds_file_csv_parameters" Description="File csv contenente la configurazione dei parametri per il versatore" Type="FILE"/>
+        <Button Name="caricaParametriDaCSV" Description="Carica i parametri da CSV" Type="STRING"/>
+        
+        <Input Name="button_action" Description="" Type="STRING" Hidden="true"/>
+    </Fields>
+    
+    <Fields Name="ValoreParametroVersatoreDetail" Description="Dettaglio valore parametri versatore" >
+        <Input Type="STRING" Description="Parametro" Name="nm_param_trasf" Required="true"/>
+        <Input Type="STRING" Description="Valore" Name="ds_valore_param" />
+        <Button Name="confermaModificaValoreParametroVersatore" Description="Modifica" Type="STRING"/>
+        <Button Name="annullaModificaValoreParametroVersatore" Description="Annulla" Type="STRING"/>
+    </Fields>
+ 
+    <!-- LISTE PER VISUALIZZAZIONE -->
+    <List Name="AmbienteVersList" Description="Ambienti" >
+        <Input Type="INTEGER" Description="Id" Name="id_ambiente_vers" Hidden="true"/>
+        <Input Type="STRING" Description="Nome" Name="nm_ambiente_vers" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_ambiente_vers" />
+        <Input Type="DATE" Description="Data inizio validità" Name="dt_ini_val" />
+        <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" />
+        <Input Name="nm_ente_gestore" Description="Ente gestore" Type="STRING"  />
+        <Input Name="nm_ente_conserv" Description="Ente conservatore" Type="STRING"  />        
+    </List>
+ 
+    <List Name="VersList" Description="Versatori correlati all’Ambiente" >
+        <Input Type="STRING" Description="Nome" Name="nm_vers" />
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers" />
+        <Input Type="STRING" Description="Tipo versatore" Name="nm_tipo_versatore" />
+        <Input Type="STRING" Description="Corrispondenze in Sacer" Name="ds_lista_dich_strut_sacer" />
+        <Input Type="STRING" Description="Enti di appartenenza" Name="ds_ambiente_ente_convenz" />
+        <Link Name="dupVersatore" Description="" Type="STRING" Target="duplicaVersatoreOperation" Tooltip="Duplica Versatore Selezionato" isTargetList="false" />
+    </List>
+    
+    <List Name="PrecedentiAppartenenzeAmbientiList" Description="Precedenti appartenenze ad ambienti" >
+        <Input Type="STRING" Description="Nome" Name="nm_ambiente_vers" />
+        <Input Type="DATE" Description="Data inizio appartenenza" Name="dt_ini_val" />
+        <Input Type="DATE" Description="Data fine appartenenza" Name="dt_fine_val" />
+        <Input Type="STRING" Description="Conservatore" Name="nm_ente_conserv" />
+        <Input Type="STRING" Description="Gestore" Name="nm_ente_gestore" />
+    </List>
+ 
+    <List Name="TipoObjectList" Description="Tipo Obj" >
+        <Input Type="STRING" Description="Nome" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_tipo_object" />
+        <Input Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+    </List>
+   
+    <!--    <List Name="CorrispondenzeSacerVersatoreList" Description="Corrispondenze in SACER per versatore"  >
+        <Input Type="INTEGER" Description="ID" Name="id_dich_vers_sacer" Hidden="true"/>
+        <Input Type="STRING" Description="Tipo dichiarazione" Name="ti_dich_vers" />
+        <Input Type="STRING" Description="Ambiente/Ente/struttura Sacer" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="User Sacer" Name="nm_userid_sacer" />
+    </List>-->
+    
+    <List Name="TipoFileObjectList" Description="Tipo File Obj" >
+        <Input Type="STRING" Description="Nome" Name="nm_tipo_file_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_tipo_file_object" />
+        <Input Type="STRING" Description="Nome Documento Sacer" Name="nm_tipo_doc_sacer" />
+        <Input Type="STRING" Description="Tipo Documento Sacer" Name="ti_doc_sacer" />
+    </List>
+ 
+    <List Name="XsdDatiSpecList" Description="Versioni XSD" >
+        <Input Type="STRING" Description="Versione" Name="cd_versione_xsd" />
+        <Input Type="DATE" Description="Data di attivazione" Name="dt_versione_xsd" />
+    </List>
+    
+    <!--<List Name="CorrispondenzeSacerTipoOggettoList" Description="Corrispondenze in SACER per tipologia oggetto" >
+        <Input Type="INTEGER" Description="ID" Name="id_dich_vers_sacer" Hidden="true"/>
+        <Input Type="STRING" Description="Tipo dichiarazione" Name="ti_dich_vers" />
+        <Input Type="STRING" Description="Ambiente/Ente/struttura Sacer" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="User Sacer" Name="nm_userid_sacer" />
+    </List>-->
+    
+    <List Name="VersatoriGenerazioneOggettiList" Description="Versatori per cui si generano oggetti" >
+        <Input Type="INTEGER" Description="Id versatore" Name="id_vers_tipo_object_da_trasf" Hidden="true"/>        
+        <Input Type="INTEGER" Description="Id Versatore generazione obj" Name="id_vers_gen" />
+        <Input Type="STRING" Description="Versatore" Name="nm_vers_gen" />
+        <Input Type="STRING" Description="Tipo oggetto generato" Name="nm_tipo_object_gen" />
+        <Input Type="STRING" Description="Codice con cui identificare il versatore" Name="cd_vers_gen" />
+    </List>
+    
+    <List Name="SetParametriVersatoreList" Description="Set parametri versatore per cui si generano oggetti" >
+        <Input Type="INTEGER" Description="Id Set parametri" Name="id_set_param_trasf" Hidden="true" />
+        <Input Type="STRING" Description="Set parametri" Name="nm_set_param_trasf" />
+        <Input Type="STRING" Description="Valori parametri" Name="ds_lista_valore_param" />
+    </List>
+    
+    <List Name="ValoreParametriVersatoreList" Description="Lista valori parametri versatore per cui si generano oggetti" >
+        <Input Type="INTEGER" Description="id valore" Name="id_valore_param_trasf" Hidden="true" />
+        <Input Type="INTEGER" Description="id valore set" Name="id_valore_set_param_trasf" Hidden="true" />
+        <Input Type="STRING" Description="Parametro" Name="nm_param_trasf" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_param_trasf" />
+        <Input Type="STRING" Description="Tipo" Name="ti_param_trasf" />
+        <Input Type="STRING" Description="Valore" Name="val_param" />
+        <Link Name="eliminaValoreParametroVersatore" Description="Reset valore parametro" Type="STRING" Tooltip="Reset valore parametro" isTargetList="false" Target="eliminaValoreParametroVersatore" VisibilityProperty="is_not_default"/>
+    </List>
+ 
+    <List Name="AttribDatiSpecList" Description="Attrib Dati Spec" >
+        <Input Type="INTEGER" Description="Numero ordine Attributo" Name="ni_ord" GroupingDecimal="true" />  
+        <Input Type="STRING" Description="Nome" Name="nm_attrib_dati_spec" />
+        <Input Type="STRING" Description="Colonna" Name="nm_col_dati_spec" />
+        <Input Type="STRING" Description="Tipo" Name="ti_datatype_col" />
+        <CheckBox Type="STRING" Description="Diario" Name="fl_filtro_diario" />
+        <CheckBox Type="STRING" Description="Versamento in Sacer" Name="fl_vers_sacer" />
+    </List>
+ 
+    <List Name="SopClassList" Description="Sop Class" >
+        <Input Type="STRING" Description="Codice Sop Class" Name="cd_sop_class_dicom" />
+        <Input Type="STRING" Description="Descrizione Sop Class" Name="ds_sop_class_dicom" />
+    </List>
+ 
+    <List Name="SopClassDispList" Description="Sop Class Disponibili" hideDetailButton="true" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="STRING" Description="Codice Sop Class" Name="cd_sop_class_dicom" />
+        <Input Type="STRING" Description="Descrizione Sop Class" Name="ds_sop_class_dicom" />
+    </List>
+ 
+    <List Name="SopClassToVersList" Description="Sop Class Versamento" hideDetailButton="true" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true" >
+        <Input Type="STRING" Description="Codice Sop Class" Name="cd_sop_class_dicom" />
+        <Input Type="STRING" Description="Descrizione Sop Class" Name="ds_sop_class_dicom" />
+    </List>
+ 
+    <List Name="IdList" Description="Lista Id" >
+        <Input Type="INTEGER" Description="Id Tipo Object" Name="id_tipo_object" />
+        <Input Type="INTEGER" Description="Id Tipo File Object" Name="id_tipo_file_object" />
+        <Input Type="INTEGER" Description="Id Vers" Name="id_vers" />
+    </List>
+ 
+    <List Name="CodaList" Description="Lista coda" hideDetailButton="true" hideInsertButton="true" hideUpdateButton="true">
+        <Link Name="inviaMessaggio" Tooltip="Invia messaggio" Description="" Type="STRING" Target="sendDmqMessage" isTargetList="false"/>
+        <CheckBox Type="STRING" Description="Seleziona" Name="select_msg"/>
+        <CheckBox Name="object_duplicato" Description="Messaggio duplicato" Type="STRING" Readonly="true" />
+        <Input Type="INTEGER" Description="Id oggetto" Name="object_id" />
+        <Input Type="INTEGER" Description="Id unità doc. sessione" Name="unita_doc_session_id" />
+        <Input Type="STRING" Description="Registro" Name="cd_registro_unita_doc_sacer" />
+        <Input Type="INTEGER" Description="Anno" Name="aa_unita_doc_sacer" />
+        <Input Type="STRING" Description="Numero" Name="cd_key_unita_doc_sacer" />
+        <Input Type="STRING" Description="Selettore msg" Name="message_selector" />
+        <Input Type="DATE" Description="Timestamp invio" Name="sent_timestamp" />
+        <Input Type="STRING" Description="Commento assenza consegna" Name="undelivered_comment" />
+        <Input Type="STRING" Description="Motivo assenza consegna" Name="undelivered_reason" />
+        <Input Type="DATE" Description="Timestamp assenza consegna" Name="undelivered_timestamp" />
+        <Input Type="INTEGER" Description="Count" Name="delivery_count" />
+        <Input Type="STRING" Description="Id messaggio" Name="message_id" />
+        <Input Type="STRING" Description="Nome coda" Name="nm_coda" Hidden="true" />
+    </List>
+ 
+    <ButtonList Name="ButtonAllList" Description="">
+        <Button Name="select_all" Description="Aggiungi tutti" Type="STRING"/>
+        <Button Name="deselect_all" Description="Rimuovi tutti" Type="STRING"/>
+    </ButtonList>
+ 
+    <List Name="StatiVersamentoObjectList" Description="Lista stati versamento oggetto" >
+        <Input Type="STRING" Description="Nome" Name="ti_stato_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_ti_stato_object" />
+    </List>
+ 
+    <Fields Name="StatoVersamentoObjectDetail" Description="Dettaglio stato versamento oggetto" >
+        <Input Type="STRING" Description="Nome" Name="ti_stato_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_ti_stato_object" />
+    </Fields>
+    
+    <Section Name="parametriAmministrazioneAmbienteSection" Description="" Legend="Parametri di amministrazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriConservazioneAmbienteSection" Description="" Legend="Parametri di conservazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriGestioneAmbienteSection" Description="" Legend="Parametri di gestione" ShowButton="true" LoadOpened="false"/>
+    
+    <List Name="ParametriAmministrazioneAmbienteList" Description="Parametri di amministrazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente_amm" Description="Valore su ambiente" Type="STRING" />        
+    </List>
+    
+    <List Name="ParametriConservazioneAmbienteList" Description="Parametri di conservazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente_cons" Description="Valore su ambiente" Type="STRING" />        
+    </List>
+    
+    <List Name="ParametriGestioneAmbienteList" Description="Parametri di gestione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente_gest" Description="Valore su ambiente" Type="STRING" />                
+    </List>
+    
+    <ButtonList Name="ParametriAmbienteButtonList" Description="">
+        <Button Name="parametriAmministrazioneAmbienteButton" Description="Parametri di amministrazione" Type="STRING" />
+        <Button Name="parametriConservazioneAmbienteButton" Description="Parametri di conservazione" Type="STRING" />
+        <Button Name="parametriGestioneAmbienteButton" Description="Parametri di gestione" Type="STRING" />
+    </ButtonList>
+    
+    <Fields Name="RicercaParametriAmbiente" Description="RicercaParametri" >
+        <MultiSelect Type="STRING" Description="Funzione" Name="funzione" />    
+        <Button Name="ricercaParametriAmbienteButton" Description="Ricerca" Type="STRING" />
+    </Fields>
+    
+    <Section Name="parametriAmministrazioneVersatoreSection" Description="" Legend="Parametri di amministrazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriConservazioneVersatoreSection" Description="" Legend="Parametri di conservazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriGestioneVersatoreSection" Description="" Legend="Parametri di gestione" ShowButton="true" LoadOpened="false"/>
+    
+    <List Name="ParametriAmministrazioneVersatoreList" Description="Parametri di amministrazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers_amm" Description="Valore su versatore" Type="STRING" />
+    </List>
+    
+    <List Name="ParametriConservazioneVersatoreList" Description="Parametri di conservazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers_cons" Description="Valore su versatore" Type="STRING" />
+    </List>
+    
+    <List Name="ParametriGestioneVersatoreList" Description="Parametri di gestione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers_gest" Description="Valore su versatore" Type="STRING" />
+    </List>
+    
+    <ButtonList Name="ParametriVersatoreButtonList" Description="">
+        <Button Name="parametriAmministrazioneVersatoreButton" Description="Parametri di amministrazione" Type="STRING" />
+        <Button Name="parametriConservazioneVersatoreButton" Description="Parametri di conservazione" Type="STRING" />
+        <Button Name="parametriGestioneVersatoreButton" Description="Parametri di gestione" Type="STRING" />
+    </ButtonList>
+    
+    <Fields Name="RicercaParametriVersatore" Description="RicercaParametri" >
+        <MultiSelect Type="STRING" Description="Funzione" Name="funzione" />    
+        <Button Name="ricercaParametriVersatoreButton" Description="Ricerca" Type="STRING" />
+    </Fields>
+    
+    <Section Name="parametriAmministrazioneTipoOggettoSection" Description="" Legend="Parametri di amministrazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriConservazioneTipoOggettoSection" Description="" Legend="Parametri di conservazione" ShowButton="true" LoadOpened="false"/>
+    <Section Name="parametriGestioneTipoOggettoSection" Description="" Legend="Parametri di gestione" ShowButton="true" LoadOpened="false"/>
+    
+    <List Name="ParametriAmministrazioneTipoOggettoList" Description="Parametri di amministrazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" /> 
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />       
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers" Description="Valore su versatore" Type="STRING" />
+        <Input Name="ds_valore_param_applic_tipo_oggetto_amm" Description="Valore su tipo oggetto" Type="STRING" />
+    </List>
+    
+    <List Name="ParametriConservazioneTipoOggettoList" Description="Parametri di conservazione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" />
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers" Description="Valore su versatore" Type="STRING" />
+        <Input Name="ds_valore_param_applic_tipo_oggetto_cons" Description="Valore su tipo oggetto" Type="STRING" />
+    </List>
+    
+    <List Name="ParametriGestioneTipoOggettoList" Description="Parametri di gestione" hideDetailButton="true" hideUpdateButton="true" hideDeleteButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="id_valore_param_applic" Description="Id valore param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Codice parametro" Type="STRING" />
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" />
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" />
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" />
+        <Input Name="ds_valore_param_applic_applic" Description="Valore su applicazione" Type="STRING" />
+        <Input Name="ds_valore_param_applic_ambiente" Description="Valore su ambiente" Type="STRING" />
+        <Input Name="ds_valore_param_applic_vers" Description="Valore su versatore" Type="STRING" />
+        <Input Name="ds_valore_param_applic_tipo_oggetto_gest" Description="Valore su tipo oggetto" Type="STRING" />
+    </List>
+    
+    <ButtonList Name="ParametriTipoOggettoButtonList" Description="">
+        <Button Name="parametriAmministrazioneTipoOggettoButton" Description="Parametri di amministrazione" Type="STRING" />
+        <Button Name="parametriConservazioneTipoOggettoButton" Description="Parametri di conservazione" Type="STRING" />
+        <Button Name="parametriGestioneTipoOggettoButton" Description="Parametri di gestione" Type="STRING" />
+    </ButtonList>
+    
+    <Fields Name="RicercaParametriTipoOggetto" Description="RicercaParametri" >
+        <MultiSelect Type="STRING" Description="Funzione" Name="funzione" />    
+        <Button Name="ricercaParametriTipoOggettoButton" Description="Ricerca" Type="STRING" />
+    </Fields>
+    
+    <!-- Registro parametri -->
+    
+    <List Name="ConfigurationList" Description="Configurazioni" hideDetailButton="true" hideUpdateButton="true">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" MaxLength="40"/>
+        <ComboBox Name="ti_gestione_param" Description="Gestione" Type="STRING" />
+        <Input Name="nm_param_applic" Description="Parametro" Type="STRING" MaxLength="100"/>
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" MaxLength="100" />
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" MaxLength="254"/>
+        <ComboBox Name="ti_valore_param_applic" Description="Tipo valore" Type="STRING" AddBlank="false"/>
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" MaxLength="4000"/>
+        <Input Name="ds_valore_param_applic" Description="Valore applicativo" Type="STRING" />
+        <CheckBox Name="fl_appart_applic" Description="Applicazione" Type="STRING"/>
+        <CheckBox Name="fl_appart_ambiente" Description="Ambiente" Type="STRING" />
+        <CheckBox Name="fl_appart_vers" Description="Versatore" Type="STRING" />
+        <CheckBox Name="fl_appart_tipo_oggetto" Description="Entità" Type="STRING" />
+    </List>
+    
+    <Fields Name="Configuration" Description="Registro dei parametri">
+        <ComboBox Name="ti_param_applic_combo" Description="Funzione" Type="STRING"/>
+        <ComboBox Name="ti_gestione_param_combo" Description="Tipo di gestione" Type="STRING"/>
+        <ComboBox Name="fl_appart_applic_combo" Description="Parametri di applicazione" Type="STRING"/>
+        <ComboBox Name="fl_appart_ambiente_combo" Description="Parametri di ambiente" Type="STRING"/>
+        <ComboBox Name="fl_appart_vers_combo" Description="Parametri di versatore" Type="STRING"/>
+        <ComboBox Name="fl_appart_tipo_oggetto_combo" Description="Parametri di entità" Type="STRING"/>
+        <Button Name="load_config_list" Description="Carica Parametri" Type="STRING" />
+        <Button Name="edit_config" Description="Edita Parametri" Type="STRING" />
+        <Button Name="add_config" Description="Aggiungi Parametro" Type="STRING" />
+        <Button Name="save_config" Description="Salva Parametri" Type="STRING" />
+    </Fields>
+    
+</Form>

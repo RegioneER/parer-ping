@@ -1,0 +1,70 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:p="http://www.springframework.org/schema/p" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+     http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd     
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+         
+    <context:annotation-config/>
+    <context:component-scan base-package="it.eng.sacerasi.web.action,it.eng.sacerasi.web.rest.controller"/>
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
+
+    <import resource="/sacerlog-web.xml" />
+    
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <!-- Turn off working out content type based on URL file extension, should fall back to looking at the Accept headers -->
+        <property name="favorPathExtension" value="false" />
+    </bean>    
+    
+    <bean name="paginator" class="it.eng.paginator.ejb.PaginatorImpl"/>
+    <bean name="preingestAuthenticator" class="it.eng.sacerasi.web.security.PreingestAuthenticator"/>
+    <bean name="/View.html" class="it.eng.spagoLite.actions.RedirectAction" scope="prototype"/>
+    <bean name="/Login.html" class="it.eng.spagoLite.actions.security.LoginAction" scope="prototype"/>
+    <bean name="/Logout.html" class="it.eng.spagoLite.actions.security.LogoutAction" scope="prototype"/>
+    <bean name="/Home.html" class="it.eng.sacerasi.web.action.HomeAction" scope="prototype"/> 
+    <bean name="/Amministrazione.html" class="it.eng.sacerasi.web.action.AmministrazioneAction" scope="prototype"/>
+    <bean name="/Monitoraggio.html" class="it.eng.sacerasi.web.action.MonitoraggioAction" scope="prototype"/>
+    <bean name="/GestioneJob.html" class="it.eng.sacerasi.web.action.GestioneJobAction" scope="prototype"/>
+    <bean name="/SceltaOrganizzazione.html" class="it.eng.sacerasi.web.action.SceltaOrganizzazioneAction" scope="prototype"/>
+    <bean name="/VersamentoOggetto.html" class="it.eng.sacerasi.web.action.VersamentoOggettoAction" scope="prototype"/>
+    <bean name="/EntiConvenzionati.html" class="it.eng.sacerasi.web.action.EntiConvenzionatiAction" scope="prototype"/>
+    
+    <!-- xFormer -->
+    <bean name="/Trasformazioni.html" class="it.eng.sacerasi.web.action.TrasformazioniAction" scope="prototype"/>
+    <bean name="/RicercaTrasformazioni.html" class="it.eng.sacerasi.web.action.TrasformazioniAction" scope="prototype"/> 
+    <bean name="/MonitoraggioServerTrasformazioni.html" class="it.eng.sacerasi.web.action.TrasformazioniAction" scope="prototype"/> 
+    
+    <bean name="/StrumentiUrbanistici.html" class="it.eng.sacerasi.web.action.StrumentiUrbanisticiAction" scope="prototype"/>
+    <bean name="/Sisma.html" class="it.eng.sacerasi.web.action.SismaAction" scope="prototype"/>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/jsp/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+
+    <!-- Template per chiamate rest con impostazione del timeout -->
+    <bean class="org.springframework.web.client.RestTemplate">
+        <constructor-arg>
+            <bean class="org.springframework.http.client.SimpleClientHttpRequestFactory"
+                  p:readTimeout="10000"
+                  p:connectTimeout="10000" />
+        </constructor-arg>
+    </bean>
+    <!-- Template da inserire nelle applicazioni che usano SpagoLite e che utilizzano -->
+    <!-- l' Help On line. Deve implementare l'interfaccia IApplicationBasePropertiesSevice -->
+    <bean class="it.eng.sacerasi.web.util.ApplicationBasePropertiesSeviceImpl">
+    </bean>
+
+</beans>

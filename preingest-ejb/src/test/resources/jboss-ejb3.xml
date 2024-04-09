@@ -1,0 +1,167 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<jboss:ejb-jar xmlns:jboss="http://www.jboss.com/xml/ns/javaee"
+               xmlns="http://java.sun.com/xml/ns/javaee"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:c="urn:clustering:1.0"
+               xmlns:p="urn:ejb-pool:1.0"
+               xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss-ejb3-2_0.xsd http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+               version="3.1"
+               impl-version="2.0">
+    <assembly-descriptor>
+        <p:pool>
+            <ejb-name>ConsumerCoda1</ejb-name>
+            <p:bean-instance-pool-ref>coda1-pool</p:bean-instance-pool-ref>
+        </p:pool>
+        <p:pool>
+            <ejb-name>ConsumerCoda2</ejb-name>
+            <p:bean-instance-pool-ref>coda2-pool</p:bean-instance-pool-ref>
+        </p:pool>
+        <p:pool>
+            <ejb-name>ConsumerCoda3</ejb-name>
+            <p:bean-instance-pool-ref>coda3-pool</p:bean-instance-pool-ref>
+        </p:pool>
+	<p:pool>
+	    <ejb-name>ConsumerCodaVH</ejb-name>
+	    <p:bean-instance-pool-ref>coda-verifica-hash-pool</p:bean-instance-pool-ref>
+	</p:pool>
+    </assembly-descriptor>
+    <enterprise-beans>
+        <session>
+            <ejb-name>MonitorCoda</ejb-name>
+            <ejb-class>it.eng.sacerasi.test.MonitorCoda</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/ProducerConnectionFactory</resource-env-ref-name>
+                <jndi-name>java:/JmsXA</jndi-name>
+            </resource-env-ref>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/dmq</resource-env-ref-name>
+                <jndi-name>java:/jms/queue/DLQ</jndi-name>
+            </resource-env-ref>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/queue/ProducerCodaVersQueue</resource-env-ref-name>
+                <jndi-name>java:/jms/queue/ProducerCodaVersQueue</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>MessageSenderEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.job.producerCodaVers.ejb.MessageSenderEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/ProducerConnectionFactory</resource-env-ref-name>
+                <jndi-name>java:/JmsXA</jndi-name>
+            </resource-env-ref>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/queue/ProducerCodaVersQueue</resource-env-ref-name>
+                <jndi-name>java:/jms/queue/ProducerCodaVersQueue</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>NotificaInAttesaPrelievoEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.ws.notificaInAttesaPrelievo.ejb.NotificaInAttesaPrelievoEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>ProducerCodaVerificaHEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.job.producerCodaVerificaH.ejb.ProducerCodaVerificaHEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/ProducerConnectionFactory</resource-env-ref-name>
+                <jndi-name>java:/JmsXA</jndi-name>
+            </resource-env-ref>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/queue/ProducerCodaVersQueue</resource-env-ref-name>
+                <jndi-name>java:/jms/queue/ProducerCodaVersQueue</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>CheckFTPDirTesterEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.web.ejb.CheckFTPDirTesterEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>NotificaTrasferimentoEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>SalvaErrorePrepXml</ejb-name>
+            <ejb-class>it.eng.sacerasi.job.preparaxml.ejb.SalvaErrorePrepXml</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>ControlliInvioOggettoAsincrono</ejb-name>
+            <ejb-class>it.eng.sacerasi.ws.invioOggettoAsincrono.ejb.ControlliInvioOggettoAsincrono</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>SalvaDati</ejb-name>
+            <ejb-class>it.eng.sacerasi.job.recuperoSacer.ejb.SalvaDati</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+
+        <session>
+            <ejb-name>NotificaPrelievoEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.ws.notificaPrelievo.ejb.NotificaPrelievoEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
+            <ejb-name>MonitoraggioEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.web.ejb.MonitoraggioEjb</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+        
+        <session>
+            <ejb-name>AmministrazioneEjb</ejb-name>
+            <ejb-class>it.eng.sacerasi.web.ejb.AmministrazioneEjb</ejb-class>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+
+    </enterprise-beans>
+
+</jboss:ejb-jar>

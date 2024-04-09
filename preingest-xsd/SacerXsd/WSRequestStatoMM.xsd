@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <!--  -->
+  <xs:simpleType name="TokenNonVuotoType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--  -->
+  <!--  -->
+  <!--  -->
+  <xs:element name="IndiceMM">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Versione" type="xs:string"/>
+        <xs:element name="ApplicativoChiamante" type="TokenNonVuotoType"/>
+        <xs:element name="OutputPath" type="TokenNonVuotoType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+    <deployment>
+        <dependencies>
+            <module name="deployment.XADisk.rar"/>
+            <!-- XFormer ws client per kettle -->
+            <module name="org.apache.cxf" export="true" />
+            <module name="org.dom4j" export="true" />                                   
+        </dependencies>
+        <exclusions>
+            <module name="org.apache.xalan" />
+            <module name="org.apache.xerces" />
+            <module name="org.apache.commons.logging"/>
+        </exclusions>
+         
+    </deployment>
+    
+    <sub-deployment name="sacerping-jboss-ejb-${project.version}.jar">
+        <dependencies>
+            <module name="deployment.XADisk.rar" export="true"/>
+            
+            <!-- XFormer ws client per kettle -->
+            <module name="org.apache.cxf" export="true" />
+            <module name="org.apache.cxf.impl" export="true" />
+        </dependencies>
+        <exclusions>
+            <module name="org.apache.xalan" />
+            <module name="org.apache.xerces" />
+            <module name="org.apache.commons.logging"/>
+        </exclusions>
+    </sub-deployment>
+    
+    <sub-deployment name="sacerping-jboss-web-${project.version}.war">
+        <!-- Exclusions allow you to prevent the server from automatically adding some dependencies     -->
+        <dependencies>
+            <!-- XFormer ws client per kettle -->
+            <module name="org.apache.cxf" export="true" />
+        </dependencies>
+        <exclusions>
+            <module name="org.apache.xalan" />
+            <module name="org.apache.xerces" />
+            <module name="org.apache.commons.logging"/>
+        </exclusions>
+    </sub-deployment>
+</jboss-deployment-structure>

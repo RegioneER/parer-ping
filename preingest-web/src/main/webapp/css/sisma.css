@@ -1,0 +1,56 @@
+.ui-progressbar-value {
+    background: yellow !important;
+    background-color: #FFFFFF;
+    color: #00FF99;    
+    opacity: 0.99;                
+}         
+.ui-progressbar {
+    background: #FF0000;
+    background-color: #2288FF;
+    color: #00FF00;
+    opacity: 0.99;                
+}            
+
+th {
+    background-color: #676F7A;
+    color: #ffffff;
+}
+
+table.grid {
+    width : 100%;
+
+}
+
+tr:nth-child(odd) { background-color: #ffffff; }
+tr:nth-child(even) { background-color: #e3e3e3; }
+
+input.pulsanteUpload {
+    background-color: #4450FF;
+    color: white;
+    font-weight: bold;
+    font-size: 10px;
+    width: auto;
+    border: 0px none;
+    height: 20px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    margin-left: 3px;
+    border-radius: 3px 3px 3px 3px;                
+}  
+
+a.DownloadSisma { 
+    background-image: url("../img/toolBar/download.png");                
+    background-repeat: no-repeat;
+    padding-right : 1.5em;
+    text-decoration: none;
+    display: inline-block;
+    width: 22px;
+    height: 24px;	
+    text-align: center;  
+    background-position: top center;
+}      
+scritteRosse {
+    color: #07752C;
+}

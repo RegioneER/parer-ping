@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Gestione Job" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd">
+    <Fields Name="PreparaXMLSACER" Description="a" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />
+        <Button Name="startPreparaXMLSACER" Description="Start" Type="STRING"/>
+        <Button Name="startOncePreparaXMLSACER" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopPreparaXMLSACER" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="ProducerCodaVersamento" Description="Elenco campi creazione indici" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />        
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />
+        <Button Name="startProducerCodaVersamento" Description="Start" Type="STRING"/>
+        <Button Name="startOnceProducerCodaVersamento" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopProducerCodaVersamento" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="RecuperaErroriCoda" Description="Elenco campi verifica firme" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" /> 
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />       
+        <Button Name="startRecuperaErroriCoda" Description="Start" Type="STRING"/>
+        <Button Name="startOnceRecuperaErroriCoda" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopRecuperaErroriCoda" Description="Stop" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="RecuperaVersErr" Description="Elenco campi recupera versamenti in errore e in timeout" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />      
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />  
+        <Button Name="startRecuperaVersErr" Description="Start" Type="STRING"/>
+        <Button Name="startOnceRecuperaVersErr" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopRecuperaVersErr" Description="Stop" Type="STRING"/>
+    </Fields>
+        
+    <Fields Name="RecuperoSACER" Description="Elenco campi scarico ca" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startRecuperoSACER" Description="Start" Type="STRING"/>
+        <Button Name="startOnceRecuperoSACER" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopRecuperoSACER" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="ProducerCodaVerificaH" Description="Elenco campi producer coda verifica hash" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startProducerCodaVerificaH" Description="Start" Type="STRING"/>
+        <Button Name="startOnceProducerCodaVerificaH" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopProducerCodaVerificaH" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="AllineamentoOrganizzazioni" Description="Elenco campi allineamento organizzazioni" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startAllineamentoOrganizzazioni" Description="Start" Type="STRING"/>
+        <Button Name="startOnceAllineamentoOrganizzazioni" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopAllineamentoOrganizzazioni" Description="Stop" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="InizializzazioneLog" Description="Inizializzazione logging applicativo" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />         
+        <Button Name="startOnceInizializzazioneLog" Description="Esecuzione singola" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="AllineamentoLog" Description="Allineamento eventi logging applicativo da script" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />         
+        <Button Name="startAllineamentoLog" Description="Start" Type="STRING"/>
+        <Button Name="stopAllineamentoLog" Description="Stop" Type="STRING"/>
+        <Button Name="startOnceAllineamentoLog" Description="Esecuzione singola" Type="STRING"/>
+    </Fields>
+    
+    <!-- xFormer forms -->
+    <Section Name="GestioneJobs" Description="" Legend="Lista jobs di xFormer" LoadOpened="true"/>
+    <Section Name="SetupIniziale" Description="" Legend="Setup repository xFormer su Oracle" LoadOpened="true"/>
+    
+    <Fields Name="EseguiTrasformazione" Description="Gestione del job 'Esegui trasformazioni'" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="vt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="vt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startEseguiTrasformazione" Description="Start" Type="STRING"/>
+        <Button Name="startOnceEseguiTrasformazione" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopEseguiTrasformazione" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+    <Fields Name="InviaOggettiGeneratiAPing" Description="Gestione del job 'Invia oggetti generati a PING'" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="vt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="vt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startInviaOggettiGeneratiAPing" Description="Start" Type="STRING"/>
+        <Button Name="startOnceInviaOggettiGeneratiAPing" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopInviaOggettiGeneratiAPing" Description="Stop" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="InvioSU" Description="Invio strumenti urbanistici" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startInvioSU" Description="Start" Type="STRING"/>
+        <Button Name="startOnceInvioSU" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopInvioSU" Description="Stop" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="InvioSisma" Description="Invio progetti ricostruzione" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />        
+        <Button Name="startInvioSisma" Description="Start" Type="STRING"/>
+        <Button Name="startOnceInvioSisma" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopInvioSisma" Description="Stop" Type="STRING"/>
+    </Fields>
+    
+      <!-- NUOVA GESTIONE JOB -->
+    <Section Description="" Legend="Filtri ricerca" LoadOpened="true" Name="FiltriRicercaJobSection" ShowButton="false"/>
+    <Section Description="" Legend="Informazioni job" LoadOpened="true" Name="InfoRiassuntiveJobSection" ShowButton="false"/>
+    <Section Description="" Legend="Stato attuale job" LoadOpened="true" Name="InfoJobSection" ShowButton="false"/>
+    <Section Description="" Legend="" LoadOpened="true" Name="InfoJob2Section" ShowButton="false"/>
+    
+    <Tab Description="Gestione Job" Name="GestioneJobTabs">
+        <TabElement Description="Ricerca" Name="RicercaJobTab"/>
+        <TabElement Description="Amministrazione Job" Name="AmmJobTab"/>        
+    </Tab>
+    
+    <Fields Name="GestioneJobRicercaInfo" Description="Informazioni Job" >
+        <Link Name="ni_tot_job_presenti" Description="Totale job" Type="INTEGER" Target="totJobOperation" Tooltip="Totale Job presenti" isTargetList="false" />
+        <Link Name="ni_tot_job_attivi" Description="Totale job attivi" Type="INTEGER" Target="totJobAttiviOperation" Tooltip="Totale Job attivi" isTargetList="false" />
+        <Link Name="ni_tot_job_disattivi" Description="Totale job disattivi" Type="INTEGER" Target="totJobDisattiviOperation" Tooltip="Totale Job diattivi" isTargetList="false" />
+    </Fields>
+    
+    <Fields Name="GestioneJobRicercaFiltri" Description="Ricerca Job" >
+        <MultiSelect Type="STRING" Description="Ambito" Name="nm_ambito" />        
+        <Input Type="STRING" Description="Descrizione Job" Name="ds_job" />        
+        <MultiSelect Type="STRING" Description="Stato" Name="ti_stato_job" />
+        <Button Description="Ricerca" Name="ricercaGestioneJob" Type="STRING"/>
+        <Button Description="Start massivo" Name="startMassivoGestioneJob" Type="STRING"/>
+        <Button Description="Stop massivo" Name="stopMassivoGestioneJob" Type="STRING"/> 
+        <Button Description="Esecuzione singola massiva" Name="esecuzioneSingolaMassivaGestioneJob" Type="STRING"/>               
+    </Fields>
+    
+     <List Name="GestioneJobRicercaList" Description="Lista Job" >
+        <CheckBox Type="STRING" Description="" Name="job_selezionati" />
+        <Input Type="STRING" Description="Ambito" Name="nm_ambito" />        
+        <Input Type="INTEGER" Description="Ord. esecuzione" Name="ni_ord_exec" />        
+        <Input Type="STRING" Description="Nome" Name="nm_job" Hidden="true"/>        
+        <Link Type="STRING" Description="Descrizione Job" Name="ds_job" Target="apriVisualizzaSchedulazioniJob" Tooltip="Vai a Visualizza Schedulazioni Job" isTargetList="false"/>        
+        <Input Type="STRING" Description="Stato" Name="stato_job" />        
+        <CheckBox Type="STRING" Description="Ultima esecuzione OK" Name="last_exec_ok" Readonly="true" />        
+        <Input Type="DATETIME" Description="Data ultima esecuzione" Name="dt_ultima_esecuzione" />
+        <Input Type="DATETIME" Description="Data prossima attivazione" Name="dt_prossima_attivazione" />        
+        <Link Name="startGestioneJob" Description="Start" Type="STRING" Target="startGestioneJobOperation" Tooltip="Start Job" isTargetList="false" VisibilityProperty="operazione_job_start"/> <!-- Name="startGestioneJob" -->
+        <Link Name="stopGestioneJob" Description="Stop" Type="STRING" Target="stopGestioneJobOperation" Tooltip="Stop Job" isTargetList="false" VisibilityProperty="operazione_job_stop"/> <!-- stopGestioneJob -->
+        <Link Name="esecuzioneSingolaGestioneJob" Description="Esec. singola" Type="STRING" Target="esecuzioneSingolaGestioneJobOperation" Tooltip="Esecuzione singola Job" isTargetList="false" VisibilityProperty="operazione_job_single"/> <!-- esecuzioneSingolaGestioneJob -->
+        <Input Type="STRING" Description="Tipo schedulazione" Name="ti_sched_job" Hidden="true"/>        
+    </List>
+    
+    <List Name="GestioneJobListPerAmm" Description="Lista Job per foto" >
+        <Input Type="STRING" Description="Nome Job" Name="nm_job" />        
+        <Input Type="STRING"  Description="Stato" Name="stato_job" />        
+    </List>
+    
+    <Fields Name="GestioneJobInfo" Description="Informazioni Job" >
+        <Input Type="INTEGER" Description="Totale job" Name="ni_tot_job_presenti" />
+        <Input Type="INTEGER" Description="Totale job attivi" Name="ni_tot_job_attivi" />
+        <Input Type="INTEGER" Description="Totale job disattivi" Name="ni_tot_job_disattivi" />
+        <Button Description="Salva foto" Name="salvaFotoGestioneJob" Type="STRING"/>
+        <Button Description="Disabilita job" Name="disabilitaAllJobs" Type="STRING"/>        
+        <Button Description="Ricarica" Name="ricaricaGestioneJob" Type="STRING"/>        
+    </Fields>
+    
+    <List Name="GestioneJobFotoListPerAmm" Description="Lista Job per foto" >
+        <Input Type="STRING" Description="Nome Job" Name="nm_job" />        
+        <Input Type="STRING" Description="Stato" Name="stato_job" />        
+    </List>
+    
+    <Fields Name="GestioneJobInfo2" Description="Informazioni Job" >
+        <Input Type="INTEGER" Description="Totale job" Name="ni_tot_job_presenti2" />
+        <Input Type="INTEGER" Description="Totale job attivi" Name="ni_tot_job_attivi2" />
+        <Input Type="INTEGER" Description="Totale job disattivi" Name="ni_tot_job_disattivi2" />
+        <Input Type="INTEGER" Description="Totale job non presenti" Name="ni_tot_job_nuovi2" />
+        <Input Type="INTEGER" Description="Totale job presenti SOLO nella foto" Name="ni_tot_job_solo_foto" />
+        <Button Description="Ripristina foto" Name="ripristinaFotoGestioneJob" Type="STRING"/>        
+    </Fields>
+                
+</Form>

@@ -1,0 +1,20 @@
+<%@ page import="it.eng.sacerasi.slite.gen.form.SismaForm" pageEncoding="UTF-8" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${!empty requestScope.customBoxRecuperoErrori}">
+    <div class="messages customBoxRecuperoErrori ">
+        <ul>
+            <li class="message info ">Seleziona lo stato a cui si vuole riportare sisma:</li>
+            <br>
+            <div class="containerLeft w4ctr">
+                <slf:lblField name="<%=SismaForm.RecuperoErrori.TI_NUOVO_STATO%>" colSpan="2" controlWidth="w60"/>
+            </div>            
+            <br>
+            <br>
+        </ul>                   
+    </div>
+    <br>
+    <div class="pulsantieraRecuperoErrori">
+        <slf:doubleLblField name="<%=SismaForm.RecuperoErrori.CONFERMA_RECUPERO_ERRORE%>" name2="<%=SismaForm.RecuperoErrori.ANNULLA_RECUPERO_ERRORE%>" controlWidth="w20" controlWidth2="w20" labelWidth="w5" colSpan="1" />
+    </div> 
+</c:if>

@@ -1,0 +1,31 @@
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="it.eng.sacerasi.slite.gen.form.AmministrazioneForm"%>
+<slf:section name="<%=AmministrazioneForm.VersatoriPing.NAME%>" styleClass="importantContainer">  
+    <slf:lblField name="<%=AmministrazioneForm.Vers.NM_VERS%>" colSpan="4" controlWidth="w40" />
+    <sl:newLine />
+</slf:section>
+<slf:section name="<%=AmministrazioneForm.TipoObjPing.NAME%>" styleClass="importantContainer">  
+    <slf:lblField name="<%=AmministrazioneForm.TipoObject.NM_TIPO_OBJECT%>" colSpan="4" controlWidth="w40" />
+    <sl:newLine />
+</slf:section>
+    <%--    <c:when test="${requestScope.lastPage=='tipoObject'}">
+            
+
+    </c:when>
+    <c:when test="${requestScope.lastPage=='tipoDoc'}">
+        <slf:section name="<%=StrutDatiSpecForm.STipoDoc.NAME%>" styleClass="importantContainer">  
+            <slf:lblField name="<%=StrutDatiSpecForm.TipoDocRif.NM_TIPO_DOC%>" colSpan="4" controlWidth="w20"/>
+        </slf:section>
+
+    </c:when> --%>
+    <c:if test="${requestScope.lastPage eq 'tipoFileObject'}">
+
+
+        <slf:section name="<%=AmministrazioneForm.TipoFileObjXsd.NAME%>" styleClass="importantContainer">  
+            <slf:lblField name="<%=AmministrazioneForm.TipoFileObject.NM_TIPO_FILE_OBJECT%>" colSpan="4" controlWidth="w40" />
+            <sl:newLine />
+        </slf:section>
+
+
+    </c:if>

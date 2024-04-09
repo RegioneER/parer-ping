@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Sisma" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
+                          
+    <List Name="SismaList" Description="Sisma" hideInsertButton="true" >
+        <Input Name="nm_sa" Type="STRING" Description="Soggetto attuatore" Required="false" />
+        <Input Name="ds_tipo_finanziamento" Type="STRING" Description="Linea di finanziamento" Required="false" />
+        <Input Name="codice_intervento" Type="STRING" Description="Intervento" Required="false" />
+        <Input Name="ds_fase_sisma" Type="STRING" Description="Fase progettuale" Required="false"/>
+        <Input Name="stato_progetto" Type="STRING" Description="Stato progetto" Required="false" />
+        <Input Name="ti_stato" Type="STRING" Description="Stato" Required="false" />
+        <Input Name="anno" Type="INTEGER" Description="Anno" Required="false"/>
+        <Input Name="cd_key" Type="STRING" Description="Identificativo" Required="false"/>
+        <Input Name="dt_creazione" Type="DATE" Description="Data creazione" Required="false"/>
+        <Input Name="dimensione" Type="INTEGER" GroupingDecimal="true" Description="Dimensione" Required="false"/>
+        <Input Name="oggetto" Type="STRING" Description="Oggetto" Required="false"/>
+        <Input Name="id_versamento_agenzia" Type="STRING" Description="Id versamento AG" Required="false"/>
+        <Link Name="download_lista" Description="Lista di versamento" Type="STRING" Tooltip="Scarica lista di versamento" isTargetList="false" Target="downloadSismaListOperation" />
+        <Link Name="download" Description="RdV SA Pubblico" Type="STRING" Tooltip="Scarica rapporto di versamento" isTargetList="false" Target="downloadSismaRapportoVersamento" />
+        <Link Name="download_agenzia" Description="Rdv Agenzia" Type="STRING" Tooltip="Scarica rapporto agenzia" isTargetList="false" Target="downloadSismaRapportoAgenzia" />
+    </List>
+    
+    <ButtonList Name="SismaButtonList" Description="Bottoni sisma" >  
+        <Button Name="caricaSisma" Description="Carica progetto" Type="STRING" />
+    </ButtonList>
+    
+    <List Name="DocumentiCaricatiList" Description="Documenti caricati" hideDetailButton="true" hideUpdateButton="true" hideInsertButton="true"  >
+        <Input Name="nm_tipo_documento" Type="STRING" Description="Tipo documento" Required="false"/>
+        <Input Name="nm_file_orig" Type="STRING" Description="Nome file zip caricato" Required="false"/>
+        <CheckBox Name="fl_obbligatorio" Type="STRING" Description="Obbligatorio" Required="false" Readonly="true" />
+        <Input Name="num_files" Type="INTEGER" Description="Numero file contenuti nel file zip" Required="false"/>
+        <Input Name="dimensione" Type="STRING" Description="Dimensione" Required="false"/>
+        <Input Name="cd_err" Type="STRING" Description="Codice errore" Required="false"/>
+        <Input Name="ds_err" Type="STRING" Description="Descrizione Errore" Required="false"/>
+        <Input Name="dt_caricamento" Type="DATETIME" Description="Data caricamento" Required="false"/>
+        <ComboBox Name="ti_verifica_agenzia" Description="Verifica agenzia" Type="STRING" Required="true"/>        
+        <CheckBox Name="fl_esito_verifica" Type="STRING" Description="Stato file zip" Required="false" Readonly="true" />
+        <Link Name="download_bl_report" Description="Risultato verifica" Type="STRING" Tooltip="Scarica il risultato della verifica" isTargetList="false" Target="downloadVerificaReport" />
+    </List>
+    
+    <Section Name="documentiObbligatoriSection" Description="" Legend="Documenti obbligatori" ShowButton="false" LoadOpened="true"/>
+    <Section Name="documentiOpzionaliSection" Description="" Legend="Documenti opzionali" ShowButton="false" LoadOpened="true"/>
+    <Section Name="DatiGeneraliSismaSection" Description="" Legend="Dati generali" ShowButton="false" LoadOpened="true"/>
+    <Section Name="InputDatiSismaSection" Description="" Legend="Progetto ricostruzione" ShowButton="false" LoadOpened="true"/>
+    <Section Name="AltreFasiSection" Description="" Legend="Precedenti fasi progettuali" ShowButton="false" LoadOpened="true"/>
+    <Section Name="DatiAgenziaSection" Description="" Legend="Dati agenzia" ShowButton="false" LoadOpened="true"/>
+    <Section Name="RicercaDatiAgenziaSection" Description="" Legend="Ricerca Dati agenzia" ShowButton="false" LoadOpened="true"/>
+    <Section Name="DatiProfiloArchivisticoSection" Description="" Legend="Profilo archivistico" ShowButton="false" LoadOpened="true"/>
+    <Section Name="DocumentiCaricatiSection" Description="" Legend="Documenti caricati" ShowButton="false" LoadOpened="true"/>
+    <Section Name="AggiuntaDocumentiFacoltativiSection" Description="" Legend="Aggiunta documenti facoltativi" ShowButton="false" LoadOpened="true"/>
+    <Section Name="ErroriRiepilogoSection" Description="" Legend="Errori" ShowButton="false" LoadOpened="true"/>
+    
+    <Wizard Name="InserimentoWizard" Description="Versamento progetto ricostruzione">
+        <Step Name="Sisma" Description="Inserimento Dati"/>
+        <Step Name="UploadDocumenti" Description="Caricamento File"/>
+        <Step Name="Riepilogo" Description="Riepilogo e invio"/>
+    </Wizard>
+    
+    <Fields Name="DatiGeneraliOutput" Description="Dati generali versamento" >
+        <Input Name="soggetto_attuatore_out" Type="STRING" Description="Soggetto attuatore" />
+        <Input Name="natura_soggetto_attuatore_out" Type="STRING" Description="Natura soggetto attuatore" />
+        <Input Name="ds_tipo_finanziamento_out" Type="STRING" Description="Linea di finanziamento" />
+        <Input Name="codice_intervento_out" Type="STRING" Description="Codice intervento" />
+        <Input Name="denominazione_intervento_out" Type="STRING" Description="Denominazione intervento" />
+        <Input Name="ente_proprietario_out" Type="STRING" Description="Ente proprietario" />
+        <Input Name="natura_ente_proprietario_out" Type="STRING" Description="Natura ente proprietario" />
+        <Input Name="ubicazione_comune_out" Type="STRING" Description="Ubicazione comune" />
+        <Input Name="ubicazione_provincia_out" Type="STRING" Description="Ubicazione provincia" />
+        <Input Name="id_sisma_out" Type="INTEGER" Description="Identificativo" Hidden="true"/>
+        <Input Name="cd_key_out" Type="STRING" Description="Identificativo" />
+        <Input Name="dt_creazione_out" Type="DATE" Description="Data creazione" />
+        <Input Name="ti_stato_out" Type="STRING" Description="Stato" />        
+        <Input Name="dt_stato_out" Type="DATETIME" Description="Data stato corrente" />
+        <Input Name="oggetto_out" Type="STRING" Description="Oggetto" Readonly="true"/>
+        <Input Name="ds_fase_sisma_out" Type="STRING" Description="Fase progettuale" />
+        <Input Name="ds_stato_progetto_out" Type="STRING" Description="Stato progetto" />
+        <Input Name="ti_atto_out" Type="STRING" Description="Atto"/>
+        <Input Name="anno_out" Type="STRING" Description="Anno"/>
+        <Input Name="numero_out" Type="STRING" Description="Numero"/>
+    </Fields>
+
+    <Fields Name="DatiGeneraliInput" Description="Dati generali versamento" >
+        <ComboBox Name="id_sisma_finanziamento" Description="Linea di finanziamento" Type="INTEGER" Required="true" />
+        <ComboBox Name="id_sisma_progetti_ag" Description="Intervento" Type="INTEGER" Required="true" />
+        <ComboBox Name="id_sisma_fase_progetto" Description="Fase progettuale" Type="INTEGER" Required="true"/>        
+        <ComboBox Name="id_sisma_stato_progetto" Description="Stato progetto" Type="INTEGER" Required="true"/>        
+        <ComboBox Name="id_sisma_val_atto" Description="Atto" Type="INTEGER" Required="true"/>
+        <ComboBox Name="anno" Description="Anno" Type="STRING" Required="true"/>        
+        <ComboBox Name="fl_intervento_soggetto_a_tutela" Description="Intervento soggetto a tutela" Type="STRING" Required="true"/>        
+        <Input Name="numero" Type="STRING" Description="Numero" Required="true" MaxLength="20"/>
+        <Input Name="data" Type="DATE" Description="Data atto" Required="true" />
+        <Input Name="oggetto" Type="STRING" Description="Oggetto" Required="false" Readonly="true"/>
+        <TextArea Name="ds_descrizione" Type="STRING" Description="Note" Rows="3" Cols="80" Required="false" MaxLength="1024"/>
+        <Input Name="modificato" Type="STRING" Description="Form Modificata" Hidden="true"/>
+        <Button Name="salvaBozza" Description="Salva bozza" Type="STRING"/>
+    </Fields>
+
+    <Fields Name="DatiAgenzia" Description="Dati agenzia" >
+<!--        <Input Name="registro_ag" Type="STRING" Description="Registro" Required="true"  MaxLength="60"/> -->
+        <ComboBox Name="registro_ag" Type="STRING" Description="Registro" Required="true" />
+        <ComboBox Name="anno_ag" Description="Anno" Type="STRING" Required="true"/>        
+        <Input Name="numero_ag" Type="STRING" Description="Numero" Required="true"  MaxLength="20" />
+        <Input Name="data_ag" Type="DATE" Description="Data" Required="true" />
+        <Input Name="classifica_ag" Type="STRING" Description="Classifica" MaxLength="100" />
+        <Input Name="id_fascicolo_ag" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
+        <Input Name="oggetto_fascicolo_ag" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />
+        <Input Name="id_sottofascicolo_ag" Type="STRING" Description="Identificativo sottofascicolo" MaxLength="100" />
+        <Input Name="oggetto_sottofascicolo_ag" Type="STRING" Description="Oggetto sottofascicolo" MaxLength="100" />
+    </Fields>
+    
+    <Fields Name="DatiProfiloArchivistico" Description="Profilo archivistico" >
+        <Input Name="classifica" Type="STRING" Description="Classifica" MaxLength="100" />
+        <Input Name="id_fascicolo" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
+        <Input Name="oggetto_fascicolo" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />
+        <Input Name="id_sottofascicolo" Type="STRING" Description="Identificativo sottofascicolo" MaxLength="100" />
+        <Input Name="oggetto_sottofascicolo" Type="STRING" Description="Oggetto sottofascicolo" MaxLength="100" />
+    </Fields>
+        
+    <ButtonList Name="RiepilogoButtonList" Description="Riepilogo" >  
+        <Button Name="verificaDocumentiSisma" Description="Verifica documenti" Type="STRING" DisableHourGlass="true" />
+        <Button Name="verificaAgenzia" Description="Verifica agenzia" Type="STRING" DisableHourGlass="true" />
+    </ButtonList>
+
+    <ButtonList Name="DettaglioButtonList" Description="Dettaglio" >  
+        <Button Name="versaSisma" Description="Versamento" Type="STRING" />
+        <Button Name="versaInAgenzia" Description="Versa in agenzia" Type="STRING" />
+        <Button Name="riportaInBozza" Description="Riporta in stato Bozza" Type="STRING" />
+        <Button Name="riportaInStatoVersato" Description="Riporta in stato Versato" Type="STRING" />
+        <Button Name="recuperaErrori" Description="Recupera errori" Type="STRING" />
+    </ButtonList>
+    
+    <Fields Name="RecuperoErrori" Description="Finestrella di recupero errori di sisma" >
+        <ComboBox Type="STRING" Description="Nuovo stato" Name="ti_nuovo_stato" />
+        <Button Name="confermaRecuperoErrore" Description="Salva" Type="STRING" />
+        <Button Name="annullaRecuperoErrore" Description="Annulla" Type="STRING" />
+    </Fields>
+    
+    <!-- Filtri oggetti -->
+    <Fields Name="FiltriSisma" Description="Ricerca Progetti ricostruzione" >
+        <ComboBox Type="STRING" Description="Soggetto attuatore" Name="id_soggetto_att" WithSearchComp="true"/>
+        <ComboBox Type="INTEGER" Description="Linea di finanziamento" Name="id_linea_fin" WithSearchComp="true"/>
+        <ComboBox Type="STRING" Description="Intervento" Name="nm_intervento" WithSearchComp="true" />
+        <ComboBox Type="STRING" Description="Fase progettuale" Name="nm_fase_prog" />
+        <ComboBox Type="STRING" Description="Stato progetto" Name="nm_stato_prog" />
+        <ComboBox Type="STRING" Description="Stato" Name="nm_stato" />
+        <ComboBox Type="INTEGER" Description="Anno" Name="anno" />
+        <Input Type="STRING" Description="Identificativo" Name="cd_identificativo" />
+        <Input Type="DATE" Description="Data creazione" Name="dt_creazione"/>
+        <Input Type="STRING" Description="Oggetto" Name="cd_oggetto" />
+        <ComboBox Type="STRING" Description="Registro Agenzia" Name="cd_registro_agenzia" />
+        <ComboBox Type="INTEGER" Description="Anno Agenzia" Name="anno_agenzia" />
+        <Input Type="STRING" Description="Numero Agenzia" Name="cd_num_agenzia" />
+        <Button Type="STRING" Description="Ricerca" Name="ricercaSisma"/>
+    </Fields>
+    
+</Form>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+    <handler-chain>
+   	    <handler>
+            <handler-name>IdpLoginHandler</handler-name>
+            <handler-class>it.eng.sacerasi.ws.handler.IdpLoginHandler</handler-class>
+        </handler>
+         <handler>
+            <handler-name>UUIDLoggerSoapHandler</handler-name>
+            <handler-class>it.eng.spagoCore.util.UUIDLoggerSoapHandler</handler-class>
+        </handler>
+    </handler-chain>
+    
+<!-- questo è l'handler originale. tutte le sue funzioni sono ora svolte da IdpLoginHandler
+che gestisce anche la disattivazione utenti dopo n tentativi errati
+    <handler-chain>
+        <handler>
+            <handler-name>SOAPServerLoginHandler</handler-name>
+            <handler-class>it.eng.spagoLite.security.auth.SOAPServerLoginHandler</handler-class>
+        </handler>
+    </handler-chain>
+-->
+</handler-chains>

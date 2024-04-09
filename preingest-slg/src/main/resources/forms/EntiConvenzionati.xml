@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Enti convenzionati" xmlns="http://www.spagoLite.eng.it/xmlbean/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema" 
+      xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
+    
+    <Section Name="versatoreSection" Description="" Legend="Versatore" ShowButton="false" LoadOpened="true"/>
+    <Section Name="enteSection" Description="" Legend="Ente Siam" ShowButton="false" LoadOpened="true"/>
+    
+    <!-- Versatore di riferimento nel dettaglio di una delle liste seguenti -->    
+    <Fields Name="VersRif" Description="Versatore" >
+        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers" />
+        <Input Type="STRING" Description="Versatore" Name="versatore" Readonly="true"/>
+        <Input Type="INTEGER" Description="id_vers" Name="id_vers" Hidden="true"/>
+        <Input Type="INTEGER" Description="id_ente_convenz" Name="id_ente_convenz" Hidden="true"/>
+    </Fields>
+    
+    <!-- Gestione associazione enti convenzionati -->
+    <List Name="EnteConvenzOrgList" Description="Lista associazione enti convenzionati">
+        <Input Name="id_ente_convenz_org" Description="ID" Type="INTEGER" Hidden="true"/>
+        <Input Name="nm_ambiente_ente_convenz" Description="Ambiente" Type="STRING"/>
+        <Input Name="nm_ente_siam" Description="Ente convenzionato" Type="STRING"/>
+        <CheckBox Type="STRING" Description="Convenzionato" Name="convenzionato" Readonly="true"/>
+        <Input Name="dt_ini_val" Description="Data inizio validità" Type="DATE"/>
+        <Input Name="dt_fine_val" Description="Data fine validità" Type="DATE"/>
+    </List>
+    
+    <Fields Name="EnteConvenzOrg" Description="Associazione versatore - ente">
+        <Input Name="id_ente_convenz_org" Description="ID" Type="INTEGER" Hidden="true"/>
+        <ComboBox Name="id_ambiente_ente_convenz" Description="Ambiente ente convenzionato" Type="INTEGER" Trigger="true" />
+        <ComboBox Name="id_ente_convenz" Description="Ente" Type="INTEGER" Required="true" Trigger="true" />
+        <CheckBox Type="STRING" Description="Convenzionato" Name="convenzionato" Readonly="true"/>
+        <Input Name="dt_ini_val" Description="Data inizio validità" Type="DATE" Required="true"/>
+        <Input Name="dt_fine_val" Description="Data fine validità" Type="DATE" Required="true"/>
+    </Fields>
+</Form>

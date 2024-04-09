@@ -327,7 +327,7 @@
         <module>preingest-jpa</module>
     </modules>
     <scm>
-        <developerConnection>scm:git:git@gitlab.ente.regione.emr.it:parer/jboss/ping.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 </project>

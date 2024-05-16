@@ -18,6 +18,7 @@
 package it.eng.sacerasi.job.coda.helper;
 
 import it.eng.paginator.util.HibernateUtils;
+import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
 import it.eng.sacerasi.common.Constants.StatoUnitaDocSessione;
 import it.eng.sacerasi.common.Constants.StatoVerificaHash;
 import it.eng.sacerasi.entity.PigObject;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -63,6 +65,14 @@ public class CodaHelper {
                 + "WHERE  ses.idSessioneIngest = obj.idLastSessioneIngest " + "AND    ses.tiStato='IN_ATTESA_VERS' "
                 + "ORDER BY obj.tiPrioritaVersamento, ses.dtApertura ASC");
         return q.getResultList();
+    }
+
+    public Stream<PigObject> retrieveObjectsByState(StatoSessioneIngest stato) {
+        Query q = em.createQuery("SELECT obj FROM PigSessioneIngest ses, PigObject obj "
+                + "WHERE ses.idSessioneIngest = obj.idLastSessioneIngest " + "AND ses.tiStato=:statoSessione "
+                + "ORDER BY obj.tiPrioritaVersamento, ses.dtApertura ASC");
+        q.setParameter("statoSessione", stato.name());
+        return q.getResultStream();
     }
 
     public EntityManager getEntityManager() {
@@ -102,7 +112,7 @@ public class CodaHelper {
         properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
         /*
          * Attenzione, Oracle usa multi version control quindi il LockModeType.PESSIMISTIC_WRITE impedisce scritture
-         * concorrenti ma ammette che qualcun altro legga questo record ma senza gli eventuali update fatti in quest
+         * concorrenti ma ammette che qualcun altro legga questo record ma senza gli eventuali update fatti in questa
          * sessione
          */
         return em.find(PigObject.class, pigObjectId, lockModeType, properties);
@@ -350,5 +360,11 @@ public class CodaHelper {
             session.setNiUnitaDocVersErr(BigDecimal.ZERO);
         }
         return session;
+    }
+
+    public void updatePrioritaOggetto(Long idObject, String priorita, String username) {
+        log.debug("Aggiorno la priorita dell'oggetto {} a {}", idObject, priorita);
+        PigObject object = em.find(PigObject.class, idObject);
+        object.impostaPrioritaVersamento(priorita, username);
     }
 }

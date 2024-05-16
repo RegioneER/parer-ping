@@ -38,7 +38,7 @@ import javax.jms.TextMessage;
  *
  * @author Agati_D
  */
-@Stateless(mappedName = "ProducerCodaVersamentoEjb")
+@Stateless(mappedName = "PrioritaEjb")
 @LocalBean
 public class MessageSenderEjb {
     @Resource(mappedName = "jms/ProducerConnectionFactory")

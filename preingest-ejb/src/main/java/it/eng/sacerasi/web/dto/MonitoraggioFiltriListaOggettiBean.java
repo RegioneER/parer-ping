@@ -17,6 +17,7 @@
 
 package it.eng.sacerasi.web.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @author Gilioli_P
  */
-public class MonitoraggioFiltriListaOggettiBean {
+public class MonitoraggioFiltriListaOggettiBean implements Serializable {
 
     private BigDecimal idAmbienteVers;
     private BigDecimal idVers;

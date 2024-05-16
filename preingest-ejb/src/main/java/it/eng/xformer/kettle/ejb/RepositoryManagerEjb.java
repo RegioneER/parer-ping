@@ -51,6 +51,8 @@ import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
 import it.eng.parer.kettle.model.Esito;
 import it.eng.parer.kettle.model.EsitoStatusCodaTrasformazione;
+import it.eng.parer.kettle.model.StatoTrasformazione;
+import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.XfoFileTrasf;
 import it.eng.sacerasi.entity.XfoStoricoTrasf;
@@ -64,21 +66,26 @@ import it.eng.sacerasi.slite.gen.tablebean.XfoTrasfRowBean;
 import it.eng.sacerasi.slite.gen.tablebean.XfoTrasfTableBean;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.util.Transform;
+import it.eng.spagoLite.db.base.BaseTableInterface;
+import it.eng.spagoLite.db.base.row.BaseRow;
+import it.eng.spagoLite.db.base.sorting.SortingRule;
+import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.xformer.common.Constants;
 import it.eng.xformer.dto.RicercaTrasformazioneBean;
 import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.ws.client.KettleWsClient;
 import it.eng.xformer.ws.client.KettleWsExecuteTrasformationClient;
+import java.sql.Timestamp;
 
 /**
  * @author Cappelli_F
  */
-@Stateless(mappedName = "RepositoryManager")
+@Stateless(mappedName = "RepositoryManagerEjb")
 @LocalBean
 @Interceptors({ it.eng.sacerasi.aop.TransactionInterceptor.class })
-public class RepositoryManager {
+public class RepositoryManagerEjb {
 
-    private final Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
+    private final Logger logger = LoggerFactory.getLogger(RepositoryManagerEjb.class);
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
     private ConfigurationHelper configurationHelper;
@@ -86,11 +93,14 @@ public class RepositoryManager {
     @EJB(mappedName = "java:app/SacerAsync-ejb/TrasformazioniHelper")
     private TrasformazioniHelper helper;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManager")
-    private RepositoryManager me;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManagerEjb")
+    private RepositoryManagerEjb me;
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/KettleWsClient")
     private KettleWsClient kwsClient;
+
+    @EJB(mappedName = "java:app/SacerAsync-ejb/TrasformazioniHelper")
+    private TrasformazioniHelper trasformazioniHelper;
 
     @Resource
     private SessionContext context;
@@ -215,63 +225,6 @@ public class RepositoryManager {
                 soppress, zipPackage, kettleId);
     }
 
-    private void updateTransformationInternal(long idTrasf, String name, String description, String enabled,
-            String version, String versionDescription, Date istituz, Date soppress, byte[] zipPackage, String kettleId)
-            throws ParerUserError {
-        try {
-            XfoTrasf trasf = helper.findByIdWithLock(XfoTrasf.class, idTrasf);
-            if (trasf != null) {
-                trasf.setCdTrasf(name);
-                trasf.setDsTrasf(description);
-                trasf.setCdVersioneCor(version);
-                trasf.setDsVersioneCor(versionDescription);
-                if (istituz != null) {
-                    trasf.setDtIstituz(istituz);
-                }
-                if (soppress != null) {
-                    trasf.setDtSoppres(soppress);
-                }
-
-                trasf.setFlAttiva(enabled);
-
-                // salva il nome della cartella della trasformazione come CD_KETTLE_ID
-                trasf.setCdKettleId(kettleId);
-
-                if (zipPackage != null) {
-
-                    if (trasf.getBlTrasf() != null) {
-                        // MEV 21859 - se non riesce a cancellarala dal repository di kettle nessun problema,
-                        // lo segnaliamo però nei log.
-                        try {
-                            me.deleteTransformationFromRepository(trasf.getBlTrasf());
-                        } catch (KettleException ke) {
-                            logger.warn("Cancellazione della trasformazione da kettle fallita: " + ke.getMessage());
-                        }
-                    }
-
-                    removeAuxiliaryFilesFromDb(trasf, true);
-                    insertAuxiliaryFilesIntoDb(zipPackage, trasf);
-                    boolean result = me.insertTransformationInKettleRepository(version + "-" + versionDescription,
-                            zipPackage, trasf);
-
-                    trasf.setBlTrasf(zipPackage);
-                    if (!result) {
-                        throw new KettleException("errore nell'inserimento della trasformazione.");
-                    }
-                }
-            } else {
-                String messaggio = "Eccezione imprevista nell'aggiornamento della trasformazione ";
-                logger.error(messaggio);
-                throw new ParerUserError(messaggio);
-            }
-        } catch (KettleException | IOException ex) {
-            String messaggio = "Eccezione imprevista nell'aggiornamento della trasformazione ";
-            messaggio += ExceptionUtils.getRootCauseMessage(ex);
-            logger.error(messaggio, ex);
-            throw new ParerUserError(messaggio);
-        }
-    }
-
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public boolean deleteTransformation(long idTrasf) throws ParerUserError {
         logger.debug("Eseguo l'eliminazione della trasformazione.");
@@ -355,7 +308,7 @@ public class RepositoryManager {
                                     try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
                                         IOUtils.copy(zipInputStream, fos);
                                     } catch (FileNotFoundException ex) {
-                                        LoggerFactory.getLogger(RepositoryManager.class.getName()).error("Eccezione",
+                                        LoggerFactory.getLogger(RepositoryManagerEjb.class.getName()).error("Eccezione",
                                                 ex);
                                     }
 
@@ -468,9 +421,56 @@ public class RepositoryManager {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(endDate);
-        cal.add(Calendar.DATE, -30);
+        cal.add(Calendar.DATE, -3000);
         Date startDate = cal.getTime();
-        return client.statusCodaTrasformazione(startDate, endDate, 10);
+        return client.statusCodaTrasformazione(startDate, endDate, 1000);
+    }
+
+    public BaseTableInterface<?> createStatoTrasformazioniTable(List<StatoTrasformazione> statiTrasformazione) {
+        BaseTableInterface<?> trasformazioniTable = new BaseTable();
+        for (StatoTrasformazione statoTrasformazione : statiTrasformazione) {
+            BaseRow row = new BaseRow();
+
+            PigObject po = null;
+
+            try {
+                po = trasformazioniHelper.findPigObjectById(statoTrasformazione.getIdOggettoPing());
+            } catch (Exception e) {
+                logger.debug(
+                        "createStatoTrasformazioniTable - oggetto {} non trovato, lista delle trasformazioni corrotta.",
+                        statoTrasformazione.getIdOggettoPing());
+            }
+
+            if (po != null) {
+                row.setString("cd_key_object", po.getCdKeyObject());
+                row.setString("nm_versatore", po.getPigVer().getNmVers());
+                row.setString("nm_tipo_object", po.getPigTipoObject().getNmTipoObject());
+            } else {
+                row.setString("cd_key_object", "--");
+                row.setString("nm_versatore", "--");
+                row.setString("nm_tipo_object", "--");
+            }
+
+            row.setString("nm_trasf", statoTrasformazione.getNomeTrasformazione());
+            row.setString("ds_stato_trasf", statoTrasformazione.getDescrizioneStatoTrasformazione());
+
+            if (statoTrasformazione.getDataInizioTrasformazione() != null) {
+                row.setTimestamp("dt_inizio_trasf",
+                        new Timestamp(statoTrasformazione.getDataInizioTrasformazione().getTime()));
+            }
+
+            if (statoTrasformazione.getDataFineTrasformazione() != null) {
+                row.setTimestamp("dt_fine_trasf",
+                        new Timestamp(statoTrasformazione.getDataFineTrasformazione().getTime()));
+            }
+
+            trasformazioniTable.add(row);
+        }
+
+        trasformazioniTable.addSortingRule("dt_inizio_trasf", SortingRule.DESC);
+        trasformazioniTable.sort();
+
+        return trasformazioniTable;
     }
 
     public XfoStoricoTrasf storicizeVersion(XfoTrasf xfoTrasf, Date dtSoppres) {
@@ -545,4 +545,60 @@ public class RepositoryManager {
         return table;
     }
 
+    private void updateTransformationInternal(long idTrasf, String name, String description, String enabled,
+            String version, String versionDescription, Date istituz, Date soppress, byte[] zipPackage, String kettleId)
+            throws ParerUserError {
+        try {
+            XfoTrasf trasf = helper.findByIdWithLock(XfoTrasf.class, idTrasf);
+            if (trasf != null) {
+                trasf.setCdTrasf(name);
+                trasf.setDsTrasf(description);
+                trasf.setCdVersioneCor(version);
+                trasf.setDsVersioneCor(versionDescription);
+                if (istituz != null) {
+                    trasf.setDtIstituz(istituz);
+                }
+                if (soppress != null) {
+                    trasf.setDtSoppres(soppress);
+                }
+
+                trasf.setFlAttiva(enabled);
+
+                // salva il nome della cartella della trasformazione come CD_KETTLE_ID
+                trasf.setCdKettleId(kettleId);
+
+                if (zipPackage != null) {
+
+                    if (trasf.getBlTrasf() != null) {
+                        // MEV 21859 - se non riesce a cancellarala dal repository di kettle nessun problema,
+                        // lo segnaliamo però nei log.
+                        try {
+                            me.deleteTransformationFromRepository(trasf.getBlTrasf());
+                        } catch (KettleException ke) {
+                            logger.warn("Cancellazione della trasformazione da kettle fallita: " + ke.getMessage());
+                        }
+                    }
+
+                    removeAuxiliaryFilesFromDb(trasf, true);
+                    insertAuxiliaryFilesIntoDb(zipPackage, trasf);
+                    boolean result = me.insertTransformationInKettleRepository(version + "-" + versionDescription,
+                            zipPackage, trasf);
+
+                    trasf.setBlTrasf(zipPackage);
+                    if (!result) {
+                        throw new KettleException("errore nell'inserimento della trasformazione.");
+                    }
+                }
+            } else {
+                String messaggio = "Eccezione imprevista nell'aggiornamento della trasformazione ";
+                logger.error(messaggio);
+                throw new ParerUserError(messaggio);
+            }
+        } catch (KettleException | IOException ex) {
+            String messaggio = "Eccezione imprevista nell'aggiornamento della trasformazione ";
+            messaggio += ExceptionUtils.getRootCauseMessage(ex);
+            logger.error(messaggio, ex);
+            throw new ParerUserError(messaggio);
+        }
+    }
 }

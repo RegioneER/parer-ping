@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
+    <url>https://nexus.ente.regione.emr.it/repository/parer-site/preingest/${project.version}/</url>
 
     <parent>
         <groupId>it.eng.parer</groupId>
@@ -30,18 +31,11 @@
     </properties>
 
     <distributionManagement>
-        <repository>
-          <id>github</id>
-          <url>https://maven.pkg.github.com/RegioneER/parer-ping</url>
-        </repository>      
+        <site>
+            <id>site</id>
+            <url>dav:https://nexus.ente.regione.emr.it/repository/parer-site/preingest/${project.version}</url>
+        </site>
     </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/RegioneER/parer-framework-parerpom</url>           
-        </repository>          
-     </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -327,7 +321,7 @@
         <module>preingest-jpa</module>
     </modules>
     <scm>
-        <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
+        <developerConnection>scm:git:git@gitlab.ente.regione.emr.it:parer/jboss/ping.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 </project>

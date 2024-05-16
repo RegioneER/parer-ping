@@ -378,8 +378,8 @@ public class MonitoraggioHelperTest {
         boolean isStudioDicom = false;
         String sPriorita = aString();
         String sPrioritaVersamento = aString();
-        helper.salvaNoteInfoTipoGestFigliObject(idObject, note, info, tipoGestioneFigli, isStudioDicom, sPriorita,
-                sPrioritaVersamento);
+        helper.updatePigObject(idObject, note, info, tipoGestioneFigli, isStudioDicom, sPriorita, sPrioritaVersamento,
+                "username");
         assertTrue(true);
     }
 
@@ -459,34 +459,6 @@ public class MonitoraggioHelperTest {
         BigDecimal idVers = aBigDecimal();
         String cdKeyObject = aString();
         helper.getMonVLisVersObjNonVersViewBean(idVers, cdKeyObject);
-        assertTrue(true);
-    }
-
-    @Test
-    @Ignore("servono id veri e questo metodo non fa query native o JQL")
-    public void areAllNonRisolubili_queryIsOk() {
-        BigDecimal idVers = aBigDecimal();
-        String cdKeyObject = aString();
-        String nmTipoObject = aString();
-        helper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-        assertTrue(true);
-    }
-
-    @Test
-    public void areAllRisolubili_queryIsOk() {
-        BigDecimal idVers = aBigDecimal();
-        String cdKeyObject = aString();
-        String nmTipoObject = aString();
-        helper.areAllRisolubili(idVers, cdKeyObject, nmTipoObject);
-        assertTrue(true);
-    }
-
-    @Test
-    public void areAllVerificate_queryIsOk() {
-        BigDecimal idVers = aBigDecimal();
-        String cdKeyObject = aString();
-        String nmTipoObject = aString();
-        helper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
         assertTrue(true);
     }
 

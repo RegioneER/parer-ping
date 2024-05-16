@@ -151,6 +151,7 @@
         <ComboBox Type="INTEGER" Description="Anno Agenzia" Name="anno_agenzia" />
         <Input Type="STRING" Description="Numero Agenzia" Name="cd_num_agenzia" />
         <Button Type="STRING" Description="Ricerca" Name="ricercaSisma"/>
+        <Button Type="STRING" Description="Pulisci ricerca" Name="pulisciRicercaSisma"/>
     </Fields>
     
 </Form>

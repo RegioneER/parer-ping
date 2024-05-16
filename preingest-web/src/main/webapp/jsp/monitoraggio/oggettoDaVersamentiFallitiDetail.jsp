@@ -7,15 +7,26 @@
         <script type='text/javascript' src="<c:url value="/js/sips/customCheckBoxSesVerif.js"/>" ></script>
         <script type='text/javascript'>
             $(document).ready(function () {
-                checkVerificati = $('table.list td > input[name="Fl_verif"]:checked');
-                checkNonRisolubili = $('table.list td > input[name="Fl_non_risolub"]:checked');
+                checkVerificati = $('table.list tr:not(:first-child) td > input[name="Fl_verif"]');
+                checkNonRisolubili = $('table.list tr:not(:first-child) td > input[name="Fl_non_risolub"]');
                 
                 checkNonRisolubili.each((index, value) => {
-                    $(value).parent().append('<img src="/sacerping/img/checkbox-on.png" alt=" Selezionato">');
                     $(value).css('visibility', 'hidden');
                 });
                 
                 checkVerificati.each((index, value) => {
+                    $(value).css('visibility', 'hidden');
+                });
+                
+                checkFirstVerificato = $('table.list tr td > input[name="Fl_verif"]:checked');
+                checkFirstRisolubile = $('table.list tr td > input[name="Fl_non_risolub"]:checked');
+                
+                checkFirstVerificato.each((index, value) => {
+                    $(value).parent().append('<img src="/sacerping/img/checkbox-on.png" alt=" Selezionato">');
+                    $(value).css('visibility', 'hidden');
+                });
+                
+                checkFirstRisolubile.each((index, value) => {
                     $(value).parent().append('<img src="/sacerping/img/checkbox-on.png" alt=" Selezionato">');
                     $(value).css('visibility', 'hidden');
                 });

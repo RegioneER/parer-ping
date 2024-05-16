@@ -262,7 +262,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
 
                                 String nmFileOs = versamentoOggettoEjb
                                         .getFileOsPathByVers(user.getIdOrganizzazioneFoglia())
-                                        + Utils.EliminaPunteggiatureSpaziNomeFile(nomeFile);
+                                        + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFile);
 
                                 s3UploadSession = new S3UploadSessionVO(salvataggioBackendHelper, config, nmFileOs);
                                 req.getSession().setAttribute(idSessione, s3UploadSession);
@@ -642,7 +642,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
             }
 
             String nmFileOs = versamentoOggettoEjb.getFileOsPathByVers(user.getIdOrganizzazioneFoglia())
-                    + Utils.EliminaPunteggiatureSpaziNomeFile(nomeFile);
+                    + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFile);
 
             // Eseguo la NotificaTrasferimentoFile
             ListaFileDepositatoType listaFile = new ListaFileDepositatoType();

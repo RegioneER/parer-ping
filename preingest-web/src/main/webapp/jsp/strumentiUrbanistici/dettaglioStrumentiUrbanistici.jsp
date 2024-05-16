@@ -77,6 +77,8 @@
                     <sl:newLine />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiGeneraliOutput.DT_STATO_OUT%>" colSpan="3" labelWidth="w30" controlWidth="w100" />
                     <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiGeneraliOutput.ID_STRUMENTI_URBANISTICI_OUT%>" colSpan="3" labelWidth="w30" controlWidth="w100" />
+                    <sl:newLine />
                 </slf:section> 
                 <slf:section name="<%=StrumentiUrbanisticiForm.AltreFasiSection.NAME%>" styleClass="importantContainer containerRight w40">  
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiGeneraliOutput.FASE_COLLEGATA1_OUT%>" width="w100" labelWidth="w30" controlWidth="w70"  />

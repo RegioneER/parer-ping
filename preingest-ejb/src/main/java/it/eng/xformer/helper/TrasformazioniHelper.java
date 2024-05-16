@@ -18,7 +18,6 @@
 package it.eng.xformer.helper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -534,10 +533,8 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
         return !transfs.isEmpty();
     }
 
-    public PigObject findByIdWithPigVerAndPigTipoObj(Long id) {
-        String queryStr = "SELECT p FROM PigObject p JOIN FETCH p.pigVer JOIN FETCH p.pigTipoObject WHERE p.idObject = :idObject";
-        TypedQuery<PigObject> query = getEntityManager().createQuery(queryStr, PigObject.class);
-        query.setParameter("idObject", id);
-        return query.getSingleResult();
+    public PigObject findPigObjectById(Long id) {
+        PigObject po = getEntityManager().find(PigObject.class, id);
+        return po;
     }
 }

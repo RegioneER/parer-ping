@@ -1360,6 +1360,14 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         getForm().getFiltriStrumentiUrbanistici().getNm_fase_elaborazione().setDecodeMap(fasiMap);
     }
 
+    @Override
+    public void pulisciRicercaStrumentiUrbanistici() throws EMFError {
+        getForm().getFiltriStrumentiUrbanistici().clear();
+        getForm().getStrumentiUrbanisticiList().getTable().clear();
+
+        forwardToPublisher(Application.Publisher.STRUMENTI_URBANISTICI);
+    }
+
     private void popolaStrumentiUrbanisticiList() throws EMFError {
         if (getForm().getFiltriStrumentiUrbanistici().postAndValidate(getRequest(), getMessageBox())) {
             RicercaStrumentiUrbanisticiDTO ricercaStrumentiUrbanisticiDTO = new RicercaStrumentiUrbanisticiDTO(

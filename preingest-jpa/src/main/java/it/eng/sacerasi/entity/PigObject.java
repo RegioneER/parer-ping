@@ -19,6 +19,7 @@ package it.eng.sacerasi.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +80,7 @@ public class PigObject implements Serializable {
     private List<PigSessioneRecup> pigSessioneRecups = new ArrayList<>();
     private List<PigUnitaDocObject> pigUnitaDocObjects = new ArrayList<>();
     private List<PigXmlObject> pigXmlObjects = new ArrayList<>();
+    private List<PigPrioritaObject> pigPrioritaObjects = new ArrayList<>();
 
     public PigObject() {
         // for Hibernate
@@ -363,8 +365,19 @@ public class PigObject implements Serializable {
         return this.tiPrioritaVersamento;
     }
 
-    public void setTiPrioritaVersamento(String tiPrioritaVersamento) {
+    protected void setTiPrioritaVersamento(String tiPrioritaVersamento) {
         this.tiPrioritaVersamento = tiPrioritaVersamento;
+    }
+
+    public void impostaPrioritaVersamento(String tiPrioritaVersamento, String username) {
+        this.tiPrioritaVersamento = tiPrioritaVersamento;
+        if (tiPrioritaVersamento != null) {
+            PigPrioritaObject storico = new PigPrioritaObject();
+            storico.setDtModifica(LocalDateTime.now());
+            storico.setNmUser(username);
+            storico.setTiPrioritaVersamento(this.tiPrioritaVersamento);
+            this.addPigPrioritaObject(storico);
+        }
     }
 
     // bi-directional many-to-one association to PigSessioneIngest
@@ -480,11 +493,18 @@ public class PigObject implements Serializable {
         return pigObjectTrasf;
     }
 
-    public PigObjectTrasf removePigObjectTrasf(PigObjectTrasf pigObjectTrasf) {
-        getPigObjectTrasfs().remove(pigObjectTrasf);
-        pigObjectTrasf.setPigObject(null);
-
-        return pigObjectTrasf;
+    @OneToMany(mappedBy = "pigObject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    public List<PigPrioritaObject> getPigPrioritaObjects() {
+        return pigPrioritaObjects;
     }
 
+    public void setPigPrioritaObjects(List<PigPrioritaObject> pigPrioritaObjects) {
+        this.pigPrioritaObjects = pigPrioritaObjects;
+    }
+
+    private PigPrioritaObject addPigPrioritaObject(PigPrioritaObject pigPrioritaObject) {
+        getPigPrioritaObjects().add(pigPrioritaObject);
+        pigPrioritaObject.setPigObject(this);
+        return pigPrioritaObject;
+    }
 }

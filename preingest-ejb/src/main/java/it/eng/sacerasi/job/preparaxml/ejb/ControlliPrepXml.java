@@ -25,31 +25,23 @@ import it.eng.sacerasi.common.Chiave;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigContUnitaDocSacer;
 import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
 import it.eng.sacerasi.entity.PigTipoFileObject;
 import it.eng.sacerasi.entity.PigTipoObject;
-import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.preparaxml.dto.OggettoInCoda;
 import it.eng.sacerasi.viewEntity.PigVChkOrgVersSacer;
 import it.eng.sacerasi.viewEntity.PigVChkSesPrecNotAnnul;
 import it.eng.sacerasi.viewEntity.PigVChkSimulaVersSacer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static it.eng.sacerasi.common.Constants.JPA_PORPERTIES_TIMEOUT;
 
 /**
  *
@@ -64,104 +56,6 @@ public class ControlliPrepXml {
     private static final Logger log = LoggerFactory.getLogger(ControlliPrepXml.class);
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
-
-    /*
-     * Seleziona tutti gli oggetti SENZA PADRE con stato IN_ATTESA_SCHED o DA_TRASFORMARE e tiStatoVerificaHash nullo
-     * usato da producer coda verifica hash
-     */
-    public List<PigObject> getListaObjectDaVersPreHashSenzaPadre() {
-        String queryStr = "SELECT u FROM PigSessioneIngest si JOIN si.pigObject u "
-                + "WHERE u.tiStatoObject IN (:tiStatoObjectIn) " + "AND si.idSessioneIngest = u.idLastSessioneIngest "
-                + "AND si.tiStatoVerificaHash IS NULL " + "AND u.pigObjectPadre IS NULL";
-
-        javax.persistence.Query query = entityManager.createQuery(queryStr);
-        List<String> stati = new ArrayList<>();
-        stati.add(Constants.StatoOggetto.IN_ATTESA_SCHED.name());
-        stati.add(Constants.StatoOggetto.DA_TRASFORMARE.name());
-        query.setParameter("tiStatoObjectIn", stati);
-
-        return query.getResultList();
-    }
-
-    /*
-     * Seleziona tutti gli oggetti CON PADRE per cui il padre sia con stato 'VERSATO_A_PING' e tiStatoVerificaHash nullo
-     * usato da producer coda verifica hash
-     */
-    public List<PigObject> getListaObjectDaVersPreHashConPadre() {
-        String queryStr = "SELECT u FROM PigSessioneIngest si JOIN si.pigObject u "
-                + "WHERE u.tiStatoObject = :tiStatoObjectIn " + "AND si.idSessioneIngest = u.idLastSessioneIngest "
-                + "AND si.tiStatoVerificaHash IS NULL " + "AND u.pigObjectPadre IS NOT NULL "
-                + "AND u.pigObjectPadre.tiStatoObject = 'VERSATO_A_PING'";
-
-        javax.persistence.Query query = entityManager.createQuery(queryStr);
-        query.setParameter("tiStatoObjectIn", Constants.StatoOggetto.IN_ATTESA_SCHED.name());
-
-        return query.getResultList();
-    }
-
-    /*
-     * usato da consumer coda verifica hash
-     */
-    public void impostaStatoVerHash(long idLastSessioneIngest, Constants.StatoVerificaHash stato)
-            throws ParerInternalError {
-        try {
-            PigSessioneIngest tmpSessioneIngest;
-            tmpSessioneIngest = entityManager.find(PigSessioneIngest.class, idLastSessioneIngest);
-            tmpSessioneIngest.setTiStatoVerificaHash(stato.name());
-            entityManager.flush();
-        } catch (Exception ex) {
-            log.error("Eccezione", ex);
-            throw new ParerInternalError(ex);
-        }
-    }
-
-    /*
-     * usato da producer coda verifica hash
-     */
-    public void impostaLockStatoVerHash(long idLastSessioneIngest, Constants.StatoVerificaHash stato)
-            throws ParerInternalError {
-        try {
-            log.debug("Blocco la riga {} e la Aggiorno", idLastSessioneIngest);
-            Map<String, Object> properties = new HashMap<>();
-            properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
-            PigSessioneIngest tmpSessioneIngest;
-            tmpSessioneIngest = entityManager.find(PigSessioneIngest.class, idLastSessioneIngest,
-                    LockModeType.PESSIMISTIC_WRITE, properties);
-            tmpSessioneIngest.setTiStatoVerificaHash(stato.name());
-            entityManager.flush();
-        } catch (Exception ex) {
-            log.error("Eccezione", ex);
-            throw new ParerInternalError(ex);
-        }
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public boolean controllaLockStatoVerHash(long idLastSessioneIngest, Constants.StatoVerificaHash stato)
-            throws ParerInternalError {
-        try {
-            log.debug("Leggo la riga {} e la blocco", idLastSessioneIngest);
-            Map<String, Object> properties = new HashMap<>();
-            properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
-            PigSessioneIngest tmpSessioneIngest;
-            tmpSessioneIngest = entityManager.find(PigSessioneIngest.class, idLastSessioneIngest,
-                    LockModeType.PESSIMISTIC_WRITE, properties);
-            return (tmpSessioneIngest.getTiStatoVerificaHash().equalsIgnoreCase(stato.name()));
-        } catch (Exception ex) {
-            log.error("Eccezione", ex);
-            throw new ParerInternalError(ex);
-        }
-    }
-
-    public PigObject riagganciaPigObject(long idObject) throws ParerInternalError {
-        PigObject object;
-        try {
-            object = entityManager.find(PigObject.class, idObject);
-            return object;
-        } catch (Exception ex) {
-            log.error("Eccezione", ex);
-            throw new ParerInternalError(ex);
-        }
-    }
 
     /*
      * usato da job produzione xml

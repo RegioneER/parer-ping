@@ -243,7 +243,8 @@ public class InviaOggettiGeneratiAPing {
                     PigObject oldPigObject = trasformazioniHelper.searchPigObjectTrasfInPigObjects(pot);
                     if (oldPigObject == null
                             || (!oldPigObject.getTiStatoObject().equals(Constants.Stato.IN_ATTESA_SCHED.name())
-                                    && !oldPigObject.getTiStatoObject().equals(Constants.Stato.CHIUSO_OK.name()))) {
+                                    && !oldPigObject.getTiStatoObject().equals(Constants.Stato.CHIUSO_OK.name())
+                                    && !oldPigObject.getTiStatoObject().equals(Constants.Stato.IN_CODA_HASH.name()))) {
                         completed = false;
                     }
                 }

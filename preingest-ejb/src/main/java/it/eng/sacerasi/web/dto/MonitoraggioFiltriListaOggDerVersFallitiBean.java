@@ -17,13 +17,14 @@
 
 package it.eng.sacerasi.web.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  *
  * @author Gilioli_P
  */
-public class MonitoraggioFiltriListaOggDerVersFallitiBean {
+public class MonitoraggioFiltriListaOggDerVersFallitiBean implements Serializable {
 
     private BigDecimal idAmbienteVers;
     private BigDecimal idVers;

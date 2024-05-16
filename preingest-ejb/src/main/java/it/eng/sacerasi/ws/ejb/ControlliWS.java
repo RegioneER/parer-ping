@@ -215,7 +215,12 @@ public class ControlliWS {
     public RispostaControlli verificaCdKeyObjectLength(String cdKeyObject, String codErr) {
         RispostaControlli rispostaControlli = new RispostaControlli();
         rispostaControlli.setrBoolean(false);
-        if (cdKeyObject.length() <= (100 - 5)) {
+
+        // MEV 27880 - i figli generati da trasformazione hanno un nome più lungo di 38 caratteri rispetto al padre
+        // e non ho il tipo di versamento, quindi controllo il nome con una regex.
+        if (cdKeyObject.matches(".*_[A-F0-9]{32}_[0-9]{4}$") && cdKeyObject.length() <= (138 - 4)) {
+            rispostaControlli.setrBoolean(true);
+        } else if (cdKeyObject.length() <= (100 - 4)) {
             rispostaControlli.setrBoolean(true);
         } else {
             rispostaControlli.setCodErr(codErr);

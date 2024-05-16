@@ -19,6 +19,7 @@ package it.eng.sacerasi.job.timer;
 
 import it.eng.sacerasi.common.Constants;
 import it.eng.parer.jboss.timer.common.CronSchedule;
+import it.eng.sacerasi.common.Constants.NomiJob;
 import it.eng.sacerasi.job.producerCodaVers.ejb.ProducerCodaVersamentoEjb;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -48,8 +49,8 @@ public class ProducerCodaVersamentoTimer extends JobTimer {
     private ProducerCodaVersamentoEjb producerCodaVersEjb;
 
     public ProducerCodaVersamentoTimer() {
-        super(Constants.NomiJob.PRODUCER_CODA_VERS);
-        logger.debug(ProducerCodaVersamentoTimer.class.getName() + " creato");
+        super(NomiJob.PRODUCER_CODA_VERS);
+        logger.debug("{} creato", this.getClass().getName());
     }
 
     @Override
@@ -68,11 +69,11 @@ public class ProducerCodaVersamentoTimer extends JobTimer {
         ScheduleExpression tmpScheduleExpression;
 
         if (!isActive()) {
-            logger.info("Schedulazione: Ore: " + sched.getHour());
-            logger.info("Schedulazione: Minuti: " + sched.getMinute());
-            logger.info("Schedulazione: DOW: " + sched.getDayOfWeek());
-            logger.info("Schedulazione: Mese: " + sched.getMonth());
-            logger.info("Schedulazione: DOM: " + sched.getDayOfMonth());
+            logger.info("Schedulazione: Ore: {}", sched.getHour());
+            logger.info("Schedulazione: Minuti: {}", sched.getMinute());
+            logger.info("Schedulazione: DOW: {}", sched.getDayOfWeek());
+            logger.info("Schedulazione: Mese: {}", sched.getMonth());
+            logger.info("Schedulazione: DOM: {}", sched.getDayOfMonth());
 
             tmpScheduleExpression = new ScheduleExpression();
             tmpScheduleExpression.hour(sched.getHour());
@@ -89,8 +90,7 @@ public class ProducerCodaVersamentoTimer extends JobTimer {
     @Lock(LockType.WRITE)
     // @Interceptors({JbossTimerNodeInterceptor.class})
     public void stop(String applicationName) {
-        for (Object obj : timerService.getTimers()) {
-            Timer timer = (Timer) obj;
+        for (Timer timer : timerService.getTimers()) {
             String scheduled = (String) timer.getInfo();
             if (scheduled.equals(jobName)) {
                 timer.cancel();
@@ -116,6 +116,7 @@ public class ProducerCodaVersamentoTimer extends JobTimer {
                 null);
         try {
             producerCodaVersEjb.produceQueue();
+            producerCodaVersEjb.gestisciAging();
         } catch (Exception e) {
             // questo log viene scritto solo in caso di errore.
             String message = null;

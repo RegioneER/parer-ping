@@ -330,11 +330,41 @@ public class SismaAction extends SismaAbstractAction {
         } else if (stato.equals(PigSisma.TiStato.DA_VERIFICARE.name())
                 || stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
             SismaEjb.SismaDto sismaDto = new SismaDto();
+
+            getForm().getDocumentiCaricatiList().post(getRequest());
+
+            // MEV 30691 - Se devo andare in stato DA_RIVEDERE mostro un pop-up.
+            int numFlagValorizzati = 0;
+            int numFlagValorizzatiADaRivedere = 0;
+
+            for (Iterator<? extends BaseRowInterface> iterator = getForm().getDocumentiCaricatiList().getTable()
+                    .iterator(); iterator.hasNext();) {
+                BaseRowInterface riga = iterator.next();
+                String valore = riga.getString("ti_verifica_agenzia");
+
+                if (!valore.isEmpty()) {
+                    numFlagValorizzati++;
+
+                    if (valore.equals(Constants.DB_FALSE)) {
+                        numFlagValorizzatiADaRivedere++;
+                    }
+                }
+            }
+
+            String popUpDaRivedereMostrato = (String) getRequest().getAttribute("popUpDaRivedereMostrato");
+            if (numFlagValorizzati == getForm().getDocumentiCaricatiList().getTable().size()
+                    && numFlagValorizzatiADaRivedere > 0 && popUpDaRivedereMostrato == null) {
+                // mostrerò un pop-up, se non già mostrato
+                getRequest().setAttribute("popUpDaRivedere", Constants.DB_TRUE);
+                forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
+                return;
+            }
+
             // MAC#24999 - correzione errore in fase di salvataggio dei dati dell'agenzia di un progetto
             if (stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
                 // MAC 29844 - se non tutti i documenti sono verificati ignora il cotrollo qui sotto
                 boolean tuttiDocumentiInVerificaOk = true;
-                getForm().getDocumentiCaricatiList().post(getRequest());
+
                 for (Iterator<? extends BaseRowInterface> iterator = getForm().getDocumentiCaricatiList().getTable()
                         .iterator(); iterator.hasNext();) {
                     BaseRowInterface riga = iterator.next();
@@ -375,6 +405,14 @@ public class SismaAction extends SismaAbstractAction {
                 saveDettaglio1(sismaDto, idSisma);
             }
         }
+
+        forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
+    }
+
+    // MEV 30691
+    public void confermaStatoDaRivedere() throws EMFError {
+        getRequest().setAttribute("popUpDaRivedereMostrato", Constants.DB_TRUE);
+        saveDettaglio();
         forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
     }
 
@@ -1518,7 +1556,10 @@ public class SismaAction extends SismaAbstractAction {
         sismaEjb.cambiaStatoSisma(idSisma, PigSisma.TiStato.DA_VERIFICARE);
         getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(PigSisma.TiStato.DA_VERIFICARE.name());
         getForm().getRiepilogoButtonList().getVerificaAgenzia().setReadonly(true);
-        forwardToPublisher(Application.Publisher.SISMA_WIZARD);
+        // MAC 31483
+        setNavigationEvent(ListAction.NE_DETTAGLIO_VIEW);
+        loadSisma();
+        forwardToPublisher(Application.Publisher.SISMA);
     }
 
     @SuppressLogging
@@ -1645,6 +1686,14 @@ public class SismaAction extends SismaAbstractAction {
     @Override
     public void ricercaSisma() throws EMFError {
         popolaListaSisma();
+
+        forwardToPublisher(Application.Publisher.SISMA);
+    }
+
+    @Override
+    public void pulisciRicercaSisma() throws EMFError {
+        getForm().getFiltriSisma().clear();
+        getForm().getSismaList().getTable().clear();
 
         forwardToPublisher(Application.Publisher.SISMA);
     }

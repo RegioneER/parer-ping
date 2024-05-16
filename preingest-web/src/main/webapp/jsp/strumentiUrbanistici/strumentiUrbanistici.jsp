@@ -46,6 +46,7 @@
             </slf:fieldSet>
             <sl:pulsantiera>
                 <slf:lblField name="<%=StrumentiUrbanisticiForm.FiltriStrumentiUrbanistici.RICERCA_STRUMENTI_URBANISTICI%>" colSpan="2" />
+                <slf:lblField name="<%=StrumentiUrbanisticiForm.FiltriStrumentiUrbanistici.PULISCI_RICERCA_STRUMENTI_URBANISTICI%>" colSpan="2" />
             </sl:pulsantiera>
                 
             <sl:newLine skipLine="true"/>

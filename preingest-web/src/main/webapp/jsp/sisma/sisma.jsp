@@ -12,7 +12,7 @@
                     // se non è bozza disabilita la cancellazione e la modifica!
                     if (statoSu === 'BOZZA') {
                         //
-                    } else if (statoSu === 'DA_RIVEDERE' || statoSu === 'DA_VERIFICARE') {
+                    } else if (statoSu === 'DA_RIVEDERE') {
                         $(this).parent().next().next().next().empty(); // Disabilita solo la Cancellazione
                     } else {
                         // Disabilita tutto l'edit per tutti gli altri stati
@@ -67,6 +67,7 @@
 
             <sl:pulsantiera>
                 <slf:lblField name="<%=SismaForm.FiltriSisma.RICERCA_SISMA%>" colSpan="2" />
+                <slf:lblField name="<%=SismaForm.FiltriSisma.PULISCI_RICERCA_SISMA%>" colSpan="2" />
             </sl:pulsantiera>
             <sl:newLine skipLine="true"/>
 

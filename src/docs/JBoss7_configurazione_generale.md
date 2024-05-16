@@ -901,12 +901,9 @@ Infine un esempio di script cli con cui inserire le system properties sopra cita
 /system-property=logo2_url:add(value="https://www.regione.emilia-romagna.it")
 /system-property=logo2_absolutePath:add(value="file:///<path>/LogoER.png")
 
-
 /system-property=logo3_absolutePath:add(value="file:///<path>/LogoIbc.png")
 
-
 /system-property=favicon_absolutePath:add(value="file:///<path>/favicon.ico")
-
 
 
 # Per applicazione

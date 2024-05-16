@@ -152,7 +152,7 @@ public class AnnullamentoEjb {
      * @param richiestoAnnullamentoVersamentiUDDuplicati
      *            true se richiesto annullamento ud duplicati
      *
-     * 
+     *
      * @throws ParerUserError
      *             errore generico
      * @throws ParerInternalError
@@ -198,6 +198,29 @@ public class AnnullamentoEjb {
             figlio.setPgOggettoTrasf(null);
             figlio.setPigObjectPadre(null);
         }
+
+        // MEV 31816 - correggo lo stato di un eventuale SISMA
+        PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(object.getCdKeyObject(),
+                PigSisma.TiStato.ANNULLATO);
+
+        if (pigSisma != null) {
+            // Setta lo stato di PigSisma
+            Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(pigSisma.getPigVer());
+            if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
+                    && pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_TRASFORMAZIONE_SA);
+            } else {
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_TRASFORMAZIONE);
+            }
+        }
+
+        // MEV 31651 - correggo lo stato di un eventuale Strumento Urbanistico
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                .getPigStrumUrbByCdKeyAndTiStato(object.getCdKeyObject(), PigStrumentiUrbanistici.TiStato.ANNULLATO);
+        if (pigStrumentiUrbanistici != null) {
+            strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE);
+        }
     }
 
     public void setErroreTrasformazione(BigDecimal idObject) {
@@ -225,6 +248,32 @@ public class AnnullamentoEjb {
 
         object.setTiStatoObject(Constants.StatoOggetto.CHIUSO_ERR_VERS.name());
         object.setIdLastSessioneIngest(new BigDecimal(sessioneCorrente.getIdSessioneIngest()));
+
+        // 30208 -gestione sisma e SU
+        if (object.getPigObjectPadre() != null) {
+            PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
+                    PigSisma.TiStato.IN_VERSAMENTO);
+
+            if (pigSisma == null) {
+                pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
+                        PigSisma.TiStato.IN_VERSAMENTO_SA);
+            }
+
+            if (pigSisma != null) {
+                // Setta lo stato di PigSisma
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.ERRORE);
+            }
+        }
+
+        if (object.getPigObjectPadre() != null) {
+            PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                    .getPigStrumUrbByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+            if (pigStrumentiUrbanistici != null) {
+                strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                        PigStrumentiUrbanistici.TiStato.ERRORE);
+            }
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -243,6 +292,7 @@ public class AnnullamentoEjb {
                     // MEV #14561 - Estensione annullamento oggetti in errore
                     || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
                     || object.getTiStatoObject().equals(Constants.StatoOggetto.TRASFORMAZIONE_NON_ATTIVA.name())
+                    || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                     || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
                     || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())
                     || !object.getPigObjectTrasfs().isEmpty())) {
@@ -257,6 +307,7 @@ public class AnnullamentoEjb {
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.DA_TRASFORMARE.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.TRASFORMAZIONE_NON_ATTIVA.name())
+                            || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
                             || object.getTiStatoObject()
                                     .equals(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name()))) {
@@ -273,9 +324,9 @@ public class AnnullamentoEjb {
         } else {
             // NO ZIP E ZIP NO/CON XML
             BigDecimal idVers = new BigDecimal(object.getPigVer().getIdVers());
-            boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, object.getCdKeyObject(),
+            boolean isLastVerificata = monitoraggioHelper.isLastVerificata(idVers, object.getCdKeyObject(),
                     tipoObject.getNmTipoObject());
-            boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, object.getCdKeyObject(),
+            boolean isLastNonRisolubile = monitoraggioHelper.isLastNonRisolubile(idVers, object.getCdKeyObject(),
                     tipoObject.getNmTipoObject());
             // Punto 3 dell'analisi
             if (!(object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MEV #14561 -
@@ -284,10 +335,11 @@ public class AnnullamentoEjb {
                                                                                                // in errore (aggiunti 4
                                                                                                // altri test in OR)
                     ((object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                            || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name()))
-                            && allVerificate && allNonRisolubili))) {
+                            && isLastVerificata && isLastNonRisolubile))) {
                 throw new ParerUserError("L'oggetto di tipo SIP " + tiVers + " e stato " + object.getTiStatoObject()
                         + " non \u00E8 annullabile");
             } else if (richiestoAnnullamentoVersamentiUD
@@ -365,6 +417,7 @@ public class AnnullamentoEjb {
                                                                                                             // oggetti
                                                                                                             // in errore
                             object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                            || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
                             || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())) && // MEV#14100
                                                                                                                    // -
@@ -715,8 +768,9 @@ public class AnnullamentoEjb {
                         .getValoreParamApplicByApplic(Constants.ID_VERSATORE_AGENZIA);
                 PigObject pigObjectAgenzia = monitoraggioHelper.getPigObject(new BigDecimal(idVersatoreAgenzia),
                         cdKeyObject);
-                if (pigObjectAgenzia.getTiStatoObject().equals(Constants.StatoOggetto.ANNULLATO.name()))
+                if (pigObjectAgenzia.getTiStatoObject().equals(Constants.StatoOggetto.ANNULLATO.name())) {
                     sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma, PigSisma.TiStato.VERSATO);
+                }
             }
         }
     }
@@ -832,7 +886,7 @@ public class AnnullamentoEjb {
      *
      * @param idObject
      *            id object
-     * 
+     *
      * @throws ParerUserError
      *             errore generico
      * @throws ParerInternalError
@@ -979,6 +1033,7 @@ public class AnnullamentoEjb {
         }
 
         return chiaveUd;
+
     }
 
     private class ChiaveUd {

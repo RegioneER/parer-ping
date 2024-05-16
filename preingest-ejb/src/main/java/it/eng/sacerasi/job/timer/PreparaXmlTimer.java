@@ -111,6 +111,7 @@ public class PreparaXmlTimer extends JobTimer {
         try {
             jobLogger.writeAtomicLog(Constants.NomiJob.PREPARA_XML, Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
             preparaXmlEjb.preparaXml();
+            preparaXmlEjb.gestisciAging();
         } catch (ParerInternalError e) {
             // questo log viene scritto solo in caso di errore.
             String message = null;

@@ -64,6 +64,38 @@
                 // Cambia l'icona informativa dall'eventuale messaggio di info in check (baffetto)
                 $('.ui-icon-info').toggleClass('ui-icon-info').addClass('ui-icon-check');
                 
+                //MEV 30691
+                $('.popUpDaRivedere').dialog({
+                    autoOpen: true,
+                    width: 600,
+                    modal: true,
+                    closeOnEscape: true,
+                    resizable: false,
+                    dialogClass: "alertBox",
+                    buttons: {
+                        "Ok": function () {
+                            $(this).dialog("close");
+                            let _csrf = $('input[name="_csrf"]');
+                            var fakeFormStr = '<form id="spagoLiteAppForm" action="Sisma.html" method="post">';
+                            
+                            let ti_verifica_agenzia = $('select[name="Ti_verifica_agenzia"]');
+                            
+                            ti_verifica_agenzia.each(function (index) {
+                                fakeFormStr += '<input type="hidden" name="Ti_verifica_agenzia" value="' + $(this).val() + '"/>';
+                            });
+                            
+                            fakeFormStr = fakeFormStr + '<input type="hidden" name="operation" value="confermaStatoDaRivedere"/>' +
+                            '<input type="hidden" name="_csrf" value="' + _csrf.val() + '">' +
+                            '</form>';
+                            
+                            $(fakeFormStr).appendTo('body').submit();
+                        },
+                        "Annulla": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                
             });
             
         </script>
@@ -75,6 +107,16 @@
         <sl:content >
             <slf:messageBox />
             <%@ include file="mascheraRecuperoErrori.jspf"%>
+            
+             <c:if test="${!empty requestScope.popUpDaRivedere}">
+                <div class="messages popUpDaRivedere">
+                    <div class="message info ">
+                        <p>Almeno un tipo documento è da rivedere: procedendo con il salvataggio il progetto sarà inviato in revisione al Soggetto Attuatore e non sarà più possibile modificarlo fino a che non verrà richiesta una nuova verifica ad Agenzia.
+Si vuole procedere?</p>
+                    </div>
+                </div>
+            </c:if>
+            
             <sl:contentTitle title="Dettaglio progetto ricostruzione" />            
             <c:choose>
                 <c:when test="${requestScope.nascondiUpdate}">

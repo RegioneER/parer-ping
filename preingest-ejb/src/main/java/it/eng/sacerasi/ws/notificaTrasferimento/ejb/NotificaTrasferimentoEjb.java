@@ -166,11 +166,12 @@ public class NotificaTrasferimentoEjb {
         if (nte.getTipoObject().equals(Constants.TipoVersamento.NO_ZIP.name())
                 || nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_NO_XML_SACER.name())
                 || nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
+            // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
             if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Modifica sessione in IN_ATTESA_SCHED");
+                log.debug("Modifica sessione in IN_CODA_HASH");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_ATTESA_SCHED, null, null);
+                        Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
@@ -180,7 +181,7 @@ public class NotificaTrasferimentoEjb {
                 log.debug("Creazione stato sessione");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_ATTESA_SCHED.name(), now);
+                        Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
@@ -190,17 +191,18 @@ public class NotificaTrasferimentoEjb {
                 log.debug("Modifica oggetto in IN_ATTESA_SCHED");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
-                        Constants.StatoOggetto.IN_ATTESA_SCHED);
+                        Constants.StatoOggetto.IN_CODA_HASH);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
             }
         } else if (nte.getTipoObject().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
+            // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
             if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
                 log.debug("Modifica sessione in DA_TRASFORMARE");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.DA_TRASFORMARE, null, null);
+                        Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
@@ -210,7 +212,7 @@ public class NotificaTrasferimentoEjb {
                 log.debug("Creazione stato sessione");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.DA_TRASFORMARE.name(), now);
+                        Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
@@ -220,7 +222,7 @@ public class NotificaTrasferimentoEjb {
                 log.debug("Modifica oggetto in DA_TRASFORMARE");
                 tmpRispostaControlli.reset();
                 tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
-                        Constants.StatoOggetto.DA_TRASFORMARE);
+                        Constants.StatoOggetto.IN_CODA_HASH);
                 if (tmpRispostaControlli.getCodErr() != null) {
                     setRispostaWsError(risp, tmpRispostaControlli);
                 }
@@ -332,7 +334,7 @@ public class NotificaTrasferimentoEjb {
 
     // MEV 30935 - errore tecnico (per chiuso err notif)
     private void handleSismaError(Long objectId) {
-        PigObject object = strumentiUrbanisticiHelper.getEntityManager().find(PigObject.class, objectId);
+        PigObject object = sismaHelper.getEntityManager().find(PigObject.class, objectId);
 
         // MEV 30935 - Il SISMA va in stato ERRORE
         if (object.getPigObjectPadre() != null) {

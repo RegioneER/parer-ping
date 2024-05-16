@@ -113,12 +113,21 @@ public class Constants {
     }
 
     public enum ComboFlagPrioVersType {
-        IMMEDIATA("0-IMMEDIATA"), ALTA("1-ALTA"), NORMALE("2-NORMALE"), BASSA("3-BASSA");
+        IMMEDIATA("0-IMMEDIATA", null), ALTA("1-ALTA", IMMEDIATA), NORMALE("2-NORMALE", ALTA),
+        BASSA("3-BASSA", NORMALE);
+
+        // prossima priorità
+        private final ComboFlagPrioVersType next;
 
         private final String value;
 
-        private ComboFlagPrioVersType(String value) {
+        ComboFlagPrioVersType(String value, ComboFlagPrioVersType next) {
+            this.next = next;
             this.value = value;
+        }
+
+        public ComboFlagPrioVersType getNext() {
+            return next;
         }
 
         public String getValue() {
@@ -132,6 +141,15 @@ public class Constants {
                 }
             }
             return null;
+        }
+
+        public static ComboFlagPrioVersType getByString(String code) {
+            for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
+                if (code.equals(e.getValue())) {
+                    return e;
+                }
+            }
+            throw new IllegalArgumentException("Nessun ComboFlagPrioVersType con valore " + code);
         }
 
         public static String getValueByEnumName(String code) {

@@ -517,9 +517,9 @@ public class SalvataggioDati {
         // Se la priorità di versamento viene passata in input usa quella per l'oggetto che si sta creando
         // altrimenti copia la priorita di versamento prelevata dal tipo Object
         if (ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento() == null) {
-            obj.setTiPrioritaVersamento(pigTipoObject.getTiPrioritaVersamento());
+            obj.impostaPrioritaVersamento(pigTipoObject.getTiPrioritaVersamento(), username);
         } else {
-            obj.setTiPrioritaVersamento(ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento());
+            obj.impostaPrioritaVersamento(ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento(), username);
         }
 
         if (ioaExt.getInvioOggettoAsincronoInput() instanceof InvioOggettoAsincronoEstesoInput) {

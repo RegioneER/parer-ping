@@ -38,6 +38,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import it.eng.sacerasi.entity.*;
+import it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1471,8 +1472,8 @@ public class MonitoraggioHelper extends GenericHelper {
     /*
      * Priorità viene passato come ALTA;IMMEDIATA ecc.., poi all'interno viene trascodificata
      */
-    public void salvaNoteInfoTipoGestFigliObject(BigDecimal idObject, String note, String info,
-            String tipoGestioneFigli, boolean isStudioDicom, String sPriorita, String sPrioritaVersamento) {
+    public void updatePigObject(BigDecimal idObject, String note, String info, String tipoGestioneFigli,
+            boolean isStudioDicom, String sPriorita, String sPrioritaVersamento, String username) {
         PigObject pigObject = getEntityManager().find(PigObject.class, idObject.longValueExact());
         pigObject.setNote(note);
         // Aggiorna solo se diverso da studio dicom
@@ -1490,11 +1491,11 @@ public class MonitoraggioHelper extends GenericHelper {
             pigObject.setTiPriorita(null);
         }
         if (sPrioritaVersamento != null) {
-            String pri = it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType.valueOf(sPrioritaVersamento)
-                    .getValue();
-            pigObject.setTiPrioritaVersamento(pri);
+            String pri = ComboFlagPrioVersType.valueOf(sPrioritaVersamento).getValue();
+            pigObject.impostaPrioritaVersamento(pri, username);
+
         } else {
-            pigObject.setTiPrioritaVersamento(null);
+            pigObject.impostaPrioritaVersamento(null, null);
         }
     }
 
@@ -1712,7 +1713,42 @@ public class MonitoraggioHelper extends GenericHelper {
         return versObjNonVersTB;
     }
 
-    public boolean areAllNonRisolubili(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
+    // MEV 31104 - controllo solo l'ultima sessione
+    public boolean isLastRisolubile(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
+        String queryStr = "SELECT count(u) FROM PigObject u "
+                + "WHERE u.pigVer.idVers = :idVers AND u.cdKeyObject = :cdKeyObject " + "AND NOT EXISTS "
+                + "(SELECT v FROM PigSessioneIngest v " + "WHERE v.flSesErrNonRisolub = '1' "
+                + "AND u.pigVer.idVers = v.pigVer.idVers AND u.cdKeyObject = v.cdKeyObject AND v.nmTipoObject = :nmTipoObject "
+                + "AND v.idSessioneIngest = u.idLastSessioneIngest) ";
+
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        query.setParameter(CD_KEY_OBJECT, cdKeyObject);
+        query.setParameter("nmTipoObject", nmTipoObject);
+        Long pig = (Long) query.getSingleResult();
+        /* Se lo trova, significa che è risolubile */
+        return pig == 1;
+    }
+
+    // MEV 31104 - controllo solo l'ultima sessione
+    public boolean isLastVerificata(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
+        String queryStr = "SELECT count(u) FROM PigObject u "
+                + "WHERE u.pigVer.idVers = :idVers AND u.cdKeyObject = :cdKeyObject " + "AND NOT EXISTS "
+                + "(SELECT v FROM PigSessioneIngest v " + "WHERE v.flSesErrVerif = '0' "
+                + "AND u.pigVer.idVers = v.pigVer.idVers AND u.cdKeyObject = v.cdKeyObject AND v.nmTipoObject = :nmTipoObject "
+                + "AND v.idSessioneIngest = u.idLastSessioneIngest) ";
+
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        query.setParameter(CD_KEY_OBJECT, cdKeyObject);
+        query.setParameter("nmTipoObject", nmTipoObject);
+        Long pig = (Long) query.getSingleResult();
+        /* Se lo trova, significa che è verificato */
+        return pig == 1;
+    }
+
+    // MEV 31104 - controllo solo l'ultima sessione
+    public boolean isLastNonRisolubile(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
         boolean retCode = false;
         PigObject oggetto = getPigObject(idVers, cdKeyObject);
         PigSessioneIngest v = getEntityManager().find(PigSessioneIngest.class,
@@ -1723,37 +1759,6 @@ public class MonitoraggioHelper extends GenericHelper {
             retCode = true;
         }
         return retCode;
-    }
-
-    public boolean areAllRisolubili(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
-        String queryStr = "SELECT count(u) FROM PigObject u "
-                + "WHERE u.pigVer.idVers = :idVers AND u.cdKeyObject = :cdKeyObject " + "AND NOT EXISTS "
-                + "(SELECT v FROM PigSessioneIngest v "
-                + "WHERE (v.flSesErrNonRisolub = '1' OR v.flSesErrNonRisolub IS NULL) "
-                + "AND u.pigVer.idVers = v.pigVer.idVers AND u.cdKeyObject = v.cdKeyObject AND v.nmTipoObject = :nmTipoObject) ";
-
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
-        query.setParameter(CD_KEY_OBJECT, cdKeyObject);
-        query.setParameter("nmTipoObject", nmTipoObject);
-        Long pig = (Long) query.getSingleResult();
-        /* Se lo trova, significa che sono tutte risolubili */
-        return pig == 1;
-    }
-
-    public boolean areAllVerificate(BigDecimal idVers, String cdKeyObject, String nmTipoObject) {
-        String queryStr = "SELECT count(u) FROM PigObject u "
-                + "WHERE u.pigVer.idVers = :idVers AND u.cdKeyObject = :cdKeyObject " + "AND NOT EXISTS "
-                + "(SELECT v FROM PigSessioneIngest v " + "WHERE v.flSesErrVerif = '0' "
-                + "AND u.pigVer.idVers = v.pigVer.idVers AND u.cdKeyObject = v.cdKeyObject AND v.nmTipoObject = :nmTipoObject) ";
-
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
-        query.setParameter(CD_KEY_OBJECT, cdKeyObject);
-        query.setParameter("nmTipoObject", nmTipoObject);
-        Long pig = (Long) query.getSingleResult();
-        /* Se lo trova, significa che sono tutte verificate */
-        return pig == 1;
     }
 
     public PigAmbienteVersRowBean getAmbienteVersFromIdVers(BigDecimal idVers) {
@@ -2350,4 +2355,10 @@ public class MonitoraggioHelper extends GenericHelper {
         getEntityManager().flush();
     }
 
+    public List<PigPrioritaObject> retrievePigPrioritaObject(Long idObject) {
+        String queryStr = "SELECT p FROM PigPrioritaObject p WHERE p.pigObject.idObject = :idObject ORDER BY p.dtModifica DESC";
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("idObject", idObject);
+        return query.getResultList();
+    }
 }

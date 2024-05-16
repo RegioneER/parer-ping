@@ -111,6 +111,13 @@
                     </tr>
                     <tr class="nascondiRiga">
                         <td></td>
+                        <td><b>In coda hash</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=OGGI&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=NON_DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=ULTIMI7&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=NON_DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=TUTTI&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=NON_DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
                         <td><b>In attesa preparazione XML vers a SACER</b></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=OGGI&amp;tiStato=IN_ATTESA_SCHED&amp;pagina=OBJ_RANGE_DT&amp;classeVers=NON_DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_ATTESA_PREP_XML_CORR%>" controlWidth="w100"/></a></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=ULTIMI7&amp;tiStato=IN_ATTESA_SCHED&amp;pagina=OBJ_RANGE_DT&amp;classeVers=NON_DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_ATTESA_PREP_XML_7%>" controlWidth="w100"/></a></td>
@@ -158,6 +165,13 @@
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=OGGI&amp;tiStato=IN_ATTESA_FILE&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_ATTESA_FILE_TRASF_CORR%>" controlWidth="w100"/></a></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=ULTIMI7&amp;tiStato=IN_ATTESA_FILE&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_ATTESA_FILE_TRASF_7%>" controlWidth="w100"/></a></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=TUTTI&amp;tiStato=IN_ATTESA_FILE&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_ATTESA_FILE_TRASF_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
+                        <td><b>In coda hash</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=OGGI&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_TRASF_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=ULTIMI7&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_TRASF_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;periodo=TUTTI&amp;tiStato=IN_CODA_HASH&amp;pagina=OBJ_RANGE_DT&amp;classeVers=DA_TRASFORMARE"><slf:field name="<%= MonitoraggioForm.RiepilogoOggettiVersati.NI_IN_CODA_HASH_TRASF_TOT%>" controlWidth="w100"/></a></td>
                     </tr>
                     <tr class="nascondiRiga">
                         <td></td>
@@ -372,6 +386,67 @@
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=NOTIFICA_FILE&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_NOTIF&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoNotificheFileFallite.NI_NOT_FILE_NORIS_NOVER_CORR%>" controlWidth="w100"/></a></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=NOTIFICA_FILE&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_NOTIF&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoNotificheFileFallite.NI_NOT_FILE_NORIS_NOVER_7%>" controlWidth="w100"/></a></td>
                         <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=NOTIFICA_FILE&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_NOTIF&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoNotificheFileFallite.NI_NOT_FILE_NORIS_NOVER_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <sl:newLine skipLine="true"/>
+            <sl:newLine skipLine="true"/>
+            <%-- MEV 31102 - Tabella RIEPILOGO VERIFICHE HASH FALLITE costruita "a manoni" --%>
+            <table class="grid" >
+                <caption>
+                    <div class="livello1"><b>RIEPILOGO VERIFICHE HASH FALLITE</b></div>
+                </caption>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;Oggi&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;Ultimi 7 giorni&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;Totale&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody class="livello2">
+                    <tr>
+                        <slf:tableSection name="<%= MonitoraggioForm.VerificheHashFallite.NAME%>" />
+                        <td><b>Totale</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_TOT_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_TOT_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_TOT_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td> 
+                        <td><b>Risolte</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=RISOLTO&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_RIS_VER_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=RISOLTO&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_RIS_VER_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=RISOLTO&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_RIS_VER_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
+                        <td><b>In corso di risoluzione</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=IN_CORSO&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_CORSO_RIS_VER_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=IN_CORSO&amp;&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_CORSO_RIS_VER_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=IN_CORSO&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_CORSO_RIS_VER_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
+                        <td><b>Non risolubili</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=1&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORISOLUB_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=1&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORISOLUB_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=1&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORISOLUB_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
+                        <td><b>Non risolte e verificate</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_SCHED&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_VER_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_SCHED&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_VER_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_SCHED&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=1&amp;flNonRisolub=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_VER_TOT%>" controlWidth="w100"/></a></td>
+                    </tr>
+                    <tr class="nascondiRiga">
+                        <td></td>
+                        <td><b>Non risolte e non verificate</b></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=OGGI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_NOVER_CORR%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=ULTIMI7&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_NOVER_7%>" controlWidth="w100"/></a></td>
+                        <td><a href="Monitoraggio.html?operation=monitoraggioListe&amp;tipoErrore=PREPARAZIONE_XML&amp;periodo=TUTTI&amp;tiStato=CHIUSO_ERR_VERIFICA_HASH&amp;tiStatoRisoluz=NON_RISOLTO&amp;flVerif=0&amp;pagina=SES_RANGE_DT"><slf:field name="<%= MonitoraggioForm.RiepilogoVerificheHashFallite.NI_VER_HASH_FALL_NORIS_NOVER_TOT%>" controlWidth="w100"/></a></td>
                     </tr>
                 </tbody>
             </table>

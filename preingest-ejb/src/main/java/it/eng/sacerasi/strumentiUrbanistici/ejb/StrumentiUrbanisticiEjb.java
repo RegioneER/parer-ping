@@ -65,6 +65,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -74,6 +76,9 @@ import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 @Stateless
 @LocalBean
 public class StrumentiUrbanisticiEjb {
+
+    private static final String BACKED_STRUMENTI_URBANISTICI = "STR_URBANISTICI";
+    Logger log = LoggerFactory.getLogger(StrumentiUrbanisticiEjb.class);
 
     public static final String TIPO_UNIONE = "UNIONE";
     @EJB
@@ -417,13 +422,8 @@ public class StrumentiUrbanisticiEjb {
 
         String oldCdKey = pigStrumentiUrbanistici.getCdKey();
         PigVers pigVers = pigStrumentiUrbanistici.getPigVer();
-        if (!oldCdKey.equals(newCdKey)) {
-            if (strumentiUrbanisticiHelper.getSUByVersAndCdKey(pigVers, newCdKey) != null) {
-                dto.addWarnMessage(messaggiHelper.retrievePigErrore("PING-ERRSU20").getDsErrore());
-            }
-            // MEV 27352 - eliminato qui il codice di cancellazione dei file allegati nel caso uno degli elemnti che
-            // compongono
-            // l'id sia stato modificato.
+        if (!oldCdKey.equals(newCdKey) && strumentiUrbanisticiHelper.getSUByVersAndCdKey(pigVers, newCdKey) != null) {
+            dto.addWarnMessage(messaggiHelper.retrievePigErrore("PING-ERRSU20").getDsErrore());
         }
 
         if (!dto.existsMessages()) {
@@ -432,8 +432,8 @@ public class StrumentiUrbanisticiEjb {
                     .equals(dto.getNmTipoStrumentoUrbanistico())
                     || !pigStrumentiUrbanistici.getPigStrumUrbPianoStato().getTiFaseStrumento()
                             .equals(dto.getTiFaseStrumento())) {
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
-                        configurationHelper
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfiguration(BACKED_STRUMENTI_URBANISTICI, configurationHelper
                                 .getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
                 // Inizia a rimuovere i doc da SO fleggandoli come cancellati
@@ -499,10 +499,6 @@ public class StrumentiUrbanisticiEjb {
             PigStrumUrbPianoStato piano = strumentiUrbanisticiHelper.getPigStrumUrbPianoStatoByNomeTipoByTipoAndFase(
                     pigStrumUrbPianoStato.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata1());
             col.setPigStrumUrbPianoStato(piano);
-            // MEV 26936
-            // PigStrumUrbAtto pigStrumUrbAtto = strumentiUrbanisticiHelper.findById(PigStrumUrbAtto.class,
-            // dto.getTiAtto());
-            // col.setPigStrumUrbAtto(pigStrumUrbAtto);
             strumentiUrbanisticiHelper.insertEntity(col, true);
         }
         if (dto.getAnnoCollegato2() != null) {
@@ -513,16 +509,13 @@ public class StrumentiUrbanisticiEjb {
             PigStrumUrbPianoStato piano = strumentiUrbanisticiHelper.getPigStrumUrbPianoStatoByNomeTipoByTipoAndFase(
                     pigStrumUrbPianoStato.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata2());
             col.setPigStrumUrbPianoStato(piano);
-            // MEV 26936
-            // PigStrumUrbAtto pigStrumUrbAtto = strumentiUrbanisticiHelper.findById(PigStrumUrbAtto.class,
-            // dto.getTiAtto());
-            // col.setPigStrumUrbAtto(pigStrumUrbAtto);
             strumentiUrbanisticiHelper.insertEntity(col, true);
         }
     }
 
     public void cancellaSU(BigDecimal idStrumentoUrbanistico) throws ObjectStorageException {
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
+        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
+                BACKED_STRUMENTI_URBANISTICI,
                 configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
         PigStrumentiUrbanistici su = strumentiUrbanisticiHelper.findById(PigStrumentiUrbanistici.class,
@@ -544,7 +537,7 @@ public class StrumentiUrbanisticiEjb {
                 .findByIdWithLock(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
         List<PigStrumUrbDocumenti> docs = pigStrumentiUrbanistici.getPigStrumUrbDocumentis();
         for (PigStrumUrbDocumenti doc : docs) {
-            doc = strumentiUrbanisticiHelper.findByIdWithLock(PigStrumUrbDocumenti.class, doc.getIdStrumUrbDocumenti());
+            strumentiUrbanisticiHelper.findByIdWithLock(PigStrumUrbDocumenti.class, doc.getIdStrumUrbDocumenti());
         }
         PigVSuCheck pigVSuCheck = strumentiUrbanisticiHelper.getDatiNavigazionePerSU(idStrumentoUrbanistico);
         if (pigVSuCheck.getFlFileMancante().equals(Constants.DB_FALSE)
@@ -595,7 +588,8 @@ public class StrumentiUrbanisticiEjb {
                 .findById(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
         if (pigStrumentiUrbanistici.getTiStato().equals(PigStrumentiUrbanistici.TiStato.BOZZA)
                 || pigStrumentiUrbanistici.getTiStato().equals(PigStrumentiUrbanistici.TiStato.ERRORE)) {
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
+            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
+                    BACKED_STRUMENTI_URBANISTICI,
                     configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
             pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.BOZZA); // RIMETTE IN BOZZA
@@ -657,7 +651,7 @@ public class StrumentiUrbanisticiEjb {
     public String getFileOsNameBySU(BigDecimal idStrumentiUrbanistici, String nomeFileOriginale) {
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idStrumentiUrbanistici);
-        return pigStrumentiUrbanistici.getCdKeyOs() + "_" + Utils.EliminaPunteggiatureSpaziNomeFile(nomeFileOriginale);
+        return pigStrumentiUrbanistici.getCdKeyOs() + "_" + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFileOriginale);
     }
 
     public NavigazioneStrumDto getDatiNavigazionePerSU(BigDecimal idSu) {
@@ -682,6 +676,7 @@ public class StrumentiUrbanisticiEjb {
                 jsonObject.put(pigErrore.getCdErrore(), pigErrore.getDsErrore());
             }
         } catch (JSONException ex) {
+            log.error("Errore nella composizione del JSONObject", ex);
         }
         return jsonObject;
     }

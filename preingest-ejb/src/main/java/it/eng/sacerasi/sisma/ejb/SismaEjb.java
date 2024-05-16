@@ -352,21 +352,6 @@ public class SismaEjb {
     public String getXmlRichiestaRappVersByIdSisma(BigDecimal idSisma, boolean estraiRapportoAgenzia) {
         String xml = null;
         String idVersatoreAgenzia = configurationHelper.getValoreParamApplicByApplic(Constants.ID_VERSATORE_AGENZIA);
-
-        // MEV 26290 - questa logica è stata spostata nel chiamante
-        // PigSisma pigSisma = sismaHelper.getEntityManager().find(PigSisma.class, idSisma.longValueExact());
-        // PigVers pigVers = pigSisma.getPigVer();
-        // /*
-        // * Se Sisma è stato creato da un versatore PRIVATO allora si chiederanno i dati dell'agenzia altrimenti quelli
-        // * del versatore pubblico che ha creato il progetto
-        // */
-        // Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper.getTipoVersatore(pigVers);
-        // if (tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)) {
-        // estraiRapportoAgenzia = true;
-        // } else if (pigSisma.getFlInviatoAEnte().equals(Constants.DB_TRUE)
-        // && pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO)) {
-        // estraiRapportoAgenzia = true;
-        // }
         SismaHelper.DatiRecuperoDto datiRecupero = sismaHelper.findDatiPerRecuperoByIdSisma(idSisma,
                 estraiRapportoAgenzia, new BigDecimal(idVersatoreAgenzia));
         String versione = configurationHelper
@@ -809,7 +794,7 @@ public class SismaEjb {
     /* Determina il nome del file secondo Object Storage */
     public String getFileOsNameBySisma(BigDecimal idSisma, String nomeFileOriginale) {
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSisma);
-        return pigSisma.getCdKeyOs() + "_" + Utils.EliminaPunteggiatureSpaziNomeFile(nomeFileOriginale);
+        return pigSisma.getCdKeyOs() + "_" + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFileOriginale);
     }
 
     public NavigazioneSismaDto getDatiNavigazionePerSisma(BigDecimal idSu) {
@@ -1070,11 +1055,7 @@ public class SismaEjb {
         List<PigSisma> pigSismas = sismaHelper.findPigSismaByVersAndDatiAgenzia(idSisma, agenzia, registroAg, annoAg,
                 numeroAg);
 
-        if (!pigSismas.isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return pigSismas.isEmpty();
     }
 
     public static class NavigazioneSismaDto extends GenericDto {

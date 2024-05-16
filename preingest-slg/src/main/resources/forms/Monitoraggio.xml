@@ -30,6 +30,7 @@
     <Section Name="InviiOggettiFalliti" Description="" Legend="Invii oggetti falliti" isLoadOpened="false" />
     <Section Name="NotificheFileFallite" Description="" Legend="Notifiche file fallite" isLoadOpened="false" />
     <Section Name="PreparazioniXmlFallite" Description="" Legend="Preparazioni XML fallite" isLoadOpened="false" />
+    <Section Name="VerificheHashFallite" Description="" Legend="Verifiche hash fallite" isLoadOpened="false" />
     <Section Name="RegistrazioniInCodaFallite" Description="" Legend="Registrazioni in coda fallite" isLoadOpened="false" />
     <Section Name="VersamentiASacerFalliti" Description="" Legend="Versamenti a SACER falliti" isLoadOpened="false" />
     <Section Name="TrasformazioniFallite" Description="" Legend="Trasformazioni fallite" isLoadOpened="false" />
@@ -52,6 +53,10 @@
         <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_corso_vers_tot_corr" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_corso_vers_tot_7" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_corso_vers_tot_tot" GroupingDecimal="true" />
+        <!-- In coda hash -->
+        <Input Type="INTEGER" Description="In coda hash oggi" Name="ni_in_coda_hash_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In coda hash negli ultimi 7 giorni" Name="ni_in_coda_hash_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In coda hash totale" Name="ni_in_coda_hash_tot" GroupingDecimal="true" />
         <!-- In attesa file -->
         <Input Type="INTEGER" Description="In attesa file oggi" Name="ni_in_attesa_file_corr" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="In attesa file negli ultimi 7 giorni" Name="ni_in_attesa_file_7" GroupingDecimal="true" />
@@ -86,6 +91,10 @@
         <Input Type="INTEGER" Description="Totale oggi" Name="ni_ogg_corso_trasf_tot_corr" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ogg_corso_trasf_tot_7" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Totale totale" Name="ni_ogg_corso_trasf_tot_tot" GroupingDecimal="true" />
+        <!-- In coda hash -->
+        <Input Type="INTEGER" Description="In coda hash oggi" Name="ni_in_coda_hash_trasf_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In coda hash negli ultimi 7 giorni" Name="ni_in_coda_hash_trasf_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In coda hash totale" Name="ni_in_coda_hash_trasf_tot" GroupingDecimal="true" />
         <!-- In attesa file -->
         <Input Type="INTEGER" Description="In attesa file oggi" Name="ni_in_attesa_file_trasf_corr" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="In attesa file negli ultimi 7 giorni" Name="ni_in_attesa_file_trasf_7" GroupingDecimal="true" />
@@ -211,6 +220,35 @@
         <Input Type="INTEGER" Description="Non risolte e non verificate oggi" Name="ni_not_file_noris_nover_corr" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Non risolte e non verificate negli ultimi 7 giorni" Name="ni_not_file_noris_nover_7" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Non risolte e non verificate totale" Name="ni_not_file_noris_nover_tot" GroupingDecimal="true" />
+    </Fields>
+    
+    <!-- Riepilogo verifiche hash fallite -->
+    <Fields Name="RiepilogoVerificheHashFallite" Description="Riepilogo verifiche hash fallite" >
+        <!-- Preparazioni XML fallite -->
+        <!-- Totale -->
+        <Input Type="INTEGER" Description="Totale oggi" Name="ni_ver_hash_fall_tot_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale negli ultimi 7 giorni" Name="ni_ver_hash_fall_tot_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Totale totale" Name="ni_ver_hash_fall_tot_tot" GroupingDecimal="true" /> 
+        <!-- Risolte -->
+        <Input Type="INTEGER" Description="Risolte oggi" Name="ni_ver_hash_fall_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte negli ultimi 7 giorni" Name="ni_ver_hash_fall_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Risolte totale" Name="ni_ver_hash_fall_ris_ver_tot" GroupingDecimal="true" />
+        <!-- In corso di risoluzione -->
+        <Input Type="INTEGER" Description="In corso di risoluzione oggi" Name="ni_ver_hash_fall_corso_ris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione negli ultimi 7 giorni" Name="ni_ver_hash_fall_corso_ris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="In corso di risoluzione totale" Name="ni_ver_hash_fall_corso_ris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolubili -->
+        <Input Type="INTEGER" Description="Non risolubili oggi" Name="ni_ver_hash_fall_norisolub_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili negli ultimi 7 giorni" Name="ni_ver_hash_fall_norisolub_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolubili totale" Name="ni_ver_hash_fall_norisolub_tot" GroupingDecimal="true" />
+        <!-- Non risolte e verificate -->
+        <Input Type="INTEGER" Description="Non risolte e verificate oggi" Name="ni_ver_hash_fall_noris_ver_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate negli ultimi 7 giorni" Name="ni_ver_hash_fall_noris_ver_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e verificate totale" Name="ni_ver_hash_fall_noris_ver_tot" GroupingDecimal="true" />
+        <!-- Non risolte e non verificate -->
+        <Input Type="INTEGER" Description="Non risolte e non verificate oggi" Name="ni_ver_hash_fall_noris_nover_corr" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate negli ultimi 7 giorni" Name="ni_ver_hash_fall_noris_nover_7" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Non risolte e non verificate totale" Name="ni_ver_hash_fall_noris_nover_tot" GroupingDecimal="true" />
     </Fields>
  
     <!-- Riepilogo preparazioni XML fallite -->
@@ -631,7 +669,7 @@
               isTargetList="false" VisibilityProperty="fl_versato_ping" Target="showOggettoVersatoAPing"/>
     </List>
     
-    <!-- Lista stati versamenti -->
+    <!-- Lista stati versamenti di un oggetto -->
     <List Name="OggettoDetailStatiVersamentiList" Description="Lista stati versamenti">
         <Input Name="id_sessione_ingest" Description="Sessione" Type="INTEGER" />
         <Input Name="ti_stato" Description="Stato" Type="STRING" />
@@ -676,6 +714,7 @@
         <TabElement Name="ListaOggetti" Description="Lista oggetti con stesso DCM hash" />
         <TabElement Name="ListaOggettiTrasf" Description="Lista oggetti generati da trasformazione" />
         <TabElement Name="ListaStatiVersamenti" Description="Lista stati versamenti" />
+        <TabElement Name="ListaPrioritaVersamento" Description="Lista priorità versamento" />
     </Tab>
  
     <!-- Filtri versamenti falliti -->
@@ -1038,5 +1077,12 @@
         <Button Name="oggettoDaTrasformareObjGenTrasf" Description="Oggetto da trasformare" Type="STRING" />
         <Button Name="oggettoVersatoPingObjGenTrasf" Description="Oggetto versato a PING" Type="STRING" />
     </Fields>
+
+    <!-- Lista cambi priorità -->
+    <List Name="OggettoDetailPrioritaVersamentoList" Description="Lista priorità versamento">
+        <Input Name="dt_modifica" Description="Data modifica" Type="DATETIME" />
+        <Input Name="ti_priorita_versamento" Description="Stato" Type="STRING" />
+        <Input Name="nm_user" Description="Stato" Type="STRING" />
+    </List>
  
 </Form>

@@ -42,13 +42,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.eng.sacerasi.common.Constants;
+import static it.eng.sacerasi.common.Constants.JPA_PORPERTIES_TIMEOUT;
 import it.eng.sacerasi.common.ejb.CommonDb;
 import it.eng.sacerasi.entity.PigObject;
+import it.eng.sacerasi.entity.PigSessioneIngest;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.ejb.JobLogger;
 import it.eng.sacerasi.job.preparaxml.dto.PayloadCdPrepXml;
-import it.eng.sacerasi.job.preparaxml.ejb.ControlliPrepXml;
 import it.eng.sacerasi.ws.util.Costanti;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -63,15 +70,14 @@ public class ProducerCodaVerificaHEjb {
     public static final String SELETTORE_CODA = "CODA_VER_HASH";
     //
     Logger log = LoggerFactory.getLogger(ProducerCodaVerificaHEjb.class);
-
+    @PersistenceContext(unitName = "SacerAsiJPA")
+    private EntityManager entityManager;
     @EJB
     private JobLogger jobLoggerEjb;
     @EJB
     ProducerCodaVerificaHEjb me;
     @EJB
     private CommonDb commonDb;
-    @EJB
-    private ControlliPrepXml controlli;
     //
     @Resource(mappedName = "jms/ProducerConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -84,8 +90,8 @@ public class ProducerCodaVerificaHEjb {
         String rootFtpValue;
 
         rootFtpValue = commonDb.getRootFtpParam();
-        tmpOggetti = controlli.getListaObjectDaVersPreHashSenzaPadre();
-        tmpOggetti.addAll(controlli.getListaObjectDaVersPreHashConPadre());
+        tmpOggetti = getListaObjectDaVersPreHashSenzaPadre();
+        tmpOggetti.addAll(getListaObjectDaVersPreHashConPadre());
         log.info("Producer Coda Verifica Hash:: oggetti da processare per il calcolo hash: {}", tmpOggetti.size());
 
         for (PigObject tmpObject : tmpOggetti) {
@@ -115,7 +121,7 @@ public class ProducerCodaVerificaHEjb {
                 Connection connection = null;
                 Session session = null;
                 try {
-                    controlli.impostaLockStatoVerHash(pigObject.getIdLastSessioneIngest().longValue(),
+                    impostaLockStatoVerHash(pigObject.getIdLastSessioneIngest().longValue(),
                             Constants.StatoVerificaHash.IN_CODA);
 
                     TextMessage textMessage = null;
@@ -170,5 +176,60 @@ public class ProducerCodaVerificaHEjb {
         }
         log.debug("Chiudo transazione per la sessione {}", pigObject.getIdLastSessioneIngest());
 
+    }
+
+    /*
+     * Seleziona tutti gli oggetti SENZA PADRE con stato IN_ATTESA_SCHED o DA_TRASFORMARE e tiStatoVerificaHash nullo
+     * usato da producer coda verifica hash
+     */
+    public List<PigObject> getListaObjectDaVersPreHashSenzaPadre() {
+        String queryStr = "SELECT u FROM PigSessioneIngest si JOIN si.pigObject u "
+                + "WHERE u.tiStatoObject IN (:tiStatoObjectIn) " + "AND si.idSessioneIngest = u.idLastSessioneIngest "
+                + "AND si.tiStatoVerificaHash IS NULL " + "AND u.pigObjectPadre IS NULL";
+
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        List<String> stati = new ArrayList<>();
+        // MEV 31102 ora cerchiamo igli oggetti in stato IN_CODA_HASH e non più quelli in IN_ATTESA_SCHED
+        stati.add(Constants.StatoOggetto.IN_CODA_HASH.name());
+        query.setParameter("tiStatoObjectIn", stati);
+
+        return query.getResultList();
+    }
+
+    /*
+     * Seleziona tutti gli oggetti CON PADRE per cui il padre sia con stato 'VERSATO_A_PING' e tiStatoVerificaHash nullo
+     * usato da producer coda verifica hash
+     */
+    private List<PigObject> getListaObjectDaVersPreHashConPadre() {
+        String queryStr = "SELECT u FROM PigSessioneIngest si JOIN si.pigObject u "
+                + "WHERE u.tiStatoObject = :tiStatoObjectIn " + "AND si.idSessioneIngest = u.idLastSessioneIngest "
+                + "AND si.tiStatoVerificaHash IS NULL " + "AND u.pigObjectPadre IS NOT NULL "
+                + "AND u.pigObjectPadre.tiStatoObject = 'VERSATO_A_PING'";
+
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        // MEV 31102 ora cerchiamo igli oggetti in stato IN_CODA_HASH e non più quelli in IN_ATTESA_SCHED
+        query.setParameter("tiStatoObjectIn", Constants.StatoOggetto.IN_CODA_HASH.name());
+
+        return query.getResultList();
+    }
+
+    /*
+     * usato da producer coda verifica hash
+     */
+    private void impostaLockStatoVerHash(long idLastSessioneIngest, Constants.StatoVerificaHash stato)
+            throws ParerInternalError {
+        try {
+            log.debug("Blocco la riga {} e la Aggiorno", idLastSessioneIngest);
+            Map<String, Object> properties = new HashMap<>();
+            properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
+            PigSessioneIngest tmpSessioneIngest;
+            tmpSessioneIngest = entityManager.find(PigSessioneIngest.class, idLastSessioneIngest,
+                    LockModeType.PESSIMISTIC_WRITE, properties);
+            tmpSessioneIngest.setTiStatoVerificaHash(stato.name());
+            entityManager.flush();
+        } catch (Exception ex) {
+            log.error("Eccezione", ex);
+            throw new ParerInternalError(ex);
+        }
     }
 }

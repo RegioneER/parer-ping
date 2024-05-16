@@ -70,6 +70,8 @@
                     title: "Conferma annullamento unità documentarie",
                     buttons: {
                         "Conferma": function () {
+                            //MEV 26942 - nascondo i pulsanti di annullamento.
+                            
                             $(this).dialog("close");
                             var idObject = $("#Id_object_hidden").val();
                             var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
@@ -99,6 +101,11 @@
                     buttons: {
                         "Conferma": function () {
                             $(this).dialog("close");
+                            
+                            //MEV 26942 - nascondi pulsanti annullamento.
+                            $('input[name="operation__annullaOggettoDetail"]').parent().hide();
+                            $('input[name="operation__annullaVersamentiUDDetail"]').parent().hide();
+                            
                             var idObject = $("#Id_object_hidden").val();
                             var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
                             if (idObject) {
@@ -127,6 +134,11 @@
                     buttons: {
                         "Conferma": function () {
                             $(this).dialog("close");
+                            
+                            //MEV 26942 - nascondi pulsanti annullamento.
+                            $('input[name="operation__annullaOggettoDetail"]').parent().hide();
+                            $('input[name="operation__annullaVersamentiUDDetail"]').parent().hide();
+                            
                             var idObject = $("#Id_object_hidden").val();
                             if (idObject) {
                                 $.post("Monitoraggio.html", {operation: "annullaOggettoDetailAction"}).done(function (data) {
@@ -142,7 +154,7 @@
                     }
                 });
 
-                $('.setAnullatoInDaTrasformare').dialog({
+                $('.setAnnullatoInDaTrasformare').dialog({
                     autoOpen: true,
                     width: 600,
                     modal: true,
@@ -296,8 +308,8 @@
                     </ul>
                 </div>
             </c:if>
-            <c:if test="${!empty requestScope.setAnullatoInDaTrasformare}">
-                <div class="messages setAnullatoInDaTrasformare ">
+            <c:if test="${!empty requestScope.setAnnullatoInDaTrasformare}">
+                <div class="messages setAnnullatoInDaTrasformare ">
                     <ul>
                         <li class="message info ">
                             <p>Seleziona lo stato da assegnare per il recupero</p><br/>
@@ -574,6 +586,10 @@
             <slf:tab name="<%= MonitoraggioForm.OggettoSubTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoSubTabs.lista_stati_versamenti%>">
                 <slf:list   name="<%= MonitoraggioForm.OggettoDetailStatiVersamentiList.NAME%>" />
                 <slf:listNavBar  name="<%= MonitoraggioForm.OggettoDetailStatiVersamentiList.NAME%>" />
+            </slf:tab>
+            <slf:tab name="<%= MonitoraggioForm.OggettoSubTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoSubTabs.lista_priorita_versamento%>">
+                <slf:list   name="<%= MonitoraggioForm.OggettoDetailPrioritaVersamentoList.NAME%>" />
+                <slf:listNavBar  name="<%= MonitoraggioForm.OggettoDetailPrioritaVersamentoList.NAME%>" />
             </slf:tab>
 
             <div><input name="mainNavTable" type="hidden" value="${(empty param.mainNavTable) ? fn:escapeXml(param.table) : fn:escapeXml(param.mainNavTable)  }" /></div>

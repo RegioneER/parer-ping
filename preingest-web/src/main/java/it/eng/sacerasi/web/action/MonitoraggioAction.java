@@ -54,6 +54,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import it.eng.sacerasi.slite.gen.tablebean.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -86,18 +87,6 @@ import it.eng.sacerasi.slite.gen.form.MonitoraggioForm;
 import it.eng.sacerasi.slite.gen.form.MonitoraggioForm.FiltriJobSchedulati;
 import it.eng.sacerasi.slite.gen.form.MonitoraggioForm.FiltriReplicaOrg;
 import it.eng.sacerasi.slite.gen.form.MonitoraggioForm.SessioniErrateDetail;
-import it.eng.sacerasi.slite.gen.tablebean.PigAmbienteVersRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigAmbienteVersTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigClasseErroreTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigErroreTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigInfoDicomRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigObjectRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigSessioneIngestRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigStatoSessioneIngestTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigXmlAnnulSessioneIngestRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.IamVLisOrganizDaReplicTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisFileObjectRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisFileObjectTableBean;
@@ -345,6 +334,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                                     Constants.TipoVersamento.ZIP_NO_XML_SACER.name(),
                                     Constants.TipoVersamento.ZIP_CON_XML_SACER.name())
                             && monitoraggioEjb.checkTiStatoPigObject(versRB.getIdObject(),
+                                    Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name(),
                                     Constants.StatoOggetto.CHIUSO_ERR_SCHED.name(),
                                     Constants.StatoOggetto.IN_ATTESA_VERS.name(),
                                     Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
@@ -546,22 +536,24 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getOggettiDerVersFallitiButtonList().getAnnullaOggettoDerVersFalliti().setHidden(true);
             getForm().getOggettiDerVersFallitiButtonList().getAnnullaVersamentiUDDerVersFalliti().setEditMode();
             getForm().getOggettiDerVersFallitiButtonList().getAnnullaVersamentiUDDerVersFalliti().setHidden(true);
-            // Nuova logica di visualizzazione del pulsante ANNULLA OGGETTO
-            boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
-            boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
+            // MEV 31134 Nuova logica di visualizzazione del pulsante ANNULLA OGGETTO
+            boolean isLastVerificata = monitoraggioHelper.isLastVerificata(idVers, cdKeyObject, nmTipoObject);
+            boolean isLastRisolubile = monitoraggioHelper.isLastRisolubile(idVers, cdKeyObject, nmTipoObject);
             BigDecimal idOgg = objNonVersRB.getIdObject();
             if (idOgg != null && tipoObjRowBean.getTiVersFile() != null) {
                 if (!tipoObjRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())
                         && monitoraggioEjb.checkTiStatoPigObject(idOgg, Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name(),
+                                Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name(),
                                 Constants.StatoOggetto.CHIUSO_ERR_SCHED.name(),
                                 Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
                                 Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-                        && allVerificate && allNonRisolubili) {
+                        && isLastVerificata && !isLastRisolubile) {
 
                     getForm().getOggettiDerVersFallitiButtonList().getAnnullaOggettoDerVersFalliti().setHidden(false);
                 } else if (tipoObjRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())
                         && (monitoraggioEjb.checkTiStatoPigObject(idOgg,
                                 Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name(),
+                                Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name(),
                                 Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name()))) {
                     getForm().getOggettiDerVersFallitiButtonList().getAnnullaOggettoDerVersFalliti().setHidden(false);
                 }
@@ -569,7 +561,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 if (!tipoObjRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())
                         && monitoraggioEjb.checkTiStatoPigObject(idOgg, Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
                                 Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-                        && allVerificate && allNonRisolubili
+                        && isLastVerificata && !isLastRisolubile
                         && monitoraggioHelper.existsUDPerObjectVersataOkOrVersataErr(idOgg,
                                 Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
                     getForm().getOggettiDerVersFallitiButtonList().getAnnullaVersamentiUDDerVersFalliti()
@@ -665,9 +657,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 getForm().getOggettoDetail().getNm_ks_instance().setValue(pigKSInstance.getNmKsInstance());
             }
 
+            // MEV 26942
+            getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(true);
+            getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail().setHidden(true);
+
             if ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.IN_ATTESA_FILE.name())
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.DA_TRASFORMARE.name())
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.TRASFORMAZIONE_NON_ATTIVA.name()))
+                    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                     // MEV#14652
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())
@@ -726,10 +723,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
             boolean filtriUd = false;
             boolean inCorsoAnnul;
-            boolean allVerificate = monitoraggioHelper.areAllVerificate(objRB.getIdVers(), objRB.getCdKeyObject(),
+            // MEV 31134 - ora controlliamo solo l'ultima sessione.
+            boolean isLastVerificata = monitoraggioHelper.isLastVerificata(objRB.getIdVers(), objRB.getCdKeyObject(),
                     objRB.getNmTipoObject());
-            boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(objRB.getIdVers(), objRB.getCdKeyObject(),
-                    objRB.getNmTipoObject());
+            boolean isLastNonRisolubile = monitoraggioHelper.isLastNonRisolubile(objRB.getIdVers(),
+                    objRB.getCdKeyObject(), objRB.getNmTipoObject());
 
             // MAC 25207
             if (objRB.getTiPriorita() != null) {
@@ -836,9 +834,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                                                                                                     // test in OR)
                     ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-                            && allVerificate && allNonRisolubili)) {
+                            && isLastVerificata && isLastNonRisolubile)) {
                 getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(false);
             }
 
@@ -858,7 +857,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name())
                     || ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-                            && allVerificate && allNonRisolubili
+                            && isLastVerificata && isLastNonRisolubile
                             && monitoraggioHelper.existsUDPerObjectVersataOkOrVersataErr(idObject,
                                     Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
                 getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail().setHidden(false);
@@ -869,6 +868,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if ((tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())
                     || tiVers.equals(Constants.TipoVersamento.ZIP_NO_XML_SACER.name()))
                     && (filtriUd || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
+                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.IN_ATTESA_VERS.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.IN_CODA_VERS.name())
@@ -993,6 +993,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         getForm().getOggettoDetailStatiVersamentiList().setTable(statiTb);
         getForm().getOggettoDetailStatiVersamentiList().getTable().setPageSize(10);
         getForm().getOggettoDetailStatiVersamentiList().getTable().first();
+        // Carico la lista dei cambi di priorità
+        PigPrioritaObjectTableBean prioritaTB = monitoraggioEjb.getPigPrioritaObjectTableBean(idObject);
+        getForm().getOggettoDetailPrioritaVersamentoList().setTable(prioritaTB);
+        getForm().getOggettoDetailPrioritaVersamentoList().getTable().setPageSize(10);
+        getForm().getOggettoDetailPrioritaVersamentoList().getTable().first();
     }
 
     /**
@@ -1191,14 +1196,19 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 getMessageBox().addError(
                         "ATTENZIONE: Il tipo gestione oggetti figli e la priorità devono essere valorizzate.");
             } else {
-                monitoraggioHelper.salvaNoteInfoTipoGestFigliObject(idObject,
-                        getForm().getOggettoDetail().getNote().parse(),
+                monitoraggioHelper.updatePigObject(idObject, getForm().getOggettoDetail().getNote().parse(),
                         getForm().getOggettoDetail().getDs_info_object().parse(),
                         getForm().getOggettoDetail().getTi_gest_oggetti_figli().parse(),
                         getForm().getOggettoDetail().getNm_tipo_object().parse().equalsIgnoreCase(STUDIO_DICOM),
                         getForm().getOggettoDetail().getTi_priorita().parse(),
-                        getForm().getOggettoDetail().getTi_priorita_versamento().parse());
+                        getForm().getOggettoDetail().getTi_priorita_versamento().parse(), getUser().getUsername());
                 setOggettoDetailViewMode();
+                try {
+                    getForm().getOggettoDetailPrioritaVersamentoList()
+                            .setTable(monitoraggioEjb.getPigPrioritaObjectTableBean(idObject));
+                } catch (ParerUserError e) {
+                    getMessageBox().addError(e.getDescription());
+                }
             }
             forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
         }
@@ -1315,14 +1325,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getFiltriRiepilogoVersamenti().getId_tipo_object().setEditMode();
             getForm().getFiltriRiepilogoVersamenti().getGeneraRiepilogoVersamenti().setEditMode();
 
-            if (idVers != null) {
-                // Ricavo il TableBean relativo ai tipi oggetto in base al versatore scelto
-                PigTipoObjectTableBean tipoObjectTableBean = comboHelper
-                        .getTipoObjectFromVersatore(getUser().getIdUtente(), idVers);
-                DecodeMap mappaTipoObject = new DecodeMap();
-                mappaTipoObject.populatedMap(tipoObjectTableBean, "id_tipo_object", "nm_tipo_object");
-                getForm().getFiltriRiepilogoVersamenti().getId_tipo_object().setDecodeMap(mappaTipoObject);
-            }
+            // Ricavo il TableBean relativo ai tipi oggetto in base al versatore scelto
+            PigTipoObjectTableBean tipoObjectTableBean = comboHelper.getTipoObjectFromVersatore(getUser().getIdUtente(),
+                    idVers);
+            DecodeMap mappaTipoObject = new DecodeMap();
+            mappaTipoObject.populatedMap(tipoObjectTableBean, "id_tipo_object", "nm_tipo_object");
+            getForm().getFiltriRiepilogoVersamenti().getId_tipo_object().setDecodeMap(mappaTipoObject);
+
             try {
                 // Calcola i totali di Riepilogo Versamenti
                 calcolaTotaliRiepilogoVersamenti(ambienteVersRB.getIdAmbienteVers(), idVers, null);
@@ -2034,6 +2043,17 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getRiepilogoOggettiVersati().getNi_chiuso_ok_7().setValue(String.valueOf(niChiusoOk7));
             getForm().getRiepilogoOggettiVersati().getNi_chiuso_ok_tot().setValue(String.valueOf(niChiusoOkTot));
 
+            /* IN CODA HASH */ // MEV 31102
+            String inCodaHashOggi = (countersVersati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.OGGI))
+                    .toString();
+            String inCodaHash7 = (countersVersati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.ULTIMI_7))
+                    .toString();
+            String inCodaHashTot = (countersVersati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.TOT))
+                    .toString();
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_corr().setValue(inCodaHashOggi);
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_7().setValue(inCodaHash7);
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_tot().setValue(inCodaHashTot);
+
             /* IN ATTESA FILE */
             String inAttesaFileOggi = (countersVersati.get(Constants.StatoOggetto.IN_ATTESA_FILE.name())
                     .get(HmKey.OGGI)).toString();
@@ -2104,17 +2124,17 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getRiepilogoOggettiVersati().getNi_chiuso_war_7().setValue(chiusoWarning7);
             getForm().getRiepilogoOggettiVersati().getNi_chiuso_war_tot().setValue(chiusoWarningTot);
             /* TOTALE */
-            int totOggi = Integer.parseInt(inAttesaFileOggi) + Integer.parseInt(inAttesaSchedOggi)
-                    + Integer.parseInt(inAttesaVersOggi) + Integer.parseInt(inCodaVersOggi)
-                    + Integer.parseInt(chiusoErrVersOggi) + Integer.parseInt(warningOggi)
-                    + Integer.parseInt(chiusoWarningOggi);
-            int totUltimi7 = Integer.parseInt(inAttesaFile7) + Integer.parseInt(inAttesaSched7)
-                    + Integer.parseInt(inAttesaVers7) + Integer.parseInt(inCodaVers7) + Integer.parseInt(chiusoErrVers7)
-                    + Integer.parseInt(warning7) + Integer.parseInt(chiusoWarning7);
-            int tot = Integer.parseInt(inAttesaFileTot) + Integer.parseInt(inAttesaSchedTot)
-                    + Integer.parseInt(inAttesaVersTot) + Integer.parseInt(inCodaVersTot)
-                    + Integer.parseInt(chiusoErrVersTot) + Integer.parseInt(warningTot)
-                    + Integer.parseInt(chiusoWarningTot);
+            int totOggi = Integer.parseInt(inCodaHashOggi) + Integer.parseInt(inAttesaFileOggi)
+                    + Integer.parseInt(inAttesaSchedOggi) + Integer.parseInt(inAttesaVersOggi)
+                    + Integer.parseInt(inCodaVersOggi) + Integer.parseInt(chiusoErrVersOggi)
+                    + Integer.parseInt(warningOggi) + Integer.parseInt(chiusoWarningOggi);
+            int totUltimi7 = Integer.parseInt(inCodaHash7) + Integer.parseInt(inAttesaFile7)
+                    + Integer.parseInt(inAttesaSched7) + Integer.parseInt(inAttesaVers7) + Integer.parseInt(inCodaVers7)
+                    + Integer.parseInt(chiusoErrVers7) + Integer.parseInt(warning7) + Integer.parseInt(chiusoWarning7);
+            int tot = Integer.parseInt(inCodaHashTot) + Integer.parseInt(inAttesaFileTot)
+                    + Integer.parseInt(inAttesaSchedTot) + Integer.parseInt(inAttesaVersTot)
+                    + Integer.parseInt(inCodaVersTot) + Integer.parseInt(chiusoErrVersTot)
+                    + Integer.parseInt(warningTot) + Integer.parseInt(chiusoWarningTot);
 
             getForm().getRiepilogoOggettiVersati().getNi_ogg_corso_vers_tot_corr().setValue(String.valueOf(totOggi));
             getForm().getRiepilogoOggettiVersati().getNi_ogg_corso_vers_tot_7().setValue(String.valueOf(totUltimi7));
@@ -2130,6 +2150,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     Constants.TipoClasseVersamento.DA_TRASFORMARE.name());
             Map<String, Map<Enum, Integer>> countersTrasformati = calcolaTotaliOggetti(contaOggettiTrasformatiTB);
             // Setto i valori nella form
+            /* IN CODA HASH */ // MEV 31102
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_trasf_corr().setValue(
+                    (countersTrasformati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.OGGI)).toString());
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_trasf_7()
+                    .setValue((countersTrasformati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.ULTIMI_7))
+                            .toString());
+            getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_trasf_tot().setValue(
+                    (countersTrasformati.get(Constants.StatoOggetto.IN_CODA_HASH.name()).get(HmKey.TOT)).toString());
             /* IN ATTESA FILE */
             getForm().getRiepilogoOggettiVersati().getNi_in_attesa_file_trasf_corr().setValue(
                     (countersTrasformati.get(Constants.StatoOggetto.IN_ATTESA_FILE.name()).get(HmKey.OGGI)).toString());
@@ -2463,6 +2491,72 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                             .toString());
             getForm().getRiepilogoNotificheFileFallite().getNi_not_file_noris_nover_tot()
                     .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_NON_VERIFICATO.name()).get(HmKey.TOT)
+                            .toString());
+
+            // MEV 31102 Setto i valori nella form RiepilogoVerfichehashfallite
+            /* TOTALI */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_tot_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get("TOTALI").get(HmKey.OGGI).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_tot_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get("TOTALI").get(HmKey.ULTIMI_7).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_tot_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get("TOTALI").get(HmKey.TOT).toString());
+            /* RISOLTI */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_ris_ver_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.RISOLTO.name()).get(HmKey.OGGI).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_ris_ver_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.RISOLTO.name()).get(HmKey.ULTIMI_7).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_ris_ver_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.RISOLTO.name()).get(HmKey.TOT).toString());
+            /* IN CORSO DI RISOLUZIONE */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_corso_ris_ver_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.IN_CORSO.name()).get(HmKey.OGGI).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_corso_ris_ver_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.IN_CORSO.name()).get(HmKey.ULTIMI_7).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_corso_ris_ver_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.IN_CORSO.name()).get(HmKey.TOT).toString());
+            /* NON RISOLUBILI */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_norisolub_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLUBILE.name()).get(HmKey.OGGI).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_norisolub_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLUBILE.name()).get(HmKey.ULTIMI_7).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_norisolub_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLUBILE.name()).get(HmKey.TOT).toString());
+            /* NON RISOLTI E VERIFICATI */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_ver_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_VERIFICATO.name()).get(HmKey.OGGI).toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_ver_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_VERIFICATO.name()).get(HmKey.ULTIMI_7)
+                            .toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_ver_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_VERIFICATO.name()).get(HmKey.TOT).toString());
+            /* NON RISOLTI E NON VERIFICATI */
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_nover_corr()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_NON_VERIFICATO.name()).get(HmKey.OGGI)
+                            .toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_nover_7()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                            .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_NON_VERIFICATO.name()).get(HmKey.ULTIMI_7)
+                            .toString());
+            getForm().getRiepilogoVerificheHashFallite().getNi_ver_hash_fall_noris_nover_tot()
+                    .setValue(calcolaTotaliFalliti.get(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                             .get(WebConstants.tiStatoRisoluz.NON_RISOLTO_NON_VERIFICATO.name()).get(HmKey.TOT)
                             .toString());
 
@@ -3413,6 +3507,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 boolean showButton = true;
                 // NB. Se vengono cambiati gli stati forse questo controllo va cambiato
                 if (stati.contains(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
+                        || stati.contains(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                         || stati.contains(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())) {
                     // Se il filtro contiene questi due stati, non posso visualizzare il pulsante imposta verificati
                     showButton = false;
@@ -3924,6 +4019,12 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     @Override
     public void tabListaStatiVersamentiOnClick() throws EMFError {
         getForm().getOggettoSubTabs().setCurrentTab(getForm().getOggettoSubTabs().getListaStatiVersamenti());
+        forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+    }
+
+    @Override
+    public void tabListaPrioritaVersamentoOnClick() throws EMFError {
+        getForm().getOggettoSubTabs().setCurrentTab(getForm().getOggettoSubTabs().getListaPrioritaVersamento());
         forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
     }
 
@@ -4776,42 +4877,43 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         forwardToPublisher(Application.Publisher.OGGETTO_DA_VERSAMENTI_FALLITI_DETAIL);
     }
 
-    public void impostaValoreFlVersSacerDaRecup(BigDecimal idVers, String cdKeyObject, String nmTipoObject)
-            throws ParerInternalError {
-        boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
-        boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-
-        try {
-            /* Gestione "Verificato" */
-            if (allVerificate) {
-                monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-            } else {
-                monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-            }
-
-            /* Gestione "Non risolubile" */
-            if (allNonRisolubili) {
-                monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-                /* Cancello la cartella nell'area FTP */
-                monitoraggioEjb.deleteDir(idVers, cdKeyObject);
-                getMessageBox().addMessage(new Message(MessageLevel.ERR,
-                        "Errore nella cancellazione della cartella '" + cdKeyObject + "' nell'area FTP"));
-            } /*
-               * Se tutte le sessioni hanno l'indicatore "Non risolubile" NON settato (condizione necessaria affinchÃ¨
-               * l'oggetto sia nel complesso "risolubile"
-               */ else {
-                boolean tutteSessioniRisolubili = monitoraggioHelper.areAllRisolubili(idVers, cdKeyObject,
-                        nmTipoObject);
-                if (tutteSessioniRisolubili) {
-                    monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-                }
-            }
-        } catch (ParerInternalError e) {
-            log.error("Errore", e);
-            throw e;
-        }
-
-    }
+    // MEV 31134 - TODO rimouvere quando verificato che non serve più
+    // public void impostaValoreFlVersSacerDaRecup(BigDecimal idVers, String cdKeyObject, String nmTipoObject)
+    // throws ParerInternalError {
+    // boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
+    // boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
+    //
+    // try {
+    // /* Gestione "Verificato" */
+    // if (allVerificate) {
+    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
+    // } else {
+    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
+    // }
+    //
+    // /* Gestione "Non risolubile" */
+    // if (allNonRisolubili) {
+    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
+    // /* Cancello la cartella nell'area FTP */
+    // monitoraggioEjb.deleteDir(idVers, cdKeyObject);
+    // getMessageBox().addMessage(new Message(MessageLevel.ERR,
+    // "Errore nella cancellazione della cartella '" + cdKeyObject + "' nell'area FTP"));
+    // } /*
+    // * Se tutte le sessioni hanno l'indicatore "Non risolubile" NON settato (condizione necessaria affinchÃ¨
+    // * l'oggetto sia nel complesso "risolubile"
+    // */ else {
+    // boolean tutteSessioniRisolubili = monitoraggioHelper.areAllRisolubili(idVers, cdKeyObject,
+    // nmTipoObject);
+    // if (tutteSessioniRisolubili) {
+    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
+    // }
+    // }
+    // } catch (ParerInternalError e) {
+    // log.error("Errore", e);
+    // throw e;
+    // }
+    //
+    // }
 
     @Override
     public JSONObject triggerFiltriVersamentiVersamento_ti_statoOnTrigger() throws EMFError {
@@ -5293,9 +5395,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
         PigObject obj = monitoraggioHelper.getPigObject(idVers, cdKeyObject);
         BigDecimal idObject = BigDecimal.valueOf(obj.getIdObject());
+        Long countPigUnitaDocObject = monitoraggioHelper.countPigUnitaDocObject(idObject);
         Long countPigUnitaDocObjectDuplicate = monitoraggioHelper.countPigUnitaDocObjectDuplicate(idObject);
 
-        getRequest().setAttribute("ni_unita_doc_vers", obj.getPigUnitaDocObjects().size());
+        getRequest().setAttribute("ni_unita_doc_vers", countPigUnitaDocObject);
         getRequest().setAttribute("ni_unita_doc_vers_dup", countPigUnitaDocObjectDuplicate);
 
         forwardToPublisher(getLastPublisher());
@@ -5914,7 +6017,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if (getForm().getUnitaDocDaVersamentiFallitiList().getTable() != null) {
                 pageSize = getForm().getUnitaDocDaVersamentiFallitiList().getTable().getPageSize();
             }
-            // Carico la lista unitÃ  doc.
+            // Carico la lista unità  doc.
             MonVLisUnitaDocSessioneTableBean udSesTB = monitoraggioHelper.getMonVLisUnitaDocSessioneTableBean(
                     idSessioneIngest, cdRegistroUnitaDoc, aaUnitaDoc, cdKeyUnitaDoc, tiStatoUnitaDoc, cdErrore, nmStrut,
                     flStrutturaNonDefinita, flVersSimulato);
@@ -5939,7 +6042,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         BigDecimal idTipoObject = getForm().getOggettoDetail().getId_tipo_object().parse();
         getForm().getOggettoDetail().getId_tipo_object().setValue(idTipoObject.longValueExact() + "");
 
-        getRequest().setAttribute("setAnullatoInDaTrasformare", true);
+        getRequest().setAttribute("setAnnullatoInDaTrasformare", true);
         forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
 
         getForm().getOggettoDetail().getTi_stato_popup().setEditMode();
@@ -5948,9 +6051,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
         PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject
 
-        .class
-
-                , idTipoObject);
+        .class, idTipoObject);
         if (pigTipoObject.getFlNoVisibVersOgg() == null || pigTipoObject.getFlNoVisibVersOgg().equals("0")) {
             getForm().getOggettoDetail().getId_tipo_object().setEditMode();
         }

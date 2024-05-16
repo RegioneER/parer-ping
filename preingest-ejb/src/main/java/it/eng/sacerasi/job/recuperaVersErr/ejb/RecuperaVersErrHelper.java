@@ -25,11 +25,15 @@ import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigSessioneIngest;
+import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigStatoSessioneIngest;
+import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.entity.PigUnitaDocObject;
 import it.eng.sacerasi.entity.PigUnitaDocSessione;
 import it.eng.sacerasi.entity.PigXmlSacerUnitaDocSes;
 import it.eng.sacerasi.entity.PigXmlSessioneIngest;
+import it.eng.sacerasi.sisma.ejb.SismaHelper;
+import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiHelper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +62,11 @@ public class RecuperaVersErrHelper {
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
     @EJB
+    private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
+    @EJB
     private RecuperaVersErrHelper me;
+    @EJB
+    private SismaHelper sismaHelper;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void elaboraOggetto(PigObject obj) {
@@ -86,6 +94,39 @@ public class RecuperaVersErrHelper {
             me.creaXmlSessioneIngest(oldSession, sessione);
             log.debug("JOB {} - creati gli oggetti Xml", Constants.NomiJob.RECUPERA_VERS_ERR.name());
             obj.setIdLastSessioneIngest(new BigDecimal(sessione.getIdSessioneIngest()));
+
+            // MEV 31816 - correggo lo stato di un eventuale SISMA
+            if (obj.getPigObjectPadre() != null) {
+                PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(obj.getPigObjectPadre().getCdKeyObject(),
+                        PigSisma.TiStato.ERRORE);
+
+                if (pigSisma != null) {
+                    // Setta lo stato di PigSisma
+                    Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(pigSisma.getPigVer());
+                    if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
+                            && pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
+                        sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_VERSAMENTO_SA);
+                    } else {
+                        sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_VERSAMENTO);
+                    }
+
+                    log.debug("JOB {} - aggiornato lo stato del SISMA collegato",
+                            Constants.NomiJob.RECUPERA_VERS_ERR.name());
+                }
+            }
+
+            // MEV 31651 - correggo lo stato di un eventuale Strumento Urbanistico
+            if (obj.getPigObjectPadre() != null) {
+                PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                        .getPigStrumUrbByCdKeyAndTiStato(obj.getPigObjectPadre().getCdKeyObject(),
+                                PigStrumentiUrbanistici.TiStato.ERRORE);
+                if (pigStrumentiUrbanistici != null) {
+                    strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                    log.debug("JOB {} - aggiornato lo stato del SU collegato",
+                            Constants.NomiJob.RECUPERA_VERS_ERR.name());
+                }
+            }
         }
     }
 

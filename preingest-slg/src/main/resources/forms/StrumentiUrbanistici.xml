@@ -60,7 +60,7 @@
         <Input Name="anno_out" Type="STRING" Description="Anno"/>
         <Input Name="numero_out" Type="STRING" Description="Numero"/>
         <Input Name="cd_key_out" Type="STRING" Description="Identificativo strumento" />
-        <Input Name="id_strumenti_urbanistici_out" Type="INTEGER" Description="Identificativo strumento urbanistico" Hidden="true"/>
+        <Input Name="id_strumenti_urbanistici_out" Type="INTEGER" Description="Identificativo strumento urbanistico"/>
         <Input Name="faseCollegata1_out" Type="STRING" Description="Fase" Readonly="true" />
         <Input Name="annoCollegato1_out" Type="STRING" Description="Anno" Readonly="true" />
         <Input Name="identificativoCollegato1_out" Type="STRING" Description="Identificativo" Readonly="true" />
@@ -116,6 +116,7 @@
         <Input Type="STRING" Description="Identificativo" Name="cd_numero" />
         <ComboBox Type="STRING" Description="Stato" Name="nm_stato" />
         <Button Type="STRING" Description="Ricerca" Name="ricercaStrumentiUrbanistici"/>
+        <Button Type="STRING" Description="Pulisci ricerca" Name="pulisciRicercaStrumentiUrbanistici"/>
     </Fields>
     
 </Form>

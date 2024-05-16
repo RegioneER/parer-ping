@@ -96,7 +96,10 @@ import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.xformer.common.Constants;
 import it.eng.xformer.helper.GenericJobHelper;
 import it.eng.xformer.helper.TrasformazioniHelper;
-import it.eng.xformer.kettle.ejb.RepositoryManager;
+import it.eng.xformer.kettle.ejb.RepositoryManagerEjb;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * @author Cappelli_F
@@ -108,8 +111,8 @@ public class EseguiTrasformazione {
 
     private final Logger logger = LoggerFactory.getLogger(EseguiTrasformazione.class);
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManager")
-    private RepositoryManager repositoryManager;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManagerEjb")
+    private RepositoryManagerEjb repositoryManager;
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/TrasformazioniHelper")
     private TrasformazioniHelper trasformazioniHelper;
@@ -1128,7 +1131,7 @@ public class EseguiTrasformazione {
     }
 
     private List<String> createOutputPackages(String udsFinalDirectory, String outputDirectory, PigObject po)
-            throws IOException {
+            throws IOException, NoSuchAlgorithmException {
         logger.info("[notificaOggettoTrasformato] inizio creazione pacchetti figli su oggetto id: {} nome: {}",
                 po.getIdObject(), po.getCdKeyObject());
         List<String> zipNames = new ArrayList<>();
@@ -1165,14 +1168,19 @@ public class EseguiTrasformazione {
                             "[notificaOggettoTrasformato] inizio generazione pacchetto {}/{} per oggetto id: {} nome: {}",
                             count, packagesTobeGenerated, po.getIdObject(), po.getCdKeyObject());
 
+                    // MEV 27880 - genero l'md5 dell'id del versatore in modo da avewre una string con lunghezza fissa.
+                    MessageDigest md = MessageDigest.getInstance("MD5");
+                    md.update(po.getPigVer().getIdVers().toString().getBytes());
+                    byte[] digest = md.digest();
+                    String versIdHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+
                     // crea la cartella che conterrà lo zip
                     File finalOutputDirectory = new File(
-                            zipFileBasePath + "_" + po.getPigVer().getIdVers() + "_" + String.format("%04d", count));
+                            zipFileBasePath + "_" + versIdHash + "_" + String.format("%04d", count));
                     finalOutputDirectory.mkdirs();
 
-                    File finalFileName = new File(finalOutputDirectory,
-                            po.getCdKeyObject() + "_" + po.getPigVer().getIdVers() + "_" + String.format("%04d", count)
-                                    + Constants.STANDARD_PACKAGE_EXTENSION);
+                    File finalFileName = new File(finalOutputDirectory, po.getCdKeyObject() + "_" + versIdHash + "_"
+                            + String.format("%04d", count) + Constants.STANDARD_PACKAGE_EXTENSION);
                     zipNames.add(finalFileName.getCanonicalPath());
 
                     zipOS = new ZipOutputStream(new FileOutputStream(finalFileName));

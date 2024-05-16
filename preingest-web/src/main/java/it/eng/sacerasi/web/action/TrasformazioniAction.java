@@ -61,7 +61,6 @@ import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
 import it.eng.parer.kettle.model.EsitoStatusCodaTrasformazione;
 import it.eng.parer.kettle.model.StatoTrasformazione;
-import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.XfoTrasf;
 import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.slite.gen.Application;
@@ -88,15 +87,13 @@ import it.eng.spagoLite.SessionManager;
 import it.eng.spagoLite.actions.form.ListAction;
 import it.eng.spagoLite.db.base.BaseRowInterface;
 import it.eng.spagoLite.db.base.BaseTableInterface;
-import it.eng.spagoLite.db.base.row.BaseRow;
-import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 import it.eng.spagoLite.form.base.BaseElements;
 import it.eng.spagoLite.security.Secure;
 import it.eng.xformer.dto.RicercaTrasformazioneBean;
 import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.kettle.ejb.ParametersManager;
-import it.eng.xformer.kettle.ejb.RepositoryManager;
+import it.eng.xformer.kettle.ejb.RepositoryManagerEjb;
 import it.eng.xformer.web.util.ComboGetter;
 import it.eng.xformer.web.util.Constants;
 import it.eng.xformer.web.util.WebConstants;
@@ -111,8 +108,8 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
     @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
     private ConfigurationHelper configurationHelper;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManager")
-    private RepositoryManager repositoryManager;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/RepositoryManagerEjb")
+    private RepositoryManagerEjb repositoryManager;
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/ParametersManager")
     private ParametersManager parametersManager;
@@ -1307,7 +1304,8 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
         List<StatoTrasformazione> statiTrasformazioni = statusCodaTrasformazioni.getTrasformazioniInCorso() != null
                 ? statusCodaTrasformazioni.getTrasformazioniInCorso() : new ArrayList<>();
 
-        BaseTableInterface<?> trasformazioniInCorsoTable = createStatoTrasformazioniTable(statiTrasformazioni);
+        BaseTableInterface<?> trasformazioniInCorsoTable = repositoryManager
+                .createStatoTrasformazioniTable(statiTrasformazioni);
         getForm().getStatoTrasformazioniInCorsoList().setTable(trasformazioniInCorsoTable);
         getForm().getStatoTrasformazioniInCorsoList().getTable().setPageSize(WebConstants.DEFAULT_PAGE_SIZE);
         getForm().getStatoTrasformazioniInCorsoList().getTable().first();
@@ -1315,7 +1313,8 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
         statiTrasformazioni = statusCodaTrasformazioni.getTrasformazioniInCoda() != null
                 ? statusCodaTrasformazioni.getTrasformazioniInCoda() : new ArrayList<>();
 
-        BaseTableInterface<?> trasformazioniInCodaTable = createStatoTrasformazioniTable(statiTrasformazioni);
+        BaseTableInterface<?> trasformazioniInCodaTable = repositoryManager
+                .createStatoTrasformazioniTable(statiTrasformazioni);
         getForm().getStatoTrasformazioniInCodaList().setTable(trasformazioniInCodaTable);
         getForm().getStatoTrasformazioniInCodaList().getTable().setPageSize(WebConstants.DEFAULT_PAGE_SIZE);
         getForm().getStatoTrasformazioniInCodaList().getTable().first();
@@ -1323,46 +1322,11 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
         statiTrasformazioni = statusCodaTrasformazioni.getStoricoTrasformazioni() != null
                 ? statusCodaTrasformazioni.getStoricoTrasformazioni() : new ArrayList<>();
 
-        BaseTableInterface<?> trasformazioniStoricoTable = createStatoTrasformazioniTable(statiTrasformazioni);
+        BaseTableInterface<?> trasformazioniStoricoTable = repositoryManager
+                .createStatoTrasformazioniTable(statiTrasformazioni);
         getForm().getStatoTrasformazioniStoricoList().setTable(trasformazioniStoricoTable);
         getForm().getStatoTrasformazioniStoricoList().getTable().setPageSize(WebConstants.DEFAULT_PAGE_SIZE);
         getForm().getStatoTrasformazioniStoricoList().getTable().first();
-    }
-
-    private BaseTableInterface<?> createStatoTrasformazioniTable(List<StatoTrasformazione> statiTrasformazione) {
-        BaseTableInterface<?> trasformazioniTable = new BaseTable();
-        for (StatoTrasformazione statoTrasformazione : statiTrasformazione) {
-            BaseRow row = new BaseRow();
-
-            PigObject po = trasformazioniHelper.findByIdWithPigVerAndPigTipoObj(statoTrasformazione.getIdOggettoPing());
-
-            if (po != null) {
-                row.setString("cd_key_object", po.getCdKeyObject());
-                row.setString("nm_versatore", po.getPigVer().getNmVers());
-                row.setString("nm_tipo_object", po.getPigTipoObject().getNmTipoObject());
-            } else {
-                row.setString("cd_key_object", "--");
-                row.setString("nm_versatore", "--");
-                row.setString("nm_tipo_object", "--");
-            }
-
-            row.setString("nm_trasf", statoTrasformazione.getNomeTrasformazione());
-            row.setString("ds_stato_trasf", statoTrasformazione.getDescrizioneStatoTrasformazione());
-
-            if (statoTrasformazione.getDataInizioTrasformazione() != null) {
-                row.setTimestamp("dt_inizio_trasf",
-                        new Timestamp(statoTrasformazione.getDataInizioTrasformazione().getTime()));
-            }
-
-            if (statoTrasformazione.getDataFineTrasformazione() != null) {
-                row.setTimestamp("dt_fine_trasf",
-                        new Timestamp(statoTrasformazione.getDataFineTrasformazione().getTime()));
-            }
-
-            trasformazioniTable.add(row);
-        }
-
-        return trasformazioniTable;
     }
 
     @Override

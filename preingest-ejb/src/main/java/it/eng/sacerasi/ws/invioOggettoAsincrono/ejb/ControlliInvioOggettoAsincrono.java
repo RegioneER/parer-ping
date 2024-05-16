@@ -590,6 +590,7 @@ public class ControlliInvioOggettoAsincrono {
 
         PigObject obj = entityManager.find(PigObject.class, idObject);
         if (obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_SCHED.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERS.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_CRASH_DPI.name())
@@ -597,6 +598,7 @@ public class ControlliInvioOggettoAsincrono {
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_CRASH_FS_PRIM.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_CRASH_FS_SECOND.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.ANNULLATO.name())
+                || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())) {
             if (!obj.getPigTipoObject().getNmTipoObject().equals(nmTipoObject)) {
@@ -660,6 +662,7 @@ public class ControlliInvioOggettoAsincrono {
                     rispostaControlli.setDsErr(
                             MessaggiWSBundle.getString(MessaggiWSBundle.PING_SENDOBJ_OBJ_007, obj.getCdKeyObject()));
                 } else if (obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                        || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                         || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_SCHED.name())
                         || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERS.name())) {
                     rispostaControlli.setrBoolean(false);
@@ -750,10 +753,10 @@ public class ControlliInvioOggettoAsincrono {
         query.setParameter("pgObjectFiglio", pgObjectFiglio);
         query.setParameter("statiObject",
                 Arrays.asList(StatoOggetto.CHIUSO_ERR_NOTIF.name(), StatoOggetto.CHIUSO_ERR_SCHED.name(),
-                        StatoOggetto.CHIUSO_ERR_CODA.name(), StatoOggetto.CHIUSO_ERR_VERS.name(),
-                        StatoOggetto.CHIUSO_ERR_CRASH_DPI.name(), StatoOggetto.CHIUSO_ERR_CRASH_FTP.name(),
-                        StatoOggetto.CHIUSO_ERR_CRASH_FS_PRIM.name(), StatoOggetto.CHIUSO_ERR_CRASH_FS_SECOND.name(),
-                        StatoOggetto.ANNULLATO.name()));
+                        StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name(), StatoOggetto.CHIUSO_ERR_CODA.name(),
+                        StatoOggetto.CHIUSO_ERR_VERS.name(), StatoOggetto.CHIUSO_ERR_CRASH_DPI.name(),
+                        StatoOggetto.CHIUSO_ERR_CRASH_FTP.name(), StatoOggetto.CHIUSO_ERR_CRASH_FS_PRIM.name(),
+                        StatoOggetto.CHIUSO_ERR_CRASH_FS_SECOND.name(), StatoOggetto.ANNULLATO.name()));
 
         List<PigObject> lista = query.getResultList();
         try {

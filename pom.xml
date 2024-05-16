@@ -31,11 +31,18 @@
     </properties>
 
     <distributionManagement>
-        <site>
-            <id>site</id>
-            <url>dav:https://nexus.ente.regione.emr.it/repository/parer-site/preingest/${project.version}</url>
-        </site>
+        <repository>
+	   <id>github</id>
+	   <url>https://maven.pkg.github.com/RegioneER/parer-ping</url>
+	 </repository>      
     </distributionManagement>
+
+     <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/RegioneER/parer-framework-parerpom</url>            
+        </repository>               
+      </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -321,7 +328,7 @@
         <module>preingest-jpa</module>
     </modules>
     <scm>
-        <developerConnection>scm:git:git@gitlab.ente.regione.emr.it:parer/jboss/ping.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 </project>

@@ -28,6 +28,7 @@ import it.eng.sacerasi.ws.xml.datiSpecOut.ListaDatiSpecificiOutType;
 import it.eng.sacerasi.ws.xml.datiSpecResult.ListaValoriDatiSpecificiType;
 import it.eng.sacerasi.ws.xml.invioAsync.ListaUnitaDocumentarieType;
 import it.eng.sacerasi.ws.xml.invioDaTrasf.OggettoType;
+import it.eng.sacerasi.xml.unitaDocumentaria.UnitaDocumentariaType;
 import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Lock;
@@ -101,6 +102,9 @@ public class XmlContextCache {
     JAXBContext invioSismaCtx_InvioSisma = null;
     Schema invioSismaSchema = null;
 
+    JAXBContext unitaDocumentariaCtx_UnitaDocumentaria = null;
+    Schema unitaDocumentariaSchema = null;
+
     @PostConstruct
     protected void initSingleton() {
         try {
@@ -152,6 +156,12 @@ public class XmlContextCache {
                     it.eng.sacerasi.sisma.xml.invioSisma.ObjectFactory.class);
             invioSismaSchema = schemaFctry.newSchema(
                     it.eng.sacerasixml.xsd.FileXSDUtil.getURLFileXSD(it.eng.sacerasixml.xsd.FileXSD.INVIO_SISMA_XSD));
+
+            // MEV 31639 Unità Documentaria
+            unitaDocumentariaCtx_UnitaDocumentaria = JAXBContext.newInstance(UnitaDocumentariaType.class,
+                    it.eng.sacerasi.xml.unitaDocumentaria.ObjectFactory.class);
+            unitaDocumentariaSchema = schemaFctry.newSchema(it.eng.sacerasixml.xsd.FileXSDUtil
+                    .getURLFileXSD(it.eng.sacerasixml.xsd.FileXSD.UNITA_DOCUMENTARIA_XSD));
 
             // FINE SERVIZI PING
             // Inizio servizi SACER
@@ -341,4 +351,13 @@ public class XmlContextCache {
         return invioSismaCtx_InvioSisma;
     }
 
+    @Lock(LockType.READ)
+    public Schema getUnitaDocumentariaSchema() {
+        return unitaDocumentariaSchema;
+    }
+
+    @Lock(LockType.READ)
+    public JAXBContext getUnitaDocumentariaCtx_UnitaDocumentaria() {
+        return unitaDocumentariaCtx_UnitaDocumentaria;
+    }
 }

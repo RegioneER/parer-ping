@@ -169,7 +169,7 @@ public class ProduzioneXmlEjb {
                 // Genera i componenti per l'indice multimedia
                 it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp = new it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType();
                 // gestisce i componenti per l'xml multimedia
-                popolaComponenteMM_NoZip_ZipNoXml(comp, fileUd);
+                popolaComponenteMMNoZipZipNoXml(comp, fileUd);
                 indiceMm.getComponenti().getComponente().add(comp);
             }
             unitaDoc.setNumeroAllegati(allegCounter);
@@ -565,7 +565,7 @@ public class ProduzioneXmlEjb {
         return indiceMm;
     }
 
-    private void popolaComponenteMM_ZipConXml(it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp,
+    private void popolaComponenteMMZipConXml(it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp,
             FileUnitaDoc fileUd) {
         comp.setID(fileUd.getIdFile());
         comp.setURNFile(fileUd.getUrnFile());
@@ -577,7 +577,7 @@ public class ProduzioneXmlEjb {
         comp.setCalcolaHash(true);
     }
 
-    private void popolaComponenteMM_NoZip_ZipNoXml(it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp,
+    private void popolaComponenteMMNoZipZipNoXml(it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp,
             FileUnitaDoc fileUd) {
         comp.setID(fileUd.getIdFile());
         comp.setURNFile(fileUd.getUrnFile());
@@ -615,7 +615,7 @@ public class ProduzioneXmlEjb {
                 // Genera i componenti per l'indice multimedia
                 it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType comp = new it.eng.parer.ws.xml.versReqMultiMedia.ComponenteType();
                 // gestisce i componenti per l'xml multimedia
-                popolaComponenteMM_ZipConXml(comp, fileUd);
+                popolaComponenteMMZipConXml(comp, fileUd);
                 indiceMm.getComponenti().getComponente().add(comp);
             }
             udObj.setIndiceMMXmlBean(indiceMm);

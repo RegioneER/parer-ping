@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>5.2.1-SNAPSHOT</version>
+        <version>6.0.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-ejb</artifactId>
@@ -119,7 +119,6 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>

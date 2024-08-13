@@ -93,6 +93,13 @@ public class Constants {
     public static final String XF_OBJECT_STORAGE_BUCKET = "XF_OBJECT_STORAGE_BUCKET";
     public static final String XF_TMP_DIR = "XF_TMP_DIR";
     public static final String XF_REPORT_ID = "XF_REPORT_ID";
+    // MEV31648
+    public static final String XF_KETTLE_DB_HOST = "XF_KETTLE_DB_HOST";
+    public static final String XF_KETTLE_DB_NAME = "XF_KETTLE_DB_NAME";
+    public static final String XF_KETTLE_DB_PASSWORD = "XF_KETTLE_DB_PASSWORD";
+    public static final String XF_KETTLE_DB_PORT = "XF_KETTLE_DB_PORT";
+    public static final String XF_KETTLE_DB_USER = "XF_KETTLE_DB_USER";
+    public static final String XF_DB_TABLE_ID = "XF_DB_TABLE_ID";
 
     // Nomi dei parametri per inviaOggettiGeneratiAPing
     public static final String IOGP_USER = "USER_INVIO_ASYNC";

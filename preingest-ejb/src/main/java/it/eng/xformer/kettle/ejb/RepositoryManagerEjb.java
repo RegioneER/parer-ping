@@ -51,6 +51,7 @@ import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
 import it.eng.parer.kettle.model.Esito;
 import it.eng.parer.kettle.model.EsitoStatusCodaTrasformazione;
+import it.eng.sacerasi.entity.PigVersTipoObjectDaTrasf;
 import it.eng.parer.kettle.model.StatoTrasformazione;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigTipoObject;
@@ -75,6 +76,7 @@ import it.eng.xformer.dto.RicercaTrasformazioneBean;
 import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.ws.client.KettleWsClient;
 import it.eng.xformer.ws.client.KettleWsExecuteTrasformationClient;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -481,10 +483,11 @@ public class RepositoryManagerEjb {
         xst.setDsVersione(xfoTrasf.getDsVersioneCor());
         xst.setDtIstituz(xfoTrasf.getDtIstituz());
 
-        if (dtSoppres.before(xfoTrasf.getDtSoppres()))
+        if (dtSoppres.before(xfoTrasf.getDtSoppres())) {
             xst.setDtSoppres(dtSoppres);
-        else
+        } else {
             xst.setDtSoppres(xfoTrasf.getDtSoppres());
+        }
 
         xst.setBlTrasf(xfoTrasf.getBlTrasf());
         xst.setXfoTrasf(xfoTrasf);
@@ -521,14 +524,31 @@ public class RepositoryManagerEjb {
     public PigTipoObjectTableBean searchAssignedPigTipoObjects(long idTrasf) throws ParerUserError {
         PigTipoObjectTableBean table = new PigTipoObjectTableBean();
 
-        List<PigTipoObject> pigTipoObjects = helper.searchAssignedPigTipoObjects(idTrasf);
+        List<PigVersTipoObjectDaTrasf> pigTipoObjects = helper.searchAssignedPigTipoObjects(idTrasf);
         if (pigTipoObjects != null && !pigTipoObjects.isEmpty()) {
             try {
-                for (PigTipoObject pto : pigTipoObjects) {
-                    PigTipoObjectRowBean row = (PigTipoObjectRowBean) Transform.entity2RowBean(pto);
+                for (PigVersTipoObjectDaTrasf pto : pigTipoObjects) {
+                    PigTipoObjectRowBean row = (PigTipoObjectRowBean) Transform
+                            .entity2RowBean(pto.getPigTipoObjectDaTrasf());
 
-                    row.setString("cd_versatore", pto.getPigVer().getNmVers());
-                    row.setString("cd_ambiente", pto.getPigVer().getPigAmbienteVer().getNmAmbienteVers());
+                    row.setString("cd_versatore", pto.getPigTipoObjectDaTrasf().getPigVer().getNmVers());
+                    row.setString("cd_ambiente",
+                            pto.getPigTipoObjectDaTrasf().getPigVer().getPigAmbienteVer().getNmAmbienteVers());
+
+                    // MEV 31255
+                    String prioritaVersamento = row.getTiPrioritaVersamento() != null
+                            ? row.getTiPrioritaVersamento().substring(row.getTiPrioritaVersamento().indexOf("-") + 1)
+                            : "";
+                    row.setString("nm_tipo_object",
+                            row.getString("nm_tipo_object") + " (priorità " + prioritaVersamento + ")");
+                    prioritaVersamento = pto.getPigTipoObjectGen().getTiPrioritaVersamento() != null
+                            ? pto.getPigTipoObjectGen().getTiPrioritaVersamento().substring(
+                                    pto.getPigTipoObjectGen().getTiPrioritaVersamento().indexOf("-") + 1)
+                            : "";
+                    row.setString("nm_tipo_object_generato", pto.getPigTipoObjectGen().getPigVer().getNmVers() + " / "
+                            + pto.getPigTipoObjectGen().getNmTipoObject() + " (priorità " + prioritaVersamento + ")");
+                    row.setBigDecimal("id_tipo_object_generato",
+                            new BigDecimal(pto.getPigTipoObjectGen().getIdTipoObject()));
 
                     table.add(row);
                 }
@@ -541,6 +561,9 @@ public class RepositoryManagerEjb {
                         + ExceptionUtils.getRootCauseMessage(ex));
             }
         }
+
+        table.addSortingRule("cd_versatore", SortingRule.ASC);
+        table.sort();
 
         return table;
     }

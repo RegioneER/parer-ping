@@ -139,7 +139,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param idVersList
      *            lista elementi di tipo Object
-     * 
+     *
      * @return entity bean {@link MonVRiepVersTableBean}
      */
     public MonVRiepVersTableBean getMonVRiepVersViewBean(List<Object> idVersList) {
@@ -349,7 +349,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *            l'unico filtro di ricerca utilizzato
      * @param maxResults
      *            massimo risultati
-     * 
+     *
      * @return entity bean {@link MonVLisSesErrateTableBean}
      */
     public MonVLisSesErrateTableBean getSessioniErrateListTB(String flVerificato, int maxResults) {
@@ -446,7 +446,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param filtri
      *            i filtri di ricerca riportati dalla pagina precedente
-     * 
+     *
      * @return entity bean {@link MonVLisObjTableBean}
      */
     public MonVLisObjTableBean getMonVLisObjViewBean(MonitoraggioFiltriListaOggettiBean filtri) {
@@ -659,7 +659,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *            id versamento
      * @param dsDcmHash
      *            descrizione hash
-     * 
+     *
      * @return entity bean {@link MonVLisObjTableBean}
      */
     public MonVLisObjTableBean getMonVLisObjDCMHashViewBean(BigDecimal idObject, BigDecimal idVers, String dsDcmHash) {
@@ -754,9 +754,9 @@ public class MonitoraggioHelper extends GenericHelper {
      *            filtri job schedulati {@link FiltriJobSchedulati}
      * @param dateValidate
      *            array con date da validare
-     * 
+     *
      * @return entity bean {@link MonVLisSchedJobTableBean}
-     * 
+     *
      * @throws EMFError
      *             errore generico
      */
@@ -772,7 +772,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *            le date
      * @param nomeJob
      *            nome del job
-     * 
+     *
      * @return {@link MonVLisSchedJobTableBean} table bean per la UI
      */
     public MonVLisSchedJobTableBean getMonVLisSchedJobViewBean(Date[] dateValidate, String nomeJob) {
@@ -832,7 +832,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param nomeJob
      *            nome job
-     * 
+     *
      * @return entity bean {@link MonVVisLastSchedJobRowBean}
      */
     public MonVVisLastSchedJobRowBean getMonVVisLastSchedJob(String nomeJob) {
@@ -1514,7 +1514,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param filtriObj
      *            filtro {@link MonitoraggioFiltriListaOggDerVersFallitiBean}
-     * 
+     *
      * @return entity bean {@link MonVLisObjNonVersTableBean}
      */
     public MonVLisObjNonVersTableBean getMonVLisObjNonVersViewBean(
@@ -1684,9 +1684,9 @@ public class MonitoraggioHelper extends GenericHelper {
      *            id versamento
      * @param cdKeyObject
      *            chiave oggetto
-     * 
+     *
      * @return entity bean {@link MonVLisVersObjNonVersTableBean}
-     * 
+     *
      * @throws EMFError
      *             errore generico
      */
@@ -2020,7 +2020,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param idSessioneSet
      *            id sessione (set)
-     * 
+     *
      * @return entity bean {@link PigObjectTableBean}
      */
     public PigObjectTableBean getPigObjectsFromSessions(Set<BigDecimal> idSessioneSet) {
@@ -2055,9 +2055,9 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param filtri
      *            i filtri di ricerca riportati dalla pagina precedente
-     * 
+     *
      * @return entity bean {@link IamVLisOrganizDaReplicTableBean}
-     * 
+     *
      * @throws EMFError
      *             errore generico
      */
@@ -2077,7 +2077,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *            operazione
      * @param tiStato
      *            stato
-     * 
+     *
      * @return table bean per la UI {@link IamVLisOrganizDaReplicTableBean}
      */
     public IamVLisOrganizDaReplicTableBean getIamVLisOrganizDaReplicTableBean(BigDecimal idAmbiente, BigDecimal idVers,
@@ -2183,7 +2183,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param ids
      *            lista id oggetti padre
-     * 
+     *
      * @return lista oggetti
      */
     public List<PigObject> getPigObjectsPadri(List<BigDecimal> ids) {
@@ -2313,7 +2313,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *            id padre
      * @param stati
      *            lista stati (opzionale)
-     * 
+     *
      * @return la lista di oggetti figli
      */
     public List<PigObject> getFigliWithStatus(long idObjectPadre, String... stati) {
@@ -2329,7 +2329,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param idObjectPadre
      *            id oggetto padre
-     * 
+     *
      * @return la lista di oggetti figli
      */
     public List<PigObject> getTuttiFigli(long idObjectPadre) {
@@ -2353,6 +2353,15 @@ public class MonitoraggioHelper extends GenericHelper {
         query.setParameter("idObject", idObject);
         query.executeUpdate();
         getEntityManager().flush();
+    }
+
+    // MEV 31639
+    public List<PigXmlSacerUnitaDoc> getPigXmlSacerUnitaDocVersamento(long idUnitaDocObject) {
+        String queryStr = "SELECT pxsud FROM PigXmlSacerUnitaDoc pxsud WHERE pxsud.tiXmlSacer = 'XML_VERS' AND pxsud.pigUnitaDocObject.idUnitaDocObject = :idUnitaDocObject";
+        Query q = getEntityManager().createQuery(queryStr);
+        q.setParameter("idUnitaDocObject", idUnitaDocObject);
+
+        return q.getResultList();
     }
 
     public List<PigPrioritaObject> retrievePigPrioritaObject(Long idObject) {

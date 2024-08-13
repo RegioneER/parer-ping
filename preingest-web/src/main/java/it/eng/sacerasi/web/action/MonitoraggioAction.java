@@ -158,10 +158,19 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import it.eng.sacerasi.slite.gen.form.GestioneJobForm;
 import it.eng.sacerasi.web.ejb.GestioneJobEjb;
+import it.eng.sacerasi.ws.ejb.XmlContextCache;
+import it.eng.sacerasi.xml.unitaDocumentaria.UnitaDocumentariaType;
+import it.eng.sacerasi.xml.unitaDocumentaria.VersatoreType;
+import it.eng.sacerasixml.xsd.util.Utils;
 import it.eng.spagoLite.form.fields.impl.Button;
 import it.eng.spagoLite.form.fields.impl.CheckBox;
 import it.eng.spagoLite.form.fields.impl.Input;
 import java.sql.Timestamp;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  *
@@ -200,6 +209,9 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     private SalvataggioBackendHelper salvataggioBackendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/GestioneJobEjb")
     private GestioneJobEjb gestioneJobEjb;
+    // singleton ejb di gestione cache dei parser Castor
+    @EJB(mappedName = "java:app/SacerAsync-ejb/XmlContextCache")
+    XmlContextCache xmlContextCache;
 
     private static final String GET_ID_OBJ_STACK = "getIdObjStack";
     private static final String ID_OBJECT = "idObject";
@@ -281,6 +293,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     loadDettaglioObject(idObject);
                     /* Se ho cliccato sul dettaglio di una UNITA' DOCUMENTARIA dal dettaglio oggetto */
                 } else if (getForm().getOggettoDetailUnitaDocList().getName().equals(lista)) {
+                    getForm().getUnitaDocDetail().setStatus(Status.view);
+
                     // Ottengo l'id unita doc e lo salvo in getSession()
                     BigDecimal idUnitaDocObject = getForm().getOggettoDetailUnitaDocList().getTable().getCurrentRow()
                             .getBigDecimal("id_unita_doc_object");
@@ -297,11 +311,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     if (xmlvers != null) {
                         xmlvers = formatter.prettyPrintWithDOM3LS(xmlvers);
                         getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setValue(xmlvers);
+                        getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setViewMode();
                     }
                     if (xmlindice != null) {
                         xmlindice = formatter.prettyPrintWithDOM3LS(xmlindice);
                         getForm().getUnitaDocDetail().getBl_xml_indice_sacer().setValue(xmlindice);
                     }
+
+                    // MEV 31639
+                    getForm().getUnitaDocDetail().getFl_xml_modificato().setValue(objRB.getFlXmlMod());
+
                     // Se ho cliccato sul dettaglio di un Versamento Fallito venendo da più parti
                 } else if (getForm().getVersamentiList().getName().equals(lista)
                         || getForm().getOggettoDaVersamentiFallitiDetailVersamentiList().getName().equals(lista)
@@ -611,7 +630,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getFiltriOggetti().setEditMode();
         }
 
-        // MAC29594 - spostato qui per copreire tutti i tipi di oggetto.
+        // MAC29594 - spostato qui per coprire tutti i tipi di oggetto.
         // Anche se la priorità di versamento non è valorizzata è necessario caricare il menu a tendona con i valori
         getForm().getOggettoDetail().getTi_priorita_versamento().setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum(
                 "ti_priorita_versamento", it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType.values()));
@@ -1043,6 +1062,15 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         } else if (publisher.equals(Application.Publisher.OGGETTO_DETAIL)) {
             setOggettoDetailViewMode();
             forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+        } else if (publisher.equals(Application.Publisher.UNITA_DOC_DETAIL)) {
+            // MEV 31639
+            BigDecimal idUnitaDocObject = getForm().getUnitaDocDetail().getId_unita_doc_object().parse();
+            MonVVisUnitaDocObjectRowBean objRB = monitoraggioHelper.getMonVVisUnitaDocObjectRowBean(idUnitaDocObject);
+            getForm().getUnitaDocDetail().copyFromBean(objRB);
+            getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setValue(objRB.getBlXmlVersSacer());
+            getForm().getUnitaDocDetail().setStatus(Status.view);
+            getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setViewMode();
+            forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
         } else {
             goBack();
         }
@@ -1211,6 +1239,46 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 }
             }
             forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+        } else if (publisher.equals(Application.Publisher.UNITA_DOC_DETAIL)) {
+            // MEV 31639
+            getForm().getUnitaDocDetail().post(getRequest());
+
+            BigDecimal idUnitaDocObject = getForm().getUnitaDocDetail().getId_unita_doc_object().parse();
+            String xmlVers = getForm().getUnitaDocDetail().getBl_xml_vers_sacer().parse();
+
+            if (xmlVers != null) {
+                try {
+                    // controlla la bontà dell'xml inviato.
+                    Unmarshaller tmpUnmarshaller = xmlContextCache.getUnitaDocumentariaCtx_UnitaDocumentaria()
+                            .createUnmarshaller();
+                    tmpUnmarshaller.setSchema(xmlContextCache.getUnitaDocumentariaSchema());
+
+                    Source saxSourceForUnmarshal = Utils.getSaxSourceForUnmarshal(xmlVers);
+                    JAXBElement<UnitaDocumentariaType> udRoot = (JAXBElement<UnitaDocumentariaType>) tmpUnmarshaller
+                            .unmarshal(saxSourceForUnmarshal);
+
+                    VersatoreType versatoreType = udRoot.getValue().getIntestazione().getVersatore();
+                    if (!monitoraggioEjb.checkVersatoreUnitaDocumentariaXml(idUnitaDocObject, versatoreType)) {
+                        getMessageBox().addError(
+                                "ATTENZIONE: Il versatore dell'xml di versamento non è conforme a quello atteso.");
+                    }
+
+                } catch (JAXBException | SAXException ex) {
+                    getMessageBox().addError("ATTENZIONE: l'xml di versamento non è conforme.");
+                }
+            } else {
+                getMessageBox().addError("ATTENZIONE: l'xml di versamento non può essere vuoto.");
+            }
+
+            if (!getMessageBox().hasError()) {
+                // salva il nuovo xml
+                monitoraggioEjb.saveUnitaDocumentariaXmlVersamento(idUnitaDocObject, xmlVers);
+                getForm().getUnitaDocDetail().setStatus(Status.view);
+                getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setViewMode();
+                getForm().getUnitaDocDetail().getFl_xml_modificato().setValue(Constants.DB_TRUE);
+            }
+
+            forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
         }
     }
 
@@ -1488,6 +1556,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         /* Imposto in sessione l'info sula provenienza: mi servirÃ  in fase di conferma salvataggio o annullamento */
         getSession().setAttribute("provenienza", "VFdaSessioniList");
         updateDettaglioVersamentoCommon();
+    }
+
+    @Override
+    public void updateUnitaDocDetail() throws EMFError {
+        BigDecimal idObject = (BigDecimal) getSession().getAttribute(ID_OBJECT);
+        MonVVisObjRowBean objRB = monitoraggioHelper.getMonVVisObjRowBean(idObject);
+
+        if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
+            getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setValue("");
+            getForm().getUnitaDocDetail().getBl_xml_vers_sacer().setEditMode();
+            getForm().getUnitaDocDetail().setStatus(Status.update);
+        }
     }
 
     // Codice a fattor comune
@@ -5113,11 +5193,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 .setDecodeMap(DecodeMap.Factory.newInstance(tipoObjectTableBean, "id_tipo_object", "nm_tipo_object"));
         getForm().getOggettoDetail().getId_tipo_object()
                 .setValue(getForm().getOggettoDetail().getId_tipo_object().parse().longValueExact() + "");
-        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject
-
-        .class
-
-                , getForm().getOggettoDetail().getId_tipo_object().parse());
+        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject.class,
+                getForm().getOggettoDetail().getId_tipo_object().parse());
         if (pigTipoObject.getFlNoVisibVersOgg() == null || pigTipoObject.getFlNoVisibVersOgg().equals("0")) {
             getForm().getOggettoDetail().getId_tipo_object().setEditMode();
         }
@@ -5156,11 +5233,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 .setDecodeMap(DecodeMap.Factory.newInstance(tipoObjectTableBean, "id_tipo_object", "nm_tipo_object"));
         getForm().getOggettoDetail().getId_tipo_object()
                 .setValue(getForm().getOggettoDetail().getId_tipo_object().parse().longValueExact() + "");
-        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject
-
-        .class
-
-                , getForm().getOggettoDetail().getId_tipo_object().parse());
+        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject.class,
+                getForm().getOggettoDetail().getId_tipo_object().parse());
         if (pigTipoObject.getFlNoVisibVersOgg() == null || pigTipoObject.getFlNoVisibVersOgg().equals("0")) {
             getForm().getOggettoDetail().getId_tipo_object().setEditMode();
         }
@@ -5250,12 +5324,26 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
         boolean richiestoAnnullamentoVersamentiUDDuplicati = getRequest().getParameter("Ti_annullamento_ud")
                 .equals("1");
+        // MEV 27691
+        String motivazioneAnnullamento = getRequest().getParameter("ds_annullamento_ud");
+
+        if (motivazioneAnnullamento != null && motivazioneAnnullamento.length() > 2000) {
+            getMessageBox().addError("La motivazione annullamento non può essere più lunga di 2000 caratteri.");
+            redirectToAjax(getForm().getOggettoDetail().asJSON());
+            return;
+        }
+
+        motivazioneAnnullamento = StringEscapeUtils.escapeHtml4(motivazioneAnnullamento);
+        motivazioneAnnullamento = StringEscapeUtils.escapeEcmaScript(motivazioneAnnullamento);
+        motivazioneAnnullamento = StringEscapeUtils.escapeXml10(motivazioneAnnullamento);
+
         // richiede cancellazione UD versate
-        annullaOggetto(idObject, true, richiestoAnnullamentoVersamentiUDDuplicati);
+        annullaOggetto(idObject, true, richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento);
 
         try {
             loadDettaglioObject(idObject);
         } catch (ParerUserError ex) {
+            log.error(ex.getDescription());
             getMessageBox().addError(ex.getDescription());
         }
 
@@ -5270,21 +5358,22 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 .getString("cd_key_object");
         PigObject obj = monitoraggioHelper.getPigObject(idVers, cdKeyObject);
         // richiede cancellazione UD
-        annullaOggetto(new BigDecimal(obj.getIdObject()), false, false);
+        annullaOggetto(new BigDecimal(obj.getIdObject()), false, false, "");
         forwardToPublisher(getLastPublisher());
     }
 
     private void annullaOggetto(BigDecimal idObject) throws EMFError {
-        annullaOggetto(idObject, false, false);
+        annullaOggetto(idObject, false, false, "");
     }
 
     // SUE26200 - Aggiunta opzione per escludere dall'annullamento le UD già versate da un'altro oggetto (Errore
     // UD-002-001)
     private void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
-            boolean richiestoAnnullamentoVersamentiUDDuplicati) throws EMFError {
+            boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento) throws EMFError {
         try {
+            String username = getUser().getUsername();
             annullamentoEjb.annullaOggetto(idObject, richiestoAnnullamentoVersamentiUD,
-                    richiestoAnnullamentoVersamentiUDDuplicati);
+                    richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento, username);
         } catch (ParerUserError | ParerInternalError ex) {
             getMessageBox().addError(ex.getDescription());
         }
@@ -5299,7 +5388,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     public void verificaAnnullamento() throws EMFError {
         BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
         try {
-            annullamentoEjb.verificaAnnullamentoTerminato(idObject);
+            String username = getUser().getUsername();
+            annullamentoEjb.verificaAnnullamentoTerminato(idObject, username);
         } catch (ParerUserError | ParerInternalError ex) {
             getMessageBox().addError(ex.getDescription());
         }
@@ -5353,15 +5443,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         String nmAmbiente = getForm().getFiltriUnitaDocVers().getNm_ambiente().parse();
         BigDecimal idSessioneIngest = getForm().getVersamentoDetail().getId_sessione_ingest().parse();
         if (StringUtils.isNotBlank(nmAmbiente)) {
-            getForm().getFiltriUnitaDocVers().getNm_ente().setDecodeMap(DecodeMap.Factory.newInstance(
-                    monitoraggioHelper.getDistinctColumnFromMonVLisUnitaDocSessioneTableBean(idSessioneIngest, String
-
-                    .class
-
-                            , "AND u.nmAmbiente = '" + nmAmbiente + "'",
-                            MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE),
-                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE,
-                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE));
+            getForm().getFiltriUnitaDocVers().getNm_ente()
+                    .setDecodeMap(DecodeMap.Factory.newInstance(
+                            monitoraggioHelper.getDistinctColumnFromMonVLisUnitaDocSessioneTableBean(idSessioneIngest,
+                                    String.class, "AND u.nmAmbiente = '" + nmAmbiente + "'",
+                                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE),
+                            MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE,
+                            MonVLisUnitaDocSessioneTableDescriptor.COL_NM_ENTE));
         }
         return getForm().getFiltriUnitaDocVers().asJSON();
     }
@@ -5372,14 +5460,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         String nmEnte = getForm().getFiltriUnitaDocVers().getNm_ente().parse();
         BigDecimal idSessioneIngest = getForm().getVersamentoDetail().getId_sessione_ingest().parse();
         if (StringUtils.isNotBlank(nmEnte)) {
-            getForm().getFiltriUnitaDocVers().getNm_strut().setDecodeMap(DecodeMap.Factory.newInstance(
-                    monitoraggioHelper.getDistinctColumnFromMonVLisUnitaDocSessioneTableBean(idSessioneIngest, String
-
-                    .class
-
-                            , "AND u.nmEnte = '" + nmEnte + "'", MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT),
-                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT,
-                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT));
+            getForm().getFiltriUnitaDocVers().getNm_strut()
+                    .setDecodeMap(DecodeMap.Factory.newInstance(
+                            monitoraggioHelper.getDistinctColumnFromMonVLisUnitaDocSessioneTableBean(idSessioneIngest,
+                                    String.class, "AND u.nmEnte = '" + nmEnte + "'",
+                                    MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT),
+                            MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT,
+                            MonVLisUnitaDocSessioneTableDescriptor.COL_NM_STRUT));
         }
         return getForm().getFiltriUnitaDocVers().asJSON();
     }
@@ -5413,9 +5500,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         boolean richiestoAnnullamentoVersamentiUDDuplicati = getRequest().getParameter("Ti_annullamento_ud")
                 .equals("1");
 
+        // MEV 27691
+        String motivazioneAnnullamento = getRequest().getParameter("ds_annullamento_ud");
+        motivazioneAnnullamento = StringEscapeUtils.escapeHtml4(motivazioneAnnullamento);
+        motivazioneAnnullamento = StringEscapeUtils.escapeEcmaScript(motivazioneAnnullamento);
+        motivazioneAnnullamento = StringEscapeUtils.escapeXml10(motivazioneAnnullamento);
+
         PigObject obj = monitoraggioHelper.getPigObject(idVers, cdKeyObject);
         // richiede cancellazione UD
-        annullaOggetto(new BigDecimal(obj.getIdObject()), true, richiestoAnnullamentoVersamentiUDDuplicati);
+        annullaOggetto(new BigDecimal(obj.getIdObject()), true, richiestoAnnullamentoVersamentiUDDuplicati,
+                motivazioneAnnullamento);
         forwardToPublisher(getLastPublisher());
     }
 
@@ -6049,9 +6143,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         getForm().getOggettoDetail().getTi_stato_popup()
                 .setDecodeMap(ComboGetter.getMappaSortedGenericEnum("ti_stato", Constants.StatoOggetto.DA_TRASFORMARE));
 
-        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject
-
-        .class, idTipoObject);
+        PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject.class, idTipoObject);
         if (pigTipoObject.getFlNoVisibVersOgg() == null || pigTipoObject.getFlNoVisibVersOgg().equals("0")) {
             getForm().getOggettoDetail().getId_tipo_object().setEditMode();
         }
@@ -6060,8 +6152,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     @Override
     public void update(Fields<Field> fields) throws EMFError {
-        updateOggettiList();
-        forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+        // MEV 31639
+        if (getForm().getUnitaDocDetail().equals(fields)) {
+            updateUnitaDocDetail();
+            forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
+        } else {
+            updateOggettiList();
+            forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+        }
     }
 
     public void scaricaReport() {

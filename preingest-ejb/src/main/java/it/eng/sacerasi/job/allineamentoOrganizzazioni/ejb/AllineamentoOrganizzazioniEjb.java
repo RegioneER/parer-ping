@@ -114,8 +114,8 @@ public class AllineamentoOrganizzazioniEjb {
         /* Mi tengo una variabile che mi dice se la replica è andata o meno a buon fine */
         boolean replicaOK = true;
 
-        log.info("Replica Organizzazioni SACER PREINGEST - ottenute " + organizList.size()
-                + " organizzazioni da replicare");
+        log.info("Replica Organizzazioni SACER PREINGEST - ottenute {0} organizzazioni da replicare",
+                organizList.size());
 
         /* Per ogni registrazione determinata */
         for (IamOrganizDaReplic organizDaReplic : organizList) {
@@ -131,8 +131,8 @@ public class AllineamentoOrganizzazioniEjb {
                 if (client != null) {
                     /* PREPARAZIONE ATTIVAZIONE SERVIZIO */
                     log.info(
-                            "Replica Organizzazioni SACER PREINGEST - Preparazione attivazione servizio per l'organizzazione "
-                                    + organizDaReplic.getNmOrganiz());
+                            "Replica Organizzazioni SACER PREINGEST - Preparazione attivazione servizio per l'organizzazione {0}",
+                            organizDaReplic.getNmOrganiz());
                     if (organizDaReplic.getTiOperReplic().equals(Constants.TiOperReplic.INS.name())
                             || organizDaReplic.getTiOperReplic().equals(Constants.TiOperReplic.MOD.name())) {
                         if (pa.isOrgPresente()) {
@@ -172,8 +172,8 @@ public class AllineamentoOrganizzazioniEjb {
                     } /* Se tipo operazione è CANCELLAZIONE */ else {
                         log.info(
                                 "Replica Organizzazioni SACER PREINGEST - Chiamo il ws di Cancellazione Organizzazione");
-                        resp = (CancellaOrganizzazioneRisposta) client.cancellaOrganizzazione(pa.getNmApplic(),
-                                pa.getIdOrganizApplic(), pa.getNmTipoOrganiz());
+                        resp = client.cancellaOrganizzazione(pa.getNmApplic(), pa.getIdOrganizApplic(),
+                                pa.getNmTipoOrganiz());
                     }
 
                     /* Il sistema verifica la risposta del servizio di replica organizzazione */
@@ -185,8 +185,8 @@ public class AllineamentoOrganizzazioniEjb {
 
                     String posNeg = esitoServizio.name().equals(Constants.EsitoServizio.OK.name()) ? "positiva"
                             : "negativa";
-                    log.info("Replica Organizzazioni SACER PREINGEST - Risposta WS " + posNeg + " per l'organizzazione"
-                            + organizDaReplic.getNmOrganiz());
+                    log.info("Replica Organizzazioni SACER PREINGEST - Risposta WS {0} per l'organizzazione {1}",
+                            posNeg, organizDaReplic.getNmOrganiz());
 
                     if (!esitoServizio.name().equals(Constants.EsitoServizio.OK.name())
                             && !resp.getCdErr().equals(Constants.SERVIZI_ORG_002)) {
@@ -199,8 +199,8 @@ public class AllineamentoOrganizzazioniEjb {
                     aoHelper.writeEsitoIamOrganizDaReplic(organizDaReplic.getIdOrganizDaReplic(),
                             Constants.EsitoServizio.KO, Constants.SERVIZI_ORG_001,
                             "Errore nella creazione del client per la chiamata al WS di ReplicaOrganizzazioni");
-                    log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione "
-                            + organizDaReplic.getNmOrganiz());
+                    log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione {0}",
+                            organizDaReplic.getNmOrganiz());
                     break;
                 }
 

@@ -126,7 +126,7 @@ public class EseguiTrasformazione {
     @EJB(mappedName = "java:app/SacerAsync-ejb/GenericJobHelper")
     private GenericJobHelper jobHelper;
 
-    @EJB
+    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
     @EJB
@@ -472,6 +472,13 @@ public class EseguiTrasformazione {
         File tmpFilesDirectory = new File(workingDirectory + File.separator + idObject + File.separator + "tmp");
         File udsFinalDirectory = new File(workingDirectory + File.separator + idObject + File.separator + "UDs");
 
+        // MEV 31648 - recupera i paramtri per laconnessione al db di appoggio delle trasformazioni
+        String kettleDBHost = configurationHelper.getValoreParamApplicByApplic(Constants.XF_KETTLE_DB_HOST);
+        String kettleDBPort = configurationHelper.getValoreParamApplicByApplic(Constants.XF_KETTLE_DB_PORT);
+        String kettleDBName = configurationHelper.getValoreParamApplicByApplic(Constants.XF_KETTLE_DB_NAME);
+        String kettleDBUser = configurationHelper.getValoreParamApplicByApplic(Constants.XF_KETTLE_DB_USER);
+        String kettleDBPassword = configurationHelper.getValoreParamApplicByApplic(Constants.XF_KETTLE_DB_PASSWORD);
+
         try (ZipInputStream zipInputStream = new ZipInputStream(
                 new ByteArrayInputStream(transformation.getBlTrasf()))) {
             ZipEntry entry = zipInputStream.getNextEntry();
@@ -516,6 +523,13 @@ public class EseguiTrasformazione {
                     case Constants.XF_FORZA_CONSERVAZIONE:
                     case Constants.XF_AUXILIARY_FILES_DIR:
                     case Constants.XF_TMP_DIR:
+                        // MEV31648
+                    case Constants.XF_KETTLE_DB_HOST:
+                    case Constants.XF_KETTLE_DB_PORT:
+                    case Constants.XF_KETTLE_DB_NAME:
+                    case Constants.XF_KETTLE_DB_USER:
+                    case Constants.XF_KETTLE_DB_PASSWORD:
+                    case Constants.XF_DB_TABLE_ID:
                         break;
                     default:
                         PigVValoreParamTrasf valoreParam = trasformazioniHelper.searchPigVValoreParamTrasfByName(
@@ -562,6 +576,14 @@ public class EseguiTrasformazione {
                 inputFilenameOS = inputFilenameOS == null ? "" : inputFilenameOS;
                 filledParameters.put(Constants.XF_OBJECT_STORAGE_BUCKET, inputFileOSBucket);
                 filledParameters.put(Constants.XF_OBJECT_STORAGE_KEY, inputFilenameOS);
+
+                // MEV31648 - riempi i parametri del db di appoggio
+                filledParameters.put(Constants.XF_KETTLE_DB_HOST, kettleDBHost);
+                filledParameters.put(Constants.XF_KETTLE_DB_PORT, kettleDBPort);
+                filledParameters.put(Constants.XF_KETTLE_DB_NAME, kettleDBName);
+                filledParameters.put(Constants.XF_KETTLE_DB_USER, kettleDBUser);
+                filledParameters.put(Constants.XF_KETTLE_DB_PASSWORD, kettleDBPassword);
+                filledParameters.put(Constants.XF_DB_TABLE_ID, po.getIdObject().toString());
 
                 // MAC 26890
                 if (transformationDirectory.exists()) {

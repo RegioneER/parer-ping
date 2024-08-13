@@ -1235,13 +1235,10 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
 
     }
 
-    private AmministrazioneForm computeLinksInfo() throws EMFError {
+    private AmministrazioneForm computeLinksInfo(BigDecimal idTipoOggetto) throws EMFError {
         AmministrazioneForm form = new AmministrazioneForm();
 
-        Integer currentRow = Integer.parseInt(getRequest().getParameter("riga"));
-
-        BigDecimal idTipoOggetto = getForm().getTipiOggettoList().getTable().getRow(currentRow)
-                .getBigDecimal("id_tipo_object");
+        Integer currentRow = Integer.valueOf(getRequest().getParameter("riga"));
 
         PigTipoObjectRowBean row = amministrazioneEjb.getPigTipoObjectRowBean(idTipoOggetto);
 
@@ -1263,14 +1260,30 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
     }
 
     public void vaiAlVersatore() throws EMFError {
-        AmministrazioneForm form = computeLinksInfo();
+        Integer currentRow = Integer.valueOf(getRequest().getParameter("riga"));
+        BigDecimal idTipoOggetto = getForm().getTipiOggettoList().getTable().getRow(currentRow)
+                .getBigDecimal("id_tipo_object");
+        AmministrazioneForm form = computeLinksInfo(idTipoOggetto);
 
         redirectToAction(Application.Actions.AMMINISTRAZIONE, "?operation=listNavigationOnClick&navigationEvent="
                 + NE_DETTAGLIO_VIEW + "&table=" + form.getVersList().getName() + "&riga=0", form);
     }
 
     public void vaiAlTipoOggetto() throws EMFError {
-        AmministrazioneForm form = computeLinksInfo();
+        Integer currentRow = Integer.valueOf(getRequest().getParameter("riga"));
+        BigDecimal idTipoOggetto = getForm().getTipiOggettoList().getTable().getRow(currentRow)
+                .getBigDecimal("id_tipo_object");
+        AmministrazioneForm form = computeLinksInfo(idTipoOggetto);
+
+        redirectToAction(Application.Actions.AMMINISTRAZIONE, "?operation=listNavigationOnClick&navigationEvent="
+                + NE_DETTAGLIO_VIEW + "&table=" + form.getTipoObjectList().getName() + "&riga=0", form);
+    }
+
+    public void vaiAlTipoOggettoGenerato() throws EMFError {
+        Integer currentRow = Integer.valueOf(getRequest().getParameter("riga"));
+        BigDecimal idTipoOggetto = getForm().getTipiOggettoList().getTable().getRow(currentRow)
+                .getBigDecimal("id_tipo_object_generato");
+        AmministrazioneForm form = computeLinksInfo(idTipoOggetto);
 
         redirectToAction(Application.Actions.AMMINISTRAZIONE, "?operation=listNavigationOnClick&navigationEvent="
                 + NE_DETTAGLIO_VIEW + "&table=" + form.getTipoObjectList().getName() + "&riga=0", form);
@@ -1366,6 +1379,12 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
                         case it.eng.xformer.common.Constants.XF_AUXILIARY_FILES_DIR:
                         case it.eng.xformer.common.Constants.XF_TMP_DIR:
                         case it.eng.xformer.common.Constants.XF_REPORT_ID:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_HOST:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_PORT:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_NAME:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_USER:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_PASSWORD:
+                        case it.eng.xformer.common.Constants.XF_DB_TABLE_ID:
                             break;
                         default:
                             if (keepAlreadyAssignedParameters
@@ -1410,6 +1429,12 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
                         case it.eng.xformer.common.Constants.XF_AUXILIARY_FILES_DIR:
                         case it.eng.xformer.common.Constants.XF_TMP_DIR:
                         case it.eng.xformer.common.Constants.XF_REPORT_ID:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_HOST:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_PORT:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_NAME:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_USER:
+                        case it.eng.xformer.common.Constants.XF_KETTLE_DB_PASSWORD:
+                        case it.eng.xformer.common.Constants.XF_DB_TABLE_ID:
                             break;
                         default:
                             if (!parametersManager.isParameterAssigned(parameter.getKey(),

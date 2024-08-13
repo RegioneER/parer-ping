@@ -4,7 +4,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>sacerping-jboss</artifactId>
-        <version>5.2.1-SNAPSHOT</version>
+        <version>6.0.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-jpa</artifactId>
@@ -79,23 +79,23 @@
         </dependency>
     </dependencies>
     <build>
-		<resources>
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>		
-		<plugins>       
+        <plugins>       
             <!-- metamodel generator -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>                            
+                <configuration>                            
                     <!-- disabilito la generazione automatica dei metamodel, la voglio gestire puntualmente -->
                     <compilerArgument>-proc:none</compilerArgument>
                         </configuration>
-            </plugin>   
-            <!-- configurazione del metamodel generator -->
-            <plugin>
+                    </plugin>   
+                    <!-- configurazione del metamodel generator -->
+                    <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
                 <version>2.2.4</version>

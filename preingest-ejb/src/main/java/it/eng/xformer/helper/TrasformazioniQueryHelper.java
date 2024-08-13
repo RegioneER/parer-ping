@@ -309,15 +309,6 @@ public class TrasformazioniQueryHelper extends GenericHelper {
         }
     }
 
-    public List<PigTipoObject> searchAssignedPigTipoObjects(long idTrasf) {
-        String queryString = "SELECT x FROM PigTipoObject x WHERE x.xfoTrasf.idTrasf = :idTrasf";
-
-        Query query = getEntityManager().createQuery(queryString);
-        query.setParameter("idTrasf", idTrasf);
-
-        return query.getResultList();
-    }
-
     public boolean isTransformationAssigned(long idTrasf) {
         String queryString = "SELECT x FROM PigTipoObject x WHERE x.xfoTrasf.idTrasf = :idTrasf";
 

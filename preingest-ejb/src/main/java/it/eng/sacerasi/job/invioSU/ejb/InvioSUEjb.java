@@ -204,7 +204,8 @@ public class InvioSUEjb {
                 // Controlli sui documenti dello strumento urbanistico attraverso i valori della vista
                 if (check.getFlVerificaErrata().equals("1") || check.getFlVerificaInCorso().equals("1")
                         || check.getFlFileMancante().equals("1")) {
-                    log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE condizioni invio strumenti urbanistici");
+                    log.error("{0} --- ERRORE condizioni invio strumenti urbanistici",
+                            InvioSUEjb.class.getSimpleName());
                     PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU01");
                     throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                             errore.getDsErrore());
@@ -290,8 +291,8 @@ public class InvioSUEjb {
                                         }
                                     }
                                 } else {
-                                    log.error(InvioSUEjb.class.getSimpleName()
-                                            + " --- ERRORE creazione ZIP invio strumenti urbanistici");
+                                    log.error("{0} --- ERRORE creazione ZIP invio strumenti urbanistici",
+                                            InvioSUEjb.class.getSimpleName());
                                     PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
                                     String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
                                             strumUrbDocumenti.getNmFileOs());
@@ -301,8 +302,8 @@ public class InvioSUEjb {
                             }
                         }
                     } catch (Exception ex) {
-                        log.error(InvioSUEjb.class.getSimpleName()
-                                + " --- ERRORE creazione ZIP invio strumenti urbanistici: " + ex.getMessage());
+                        log.error("{0} --- ERRORE creazione ZIP invio strumenti urbanistici: {1}",
+                                InvioSUEjb.class.getSimpleName(), ex.getMessage());
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU15");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                 errore.getDsErrore());
@@ -423,8 +424,9 @@ public class InvioSUEjb {
                         if (salvataggioBackendHelper.isActive()) {
                             salvataggioBackendHelper.putS3Object(config,
                                     strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip",
-                                    new File(rootFtp + "/" + dsPathInputFtp + "/" + zipStrumentiUrbanistici + "/"
-                                            + zipStrumentiUrbanistici + ".zip"));
+                                    new File(rootFtp + File.separator + dsPathInputFtp + File.separator
+                                            + zipStrumentiUrbanistici + File.separator + zipStrumentiUrbanistici
+                                            + ".zip"));
                         }
                     } catch (SdkClientException e) {
                         log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici: "
@@ -453,8 +455,7 @@ public class InvioSUEjb {
         }
     }
 
-    public static void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase)
-            throws FileNotFoundException, IOException {
+    public static void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             ZipEntry zipEntry = new ZipEntry(nomeFileLowerCase);
             zos.putNextEntry(zipEntry);
@@ -573,8 +574,7 @@ public class InvioSUEjb {
         return marshallXmlInvioSU(strumentiUrbanistici);
     }
 
-    private String marshallXmlInvioSU(StrumentiUrbanistici strumentiUrbanistici)
-            throws ValidationException, MarshalException, Exception {
+    private String marshallXmlInvioSU(StrumentiUrbanistici strumentiUrbanistici) throws Exception {
         StringWriter tmpWriter = new StringWriter();
         // Eseguo il marshalling degli oggetti creati
         Marshaller udMarshaller = xmlContextCache.getInvioSUCtx_InvioSU().createMarshaller();

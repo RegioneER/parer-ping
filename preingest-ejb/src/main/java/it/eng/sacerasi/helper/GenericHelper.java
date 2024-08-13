@@ -98,8 +98,8 @@ public class GenericHelper implements HelperInterface {
 
     @Override
     public <T> T findByIdWithLock(Class<T> entityClass, Serializable id) {
-        logger.debug("Getting instance of class " + entityClass.getSimpleName() + " with id: " + id
-                + ", with exclusive lock");
+        logger.debug("Getting instance of class {0} with id: {1}, with exclusive lock", entityClass.getSimpleName(),
+                id);
         T instance = null;
         try {
             instance = entityManager.find(entityClass, id, LockModeType.PESSIMISTIC_WRITE);

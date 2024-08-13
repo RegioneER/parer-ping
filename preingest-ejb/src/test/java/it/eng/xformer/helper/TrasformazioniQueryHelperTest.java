@@ -182,13 +182,6 @@ public class TrasformazioniQueryHelperTest {
     }
 
     @Test
-    public void searchAssignedPigTipoObjects_queryIsOk() {
-        long idTrasf = aLong();
-        helper.searchAssignedPigTipoObjects(idTrasf);
-        assertTrue(true);
-    }
-
-    @Test
     public void isTransformationAssigned_queryIsOk() {
         long idTrasf = aLong();
         helper.isTransformationAssigned(idTrasf);

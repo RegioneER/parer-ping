@@ -30,7 +30,7 @@ public class Constants {
     public static final String TIMEOUT_VERS_SACER = "TIMEOUT_VERS_SACER";
     public static final String URL_ANNUL_VERS = "URL_ANNUL_VERS";
     public static final String VERSIONE_XML_ANNUL = "VERSIONE_XML_ANNUL";
-    public static final String VERSIONE_XML_SACER = "1.4";
+    public static final String VERSIONE_XML_SACER = "1.5";
     public static final String VERSIONE_XML_MM = "1.0";
     public static final String NUM_UNITA_DOC_CODA_VERS = "NUM_UNITA_DOC_CODA_VERS";
     public static final String NUM_MAX_DICOM_XGIORNO = "NUM_MAX_DICOM_XGIORNO";

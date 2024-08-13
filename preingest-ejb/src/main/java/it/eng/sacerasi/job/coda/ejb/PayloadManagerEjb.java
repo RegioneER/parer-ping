@@ -305,10 +305,22 @@ public class PayloadManagerEjb {
                                                     PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
                                     if (pigStrumentiUrbanistici != null) {
                                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
+                                        if (unitaDoc.getCdErrSacer() != null
+                                                && unitaDoc.getCdErrSacer().equals("UD-008-001")) {
+                                            errore = messaggiHelper.retrievePigErrore("PING-ERRSU28");
+                                        }
                                         pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(
                                                 pigStrumentiUrbanistici, PigStrumentiUrbanistici.TiStato.ERRORE);
-                                        pigStrumentiUrbanistici.setCdErr(errore.getCdErrore());
-                                        pigStrumentiUrbanistici.setDsErr(errore.getDsErrore());
+
+                                        // MEV 31151 - se esiste un errore già settato e è quello generico lo
+                                        // sostituiamo con quello nuovo,
+                                        // altrimenti (per ora) il primo errore non geenrico segnalato è quello
+                                        // principale.
+                                        if (pigStrumentiUrbanistici.getCdErr() == null
+                                                || pigStrumentiUrbanistici.getCdErr().equals("PING-ERRSU27")) {
+                                            pigStrumentiUrbanistici.setCdErr(errore.getCdErrore());
+                                            pigStrumentiUrbanistici.setDsErr(errore.getDsErrore());
+                                        }
                                     }
                                 }
 

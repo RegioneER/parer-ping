@@ -78,7 +78,7 @@ public class ParerInternalError extends ParerAbstractError implements Serializab
     private void init(String severity, String description, Exception ex) {
         logger.debug("ParerInternalError::init: invocato");
         setSeverity(severity);
-        logger.debug("ParerInternalError::init: severity [" + getSeverity() + "]");
+        logger.debug("ParerInternalError::init: severity [{0}]", getSeverity());
         _nativeException = null;
         if (ex != null) {
             _nativeException = ex;

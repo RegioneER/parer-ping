@@ -17,7 +17,7 @@ Requisiti minimi per installazione:
 - JBoss 7 EAP;
 - Oracle DB (versione consigliata 19c).
 
-## Instalazione JDK 
+## Installazione JDK 
 
 Consigliata adozione della OpenJDK alla versione 8, guida all'installazione https://openjdk.org/install/.
 
@@ -48,6 +48,21 @@ Di seguito le indicazioni per il rilascio su application server JBoss7:
 L'applicazione utilizza come DBMS di riferimento Oracle DB (https://www.oracle.com/it/database/) alla versione, consigliata, **19c**. Per l'installazione e la configurazione fare riferimento alle guide ufficiali.
 
 Per la creazione del modello E-R consultare il seguente [README.md](https://github.com/RegioneER/parer-db-init/blob/master/README.md) (progetto di riferimento https://github.com/RegioneER/parer-db-init).
+
+## Configurazione bucket S3 Object Storage
+
+L'applicazione può essere integrata sulla base delle configurazioni impostate, vedi paragrafo Setup application server (Jboss 7), ad uno storage grid o object storage attraverso lo standard AWS S3.
+
+### Configurazione dei bucket
+
+Una possibile configurazione dei bucket proposta è la seguente, tra parentesi il nome del parametro da configurare su PING:
+
+- xformer : Nome del bucket per archiviare i report delle trasformazioni richieste a Kettle Server (BUCKET_REPORT_XFORMER).
+- sisma-trasformati : Nome del bucket per i progetti Sisma da trasformare (BUCKET_SISMA_TRASFORMATI).
+- su-trasformati : Nome del bucket per gli Strumenti Urbanistici da trasformare (BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI).
+- sisma-verifica : Nome del bucket per la verifica dei progetti Sisma (BUCKET_VERIFICA_SISMA).
+- su-verifica : Nome del bucket per la verifica degli Strumenti Urbanistici (BUCKET_VERIFICA_STRUMENTI_URBANISTICI).
+- xf-object : Nome del bucket usato per versare oggetti se il tipo oggetto lo specifica (BUCKET_VERSAMENTO_OGGETTO).
 
 # Utilizzo
 

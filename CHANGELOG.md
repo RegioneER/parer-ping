@@ -1,4 +1,27 @@
 
+## 6.0.0 (13-08-2024)
+
+### Novità: 2
+- [#32825](https://parermine.regione.emilia-romagna.it/issues/32825) Modifiche alla conservazione dei log dei job
+- [#30801](https://parermine.regione.emilia-romagna.it/issues/30801) Aggiornamento a Java 11
+
+## 5.3.0 (16-07-2024)
+
+### Bugfix: 2
+- [#30193](https://parermine.regione.emilia-romagna.it/issues/30193) Correzione errore pagina grigia dopo il download nella pagina Dettaglio versione XSD del Tipo Oggetto
+- [#27986](https://parermine.regione.emilia-romagna.it/issues/27986) Correzione job Recupero da Sacer
+
+### Novità: 9
+- [#32724](https://parermine.regione.emilia-romagna.it/issues/32724) Modificare dimensioni campo Ente 
+- [#31953](https://parermine.regione.emilia-romagna.it/issues/31953) modifica al messaggio della pop up quando si setta un oggetto come non risolubile
+- [#31648](https://parermine.regione.emilia-romagna.it/issues/31648) Aggiungere nuovi parametri "di sistema" passati da ping a kettle 
+- [#31639](https://parermine.regione.emilia-romagna.it/issues/31639) PING Possibilità di modificare l'xml delle UD in errore nel versamento a SACER
+- [#31255](https://parermine.regione.emilia-romagna.it/issues/31255) Modifiche alla pagina DETTAGLIO TRASFORMAZIONE per inserire oggetto generato
+- [#31151](https://parermine.regione.emilia-romagna.it/issues/31151) SU - personalizzazione del messaggio di errore nel caso di assenza di documenti firmati digitalmente
+- [#27691](https://parermine.regione.emilia-romagna.it/issues/27691) Introduzione della motivazione negli annullamenti 
+- [#24125](https://parermine.regione.emilia-romagna.it/issues/24125) Portare alla 1.5 il client di versamento a Sacer NO_ZIP
+- [#15213](https://parermine.regione.emilia-romagna.it/issues/15213) Annullamento versamenti UD: valorizzare il campo Utente con l'utente che esegue l'operazione
+
 ## 5.2.0 (15-05-2024)
 
 ### Bugfix: 3

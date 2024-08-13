@@ -439,6 +439,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 
                     getForm().getXsdDatiSpec().setViewMode();
                     getForm().getXsdDatiSpec().getScaricaXsdButton().setEditMode();
+                    getForm().getXsdDatiSpec().getScaricaXsdButton().setDisableHourGlass(true);
 
                     BigDecimal idXsdDatiSpec = ((PigXsdDatiSpecRowBean) getForm().getXsdDatiSpecList().getTable()
                             .getCurrentRow()).getIdXsdSpec();
@@ -4188,6 +4189,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 
                 getForm().getXsdDatiSpec().setViewMode();
                 getForm().getXsdDatiSpec().getScaricaXsdButton().setEditMode();
+                getForm().getXsdDatiSpec().getScaricaXsdButton().setDisableHourGlass(true);
 
                 if (getForm().getXsdDatiSpec().getStatus().equals(Status.insert)) {
 
@@ -4612,6 +4614,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     private void aggiornaDettaglioXsd() throws EMFError {
         getForm().getXsdDatiSpec().setViewMode();
         getForm().getXsdDatiSpec().getScaricaXsdButton().setEditMode();
+        getForm().getXsdDatiSpec().getScaricaXsdButton().setDisableHourGlass(true);
 
         BigDecimal idXsdDatiSpec = ((PigXsdDatiSpecRowBean) getForm().getXsdDatiSpecList().getTable().getCurrentRow())
                 .getIdXsdSpec();

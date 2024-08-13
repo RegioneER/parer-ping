@@ -82,7 +82,7 @@ public class SalvaDati {
 
     public void elabora(PigSessioneRecup sessioneRec, PigUnitaDocObject unitaDocObj) throws ParerInternalError {
         // I file da rinominare sono quelli creati da Sacer con le due chiamate di recupero eseguite nel metodo sopra
-        // String rootFtp = commonDb.getRootFtpParam();
+        String rootFtp = commonDb.getRootFtpParam();
         // // String ftpOutput = rootFtp.concat(sessioneRec.getPigVer().getDsPathOutputFtp());
         // BigDecimal idAmbienteVers = BigDecimal.valueOf(
         // sessioneRec.getPigObject().getPigTipoObject().getPigVer().getPigAmbienteVer().getIdAmbienteVers());
@@ -90,10 +90,8 @@ public class SalvaDati {
         // BigDecimal.valueOf(sessioneRec.getPigObject().getPigTipoObject().getPigVer().getIdVers());
         // BigDecimal idTipoObject =
         // BigDecimal.valueOf(sessioneRec.getPigObject().getPigTipoObject().getIdTipoObject());
-        String ftpOutput = sessioneRec.getPigObject().getPigTipoObject().getPigVer().getDsPathOutputFtp();
-        // String ftpOutput = rootFtp.concat(configurationHelper.getValoreParamApplic("DS_PATH_OUTPUT_FTP",
-        // idAmbienteVers,
-        // idVers, idTipoObject, Constants.TipoPigVGetValAppart.TIPOOBJECT));
+        String ftpOutput = rootFtp
+                .concat(sessioneRec.getPigObject().getPigTipoObject().getPigVer().getDsPathOutputFtp());
         String fileSuffix = unitaDocObj.getCdRegistroUnitaDocSacer().concat(FILE_KEY_SEPARATOR)
                 .concat(unitaDocObj.getAaUnitaDocSacer().toString().concat(FILE_KEY_SEPARATOR))
                 .concat(unitaDocObj.getCdKeyUnitaDocSacer().concat(Constants.ZIP_EXTENSION));
@@ -108,8 +106,7 @@ public class SalvaDati {
         File filePcDest = new File(ftpOutput.concat(Constants.PC_FILE_PREFIX_PREINGEST)
                 .concat(sessioneRec.getPigObject().getCdKeyObject()).concat(Constants.ZIP_EXTENSION));
 
-        if (this.modificaSessione(sessioneRec, Constants.StatoSessioneRecup.RECUPERATO, null, null, null)
-                && this.rinominaFiles(fileUd, fileUdDest, filePc, filePcDest)) {
+        if (this.modificaSessione(sessioneRec, Constants.StatoSessioneRecup.RECUPERATO, null, null, null)) {
             log.info("Commit effettuato");
         } else {
             log.info("Rollback effettuato");

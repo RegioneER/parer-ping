@@ -112,8 +112,8 @@ public class AllineamentoEntiConvenzionatiEjb {
 
                 if (client != null) {
                     log.info(
-                            "Allineamento Ente Convenzionato - Preparazione attivazione servizio per l'ente convenzionato "
-                                    + idEnteSiam);
+                            "Allineamento Ente Convenzionato - Preparazione attivazione servizio per l'ente convenzionato {0}",
+                            idEnteSiam);
 
                     // Esito chiamata WS
                     rispostaWsAec = client.ricalcoloServiziErogati(idEnteSiam.intValue());
@@ -130,8 +130,8 @@ public class AllineamentoEntiConvenzionatiEjb {
 
                     String posNeg = esitoServizio.name().equals(CostantiAllineaEntiConv.EsitoServizio.OK.name())
                             ? "positiva" : "negativa";
-                    log.info("Allineamento Ente Convenzionato - Risposta WS " + posNeg + " per l'ente siam "
-                            + idEnteSiam);
+                    log.info("Allineamento Ente Convenzionato - Risposta WS {0} per l'ente siam {1}", posNeg,
+                            idEnteSiam);
 
                     // Se non è OK mi salvo l'informazione
                     if (!esitoServizio.name().equals(CostantiAllineaEntiConv.EsitoServizio.OK.name())) {
@@ -143,7 +143,7 @@ public class AllineamentoEntiConvenzionatiEjb {
                     amministrazioneHelper.writeEsitoIamEnteSiamDaAllinea(enteSiamDaAllinea.getIdEnteSiamDaAllinea(),
                             CostantiAllineaEntiConv.EsitoServizio.KO, CostantiAllineaEntiConv.SERVIZI_ENTE_001,
                             "Errore nella creazione del client per la chiamata al WS di AllineamentoEnteConvenzionato");
-                    log.error("Allineamento Ente Convenzionato - Risposta WS negativa per l'ente siam " + idEnteSiam);
+                    log.error("Allineamento Ente Convenzionato - Risposta WS negativa per l'ente siam {0}", idEnteSiam);
                     break;
                 }
 
@@ -161,8 +161,9 @@ public class AllineamentoEntiConvenzionatiEjb {
                 amministrazioneHelper.writeEsitoIamEnteSiamDaAllinea(enteSiamDaAllinea.getIdEnteSiamDaAllinea(),
                         CostantiAllineaEntiConv.EsitoServizio.NO_RISPOSTA, CostantiAllineaEntiConv.ALLINEA_ENTE_001,
                         "Il servizio di allineamento ente siam non risponde");
-                log.error("Allineamento Ente Convenzionato - Risposta WS negativa per l'ente siam " + idEnteSiam
-                        + " - Il servizio di allineamento ente convenzionato non risponde");
+                log.error(
+                        "Allineamento Ente Convenzionato - Risposta WS negativa per l'ente siam {0} - Il servizio di allineamento ente convenzionato non risponde",
+                        idEnteSiam);
                 replicaOK = false;
                 break;
             } catch (Exception e) {
@@ -180,14 +181,9 @@ public class AllineamentoEntiConvenzionatiEjb {
         /* Scrivo nel log del job l'esito finale */
         if (!arrivoDaOnLine) {
             if (replicaOK) {
-                // jobHelper.writeAtomicLogJob(JobConstants.JobEnum.ALLINEA_ENTI_CONVENZIONATI.name(),
-                // JobConstants.OpTypeEnum.FINE_SCHEDULAZIONE.name());
                 jobLoggerEjb.writeAtomicLog(Constants.NomiJob.ALLINEA_ENTI_CONVENZIONATI,
                         Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
             } else {
-                // jobHelper.writeAtomicLogJob(JobConstants.JobEnum.ALLINEA_ENTI_CONVENZIONATI.name(),
-                // JobConstants.OpTypeEnum.ERRORE.name(), "Errore durante la chiamata al WS di allineamento ente
-                // convenzionato");
                 jobLoggerEjb.writeAtomicLog(Constants.NomiJob.ALLINEA_ENTI_CONVENZIONATI,
                         Constants.TipiRegLogJob.ERRORE, "Errore durante la chiamata al WS di allineamento ente siam");
             }

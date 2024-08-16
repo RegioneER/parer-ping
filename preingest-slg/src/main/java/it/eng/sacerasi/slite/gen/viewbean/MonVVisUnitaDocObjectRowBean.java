@@ -199,6 +199,14 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         setObject("fl_vers_simulato", flVersSimulato);
     }
 
+    public String getFlXmlMod() {
+        return getString("fl_xml_mod");
+    }
+
+    public void setFlXmlMod(String flXmlMod) {
+        setObject("fl_xml_mod", flXmlMod);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVVisUnitaDocObject entity = (MonVVisUnitaDocObject) obj;
@@ -221,6 +229,7 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         this.setIdOrganizIam(entity.getIdOrganizIam());
         this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
         this.setFlVersSimulato(entity.getFlVersSimulato());
+        this.setFlXmlMod(entity.getFlXMlMod());
     }
 
     @Override
@@ -245,6 +254,7 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         entity.setIdOrganizIam(this.getIdOrganizIam());
         entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
         entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setFlXMlMod(this.getFlXmlMod());
         return entity;
     }
 

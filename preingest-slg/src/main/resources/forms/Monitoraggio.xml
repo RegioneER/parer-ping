@@ -623,6 +623,7 @@
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
         <CheckBox Type="STRING" Description="Versamento simulato" Name="fl_vers_simulato" Readonly="true"/>
+        <CheckBox Type="STRING" Description="XML versato modificato" Name="fl_xml_modificato" Readonly="true"/>
         <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
         <TextArea Name="bl_xml_indice_sacer" Description="XML indice" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
         <Button Name="downloadXMLUnitaDocObject" Description="Download XML unità documentaria" Type="STRING" DisableHourGlass="true"/> 

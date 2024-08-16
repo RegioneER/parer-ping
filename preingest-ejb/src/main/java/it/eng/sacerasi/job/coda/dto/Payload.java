@@ -114,22 +114,6 @@ public class Payload implements Serializable {
         this.xmlIndiceId = xmlIndiceId;
     }
 
-    // public String getXmlVersamentoSacer() {
-    // return xmlVersamentoSacer;
-    // }
-    //
-    // public void setXmlVersamentoSacer(String xmlVersamentoSacer) {
-    // this.xmlVersamentoSacer = xmlVersamentoSacer;
-    // }
-    //
-    // public String getXmlIndice() {
-    // return xmlIndice;
-    // }
-    //
-    // public void setXmlIndice(String xmlIndice) {
-    // this.xmlIndice = xmlIndice;
-    // }
-
     public String getUserIdSacer() {
         return userIdSacer;
     }
@@ -156,11 +140,6 @@ public class Payload implements Serializable {
 
     @Override
     public String toString() {
-        // return "Payload{" + "sessionId=" + sessionId + "\n objectId=" + objectId + "\n unitaDocId=" + unitaDocId +
-        // "\n unitaDocSessionId=" + unitaDocSessionId + "\n cdRegistroUnitaDocSacer=" + cdRegistroUnitaDocSacer + "\n
-        // aaUnitaDocSacer=" + aaUnitaDocSacer + "\n cdKeyUnitaDocSacer=" + cdKeyUnitaDocSacer + "\n urlServVersamento="
-        // + urlServVersamento + "\n xmlVersamentoSacerId=" + xmlVersamentoSacer + "\n xmlIndice=" + xmlIndice + "\n
-        // userIdSacer=" + userIdSacer + "\n passwordSacer=" + passwordSacer + '}';
         return "Payload{" + "sessionId=" + sessionId + "\n objectId=" + objectId + "\n unitaDocId=" + unitaDocId
                 + "\n unitaDocSessionId=" + unitaDocSessionId + "\n cdRegistroUnitaDocSacer=" + cdRegistroUnitaDocSacer
                 + "\n aaUnitaDocSacer=" + aaUnitaDocSacer + "\n cdKeyUnitaDocSacer=" + cdKeyUnitaDocSacer

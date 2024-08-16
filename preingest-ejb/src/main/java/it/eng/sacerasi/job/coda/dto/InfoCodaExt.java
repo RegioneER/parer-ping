@@ -110,9 +110,8 @@ public class InfoCodaExt extends InfoCoda {
                 return false;
         } else if (!undeliveredTimestamp.equals(other.undeliveredTimestamp))
             return false;
-        if (unitaDocSessionId != other.unitaDocSessionId)
-            return false;
-        return true;
+
+        return unitaDocSessionId == other.unitaDocSessionId;
     }
 
 }

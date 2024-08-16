@@ -62,7 +62,7 @@ public class UnitaDocObject implements Serializable {
     private String nmEnteSacer;
 
     public UnitaDocObject() {
-        // imposta il default della versione del WS versamento a 1.4
+        // imposta il default della versione del WS versamento a 1.5
         versioneWsVersamento = Constants.VERSIONE_XML_SACER;
     }
 

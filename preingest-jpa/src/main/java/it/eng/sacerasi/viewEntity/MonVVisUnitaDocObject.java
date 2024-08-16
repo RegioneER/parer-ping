@@ -46,6 +46,7 @@ public class MonVVisUnitaDocObject implements Serializable {
     private String dlErrSacer;
     private String dsInfoObject;
     private String flVersSimulato;
+    private String flXMlMod;
     private BigDecimal idOrganizIam;
     private BigDecimal idUnitaDocObject;
     private BigDecimal niSizeFileByte;
@@ -157,6 +158,15 @@ public class MonVVisUnitaDocObject implements Serializable {
 
     public void setFlVersSimulato(String flVersSimulato) {
         this.flVersSimulato = flVersSimulato;
+    }
+
+    @Column(name = "FL_XML_MOD", columnDefinition = "char")
+    public String getFlXMlMod() {
+        return flXMlMod;
+    }
+
+    public void setFlXMlMod(String flXMlMod) {
+        this.flXMlMod = flXMlMod;
     }
 
     @Column(name = "ID_ORGANIZ_IAM")

@@ -151,7 +151,10 @@ public class AnnullamentoEjb {
      *
      * @param richiestoAnnullamentoVersamentiUDDuplicati
      *            true se richiesto annullamento ud duplicati
-     *
+     * @param motivazioneAnnullamento
+     *            motivazione dell'annullamento
+     * @param username
+     *            nome dell'utente che richiede l'annullamento
      *
      * @throws ParerUserError
      *             errore generico
@@ -159,9 +162,11 @@ public class AnnullamentoEjb {
      *             errore generico
      */
     public void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
-            boolean richiestoAnnullamentoVersamentiUDDuplicati) throws ParerUserError, ParerInternalError {
+            boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento, String username)
+            throws ParerUserError, ParerInternalError {
         RichiestaSacerInput input = context.getBusinessObject(AnnullamentoEjb.class).eseguiAnnullamentoPing(idObject,
-                richiestoAnnullamentoVersamentiUD, richiestoAnnullamentoVersamentiUDDuplicati);
+                richiestoAnnullamentoVersamentiUD, richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento,
+                username);
         if (input != null) {
             // E' stato generato un xml di invio richiesta di annullamento a Sacer, eseguo l'attivazione del servizio
             // Chiamata a richiesta sacer RecuperoUnitaDocumentariaSync
@@ -278,7 +283,8 @@ public class AnnullamentoEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public RichiestaSacerInput eseguiAnnullamentoPing(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
-            boolean richiestoAnnullamentoVersamentiUDDuplicati) throws ParerUserError {
+            boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento, String username)
+            throws ParerUserError {
         PigObject object = helper.findByIdWithLock(PigObject.class, idObject);
         PigTipoObject tipoObject = object.getPigTipoObject();
         final String tiVers = tipoObject.getTiVersFile();
@@ -385,7 +391,7 @@ public class AnnullamentoEjb {
                     monitoraggioHelper.creaStatoSessione(object.getIdLastSessioneIngest(),
                             Constants.StatoSessioneIngest.IN_CORSO_ANNULLAMENTO.name(), now);
 
-                    input = generaRichiestaAnnullamentoVersamenti(object);
+                    input = generaRichiestaAnnullamentoVersamenti(object, motivazioneAnnullamento, username);
                     logger.debug("STATO CHIUSO_ERR_VERS, CHIUSO_OK - Salvo il record XML di richiesta annullamento");
                     PigSessioneIngest pigSessioneIngest = helper.findById(PigSessioneIngest.class,
                             object.getIdLastSessioneIngest());
@@ -440,15 +446,14 @@ public class AnnullamentoEjb {
                 if (lud != null) {
                     for (PigUnitaDocSessione pigUnitaDocSessione : lud) {
                         if (pigUnitaDocSessione.getTiStatoUnitaDocSessione()
-                                .equals(Constants.StatoUnitaDocSessione.VERSATA_ERR.name())) {
+                                .equals(Constants.StatoUnitaDocSessione.VERSATA_ERR.name())
+                                && (!(pigUnitaDocSessione.getCdErrSacer()
+                                        .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)
+                                        && richiestoAnnullamentoVersamentiUDDuplicati))) {
                             // SUE26200 - Non annullo le sessioni delle UD in errore UD-002-001 perchè richiesto
                             // dall'utente.
-                            if (!(pigUnitaDocSessione.getCdErrSacer()
-                                    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)
-                                    && richiestoAnnullamentoVersamentiUDDuplicati)) {
-                                pigUnitaDocSessione
-                                        .setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.ANNULLATA.name());
-                            }
+                            pigUnitaDocSessione
+                                    .setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.ANNULLATA.name());
                         }
                     }
                 }
@@ -505,7 +510,6 @@ public class AnnullamentoEjb {
             // Il servizio non ha risposto per un errore di connessione
             object.setFlRichAnnulTimeout("1");
             // MEV13062
-            // TODO
 
             logger.debug("RISPOSTA ANNULLAMENTO - TimeOut di Connessione");
         } else {
@@ -801,7 +805,9 @@ public class AnnullamentoEjb {
         return false;
     }
 
-    private RichiestaSacerInput generaRichiestaAnnullamentoVersamenti(PigObject object) throws ParerUserError {
+    // MEV 27691 - aggiunto un campo contenente la motivazione dell'annullamento UD.
+    private RichiestaSacerInput generaRichiestaAnnullamentoVersamenti(PigObject object, String motivazioneAnnullamento,
+            String username) throws ParerUserError {
         RichiestaAnnullamentoVersamenti richAnnulVers = new RichiestaAnnullamentoVersamenti();
         richAnnulVers.setVersioneXmlRichiesta(
                 configurationHelper.getValoreParamApplicByApplic(Constants.VERSIONE_XML_ANNUL));
@@ -818,7 +824,12 @@ public class AnnullamentoEjb {
         richAnnulVers.getRichiesta()
                 .setCodice("Annullamento oggetto " + cdKeyObject + " e sessione " + idSessioneIngest.toPlainString());
         richAnnulVers.getRichiesta().setDescrizione("Annullamento oggetto " + cdKeyObject);
-        richAnnulVers.getRichiesta().setMotivazione("Annullamento in PreIngest dell'oggetto " + cdKeyObject);
+        if (motivazioneAnnullamento != null && !motivazioneAnnullamento.isEmpty()) {
+            richAnnulVers.getRichiesta().setMotivazione(
+                    "Annullamento in PreIngest dell'oggetto " + cdKeyObject + " - " + motivazioneAnnullamento);
+        } else {
+            richAnnulVers.getRichiesta().setMotivazione("Annullamento in PreIngest dell'oggetto " + cdKeyObject);
+        }
         richAnnulVers.getRichiesta().setImmediata(true);
         richAnnulVers.getRichiesta().setForzaAnnullamento(true);
         richAnnulVers.getRichiesta().setRichiestaDaPreIngest(true);
@@ -854,6 +865,8 @@ public class AnnullamentoEjb {
                 idTipoObject);
 
         richAnnulVers.getVersatore().setUserID(nmUseridSacer);
+        richAnnulVers.getVersatore().setUtente(username);
+
         UsrVAbilStrutSacerXping strutturaAbilitata = corVersHelper.getStrutturaAbilitata(idOrganizIamFromUdObject,
                 nmUseridSacer);
         richAnnulVers.getVersatore().setAmbiente(strutturaAbilitata.getNmAmbiente());
@@ -886,14 +899,18 @@ public class AnnullamentoEjb {
      *
      * @param idObject
      *            id object
-     *
+     * @param username
+     *            nome dell'utente che ha richiesto l'annullamento
+     * 
      * @throws ParerUserError
      *             errore generico
      * @throws ParerInternalError
      *             errore generico
      */
-    public void verificaAnnullamentoTerminato(BigDecimal idObject) throws ParerUserError, ParerInternalError {
-        RichiestaSacerInput input = context.getBusinessObject(AnnullamentoEjb.class).initVerificaAnnullamento(idObject);
+    public void verificaAnnullamentoTerminato(BigDecimal idObject, String username)
+            throws ParerUserError, ParerInternalError {
+        RichiestaSacerInput input = context.getBusinessObject(AnnullamentoEjb.class).initVerificaAnnullamento(idObject,
+                username);
         if (input != null) {
             // E' stato generato un xml di invio richiesta di annullamento a Sacer, eseguo l'attivazione del servizio
             // Chiamata a richiesta sacer RecuperoUnitaDocumentariaSync
@@ -908,19 +925,43 @@ public class AnnullamentoEjb {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public RichiestaSacerInput initVerificaAnnullamento(BigDecimal idObject) throws ParerUserError {
+    public RichiestaSacerInput initVerificaAnnullamento(BigDecimal idObject, String username) throws ParerUserError {
         PigObject object = helper.findByIdWithLock(PigObject.class, idObject);
         object.setFlRichAnnulTimeout("0");
-        RichiestaSacerInput input = generaRichiestaAnnullamentoVersamenti(object);
-        if (input != null) {
-            List<PigXmlAnnulSessioneIngest> xmlResps = helper.retrievePigXmlAnnulSessioneIngests(
-                    object.getIdLastSessioneIngest(), Constants.TipiXmlAnnul.RICHIESTA.name());
-            PigXmlAnnulSessioneIngest xmlAnnul;
-            if (!xmlResps.isEmpty()) {
-                xmlAnnul = xmlResps.get(0);
-            } else {
-                throw new ParerUserError("Errore inatteso nella verifica: xml di richiesta non registrato");
+
+        List<PigXmlAnnulSessioneIngest> xmlResps = helper.retrievePigXmlAnnulSessioneIngests(
+                object.getIdLastSessioneIngest(), Constants.TipiXmlAnnul.RICHIESTA.name());
+        PigXmlAnnulSessioneIngest xmlAnnul;
+        if (!xmlResps.isEmpty()) {
+            xmlAnnul = xmlResps.get(0);
+        } else {
+            throw new ParerUserError("Errore inatteso nella verifica: xml di richiesta non registrato");
+        }
+
+        // MEV 27691 - controllo che non ci sia una motivazione di annullamento custom
+        String motivazioneAnnullamento = "";
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(xmlAnnul.getBlXmlAnnul()));
+            Document doc = builder.parse(is);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            XPathExpression expr = xPath.compile("//RichiestaAnnullamentoVersamenti/Richiesta/Motivazione");
+            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            if (nodes.getLength() > 0) {
+                String oldMotivazione = nodes.item(0).getTextContent();
+                int motivazioneCustomIndex = oldMotivazione.indexOf("-");
+                if (motivazioneCustomIndex != -1) {
+                    motivazioneAnnullamento = oldMotivazione.substring(motivazioneCustomIndex + 1).trim();
+                }
             }
+        } catch (Exception ex) {
+            throw new ParerUserError("Errore inatteso nella verifica : " + ex.getMessage());
+        }
+
+        RichiestaSacerInput input = generaRichiestaAnnullamentoVersamenti(object, motivazioneAnnullamento, username);
+        if (input != null) {
             xmlAnnul.setBlXmlAnnul(input.getXmlRichiestaSacer());
             xmlAnnul.setDtRegXmlAnnul(Calendar.getInstance().getTime());
         }

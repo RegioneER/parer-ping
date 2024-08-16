@@ -351,13 +351,14 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
         }
     }
 
-    public List<PigTipoObject> searchAssignedPigTipoObjects(long idTrasf) {
-        String queryString = "SELECT x FROM PigTipoObject x WHERE x.xfoTrasf.idTrasf = :idTrasf";
+    // MEV 31255
+    public List<PigVersTipoObjectDaTrasf> searchAssignedPigTipoObjects(long idTrasf) {
+        String queryString = "SELECT x FROM PigVersTipoObjectDaTrasf x WHERE x.pigTipoObjectDaTrasf.xfoTrasf.idTrasf = :idTrasf";
 
         Query query = getEntityManager().createQuery(queryString);
         query.setParameter("idTrasf", idTrasf);
 
-        return (List<PigTipoObject>) query.getResultList();
+        return (List<PigVersTipoObjectDaTrasf>) query.getResultList();
     }
 
     public boolean isTransformationAssigned(long idTrasf) {

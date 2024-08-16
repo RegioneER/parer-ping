@@ -223,7 +223,7 @@ public class ConsumerCodaVH implements MessageListener {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private void chiudiInErrore(OggettoInCoda oggetto) throws ParerInternalError {
+    private void chiudiInErrore(OggettoInCoda oggetto) {
 
         BigDecimal tmpIdLastSess = oggetto.getRifPigObject().getIdLastSessioneIngest();
         PigObject tmpPigObject;
@@ -319,7 +319,7 @@ public class ConsumerCodaVH implements MessageListener {
     }
 
     private void logError(RispostaControlli rispostaControlli) {
-        log.debug("Errore Notifica : " + rispostaControlli.getCodErr() + " - " + rispostaControlli.getDsErr());
+        log.debug("Errore Notifica : {0} - {1} ", rispostaControlli.getCodErr(), rispostaControlli.getDsErr());
         log.debug("Fine transazione - ROLLBACK");
     }
 }

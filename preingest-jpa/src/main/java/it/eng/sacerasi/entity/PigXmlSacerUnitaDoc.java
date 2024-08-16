@@ -47,6 +47,7 @@ public class PigXmlSacerUnitaDoc implements Serializable {
     private String tiXmlSacer;
     private PigUnitaDocObject pigUnitaDocObject;
     private Long idVers;
+    private String flXmlMod;
 
     public PigXmlSacerUnitaDoc() {
         // hibernate
@@ -104,5 +105,14 @@ public class PigXmlSacerUnitaDoc implements Serializable {
 
     public void setIdVers(Long idVers) {
         this.idVers = idVers;
+    }
+
+    @Column(name = "FL_XML_MOD", columnDefinition = "char")
+    public String getFlXmlMod() {
+        return flXmlMod;
+    }
+
+    public void setFlXmlMod(String flXmlMod) {
+        this.flXmlMod = flXmlMod;
     }
 }

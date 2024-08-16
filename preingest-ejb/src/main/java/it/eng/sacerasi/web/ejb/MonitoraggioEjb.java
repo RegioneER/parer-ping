@@ -19,6 +19,7 @@ package it.eng.sacerasi.web.ejb;
 
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.ejb.CommonDb;
+import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
 import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.exception.ParerErrorSeverity;
 import it.eng.sacerasi.exception.ParerInternalError;
@@ -36,10 +37,14 @@ import it.eng.sacerasi.viewEntity.MonVLisObjTrasf;
 import it.eng.sacerasi.viewEntity.MonVVisObjTrasf;
 import it.eng.sacerasi.viewEntity.MonVVisUnitaDocSessione;
 import it.eng.sacerasi.viewEntity.MonVVisVersFallito;
+import it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer;
+import it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.helper.MonitoraggioHelper;
 import it.eng.sacerasi.web.util.Transform;
 import it.eng.sacerasi.ws.util.Util;
+import it.eng.sacerasi.xml.unitaDocumentaria.VersatoreType;
+import it.eng.spagoCore.error.EMFError;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -82,6 +87,8 @@ public class MonitoraggioEjb {
     private AmministrazioneEjb amministrazioneEjb;
     @EJB
     private PayloadManagerEjb payloadManagerHelper;
+    @EJB
+    CorrispondenzeVersHelper corVersHelper;
 
     private static final Logger log = LoggerFactory.getLogger(MonitoraggioEjb.class);
 
@@ -974,6 +981,68 @@ public class MonitoraggioEjb {
         PigTipoObject pigTipoObject = monitoraggioHelper.findById(PigTipoObject.class, idTipoObject);
 
         object.setPigTipoObject(pigTipoObject);
+    }
+
+    // MEV 31639
+    public boolean checkVersatoreUnitaDocumentariaXml(BigDecimal idUnitaDocObject, VersatoreType versatoreType)
+            throws EMFError {
+        List<PigXmlSacerUnitaDoc> pigXmlSacerUnitaDocVersamentoList = monitoraggioHelper
+                .getPigXmlSacerUnitaDocVersamento(idUnitaDocObject.longValue());
+
+        if (pigXmlSacerUnitaDocVersamentoList == null || pigXmlSacerUnitaDocVersamentoList.size() != 1) {
+            String msg = "checkVersatoreUnitaDocumentariaXml - Errore durante il recupero dell'unità documentaria versamento "
+                    + idUnitaDocObject;
+            log.error(msg);
+            throw new EMFError(EMFError.ERROR, msg);
+        }
+
+        PigXmlSacerUnitaDoc pigXmlSacerUnitaDoc = pigXmlSacerUnitaDocVersamentoList.get(0);
+        List<PigVLisStrutVersSacer> idOrganizIamStruts = corVersHelper.getIdOrganizIamStrut(
+                pigXmlSacerUnitaDoc.getPigUnitaDocObject().getPigObject().getPigTipoObject().getIdTipoObject());
+
+        if (idOrganizIamStruts == null || idOrganizIamStruts.isEmpty() || idOrganizIamStruts.size() > 1) {
+            String msg = "checkVersatoreUnitaDocumentariaXml - Errore durante il recupero della struttura per l'unità documentaria "
+                    + idUnitaDocObject;
+            log.error(msg);
+            throw new EMFError(EMFError.ERROR, msg);
+        }
+
+        PigVLisStrutVersSacer organiz = idOrganizIamStruts.get(0);
+        BigDecimal idOrganizIam = organiz.getPigVLisStrutVersSacerId().getIdOrganizIamStrut();
+        String nmUseridSacer = organiz.getNmUseridSacer();
+
+        UsrVAbilStrutSacerXping strutturaAbilitata = corVersHelper.getStrutturaAbilitata(idOrganizIam, nmUseridSacer);
+
+        if (!strutturaAbilitata.getNmAmbiente().equals(versatoreType.getAmbiente())) {
+            return false;
+        }
+
+        if (!strutturaAbilitata.getNmEnte().equals(versatoreType.getEnte())) {
+            return false;
+        }
+
+        if (!strutturaAbilitata.getNmStrut().equals(versatoreType.getStruttura())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // MEV 31639
+    public void saveUnitaDocumentariaXmlVersamento(BigDecimal idUnitaDocObject, String xml) throws EMFError {
+        List<PigXmlSacerUnitaDoc> pigXmlSacerUnitaDocVersamentoList = monitoraggioHelper
+                .getPigXmlSacerUnitaDocVersamento(idUnitaDocObject.longValue());
+
+        if (pigXmlSacerUnitaDocVersamentoList == null || pigXmlSacerUnitaDocVersamentoList.size() != 1) {
+            String msg = "saveUnitaDocumentariaXmlVersamento - Errore durante il recupero dell'unità documentaria versamento "
+                    + idUnitaDocObject;
+            log.error(msg);
+            throw new EMFError(EMFError.ERROR, msg);
+        }
+
+        PigXmlSacerUnitaDoc pigXmlSacerUnitaDoc = pigXmlSacerUnitaDocVersamentoList.get(0);
+        pigXmlSacerUnitaDoc.setBlXmlSacer(xml);
+        pigXmlSacerUnitaDoc.setFlXmlMod(Constants.DB_TRUE);
     }
 
     public PigPrioritaObjectTableBean getPigPrioritaObjectTableBean(BigDecimal idObject) throws ParerUserError {

@@ -4,7 +4,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>sacerping-jboss</artifactId>
-        <version>5.2.1-SNAPSHOT</version>
+        <version>6.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sacerping-jboss-slg</artifactId>
@@ -105,9 +105,14 @@
             <artifactId>spagofat-sl-jpa</artifactId>
         </dependency>
         <dependency>
-			<groupId>org.dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.18.0</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>      

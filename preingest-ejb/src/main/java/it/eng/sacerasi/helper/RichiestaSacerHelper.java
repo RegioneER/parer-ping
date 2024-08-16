@@ -62,6 +62,7 @@ import it.eng.sacerasi.job.dto.EsitoConnessione;
 import it.eng.sacerasi.job.dto.RichiestaSacerInput;
 import it.eng.sacerasi.job.preparaxml.util.XmlUtils;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
+import org.apache.http.ParseException;
 
 @Stateless(mappedName = "RichiestaSacerHelper")
 @LocalBean
@@ -99,10 +100,12 @@ public class RichiestaSacerHelper {
 
                     @Override
                     public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                        // unused
                     }
 
                     @Override
                     public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                        // unused
                     }
                 };
 
@@ -118,7 +121,7 @@ public class RichiestaSacerHelper {
                     sr.register(new Scheme("https", 443, ssf));
                     httpclient = new DefaultHttpClient(ccm, httpclient.getParams());
                 } catch (NoSuchAlgorithmException | KeyManagementException e) {
-                    log.error("Errore interno nella preparazione della chiamata HTTPS " + e.getMessage());
+                    log.error("Errore interno nella preparazione della chiamata HTTPS {0}", e.getMessage());
                 }
             }
 
@@ -206,17 +209,6 @@ public class RichiestaSacerHelper {
                     esitoConnessione.setErroreConnessione(false);
                 }
             }
-        } catch (UnmarshalException | ValidationException | IOException ex) {
-            // MAC#14483 - Gestire esito non conforme in annullamento oggetto
-            // Se l'xml c'è ma non lo valida con l'xsd lo deve registrare comunque evitando di lasciarlo nullo
-            esitoConnessione.setXmlResponse(responseString);
-            esitoConnessione.setErroreConnessione(false);
-            esitoConnessione.setDescrErrConnessione(null);
-            esitoConnessione.setCodiceEsito(Constants.EsitoVersamento.NEGATIVO.name());
-            esitoConnessione.setCodiceErrore(null);
-            esitoConnessione
-                    .setMessaggioErrore("Errore nella risposta: l'xml di risposta non rispetta l'xsd associato");
-            log.error("Errore nella risposta: l'xml di risposta non rispetta l'xsd associato", ex);
         } catch (Exception ex) {
             // MAC#14483 - Gestire esito non conforme in annullamento oggetto
             // Se l'xml c'è ma non lo valida con l'xsd lo deve registrare comunque evitando di lasciarlo nullo

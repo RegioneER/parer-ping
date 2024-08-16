@@ -99,10 +99,9 @@
     
     <List Name="TipiOggettoList" Description="">
         <Input Name="cd_ambiente" Description="Ambiente" Type="STRING" />
-<!--        <Input Name="cd_versatore" Description="Versatore" Type="STRING"/>
-        <Input Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" />-->
         <Link Name="cd_versatore" Description="Versatore" Type="STRING" Target="vaiAlVersatore" Tooltip="Vai al versatore" isTargetList="false"/>
-        <Link Name="nm_tipo_object" Description="Tipo oggetto" Type="STRING" Target="vaiAlTipoOggetto" Tooltip="Vai al tipo oggetto" isTargetList="false"/>
+        <Link Name="nm_tipo_object" Description="Tipo oggetto da trasformare" Type="STRING" Target="vaiAlTipoOggetto" Tooltip="Vai al tipo oggetto" isTargetList="false"/>
+        <Link Name="nm_tipo_object_generato" Description="Tipo oggetto generato" Type="STRING" Target="vaiAlTipoOggettoGenerato" Tooltip="Vai al tipo oggetto" isTargetList="false"/>
     </List>
     
     <Section Description="Versioni precedenti" Legend="Versioni precedenti" LoadOpened="true" Name="VersioniListSection" ShowButton="false"/>

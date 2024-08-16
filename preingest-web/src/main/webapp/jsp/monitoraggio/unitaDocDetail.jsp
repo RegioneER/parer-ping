@@ -3,9 +3,11 @@
 
 <sl:html>
     <sl:head  title="Monitoraggio - Dettaglio unità documentaria" >
-          <script src="<c:url value='/js/help/inithighlightingjs.js' />" type="text/javascript"></script>    
+<script src="<c:url value='/js/help/inithighlightingjs.js' />" type="text/javascript"></script>    
     </sl:head>
     <sl:body>
+        <c:set value="${sessionScope['###_FORM_CONTAINER']}" var="form" />
+
         <sl:header changeOrganizationBtnDescription="Cambia versatore"/>
         <sl:menu showChangePasswordBtn="true" />
         <sl:content>
@@ -13,7 +15,14 @@
             <sl:newLine skipLine="true"/>
 
             <sl:contentTitle title="DETTAGLIO UNITA' DOCUMENTARIA"/>
-            <slf:listNavBarDetail name="<%= MonitoraggioForm.OggettoDetailUnitaDocList.NAME%>"/>
+            <c:choose>
+                <c:when test="${(form.oggettoDetail.ti_stato_object.value eq 'CHIUSO_ERR_VERS')}">
+                    <slf:fieldBarDetailTag name="<%= MonitoraggioForm.UnitaDocDetail.NAME%>" hideInsertButton="true"/>
+                </c:when>
+                <c:otherwise>
+                    <slf:listNavBarDetail name="<%= MonitoraggioForm.OggettoDetailUnitaDocList.NAME%>"/>
+                </c:otherwise>
+            </c:choose>
             <sl:newLine skipLine="true"/>
             <slf:fieldSet  borderHidden="false">
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.VERSATORE%>" colSpan="4"/>
@@ -38,6 +47,8 @@
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.DL_ERR_SACER%>" colSpan="2"/>
                 <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.FL_VERS_SIMULATO%>" colSpan="4"/>
+                <sl:newLine />
+                <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.FL_XML_MODIFICATO %>" colSpan="4"/>
                 <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.BL_XML_VERS_SACER%>" colSpan="4" controlWidth="w100"/>
                 <sl:newLine />

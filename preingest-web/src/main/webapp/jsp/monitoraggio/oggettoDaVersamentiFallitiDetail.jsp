@@ -13,7 +13,7 @@
                 checkNonRisolubili.each((index, value) => {
                     $(value).css('visibility', 'hidden');
                 });
-                
+
                 checkVerificati.each((index, value) => {
                     $(value).css('visibility', 'hidden');
                 });
@@ -45,8 +45,9 @@
                             $(this).dialog("close");
                             var cdKey = $("#Cd_key_object_hidden").val();
                             var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
+                            var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
                             if (cdKey) {
-                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDerVersFallitiAction", Ti_annullamento_ud: tiAnnullamentoUD}).done(function (data) {
+                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDerVersFallitiAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
                                     CAjaxDataFormWalk(data);
 
                                     window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiDaVersamentiFallitiList&navigationEvent=elenco&riga=-1&forceReload=false";
@@ -76,23 +77,23 @@
                             let flNonRisolub = Array.from(document.querySelectorAll('table.list td > input[name="Fl_non_risolub"]:checked')).map((element) => {
                                 return element.getAttribute('value');
                             });
-                            
+
                             let csrf = $('input[name="_csrf"]').val();
-                            
+
                             let fakeForm = '<form id="spagoLiteAppForm" action="Monitoraggio.html" method="post">' +
-                                    '<input type="hidden" name="_csrf" value="' + csrf + '">' + 
+                                    '<input type="hidden" name="_csrf" value="' + csrf + '">' +
                                     '<input type="hidden" name="operation__impostaVerificNonRisolubOggettiDaVersFallitiAction" value="Imposta versamenti verificati / non risolubili">';
-                            
+
                             for (let i = 0; i < flVerif.length; i++) {
                                 fakeForm = fakeForm + '<input id="Fl_verif_' + i + '" name="Fl_verif" type="checkbox" value="' + flVerif[i] + '" checked="checked" style="visibility: hidden">';
                             }
-                            
+
                             for (let i = 0; i < flNonRisolub.length; i++) {
                                 fakeForm = fakeForm + '<input id="Fl_non_risolub_' + i + '" name="Fl_non_risolub" type="checkbox" value="' + flNonRisolub[i] + '" checked="checked" style="visibility: hidden">';
                             }
-                            
+
                             fakeForm = fakeForm + '</form>';
-                            
+
                             $(fakeForm).appendTo($(document.body)).submit();
                         },
                         "Annulla": function () {
@@ -100,7 +101,7 @@
                         }
                     }
                 });
-                
+
                 $('.confermaImpostaTuttiNonRisolubOggettiDaVersFallitiAction').dialog({
                     autoOpen: true,
                     width: 600,
@@ -113,12 +114,12 @@
                         "Conferma": function () {
                             $(this).dialog("close");
                             let csrf = $('input[name="_csrf"]').val();
-                            
+
                             let fakeForm = '<form id="spagoLiteAppForm" action="Monitoraggio.html" method="post">' +
-                                    '<input type="hidden" name="_csrf" value="' + csrf + '">' + 
+                                    '<input type="hidden" name="_csrf" value="' + csrf + '">' +
                                     '<input type="hidden" name="operation__impostaTuttiNonRisolubOggettiDaVersFallitiAction" value="Imposta versamenti verificati / non risolubili">' +
                                     '</form>';
-                            
+
                             $(fakeForm).appendTo($(document.body)).submit();
                         },
                         "Annulla": function () {
@@ -147,19 +148,27 @@
                         <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
                         <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
                     </div>
+                    <div class="message">
+                        <p>
+                            <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale)</label>
+                        <div>
+                            <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                        </div>
+                        </p>
+                    </div>
                 </div>
             </c:if>
             <c:if test="${!empty requestScope.confermaImpostaVerificNonRisolubOggettiDaVersFalliti}">
                 <div class="messages confermaImpostaVerificNonRisolubOggettiDaVersFalliti">
                     <div class="message info ">
-                        <p><span>ATTENZIONE! E' stata selezionato il valore NON RISOLUBILE. Procedendo con il salvataggio il sistema eliminerà il file dell'oggetto e non sarà più possibile rimetterlo in versamento o in trasformazione. Confermi?</span></p>
+                        <p><span>ATTENZIONE! È stata selezionato il valore NON RISOLUBILE. Procedendo con il salvataggio il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione. Confermi?</span></p>
                     </div>
                 </div>
             </c:if>
             <c:if test="${!empty requestScope.confermaImpostaTuttiNonRisolubOggettiDaVersFallitiAction}">
                 <div class="messages confermaImpostaTuttiNonRisolubOggettiDaVersFallitiAction">
                     <div class="message info ">
-                        <p><span>ATTENZIONE! E' stata selezionato il valore NON RISOLUBILE. Procedendo con il salvataggio il sistema eliminerà il file dell'oggetto e non sarà più possibile rimetterlo in versamento o in trasformazione. Confermi?</span></p>
+                        <p><span>ATTENZIONE! È stata selezionato il valore NON RISOLUBILE. Procedendo con il salvataggio il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione. Confermi?</span></p>
                     </div>
                 </div>
             </c:if>

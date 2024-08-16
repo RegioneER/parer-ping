@@ -170,6 +170,8 @@ public class SalvataggioPrepXml {
                     tmpPigUnitaDocObject.getPigXmlSacerUnitaDocs().add(tmpXmlSacerUnitaDoc);
                 }
                 tmpXmlSacerUnitaDoc.setBlXmlSacer(tmpUnitaDocObject.getIndiceMMXml());
+                // MEV 31639
+                tmpXmlSacerUnitaDoc.setFlXmlMod(Constants.DB_FALSE);
 
                 // aggiunta o sostituzione dell'XML_VERS
                 queryStr = "select u from PigXmlSacerUnitaDoc u " + "where u.pigUnitaDocObject = :pigUnitaDocObject "
@@ -190,6 +192,8 @@ public class SalvataggioPrepXml {
                 }
                 tmpXmlSacerUnitaDoc.setBlXmlSacer(tmpUnitaDocObject.getUnitaDocumentariaXml());
                 // fine gestione XML
+                // MEV 31639
+                tmpXmlSacerUnitaDoc.setFlXmlMod(Constants.DB_FALSE);
             }
 
             // inserimento record in pigUnitaDocSessione

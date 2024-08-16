@@ -33,10 +33,11 @@ public class ParerErrorSeverity {
      * @return <code>boolean</code> la validità della severity passata in input.
      */
     public static boolean isSeverityValid(String severity) {
-        if ((severity == null) || ((severity != null) && !severity.equals(ParerErrorSeverity.INFORMATION)
-                && !severity.equals(ParerErrorSeverity.WARNING) && !severity.equals(ParerErrorSeverity.ERROR)
-                && !severity.equals(ParerErrorSeverity.BLOCKING)))
+        if ((severity == null)
+                || (!severity.equals(ParerErrorSeverity.INFORMATION) && !severity.equals(ParerErrorSeverity.WARNING)
+                        && !severity.equals(ParerErrorSeverity.ERROR) && !severity.equals(ParerErrorSeverity.BLOCKING)))
             return false;
+
         return true;
     } // public static boolean isSeverityValid(String severity)
 

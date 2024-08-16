@@ -71,45 +71,13 @@
                     buttons: {
                         "Conferma": function () {
                             //MEV 26942 - nascondo i pulsanti di annullamento.
-                            
                             $(this).dialog("close");
                             var idObject = $("#Id_object_hidden").val();
                             var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
+                            var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
                             if (idObject) {
-                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDetailAction", Ti_annullamento_ud: tiAnnullamentoUD}).done(function (data) {
-                                    CAjaxDataFormWalk(data);
+                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDetailAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
 
-                                    window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-                //SUE26200
-                $('.confermaAnnullamentoUD').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    title: "Conferma annullamento unità documentarie",
-                    buttons: {
-                        "Conferma": function () {
-                            $(this).dialog("close");
-                            
-                            //MEV 26942 - nascondi pulsanti annullamento.
-                            $('input[name="operation__annullaOggettoDetail"]').parent().hide();
-                            $('input[name="operation__annullaVersamentiUDDetail"]').parent().hide();
-                            
-                            var idObject = $("#Id_object_hidden").val();
-                            var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
-                            if (idObject) {
-                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDetailAction", Ti_annullamento_ud: tiAnnullamentoUD}).done(function (data) {
                                     CAjaxDataFormWalk(data);
 
                                     window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
@@ -254,7 +222,6 @@
                                 <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
                             </c:if>
                             <span>Selezionare l'operazione da completare: </span>
-
                             </p>
                         </div>
                         <div class="message">
@@ -264,6 +231,14 @@
                         <div class="message">
                             <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
                             <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
+                        </div>
+                        <div class="message">
+                            <p>
+                                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                            <div>
+                                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                            </div>
+                            </p>
                         </div>
                     </div>
                 </c:if>
@@ -276,7 +251,15 @@
                                 <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
                                     <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
                                 </c:if>
-                            <span>Procedere con l'annullamento?</span>
+                                <div class="message">
+                                    <p>
+                                        <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                                    <div>
+                                        <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                                    </div>
+                                    </p>
+                                </div>
+                                <span>Procedere con l'annullamento?</span>
 
                             </p>
                         </div>

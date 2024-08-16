@@ -45,19 +45,19 @@ public class TransactionInterceptor {
             Object obj = inv.proceed();
             return obj;
         } catch (ParerUserError ue) {
-            logger.error("ParerUserError nel metodo " + inv.getMethod().getName() + ": " + ue.getDescription());
+            logger.error("ParerUserError nel metodo {0}: {1}", inv.getMethod().getName(), ue.getDescription());
             ctx.setRollbackOnly();
             throw ue;
         } catch (ParerInternalError ie) {
-            logger.error("ParerInternalError nel metodo " + inv.getMethod().getName() + ": " + ie.getMessage());
+            logger.error("ParerInternalError nel metodo {0}: {1}", inv.getMethod().getName(), ie.getMessage());
             ctx.setRollbackOnly();
             throw ie;
         } catch (JMSSendException uw) {
-            logger.error(
-                    "JMSSendException nel metodo (no rollback)" + inv.getMethod().getName() + ": " + uw.getMessage());
+            logger.error("JMSSendException nel metodo (no rollback) {0}: {1}", inv.getMethod().getName(),
+                    uw.getMessage());
             throw uw;
         } catch (Exception e) {
-            logger.info("Exception nel metodo " + inv.getMethod().getName() + ": " + e.getMessage());
+            logger.info("Exception nel metodo {0}: {1}", inv.getMethod().getName(), e.getMessage());
             ctx.setRollbackOnly();
             throw e;
         }

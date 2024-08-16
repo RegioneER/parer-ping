@@ -72,7 +72,7 @@ public class PingTimerHelper extends AbstractJbossTimerHelper implements JbossTi
                 .setParameter("nmJob", jobName);
         List<JobTable> list = query.setMaxResults(1).getResultList();
 
-        if (list.size() < 1) {
+        if (list.isEmpty()) {
             throw new TimerNotFoundException(jobName);
         }
         return list.get(0);

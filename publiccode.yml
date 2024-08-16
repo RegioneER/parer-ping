@@ -22,11 +22,11 @@ description:
       - versamento a Sacer dei SIP generati dalla trasformazione 
     genericName: Sacer
     longDescription: |
-      PING (PreINGest) è il modulo del Sistema di conservazione Sacer che gestisce la fase di preacquisizione del processo di conservazione basato sullo standard OAIS. Riceve in input degli Oggetti contenenti dati e documenti con struttura e formati concordati e, attraverso un processo ETL di trasformazione, genera come output degli Oggetti contenenti SIP che poi vengono versati in SACER. Tra le principali funzionalità che PING mette a disposizione ci sono quelle di amministrazione per configurare le tipologie di oggetti e le trasformazioni, di versamento degli oggetti da trasformare e di monitoraggio dei processi. 
-   
-     
+      PING (PreINGest) è il modulo del Sistema di conservazione Sacer che gestisce la fase di preacquisizione del processo di conservazione basato sullo standard OAIS. Riceve in input degli Oggetti contenenti 
+      dati e documenti con struttura e formati concordati e, attraverso un processo ETL di trasformazione, genera come output degli Oggetti contenenti SIP che poi vengono versati in SACER. 
+      Tra le principali funzionalità che PING mette a disposizione ci sono quelle di amministrazione per configurare le tipologie di oggetti e le trasformazioni, di versamento degli oggetti da trasformare e di monitoraggio dei processi.         
     shortDescription: |-
-      Gestisce la fase di preacquisizione del processo di conservazione basato sullo stardard OAIS, ricevendo in input oggetti contenenti dati e documenti e, attrverso una trasformazione ETL, generando in output SIP da versare al sistema di conservazione SACER
+      Preacquisizione del processo di conservazione basato sullo stardard OAIS generando in output SIP da versare al sistema di conservazione SACER
 developmentStatus: stable
 intendedAudience:
   countries:

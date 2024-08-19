@@ -60,15 +60,15 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
         ControlliRestWS myControlliWs;
         Boolean outbound = (Boolean) msgCtx.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         String ipAddress = "NON_CALCOLATO";
-        if (!outbound) {
+        if (!outbound.booleanValue()) {
             Object tmpRequest = msgCtx.get(MessageContext.SERVLET_REQUEST);
-            if (tmpRequest != null && tmpRequest instanceof HttpServletRequest) {
+            if (tmpRequest instanceof HttpServletRequest) {
                 ipAddress = ((HttpServletRequest) tmpRequest).getHeader("X-FORWARDED-FOR");
                 if (ipAddress == null || ipAddress.isEmpty()) {
                     ipAddress = ((HttpServletRequest) tmpRequest).getRemoteAddr();
                 }
             }
-            log.debug("IdpLoginHandler attivato. Client IP Address: " + ipAddress);
+            log.debug("IdpLoginHandler attivato. Client IP Address: {}", ipAddress);
 
             // nell'originale su SACER la classe di chiama ControlliWs
             // in questo caso, quel nome era già "occupato".
@@ -77,14 +77,13 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
                 myControlliWs = (ControlliRestWS) new InitialContext()
                         .lookup("java:app/SacerAsync-ejb/ControlliRestWS");
             } catch (NamingException ex) {
-                log.error("Errore nel recupero dell'EJB ", ex);
                 throw new ProtocolException("Impossibile recuperare l'ejb ControlliRestWS", ex);
             }
 
             try {
-                NodeList usernameEl = (NodeList) msgCtx.getMessage().getSOAPHeader()
+                NodeList usernameEl = msgCtx.getMessage().getSOAPHeader()
                         .getElementsByTagNameNS(WSSE_XSD_URI, "Username");
-                NodeList passwordEl = (NodeList) msgCtx.getMessage().getSOAPHeader()
+                NodeList passwordEl = msgCtx.getMessage().getSOAPHeader()
                         .getElementsByTagNameNS(WSSE_XSD_URI, "Password");
                 Node userNode = null;
                 Node passNode = null;
@@ -102,8 +101,7 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
                             sfault.setFaultString(rc.getDsErr());
                             throw new SOAPFaultException(sfault);
                         } catch (SOAPException e1) {
-                            log.error("Errore durante la creazione dell'eccezione SOAP", e1);
-                            throw new ProtocolException(e1);
+                            throw new ProtocolException("Errore durante la creazione dell'eccezione SOAP", e1);
                         }
                     }
                     msgCtx.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.TRUE);
@@ -134,7 +132,7 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
 
     @Override
     public Set<QName> getHeaders() {
-        HashSet<QName> headers = new HashSet<QName>();
+        HashSet<QName> headers = new HashSet<>();
         headers.add(QNAME_WSSE_HEADER);
         return headers;
     }

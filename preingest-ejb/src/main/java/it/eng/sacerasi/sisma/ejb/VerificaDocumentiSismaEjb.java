@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -34,8 +35,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +59,8 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  *
@@ -187,7 +188,7 @@ public class VerificaDocumentiSismaEjb {
                     report = response.getReport();
                 } finally {
                     if (tempFile != null) {
-                        tempFile.delete();
+                        Files.delete(tempFile.toPath());
                     }
                 }
             } else {
@@ -210,11 +211,11 @@ public class VerificaDocumentiSismaEjb {
             PigSismaDocumenti sismaDocumenti) throws IOException {
         VerificaZipFileResponse response = new VerificaZipFileResponse();
         StringBuilder report = new StringBuilder("");
-        ZipArchiveEntry entry;
+        ZipEntry entry;
         ZipFile zipFile;
-        Enumeration<ZipArchiveEntry> entries;
+        Enumeration<? extends ZipEntry> entries;
         zipFile = new ZipFile(file);
-        entries = zipFile.getEntries();
+        entries = zipFile.entries();
         Integer numFiles = null;
         sismaHelper.cancellaEntryDocumenti(sismaDocumenti);
         if (entries.hasMoreElements()) {

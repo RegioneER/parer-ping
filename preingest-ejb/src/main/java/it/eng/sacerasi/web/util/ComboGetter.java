@@ -17,22 +17,16 @@
 
 package it.eng.sacerasi.web.util;
 
+import java.util.Collections;
+import java.util.List;
+
 import it.eng.sacerasi.util.DateUtil;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.decodemap.DecodeMapIF;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
-import java.util.Collections;
-import java.util.List;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
 
-/**
- *
- * @author Gilioli_P
- */
-@Stateless
-@LocalBean
+@SuppressWarnings("unchecked")
 public class ComboGetter {
 
     public static final String CAMPO_REGISTRO_AG = "registro_ag";
@@ -44,8 +38,8 @@ public class ComboGetter {
     public static final String CAMPO_ANNO = "anno";
     public static final String CAMPO_TIPO_VERSATORE = "nm_tipo_vers";
 
-    public ComboGetter() {
-        // empty
+    private ComboGetter() {
+        throw new IllegalStateException("Utility class");
     }
 
     public static DecodeMap getMappaTiOperReplic() {

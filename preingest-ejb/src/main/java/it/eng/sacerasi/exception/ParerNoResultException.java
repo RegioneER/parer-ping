@@ -21,7 +21,6 @@
  */
 package it.eng.sacerasi.exception;
 
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Agati_D
  */
-public class ParerNoResultException extends ParerAbstractError implements Serializable {
+public class ParerNoResultException extends ParerAbstractError {
 
     private static final long serialVersionUID = 1L;
     public static final String USER_ERROR_ELEMENT = "USER_ERROR";
@@ -45,7 +44,7 @@ public class ParerNoResultException extends ParerAbstractError implements Serial
     private static final Logger logger = LoggerFactory.getLogger(ParerNoResultException.class);
     private ResourceBundle _bundle = ResourceBundle.getBundle("it.eng.parer.exception.errors", Locale.ITALIAN);
 
-    public ParerNoResultException(String severity, String code, List params) {
+    public ParerNoResultException(String severity, String code, List<?> params) {
         super();
         init(severity, code, params);
     }
@@ -64,32 +63,32 @@ public class ParerNoResultException extends ParerAbstractError implements Serial
      * Questo metodo ha il compito di inizializzare lo stato dell'oggetto, viene invocato da tutti i costruttori di
      * <code>ParerUserError</code>.
      */
-    private void init(String severity, String code, List params) {
+    private void init(String severity, String code, List<?> params) {
         logger.debug("ParerNoResultException::init: invocato");
         setSeverity(severity);
-        logger.debug("ParerNoResultException::init: severity [" + getSeverity() + "]");
+        logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
         _code = code;
-        logger.debug("ParerNoResultException::init: code [" + code + "]");
+        logger.debug("ParerNoResultException::init: code [{}]", code);
         String text = getText(code, params);
         setDescription(text);
-        logger.debug("ParerNoResultException::init: description [" + getDescription() + "]");
+        logger.debug("ParerNoResultException::init: description [{}]", getDescription());
     }
 
     private void init(String severity, String message) {
         logger.debug("ParerNoResultException::init: invocato");
         setSeverity(severity);
-        logger.debug("ParerNoResultException::init: severity [" + getSeverity() + "]");
+        logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
         _code = null;
-        logger.debug("ParerNoResultException::init: code [" + _code + "]");
+        logger.debug("ParerNoResultException::init: code [{}]", _code);
         setDescription(message);
-        logger.debug("ParerNoResultException::init: description [" + getDescription() + "]");
+        logger.debug("ParerNoResultException::init: description [{}]", getDescription());
     }
 
     public String getCategory() {
         return ParerErrorCategory.USER_ERROR;
     }
 
-    private String getText(String code, List params) {
+    private String getText(String code, List<?> params) {
         if (code == null)
             return "";
 
@@ -101,7 +100,7 @@ public class ParerNoResultException extends ParerAbstractError implements Serial
         }
 
         if (params != null) {
-            Object[] strParams = (Object[]) params.toArray(stringArray);
+            Object[] strParams = params.toArray(stringArray);
             MessageFormat mf = new MessageFormat(text);
             text = mf.format(strParams, new StringBuffer(), null).toString();
         }

@@ -112,6 +112,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
      * @param resp
      *            The HTTP response
      */
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String responseString = RESP_SUCCESS;
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);

@@ -21,6 +21,17 @@
  */
 package it.eng.sacerasi.job.preparaxml.ejb;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import it.eng.sacerasi.common.Chiave;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigContUnitaDocSacer;
@@ -31,17 +42,6 @@ import it.eng.sacerasi.job.preparaxml.dto.OggettoInCoda;
 import it.eng.sacerasi.viewEntity.PigVChkOrgVersSacer;
 import it.eng.sacerasi.viewEntity.PigVChkSesPrecNotAnnul;
 import it.eng.sacerasi.viewEntity.PigVChkSimulaVersSacer;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -53,7 +53,6 @@ import org.slf4j.LoggerFactory;
 @TransactionAttribute(TransactionAttributeType.REQUIRED) // inutile, ma meglio andare sul sicuro
 public class ControlliPrepXml {
 
-    private static final Logger log = LoggerFactory.getLogger(ControlliPrepXml.class);
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
 

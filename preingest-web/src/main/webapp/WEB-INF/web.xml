@@ -35,6 +35,7 @@
         <filter-name>UUID Logger filter</filter-name>
         <url-pattern>/StatusMonitor</url-pattern>
         <url-pattern>/StatusMonitorHost</url-pattern>
+        <url-pattern>/CheckFTPDirServlet</url-pattern>
     </filter-mapping>
 	 
     <listener>
@@ -63,36 +64,14 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet>
-        <servlet-name>CheckFTPDirServlet</servlet-name>
-        <servlet-class>it.eng.sacerasi.test.CheckFTPDirTesterServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>StatusMonitorSrvlt</servlet-name>
-        <servlet-class>it.eng.sacerasi.restws.StatusMonitorSrvlt</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>StatusMonitorHostSrvlt</servlet-name>
-        <servlet-class>it.eng.sacerasi.restws.StatusMonitorHostSrvlt</servlet-class>
-    </servlet>
+
     <servlet-mapping>
         <servlet-name>SpringServlet</servlet-name>
         <url-pattern>*.html</url-pattern>
         <url-pattern>*.json</url-pattern>
         <url-pattern>/detail/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CheckFTPDirServlet</servlet-name>
-        <url-pattern>/CheckFTPDirServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>StatusMonitorSrvlt</servlet-name>
-        <url-pattern>/StatusMonitor</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>StatusMonitorHostSrvlt</servlet-name>
-        <url-pattern>/StatusMonitorHost</url-pattern>
-    </servlet-mapping>
+
     <session-config>
         <session-timeout>60</session-timeout>
         <cookie-config>

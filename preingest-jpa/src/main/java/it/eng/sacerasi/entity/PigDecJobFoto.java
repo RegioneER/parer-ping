@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the PIG_DEC_JOB_FOTO database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_DEC_JOB_FOTO")

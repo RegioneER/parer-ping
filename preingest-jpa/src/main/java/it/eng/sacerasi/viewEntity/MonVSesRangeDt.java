@@ -27,7 +27,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the MON_V_SES_RANGE_DT database table.
- * 
+ *
  */
 @Entity
 @Table(name = "MON_V_SES_RANGE_DT")

@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>6.0.1-SNAPSHOT</version>
+        <version>6.1.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-web</artifactId>
@@ -107,24 +107,26 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>${httpcore.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>plupload</artifactId>
+		</dependency>          
     </dependencies>
 
     <build>
         <resources>
             <resource>
-                <!-- il filtraggio riguarda solo questo file: verranno sostituite  -->
-                <!-- le proprietà del repo GIT fornite dal plugin git-commit-id-plugin  -->
+				<!-- il filtraggio riguarda solo questo file: verranno sostituite  -->
+				<!-- le proprietà del repo GIT fornite dal plugin git-commit-id-plugin  -->
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
@@ -152,9 +154,9 @@
                         </goals>
                         <phase>validate</phase>
                         <configuration>
-                            <!-- il riferimento alla directory, posizionata sul progetto padre -->
+							<!-- il riferimento alla directory, posizionata sul progetto padre -->
                             <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-                            <!-- -->
+							<!-- -->
                             <failOnNoGitDirectory>false</failOnNoGitDirectory>
                             <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
                             <gitDescribe>
@@ -203,7 +205,7 @@
                         <overlay>
                             <groupId>it.eng.parer</groupId>
                             <artifactId>spagofat-sl-web</artifactId>
-                            <!-- 
+							<!-- 
                                 Escludo i .class perché sono già contenuti nell'artifact it.eng.parer/sacerlog-web con 
                                 il classifier "classes"
                             -->

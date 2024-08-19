@@ -40,7 +40,7 @@ import it.eng.sacerasi.entity.constraint.ConstOrgCollegEntiConvenz.TiColleg;
 
 /**
  * The persistent class for the ORG_COLLEG_ENTI_CONVENZ database table.
- * 
+ *
  */
 @Entity
 @Table(schema = "SACER_IAM", name = "ORG_COLLEG_ENTI_CONVENZ")

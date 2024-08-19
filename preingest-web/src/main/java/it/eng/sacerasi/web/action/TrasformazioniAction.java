@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -849,7 +850,7 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
         }
     }
 
-    public void download() throws EMFError {
+    public void download() throws EMFError, IOException {
         String filename = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name());
         String path = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILEPATH.name());
         Boolean deleteFile = Boolean.parseBoolean(
@@ -889,7 +890,7 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (deleteFile) {
-                    fileToDownload.delete();
+                    Files.delete(fileToDownload.toPath());
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");

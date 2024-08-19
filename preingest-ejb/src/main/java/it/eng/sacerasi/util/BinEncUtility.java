@@ -39,7 +39,7 @@ public class BinEncUtility {
     private static final Logger logger = LoggerFactory.getLogger(BinEncUtility.class);
 
     public static boolean isBase64String(String utf8str) {
-        return Base64.isArrayByteBase64(utf8str.getBytes());
+        return Base64.isBase64(utf8str.getBytes());
     }
 
     public static String encodeUTF8Base64String(byte[] barray) {

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Questa interfaccia è la versione ridotta di IRispostaWS in PARER. Per avere anche gli altri metodi definiti dalla
  * versione PARER di questa interfaccia, occorre usare IRispostaRestWS
- * 
+ *
  * @author Fioravanti_F
  */
 public interface IRispostaWS extends Serializable {

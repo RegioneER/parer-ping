@@ -24,53 +24,53 @@ public class ControlliInvioOggettoAsincronoTest {
 
     /*
      * @EJB private ControlliInvioOggettoAsincrono ejb;
-     * 
+     *
      * @Test public void verificaVersioneXML() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaAccettazioneMotivazione() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaPresenzaXml() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaTipoVersamento() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaStudioDicom() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaVersioneDatiSpecifici() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaTipoFileObject() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaUdInXml() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaChiave() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaFiles() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaSopClassList() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaModalityStudio() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaStatoOggetto() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaModificaTipoOggetto() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaOggettoDicom() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaUltimaSessioneOggetto() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void isVerificaPartizioneOn() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaPartizioneObj() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaPartizioneSess() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaOggettoFiglio() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaCdVersGen() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaFigliVersati() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Test public void verificaOggettoPadre() { Assert.fail("da implementare"); }
-     * 
+     *
      * @Deployment public static Archive<?> createTestArchive() { JavaArchive pingJar =
      * ArquillianUtils.createPingJar(ControlliInvioOggettoAsincrono.class).addPackages(true, "org.xadisk",
      * "it.eng.sacerasi", "it.eng.xformer", "com.amazonaws", "it.eng.parer.kettle", "org.dom4j", "it.eng.integriam",

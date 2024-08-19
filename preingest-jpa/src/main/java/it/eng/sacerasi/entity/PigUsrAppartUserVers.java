@@ -33,7 +33,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_USR_APPART_USER_VERS database table.
- * 
+ *
  */
 // @Entity
 // @Table(name = "PIG_USR_APPART_USER_VERS")

@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -5225,7 +5226,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
         /*
          * MEV#15178 - Modifica Tipo oggetto in dettaglio oggetto per gli oggetti da trasformare
-         * 
+         *
          */
         PigTipoObjectTableBean tipoObjectTableBean = comboHelper.getTipoObjectFromVersatore(getUser().getIdUtente(),
                 getForm().getOggettoDetail().getId_vers().parse(), Constants.TipoVersamento.DA_TRASFORMARE.name());
@@ -6127,7 +6128,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
         /*
          * MEV#15178 - Modifica Tipo oggetto in dettaglio oggetto per gli oggetti da trasformare
-         * 
+         *
          */
         PigTipoObjectTableBean tipoObjectTableBean = comboHelper.getTipoObjectFromVersatore(getUser().getIdUtente(),
                 getForm().getOggettoDetail().getId_vers().parse(), Constants.TipoVersamento.DA_TRASFORMARE.name());
@@ -6216,7 +6217,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     }
 
-    public void download() throws EMFError {
+    public void download() throws EMFError, IOException {
         String filename = (String) getSession()
                 .getAttribute(it.eng.xformer.web.util.WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name());
         String path = (String) getSession()
@@ -6258,7 +6259,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (Boolean.TRUE.equals(deleteFile)) {
-                    fileToDownload.delete();
+                    Files.delete(fileToDownload.toPath());
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");

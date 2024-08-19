@@ -17,15 +17,11 @@
 
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.sacerasi.sisma.ejb.SismaEjb;
-import it.eng.sacerasi.slite.gen.form.SismaForm;
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import javax.ejb.EJB;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -39,8 +35,14 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.sisma.dto.DocSismaDto;
+import it.eng.sacerasi.sisma.ejb.SismaEjb;
+import it.eng.sacerasi.slite.gen.form.SismaForm;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 
 @WebServlet("/MultipartFileUploadSismaToS3Servlet")
 public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
@@ -71,6 +73,7 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
      * @param resp
      *            The HTTP response
      */
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String responseString = RESP_SUCCESS;
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
@@ -138,7 +141,7 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
                                     config);
                             if (s3UploadSessionSisma.existsOnOS()) {
                                 responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
-                                log.info(String.format("Il file [%s] già esiste sull'object storage!", nmFieOs));
+                                log.info("Il file {} già esiste sull'object storage!", nmFieOs);
                                 inErrore = true;
                             } else {
                                 req.getSession().setAttribute(PREFISSO_SESSIONE + idSessione, s3UploadSessionSisma);
@@ -148,8 +151,8 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
                                     .getAttribute(PREFISSO_SESSIONE + idSessione);
                         }
                         /* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
-                        if (inErrore == false && s3UploadSessionSisma.uploadChunk(input, chunk, chunks)) {
-                            SismaEjb.DocSismaDto dto = new SismaEjb.DocSismaDto();
+                        if (!inErrore && s3UploadSessionSisma.uploadChunk(input, chunk, chunks)) {
+                            DocSismaDto dto = new DocSismaDto();
                             dto.setIdSisma(s3UploadSessionSisma.getIdSisma());
                             dto.setNmFileOrig(nomeFile);
                             dto.setNmFileOs(s3UploadSessionSisma.getKeyName());
@@ -172,8 +175,8 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
             responseString = RESP_ERROR;
         }
         if (chunk == chunks - 1) {
-            log.debug("nome：" + nomeFile);
-            log.debug("nmTipoDocumento：" + nmTipoDocumento);
+            log.debug("nome: {}", nomeFile);
+            log.debug("nmTipoDocumento: {},", nmTipoDocumento);
             req.getSession().removeAttribute(idSessione);
         }
         resp.setContentType(JSON);

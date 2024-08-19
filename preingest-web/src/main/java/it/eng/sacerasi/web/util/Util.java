@@ -39,7 +39,7 @@ public class Util {
      *            elemento generico di tipo {@link Enum}
      * @param enumValues
      *            l'array di valori dell'enum
-     * 
+     *
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {
@@ -52,7 +52,7 @@ public class Util {
 
     /*
      * Metodo di popolamento delle combobox di tipo Flag SI/NO
-     * 
+     *
      * @return DecodeMap per i flag contenente la codifica utilizzata nel DB
      */
     public static DecodeMap getFlagComboDecodeMap() {
@@ -78,14 +78,14 @@ public class Util {
 
     /**
      * Metodo generico di popolamento di una decodeMap dato i valori di un enum
-     * 
+     *
      * @param <T>
      *            elemento generico di tipo {@link Enum}
      * @param key
      *            chiave
      * @param enumValues
      *            valori di tipo T
-     * 
+     *
      * @return mappa con codifica chiave/valore
      */
     public static <T extends Enum<?>> DecodeMap createDataDecodeMap(String key, T[] enumValues) {

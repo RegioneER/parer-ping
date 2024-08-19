@@ -94,7 +94,7 @@ public class ProduzioneXmlEjb {
      *
      * @param oggetto
      *            l'oggetto in coda
-     * 
+     *
      * @throws ParerInternalError
      *             In caso di eccezione
      */

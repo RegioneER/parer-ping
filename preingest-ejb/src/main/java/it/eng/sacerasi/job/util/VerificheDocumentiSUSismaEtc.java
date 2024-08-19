@@ -21,7 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.compress.archivers.zip.ZipFile;
+import java.util.zip.ZipFile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,13 +34,17 @@ public class VerificheDocumentiSUSismaEtc {
 
     private static final Logger log = LoggerFactory.getLogger(VerificheDocumentiSUSismaEtc.class);
 
+    private VerificheDocumentiSUSismaEtc() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
-     * 
+     *
      * @param completeZipFileName
      *            es.: pippo.zip
      * @param entryInsideZip
      *            es.: \pippo\paperino\file.doc
-     * 
+     *
      * @return false se la lunghezza complessiva del nome dello zip + entry maggiore 254 caratteri altrimenti true.
      */
     public static final boolean isLongMoreThan254Chars(String completeZipFileName, String entryInsideZip) {
@@ -49,38 +54,27 @@ public class VerificheDocumentiSUSismaEtc {
         String nomeCompleto = nomeSenzaZip + "_" + entryInsideZip;
         int lun = nomeCompleto.length();
         if (lun > 254) {
-            log.debug(String.format("l'entry [%s] è lunga [%d] quindi > 254 caratteri!", nomeCompleto, lun));
+            log.debug("l'entry {} è lunga {} quindi > 254 caratteri!", nomeCompleto, lun);
             esito = true;
         } else {
-            log.debug(String.format("l'entry [%s] è lunga [%d].", nomeCompleto, lun));
+            log.debug("l'entry {} è lunga {}.", nomeCompleto, lun);
         }
         return esito;
     }
 
     /**
      * Torna true se file è uno zip valido
-     * 
+     *
      * @param file
      *            il file da verificare
-     * 
+     *
      * @return true se file è uno zip valido
      */
     public static boolean isValidZip(final File file) {
-        ZipFile zipfile = null;
-        try {
-            zipfile = new ZipFile(file);
+        try (ZipFile zipfile = new ZipFile(file);) {
             return true;
         } catch (IOException e) {
             return false;
-        } finally {
-            try {
-                if (zipfile != null) {
-                    zipfile.close();
-                    zipfile = null;
-                }
-            } catch (IOException e) {
-                log.error("Errore nella chiusura del file zip", e);
-            }
         }
     }
 

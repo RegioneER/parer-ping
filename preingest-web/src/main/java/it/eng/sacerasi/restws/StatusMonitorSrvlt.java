@@ -24,11 +24,12 @@ package it.eng.sacerasi.restws;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,10 +57,17 @@ import it.eng.sacerasi.ws.rest.monitoraggio.ejb.StatusMonitorSync;
  *
  * @author fioravanti_f
  */
+@WebServlet(urlPatterns = { "/StatusMonitor" }, asyncSupported = true)
 public class StatusMonitorSrvlt extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(StatusMonitorSrvlt.class);
+
+    @EJB
+    private StatusMonitorSync statusMonitorSync;
+
+    @EJB
+    private JobLogger jobLogger;
 
     public StatusMonitorSrvlt() {
         super();
@@ -74,8 +82,6 @@ public class StatusMonitorSrvlt extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        StatusMonitorSync statusMonitorSync;
-        JobLogger jobLogger;
         RispostaWSStatusMonitor rispostaWs;
         StatusMonExt statusMonExt;
         HostMonitor myEsito;
@@ -87,23 +93,6 @@ public class StatusMonitorSrvlt extends HttpServlet {
         statusMonExt = new StatusMonExt();
         statusMonExt.setDescrizione(new WSDescStatusMonitor());
 
-        // Recupera l'ejb, se possibile - altrimenti segnala errore
-        try {
-            statusMonitorSync = (StatusMonitorSync) new InitialContext()
-                    .lookup("java:app/SacerAsync-ejb/StatusMonitorSync");
-        } catch (NamingException ex) {
-            log.error("Errore nel recupero dell'EJB ", ex);
-            throw new ServletException("Impossibile recuperare l'ejb StatusMonitorSync", ex);
-        }
-
-        // Recupera l'ejb, se possibile - altrimenti segnala errore
-        try {
-            jobLogger = (JobLogger) new InitialContext().lookup("java:app/SacerAsync-ejb/JobLogger");
-        } catch (NamingException ex) {
-            log.error("Errore nel recupero dell'EJB ", ex);
-            throw new ServletException("Impossibile recuperare l'ejb JobLogger", ex);
-        }
-
         statusMonitorSync.initRispostaWs(rispostaWs, statusMonExt);
 
         // logga l'inizio della chiamata al ws
@@ -111,7 +100,7 @@ public class StatusMonitorSrvlt extends HttpServlet {
                 null);
         //
         sessioneFinta.setIpChiamante(myReqPrsr.leggiIpVersante(request));
-        log.info("Request, indirizzo IP di provenienza:  " + sessioneFinta.getIpChiamante());
+        log.info("Request, indirizzo IP di provenienza:  {}", sessioneFinta.getIpChiamante());
 
         try {
             if (request.getContentType() != null
@@ -165,26 +154,14 @@ public class StatusMonitorSrvlt extends HttpServlet {
         response.reset();
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json; charset=\"utf-8\"");
-        ServletOutputStream out = response.getOutputStream();
-        OutputStreamWriter tmpStreamWriter = new OutputStreamWriter(out, "UTF-8");
 
-        try {
+        try (ServletOutputStream out = response.getOutputStream();
+                OutputStreamWriter tmpStreamWriter = new OutputStreamWriter(out, StandardCharsets.UTF_8);) {
+
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(tmpStreamWriter, myEsito);
         } catch (Exception e) {
             log.error("Eccezione nella servlet di monitoraggio", e);
-        } finally {
-            try {
-                tmpStreamWriter.close();
-            } catch (Exception ei) {
-                log.error("Eccezione nella servlet di monitoraggio", ei);
-            }
-            try {
-                out.flush();
-                out.close();
-            } catch (Exception ei) {
-                log.error("Eccezione nella servlet di monitoraggio", ei);
-            }
         }
     }
 }

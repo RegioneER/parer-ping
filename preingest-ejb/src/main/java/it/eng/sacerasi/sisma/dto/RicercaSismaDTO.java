@@ -19,13 +19,18 @@ package it.eng.sacerasi.sisma.dto;
 
 import it.eng.sacerasi.slite.gen.form.SismaForm;
 import it.eng.spagoCore.error.EMFError;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @author Cappelli_F
  */
-public class RicercaSismaDTO {
+public class RicercaSismaDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String soggettoAttuatore;
     private BigDecimal idLineaFin;
     private String nmIntervento;

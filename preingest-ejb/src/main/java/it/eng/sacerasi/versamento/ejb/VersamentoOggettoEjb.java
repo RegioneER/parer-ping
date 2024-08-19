@@ -99,9 +99,9 @@ public class VersamentoOggettoEjb {
      *            tipo versamento file
      * @param note
      *            campo note dell'oggetto
-     * 
+     *
      * @return entity bean {@link MonVLisStatoVersTableBean}
-     * 
+     *
      * @throws ParerUserError
      *             errore generico
      */

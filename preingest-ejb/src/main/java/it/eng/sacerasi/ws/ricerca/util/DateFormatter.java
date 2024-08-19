@@ -45,7 +45,7 @@ public class DateFormatter {
      *
      * @param dataA
      *            data A
-     * 
+     *
      * @return data formattata tipo {@link Date}
      */
     public static Date formatta2359(String dataA) {

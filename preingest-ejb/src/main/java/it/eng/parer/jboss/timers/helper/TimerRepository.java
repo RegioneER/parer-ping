@@ -126,7 +126,7 @@ public class TimerRepository {
      *
      * @param jobName
      *            nome del job
-     * 
+     *
      * @return istanza del timer oppure null
      */
     @Lock(LockType.READ)

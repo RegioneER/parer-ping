@@ -25,7 +25,7 @@ import it.eng.sacerasi.ws.ricerca.enums.OperatoreType;
 /**
  *
  * @author Gilioli_P
- * 
+ *
  *         Classe con alcuni metodi statici utilizzati nella costruzione delle queries di ricerca diario e restituzione
  *         oggetti
  */

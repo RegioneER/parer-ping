@@ -3,11 +3,11 @@
 
 <sl:html>
     <sl:head title="<%= VersamentoOggettoForm.VersamentoOggettoDetail.DESCRIPTION%>" >
-        <link rel="stylesheet" type="text/css" href="/sacerping/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="/sacerping/webjars/plupload/2.3.9/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
         
-        <script type="text/javascript" src="/sacerping/js/plupload/plupload.full.min.js"></script>
-        <script type="text/javascript" src="/sacerping/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js"></script>
-        <script type="text/javascript" src="/sacerping/js/plupload/i18n/it.js"></script>
+        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/plupload.full.min.js"></script>
+        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/i18n/it.js"></script>
         
         <script type="text/javascript" src="/sacerping/js/versamentoOggettoDaTrasformare.js"></script>
         

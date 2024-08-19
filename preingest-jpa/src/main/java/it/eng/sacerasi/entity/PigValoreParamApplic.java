@@ -36,7 +36,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_VALORE_PARAM_APPLIC database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_VALORE_PARAM_APPLIC")

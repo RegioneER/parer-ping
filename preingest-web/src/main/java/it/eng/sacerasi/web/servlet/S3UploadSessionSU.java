@@ -22,9 +22,6 @@
  */
 package it.eng.sacerasi.web.servlet;
 
-import software.amazon.awssdk.utils.IoUtils;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -34,7 +31,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.core.sync.RequestBody;
+
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
@@ -42,7 +42,7 @@ import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import software.amazon.awssdk.utils.IoUtils;
 
 /**
  *
@@ -103,11 +103,11 @@ public class S3UploadSessionSU {
 
     private void start() {
         dataInizio = new Date();
-        log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
+        log.info("Inizio UploadMultipart to S3 {}", dataInizio);
         // Create a list of ETag objects. You retrieve ETags for each object part uploaded,
         // then, after each individual part has been uploaded, pass the list of ETags to
         // the request to complete the upload.
-        partETags = new ArrayList<CompletedPart>();
+        partETags = new ArrayList<>();
         // Initiate the multipart upload.
         initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName).build();
         initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
@@ -122,7 +122,7 @@ public class S3UploadSessionSU {
 
         salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
         dataFine = new Date();
-        log.info(String.format("Fine UploadMultipart to S3 [%s]", dataFine));
+        log.info("Fine UploadMultipart to S3 [{}]", dataFine);
     }
 
     /*
@@ -139,13 +139,13 @@ public class S3UploadSessionSU {
         } catch (IOException ex) {
             log.error("Errore caricamento chunk su S3!", ex);
         }
-        log.info(String.format("Inizio l'update del chunk [%d] di [%d].", chunk, chunks));
+        log.info("Inizio l'update del chunk [{}] di [{}].", chunk, chunks);
         // Create the request to upload a part.
         UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName).key(keyName)
                 .uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
         // Upload the part and add the response's ETag to our list.
         UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes, config);
-        log.info(String.format("Upload del chunk [%d] OK.", chunk, chunks));
+        log.info("Upload del chunk [{}] OK.", chunk);
         partETags.add(CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
         if (isLastPart) {
             stop();

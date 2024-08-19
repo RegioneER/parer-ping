@@ -47,7 +47,7 @@ public class PigVLisChkUdSesErr implements Serializable {
 
     /*
      * @Column(name = "CD_ERR") public String getCdErr() { return this.cdErr; }
-     * 
+     *
      * public void setCdErr(String cdErr) { this.cdErr = cdErr; }
      */
 

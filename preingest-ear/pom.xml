@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>6.0.1-SNAPSHOT</version>
+        <version>6.1.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-ear</artifactId>
@@ -140,12 +140,16 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
         </dependency>
-        <!-- Jaxb -->
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>serializer</artifactId>
+		</dependency>
+		<!-- Jaxb -->
         <dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
-        <!-- Incluso per l'ejb del logging applicativo -->
+		<!-- Incluso per l'ejb del logging applicativo -->
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-sl-ejb</artifactId>
@@ -155,11 +159,6 @@
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-sl-slg</artifactId>
         </dependency>
-        <dependency> 
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>${commons-collections.version}</version>
-        </dependency> 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>

@@ -74,7 +74,7 @@ public class RicercaDiarioExecuteQueries {
      *            i valori dei parametri da passare alla query
      * @param rispostaWs
      *            risposta ws
-     * 
+     *
      * @return conta, il risultato della query
      */
     public Long eseguiQueryConta(String queryConta, Map<?, ?> valoriParametriQuery,
@@ -125,7 +125,7 @@ public class RicercaDiarioExecuteQueries {
      *            numreo oggetto
      * @param rispostaWs
      *            risposta ws
-     * 
+     *
      * @return ListaOggRicDiarioType, l'oggetto contenente la lista di oggetti, risultato della query ricerca
      */
     @SuppressWarnings("unchecked")

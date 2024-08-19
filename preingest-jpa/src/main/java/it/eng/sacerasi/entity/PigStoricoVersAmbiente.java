@@ -39,7 +39,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_STORICO_VERS_AMBIENTE database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_STORICO_VERS_AMBIENTE")

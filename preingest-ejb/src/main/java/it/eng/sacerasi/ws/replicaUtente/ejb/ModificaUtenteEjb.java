@@ -81,7 +81,7 @@ public class ModificaUtenteEjb {
      *            dto servizio di modifica utente {@link ModificaUtenteExt}
      * @param rispostaWs
      *            risposta ws
-     * 
+     *
      * @throws ParerInternalError
      *             errore generico
      */

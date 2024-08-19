@@ -47,7 +47,7 @@ public class Utils {
      *            ordinamento enum generici
      * @param enumValues
      *            l'array di valori dell'enum
-     * 
+     *
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {

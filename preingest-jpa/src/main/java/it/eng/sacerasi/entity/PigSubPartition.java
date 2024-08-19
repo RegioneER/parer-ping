@@ -37,7 +37,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_SUB_PARTITION database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_SUB_PARTITION")

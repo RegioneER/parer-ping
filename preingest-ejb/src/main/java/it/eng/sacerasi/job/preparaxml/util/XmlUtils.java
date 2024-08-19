@@ -50,10 +50,10 @@ public class XmlUtils {
     /**
      * Gestisce la conversione del set di caratteri non gestiti da ISO8859-1 per evitare problemi di trasmissione a
      * sacer. La conversione restituisce la relativa entità HTML.
-     * 
+     *
      * @param str
      *            valore da convertire
-     * 
+     *
      * @return valore convertito
      */
     // MAC #21830

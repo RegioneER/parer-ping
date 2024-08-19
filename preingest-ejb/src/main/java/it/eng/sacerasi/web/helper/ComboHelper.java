@@ -62,7 +62,7 @@ public class ComboHelper {
      *
      * @param idUtente
      *            id utente
-     * 
+     *
      * @return ambienteTableBean, il tablebean di ambienti versatore
      */
     public PigAmbienteVersTableBean getAmbienteVersatoreFromUtente(long idUtente) {
@@ -210,7 +210,7 @@ public class ComboHelper {
      *
      * @param idUtente
      *            id utente
-     * 
+     *
      * @return Object[], l'object array contenente i dati sui versatori
      */
     public Object[] getVersatori(long idUtente) {

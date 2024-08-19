@@ -76,7 +76,7 @@ public class ControlliWS {
      *
      * @param nmAmbiente
      *            nome ambiente
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaNomeAmbiente(String nmAmbiente) {
@@ -108,7 +108,7 @@ public class ControlliWS {
      *            nome ambiente
      * @param nmVersatore
      *            nome versatore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaNomeVersatore(String nmAmbiente, String nmVersatore) {
@@ -150,7 +150,7 @@ public class ControlliWS {
      *            id versamento
      * @param cdPasswordVers
      *            password
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaPassword(long idVers, String cdPasswordVers) {
@@ -185,7 +185,7 @@ public class ControlliWS {
      *            numero oggetto
      * @param codErr
      *            il codice di errore del messaggio da inviare in caso di errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaNotBlankCdKeyObject(String cdKeyObject, String codErr) {
@@ -209,7 +209,7 @@ public class ControlliWS {
      *            numero oggetto
      * @param codErr
      *            il codice di errore del messaggio da inviare in caso di errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaCdKeyObjectLength(String cdKeyObject, String codErr) {
@@ -238,7 +238,7 @@ public class ControlliWS {
      *            nome versatore
      * @param cdKeyObject
      *            chiave oggetto
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaCdKeyObject(String nmAmbiente, String nmVersatore, String cdKeyObject) {
@@ -278,7 +278,7 @@ public class ControlliWS {
      *            nome tipo oggetto
      * @param codErr
      *            codice errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaNomeTipoObject(long idVers, String nmTipoObject, String codErr) {
@@ -317,7 +317,7 @@ public class ControlliWS {
      *            algoritmo hash
      * @param errorCode
      *            codice di errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaAlgoritmo(String hashAlgo, String errorCode) {
@@ -341,7 +341,7 @@ public class ControlliWS {
      *            encoding hash
      * @param errorCode
      *            codice di errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaEncoding(String hashEncoding, String errorCode) {
@@ -452,7 +452,7 @@ public class ControlliWS {
      * Se il cdVersGen non è valorizzato, se il tipo vers file = "DA_TRASFORMARE" e la regExpr non è definita verifica
      * se esistono tipi oggetto da trasformare; se ne esiste uno solo estrae il suo cdVersGen e valorizza il parametro
      * di input con quello estratto.
-     * 
+     *
      * @param invOgg
      *            oggetto contentnte tutti i parametri di input
      */

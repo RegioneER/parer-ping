@@ -143,8 +143,8 @@ public class PayloadManagerEjb {
                     String passwordSacer = payload.getPasswordSacer();
                     // chiamo il Servizio Multimedia di Sacer
                     // recupero il timeout di chiamata al Servizio Multimedia di Sacer
-                    Integer timeout = new Integer(
-                            configurationHelper.getValoreParamApplicByApplic(Constants.TIMEOUT_VERS_SACER));
+                    Integer timeout = Integer
+                            .valueOf(configurationHelper.getValoreParamApplicByApplic(Constants.TIMEOUT_VERS_SACER));
                     // creo l'oggetto contenente i suoi parametri (TipoRichiesta = VERSAMENTO)
                     // costante oppure letto dall'xml del SIP versato nel file ZIP
                     RichiestaSacerInput input = new RichiestaSacerInput(

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Agati_D
  */
-public class HttpConnectionException extends ParerAbstractError implements Serializable {
+public class HttpConnectionException extends ParerAbstractError {
 
     private static final long serialVersionUID = 1L;
     public static final String USER_ERROR_ELEMENT = "USER_ERROR";
@@ -41,7 +41,7 @@ public class HttpConnectionException extends ParerAbstractError implements Seria
     private static final Logger logger = LoggerFactory.getLogger(HttpConnectionException.class);
     private ResourceBundle _bundle = ResourceBundle.getBundle("it.eng.sacerasi.exception.errors", Locale.ITALIAN);
 
-    public HttpConnectionException(String severity, String code, List params) {
+    public HttpConnectionException(String severity, String code, List<?> params) {
         super();
         init(severity, code, params);
     }
@@ -60,32 +60,32 @@ public class HttpConnectionException extends ParerAbstractError implements Seria
      * Questo metodo ha il compito di inizializzare lo stato dell'oggetto, viene invocato da tutti i costruttori di
      * <code>ParerUserError</code>.
      */
-    private void init(String severity, String code, List params) {
+    private void init(String severity, String code, List<?> params) {
         logger.debug("Http404Exception::init: invocato");
         setSeverity(severity);
-        logger.debug("Http404Exception::init: severity [" + getSeverity() + "]");
+        logger.debug("Http404Exception::init: severity [{}]", getSeverity());
         _code = code;
-        logger.debug("Http404Exception::init: code [" + code + "]");
+        logger.debug("Http404Exception::init: code [{}]", code);
         String text = getText(code, params);
         setDescription(text);
-        logger.debug("Http404Exception::init: description [" + getDescription() + "]");
+        logger.debug("Http404Exception::init: description [{}]", getDescription());
     }
 
     private void init(String severity, String message) {
         logger.debug("Http404Exception::init: invocato");
         setSeverity(severity);
-        logger.debug("Http404Exception::init: severity [" + getSeverity() + "]");
+        logger.debug("Http404Exception::init: severity [{}]", getSeverity());
         _code = null;
-        logger.debug("Http404Exception::init: code [" + _code + "]");
+        logger.debug("Http404Exception::init: code [{}]", _code);
         setDescription(message);
-        logger.debug("Http404Exception::init: description [" + getDescription() + "]");
+        logger.debug("Http404Exception::init: description [{}]", getDescription());
     }
 
     public String getCategory() {
         return ParerErrorCategory.USER_ERROR;
     }
 
-    private String getText(String code, List params) {
+    private String getText(String code, List<?> params) {
         if (code == null)
             return "";
 
@@ -97,7 +97,7 @@ public class HttpConnectionException extends ParerAbstractError implements Seria
         }
 
         if (params != null) {
-            Object[] strParams = (Object[]) params.toArray(stringArray);
+            Object[] strParams = params.toArray(stringArray);
             MessageFormat mf = new MessageFormat(text);
             text = mf.format(strParams, new StringBuffer(), null).toString();
         }

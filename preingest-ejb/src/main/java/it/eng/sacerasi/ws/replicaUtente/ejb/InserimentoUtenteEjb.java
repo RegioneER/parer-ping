@@ -71,7 +71,7 @@ public class InserimentoUtenteEjb {
      *            contenente i valori da inserire
      * @param rispostaWs
      *            la risposta in cui tenere traccia dell'esito dell'operazione
-     * 
+     *
      * @throws ParerInternalError
      *             errore generico
      */

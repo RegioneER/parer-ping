@@ -51,10 +51,10 @@ public enum OperatoreNulloType {
 
     /**
      * Method fromValue.
-     * 
+     *
      * @param value
      *            stringa da convertire
-     * 
+     *
      * @return the constant for this value
      */
     public static OperatoreNulloType fromValue(final java.lang.String value) {
@@ -66,8 +66,8 @@ public enum OperatoreNulloType {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param value
      *            set del valore
      */
@@ -76,7 +76,7 @@ public enum OperatoreNulloType {
 
     /**
      * Method toString.
-     * 
+     *
      * @return the value of this constant
      */
     public java.lang.String toString() {
@@ -85,7 +85,7 @@ public enum OperatoreNulloType {
 
     /**
      * Method value.
-     * 
+     *
      * @return the value of this constant
      */
     public java.lang.String value() {

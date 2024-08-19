@@ -47,10 +47,10 @@ public class InvioSUHelper extends GenericHelper {
 
     /**
      * @deprecated could not resolve property: nmDocumento
-     * 
+     *
      * @param idStrumentiUrbanistici
      *            strumento urbanistico
-     * 
+     *
      * @return Tipo del documento principale
      */
     @Deprecated
@@ -93,10 +93,10 @@ public class InvioSUHelper extends GenericHelper {
 
     /**
      * @deprecated PigVDettStrumentoUrbanistico is not mapped
-     * 
+     *
      * @param idStrumentiUrbanistici
      *            strumento urbanistico
-     * 
+     *
      * @return lista di {@link PigVDettStrumUrb}
      */
     @Deprecated

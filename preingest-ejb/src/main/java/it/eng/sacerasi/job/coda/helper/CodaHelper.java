@@ -310,7 +310,7 @@ public class CodaHelper {
      *
      * @param idObjectPadre
      *            id padre
-     * 
+     *
      * @return valore calcolo
      */
     public String getCalcoloStatoObjDaTrasf(Long idObjectPadre) {
@@ -331,7 +331,7 @@ public class CodaHelper {
      *            se true indica di aggiornare {@link PigSessioneIngest#niUnitaDocVersErr}
      * @param incrementaVersateTimeout
      *            se true indica di aggiornare {@link PigSessioneIngest#niUnitaDocVersTimeout}
-     * 
+     *
      * @return {@link PigSessioneIngest} aggiornato
      */
     public PigSessioneIngest aggiornaContatori(long idSessioneIngest, boolean incrementaVersateOk,

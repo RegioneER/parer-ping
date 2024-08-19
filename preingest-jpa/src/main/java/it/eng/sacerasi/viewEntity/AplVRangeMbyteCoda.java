@@ -27,7 +27,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the APL_V_RANGE_MBYTE_CODA database table.
- * 
+ *
  */
 @Entity
 @Table(name = "APL_V_RANGE_MBYTE_CODA")

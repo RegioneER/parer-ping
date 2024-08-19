@@ -46,7 +46,7 @@ public class PigVDettStrumUrb implements Serializable {
 
     /*
      * @Column(name = "ERR_DESC") public String getErrDesc() { return this.errDesc; }
-     * 
+     *
      * public void setErrDesc(String errDesc) { this.errDesc = errDesc; }
      */
 
@@ -89,7 +89,7 @@ public class PigVDettStrumUrb implements Serializable {
 
     /*
      * @Column(name = "NM_DOCUMENTO") public String getNmDocumento() { return this.nmDocumento; }
-     * 
+     *
      * public void setNmDocumento(String nmDocumento) { this.nmDocumento = nmDocumento; }
      */
 

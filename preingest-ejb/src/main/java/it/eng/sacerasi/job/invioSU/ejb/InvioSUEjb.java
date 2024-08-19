@@ -17,6 +17,37 @@
 
 package it.eng.sacerasi.job.invioSU.ejb;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.ejb.ApplicationException;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
@@ -29,7 +60,6 @@ import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici.TiStato;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.grantEntity.SIOrgEnteSiam;
 import it.eng.sacerasi.helper.GenericHelper;
 import it.eng.sacerasi.job.ejb.JobLogger;
@@ -56,35 +86,6 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import javax.ejb.ApplicationException;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.xml.bind.MarshalException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.ValidationException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -126,9 +127,9 @@ public class InvioSUEjb {
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
     public void invioSU() throws IOException {
-        log.info(InvioSUEjb.class.getSimpleName() + " --- Chiamata JOB per invio strumenti urbanistici");
+        log.info("{} --- Chiamata JOB per invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
         List<Long> idStrumentiUrbanisticiDaInviare = invioSUHelper.getIdStrumentiUrbanisticiDaInviare();
-        log.info("Recuperati " + idStrumentiUrbanisticiDaInviare.size() + " strumenti urbanistici da inviare");
+        log.info("Recuperati {} strumenti urbanistici da inviare", idStrumentiUrbanisticiDaInviare.size());
 
         for (Long idStrumentoUrbanisticoDaInviare : idStrumentiUrbanisticiDaInviare) {
             // Apro una transazione (recupero un proxy per invocare il metodo con una nuova transazione)
@@ -146,11 +147,13 @@ public class InvioSUEjb {
 
         jobLoggerEjb.writeAtomicLog(Constants.NomiJob.INVIO_STRUMENTI_URBANISTICI,
                 Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
-        log.info(InvioSUEjb.class.getSimpleName() + " --- FINE chiamata per invio strumenti urbanistici");
+        log.info("{} --- FINE chiamata per invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
     }
 
     @ApplicationException(rollback = true)
-    private static class InvioSUException extends Exception {
+    private class InvioSUException extends Exception {
+
+        private static final long serialVersionUID = 1L;
 
         private long idStrumentoUrbanisticoDaInviare;
         private String cdErr;
@@ -177,7 +180,7 @@ public class InvioSUEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciInvioStrumentoUrbanistico(long idStrumentoUrbanisticoDaInviare)
-            throws InvioSUException, ObjectStorageException {
+            throws InvioSUException, ObjectStorageException, IOException {
         // Locko lo strumento urbanistico
         PigStrumentiUrbanistici strumentoUrbanisticoDaInviare = genericHelper
                 .findByIdWithLock(PigStrumentiUrbanistici.class, idStrumentoUrbanisticoDaInviare);
@@ -204,8 +207,7 @@ public class InvioSUEjb {
                 // Controlli sui documenti dello strumento urbanistico attraverso i valori della vista
                 if (check.getFlVerificaErrata().equals("1") || check.getFlVerificaInCorso().equals("1")
                         || check.getFlFileMancante().equals("1")) {
-                    log.error("{0} --- ERRORE condizioni invio strumenti urbanistici",
-                            InvioSUEjb.class.getSimpleName());
+                    log.error("{} --- ERRORE condizioni invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                     PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU01");
                     throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                             errore.getDsErrore());
@@ -224,8 +226,8 @@ public class InvioSUEjb {
                     // Genero l'xml di versamento
                     xmlVersamento = creaXml(strumentoUrbanisticoDaInviare);
                 } catch (Exception ex) {
-                    log.error(InvioSUEjb.class.getSimpleName()
-                            + " --- ERRORE creazione XML invio strumenti urbanistici: " + ex.getMessage());
+                    log.error("{} --- ERRORE creazione XML invio strumenti urbanistici: ",
+                            InvioSUEjb.class.getSimpleName(), ex);
                     PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU14");
                     throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                             errore.getDsErrore());
@@ -247,7 +249,7 @@ public class InvioSUEjb {
                         // Creo il file con l'xml
                         fileXmlVersamento = File.createTempFile("StrumentiUrbanistici.xml", "",
                                 new File(dirCompletaFtp));
-                        FileUtils.writeStringToFile(fileXmlVersamento, xmlVersamento);
+                        FileUtils.writeStringToFile(fileXmlVersamento, xmlVersamento, StandardCharsets.UTF_8);
                         // Lo aggiungo allo zip
                         addToZipFile(fileXmlVersamento, zos, "StrumentiUrbanistici.xml");
                         // Recupero i file dall'object storage
@@ -267,31 +269,23 @@ public class InvioSUEjb {
                                 // stile ack)
                                 boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, nmFileOs);
                                 if (doesObjectExist) {
-                                    File tempFile = null;
-                                    FileOutputStream fosTemp = null;
-                                    try {
+                                    File tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
+                                    try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
                                         ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
                                                 .getObject(config, nmFileOs);
                                         // Partendo dall'input stream S3 Amazon, recupero il file
-                                        // Creo il file in una cartella temporanea
-                                        tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
-                                        fosTemp = new FileOutputStream(tempFile);
                                         IOUtils.copy(objectContent, fosTemp);
-                                        fosTemp.close();
                                         String nomeFileLowerCase = strumUrbDocumenti.getPigStrumUrbValDoc()
                                                 .getNmTipoDocumento().replace(" ", "_").toLowerCase() + ".zip";
                                         // Aggiungo il file scaricato dall'OS al file zip
                                         addToZipFile(tempFile, zos, nomeFileLowerCase);
                                     } finally {
-                                        if (fosTemp != null) {
-                                            fosTemp.close();
-                                        }
                                         if (tempFile != null) {
-                                            tempFile.delete();
+                                            Files.delete(tempFile.toPath());
                                         }
                                     }
                                 } else {
-                                    log.error("{0} --- ERRORE creazione ZIP invio strumenti urbanistici",
+                                    log.error("{} --- ERRORE creazione ZIP invio strumenti urbanistici",
                                             InvioSUEjb.class.getSimpleName());
                                     PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
                                     String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
@@ -302,8 +296,8 @@ public class InvioSUEjb {
                             }
                         }
                     } catch (Exception ex) {
-                        log.error("{0} --- ERRORE creazione ZIP invio strumenti urbanistici: {1}",
-                                InvioSUEjb.class.getSimpleName(), ex.getMessage());
+                        log.error("{} --- ERRORE creazione ZIP invio strumenti urbanistici",
+                                InvioSUEjb.class.getSimpleName(), ex);
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU15");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                 errore.getDsErrore());
@@ -339,7 +333,7 @@ public class InvioSUEjb {
                                     null, null, null, null, priorita, null);
 
                         } catch (Exception e) {
-                            log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+                            log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                             PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU17");
                             throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                     errore.getDsErrore() + e);
@@ -353,7 +347,7 @@ public class InvioSUEjb {
                             strumentoUrbanisticoDaInviare.getCdKey())) {
                         //
                     } else {
-                        log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+                        log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU01"); // TODO DA MODIFICARE IN 21
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                 errore.getDsErrore());
@@ -379,14 +373,14 @@ public class InvioSUEjb {
                     PigObject obj = invioSUHelper.getPigObjectPerVersatoreStrumUrbInNewTx(vers.getIdVers(),
                             cdKeyObject);
                     if (obj == null) {
-                        log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+                        log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU01");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                 errore.getDsErrore());
                     } else if (obj.getTiStatoObject().equals("DA_TRASFORMARE")) {
                         return;
                     } else if (!obj.getTiStatoObject().equals("IN_ATTESA_FILE")) {
-                        log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+                        log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU20");
                         String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
                                 "" + strumentoUrbanisticoDaInviare.getIdStrumentiUrbanistici());
@@ -402,7 +396,7 @@ public class InvioSUEjb {
                             risposta = notificaTrasferimentoEjb.notificaAvvenutoTrasferimentoFileInNewTx(nmAmbienteVers,
                                     nmVers, cdKeyObject, listaFileDepositatoType);
                         } catch (Exception e) {
-                            log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+                            log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
                             PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU18");
                             throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                     errore.getDsErrore());
@@ -429,8 +423,7 @@ public class InvioSUEjb {
                                             + ".zip"));
                         }
                     } catch (SdkClientException e) {
-                        log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici: "
-                                + e.getMessage());
+                        log.error("{} --- ERRORE invio strumenti urbanistici: ", InvioSUEjb.class.getSimpleName(), e);
                         PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU19");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
                                 errore.getDsErrore());
@@ -441,21 +434,21 @@ public class InvioSUEjb {
                     genericHelper.getEntityManager().flush();
                 } finally {
                     if (fileXmlVersamento != null) {
-                        fileXmlVersamento.delete();
+                        Files.delete(fileXmlVersamento.toPath());
                     }
                     if (fileTemporaneoGenerale != null) {
-                        fileTemporaneoGenerale.delete();
+                        Files.delete(fileTemporaneoGenerale.toPath());
                     }
                 }
             }
         } else {
-            log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici");
+            log.error("{} --- ERRORE invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
             PigErrore errore = messaggiHelper.retrievePigErrore("PING-SENDOBJ-OBJ-001");
             throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(), errore.getDsErrore());
         }
     }
 
-    public static void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase) throws IOException {
+    private void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             ZipEntry zipEntry = new ZipEntry(nomeFileLowerCase);
             zos.putNextEntry(zipEntry);
@@ -469,8 +462,7 @@ public class InvioSUEjb {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private String creaXml(PigStrumentiUrbanistici strumentoUrbanisticoDaInviare)
-            throws ParerInternalError, MarshalException, Exception {
+    private String creaXml(PigStrumentiUrbanistici strumentoUrbanisticoDaInviare) throws JAXBException {
 
         StrumentiUrbanistici strumentiUrbanistici = new StrumentiUrbanistici();
         // Popolo l'ente
@@ -570,11 +562,11 @@ public class InvioSUEjb {
             strumentiUrbanistici.setCollegamenti(collegamenti);
         }
 
-        log.info(InvioSUEjb.class.getSimpleName() + " --- Creazione XML invio strumento urbanistico");
+        log.info("{} --- Creazione XML invio strumento urbanistico", InvioSUEjb.class.getSimpleName());
         return marshallXmlInvioSU(strumentiUrbanistici);
     }
 
-    private String marshallXmlInvioSU(StrumentiUrbanistici strumentiUrbanistici) throws Exception {
+    private String marshallXmlInvioSU(StrumentiUrbanistici strumentiUrbanistici) throws JAXBException {
         StringWriter tmpWriter = new StringWriter();
         // Eseguo il marshalling degli oggetti creati
         Marshaller udMarshaller = xmlContextCache.getInvioSUCtx_InvioSU().createMarshaller();

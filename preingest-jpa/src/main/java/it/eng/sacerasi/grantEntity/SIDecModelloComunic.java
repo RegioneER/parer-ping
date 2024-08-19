@@ -80,7 +80,7 @@ public class SIDecModelloComunic implements Serializable {
     /*
      * @OneToMany(mappedBy = "siDecModelloComunic", cascade = CascadeType.MERGE) public List<SIDecQueryModelloComunic>
      * getDecQueryModelloComunics() { return decQueryModelloComunics; }
-     * 
+     *
      * public void setDecQueryModelloComunics(List<SIDecQueryModelloComunic> decQueryModelloComunics) {
      * this.decQueryModelloComunics = decQueryModelloComunics; }
      */

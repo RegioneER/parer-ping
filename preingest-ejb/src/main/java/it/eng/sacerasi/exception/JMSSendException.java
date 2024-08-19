@@ -26,6 +26,8 @@ import javax.ejb.ApplicationException;
 @ApplicationException(rollback = false)
 public class JMSSendException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public JMSSendException(String message) {
         super(message);
     }

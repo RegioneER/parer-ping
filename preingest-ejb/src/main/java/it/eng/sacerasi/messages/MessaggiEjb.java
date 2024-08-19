@@ -56,9 +56,9 @@ public class MessaggiEjb {
      *
      * @param stati
      *            lista degli stati
-     * 
+     *
      * @return il tableBean contenente la lista
-     * 
+     *
      * @throws ParerUserError
      *             errore generico
      */

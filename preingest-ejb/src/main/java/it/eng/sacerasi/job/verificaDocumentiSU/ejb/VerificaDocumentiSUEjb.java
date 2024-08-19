@@ -17,26 +17,18 @@
 
 package it.eng.sacerasi.job.verificaDocumentiSU.ejb;
 
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.entity.PigErrore;
-import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
-import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
-import it.eng.sacerasi.helper.GenericHelper;
-import it.eng.sacerasi.job.ejb.JobLogger;
-import it.eng.sacerasi.job.util.VerificheDocumentiSUSismaEtc;
-import it.eng.sacerasi.job.util.NfsUtils;
-import it.eng.sacerasi.messages.MessaggiHelper;
-import it.eng.sacerasi.strumentiUrbanistici.dto.VerificaZipFileResponse;
-import it.eng.sacerasi.viewEntity.PigVSuLisDocDaVerif;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
@@ -46,17 +38,30 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.entity.PigErrore;
+import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
+import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
+import it.eng.sacerasi.helper.GenericHelper;
+import it.eng.sacerasi.job.ejb.JobLogger;
+import it.eng.sacerasi.job.util.NfsUtils;
+import it.eng.sacerasi.job.util.VerificheDocumentiSUSismaEtc;
+import it.eng.sacerasi.messages.MessaggiHelper;
+import it.eng.sacerasi.strumentiUrbanistici.dto.VerificaZipFileResponse;
+import it.eng.sacerasi.viewEntity.PigVSuLisDocDaVerif;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -143,7 +148,7 @@ public class VerificaDocumentiSUEjb {
 
                         } finally {
                             if (tempFile != null) {
-                                tempFile.delete();
+                                Files.delete(tempFile.toPath());
                             }
                         }
                     } else {
@@ -290,7 +295,7 @@ public class VerificaDocumentiSUEjb {
 
                 } finally {
                     if (tempFile != null) {
-                        tempFile.delete();
+                        Files.delete(tempFile.toPath());
                     }
                 }
             } else {
@@ -313,11 +318,11 @@ public class VerificaDocumentiSUEjb {
             PigStrumUrbDocumenti strumUrbDocumenti) throws FileNotFoundException, IOException {
         VerificaZipFileResponse response = new VerificaZipFileResponse();
         StringBuilder report = new StringBuilder("");
-        ZipArchiveEntry entry;
+        ZipEntry entry;
         ZipFile zipFile;
-        Enumeration<ZipArchiveEntry> entries;
+        Enumeration<? extends ZipEntry> entries;
         zipFile = new ZipFile(file);
-        entries = zipFile.getEntries();
+        entries = zipFile.entries();
         Integer numFiles = null;
         if (entries.hasMoreElements()) {
             // estraggo i file

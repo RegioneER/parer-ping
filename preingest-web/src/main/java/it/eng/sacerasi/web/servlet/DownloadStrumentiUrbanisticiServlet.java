@@ -55,6 +55,7 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
     @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

@@ -64,7 +64,7 @@ maintenance:
     - name: ' Engineering Ingegneria Informatica S.p.A.'
       until: '2024-12-31'
   type: contract
-name: Parer - Sacer
+name: Parer - Ping
 platforms:
   - linux
 releaseDate: '2023-11-13'

@@ -82,11 +82,11 @@ public class KettleWsClient {
      * caso di esito positivo deve essere <tt>TRASFORMAZIONE_IN_CORSO</tt> .
      *
      * @param idOggetto id del <tt>PIG_OBJECT</tt> relativo alla <em>Trasformazione</em>.
-     * 
+     *
      * @param nomeTrasformazione nome <em>univoco</em> della trasformazione
-     * 
+     *
      * @param parametri della trasformazioni (definiti sul repository kettle)
-     * 
+     *
      * @return Esito dell'avvenuto lancio della trasformazione
      */
     public Esito eseguiTrasformazione(long idOggetto, String nomeTrasformazione, Map<String, String> parametri)
@@ -108,12 +108,12 @@ public class KettleWsClient {
 
     /**
      * Inserimento del job di kettle. Necessario utilizzare <em>MTOM</em> per trasferire il file.
-     * 
+     *
      * @param jobXmlFile
      *            file xml
      * @param versionComment
      *            versione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -132,12 +132,12 @@ public class KettleWsClient {
 
     /**
      * Inserimento della trasformation di kettle. Necessario utilizzare <em>MTOM</em> per trasferire il file.
-     * 
+     *
      * @param transformationXmlFile
      *            file trasformato xml
      * @param versionComment
      *            versione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -159,7 +159,7 @@ public class KettleWsClient {
      *
      * @param nomeCartella
      *            nome della cartella/trasformazione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -175,7 +175,7 @@ public class KettleWsClient {
      *
      * @param nomeCartella
      *            nome della cartella/trasformazione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -191,20 +191,20 @@ public class KettleWsClient {
      *
      * @param nomeTrasformazione
      *            nome della trasformazione/cartella.
-     * 
+     *
      * @return Lista dei parametri associati alla trasformazione/cartella.
-     * 
+     *
      * @throws KettleException
      *             errore generico
      * @throws KettleServiceException
      *             errore generico
-     * 
+     *
      */
     @WebResult(name = "ParametriList")
     public Map<String, String> ottieniParametri(String nomeTrasformazione)
             throws KettleException, KettleServiceException {
         try {
-            Map<String, String> parametersMap = new HashMap<String, String>();
+            Map<String, String> parametersMap = new HashMap<>();
 
             EsitoListaParametri esito = client.ottieniParametri(nomeTrasformazione);
             if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
@@ -227,9 +227,9 @@ public class KettleWsClient {
      *
      * @param nomeCartella
      *            nome della trasformazione/cartella.
-     * 
+     *
      * @return esitenza della cartella
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */

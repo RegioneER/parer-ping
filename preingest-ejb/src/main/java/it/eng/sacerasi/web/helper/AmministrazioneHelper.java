@@ -429,10 +429,10 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /**
      * @deprecated PigVersDaTrasfTrasf is not mapped
-     * 
+     *
      * @param idVers
      *            versatore
-     * 
+     *
      * @return lista di {@link PigVersDaTrasfTrasf}
      */
     @Deprecated
@@ -457,12 +457,12 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /**
      * @deprecated
-     * 
+     *
      * @param idVersDaTrasf
      *            versatore da
      * @param idVersTrasf
      *            versatore
-     * 
+     *
      * @return vero se esiste, falso altrimenti
      */
     @Deprecated
@@ -478,9 +478,9 @@ public class AmministrazioneHelper extends GenericHelper {
     /**
      * Ritorna la lista dei versatori per cui generare oggetti, escludendo il versatore del parametro dato in input (che
      * è chi genera) e le sue associazioni
-     * 
+     *
      * @deprecated PigVersDaTrasfTrasf is not mapped
-     * 
+     *
      * @param idAmbienteVers
      *            id ambiente
      * @param idVers
@@ -531,7 +531,7 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /*
      * TIPO OBJ
-     * 
+     *
      */
     public List<PigTipoObject> getPigTipoObjectList(BigDecimal idVers) {
         StringBuilder queryStr = new StringBuilder("SELECT tipoObject FROM PigTipoObject tipoObject ");
@@ -2089,7 +2089,7 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /**
      * @deprecated enteConvenzDaAllinea non esiste
-     * 
+     *
      * @return lista di {@link IamEnteSiamDaAllinea} enti da allineare
      */
     @Deprecated
@@ -2147,12 +2147,12 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /**
      * @deprecated OrgVRicEnteConvenz is not mapped
-     * 
+     *
      * @param idUserIamCor
      *            user
      * @param idAmbienteEnteConvenz
      *            ambiente convenzionato
-     * 
+     *
      * @return lista di {@link SIOrgEnteSiam} enti convenzionati abilitati
      */
     @Deprecated
@@ -2318,9 +2318,9 @@ public class AmministrazioneHelper extends GenericHelper {
 
     /**
      * Conto quante righe diverse ho in base agli idEnteConvenz
-     * 
+     *
      * @deprecated
-     * 
+     *
      * @param idEnte
      *            id ente
      *

@@ -94,9 +94,9 @@ public class MonitorCoda {
      *            nome coda
      * @param messageSelector
      *            selettore
-     * 
+     *
      * @return lista di messaggi
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -207,14 +207,14 @@ public class MonitorCoda {
     }
 
     /**
-     * 
+     *
      * @param queue
      *            nome coda
      * @param messageSelector
      *            selettore
-     * 
+     *
      * @return elementi di tipo {@link InfoCoda}
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -283,9 +283,9 @@ public class MonitorCoda {
      *            id messaggio
      * @param queueName
      *            nome coda
-     * 
+     *
      * @return L'id del messaggio inviato
-     * 
+     *
      * @throws ParerInternalError
      *             errore generico
      * @throws JMSException
@@ -304,7 +304,7 @@ public class MonitorCoda {
      *
      * @param message
      *            dto messaggio {@link Message}
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -340,9 +340,9 @@ public class MonitorCoda {
      *            id messaggio
      * @param queueName
      *            nome coda
-     * 
+     *
      * @return il messaggio letto e consumato
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -358,9 +358,9 @@ public class MonitorCoda {
      *            id messaggio
      * @param queueName
      *            nome coda
-     * 
+     *
      * @return il messaggio letto e consumato
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -412,9 +412,9 @@ public class MonitorCoda {
      *            id messaggio
      * @param queueName
      *            nome coda
-     * 
+     *
      * @return L'id del messaggio eliminato
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -430,9 +430,9 @@ public class MonitorCoda {
      *            selettore
      * @param parToCheck
      *            numero parametro da verificare
-     * 
+     *
      * @return Il numero di occorrenze del messaggio cercato all'interno della coda
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */
@@ -510,7 +510,7 @@ public class MonitorCoda {
      *            selettore
      * @param paramToCheck
      *            parametro da verificare
-     * 
+     *
      * @return numero messaggi consumati
      */
     public int checkMsgConsumed(String messageSelector, BigDecimal paramToCheck) {
@@ -527,9 +527,9 @@ public class MonitorCoda {
      *            numero messaggi inviati
      * @param messageSelector
      *            selettore
-     * 
+     *
      * @return La stringa del messaggio da visualizzare all'utente
-     * 
+     *
      * @throws JMSException
      *             errore generico
      */

@@ -28,7 +28,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the MON_V_CHK_OK_OBJ database table.
- * 
+ *
  */
 @Entity
 @Table(name = "MON_V_CHK_OK_OBJ")

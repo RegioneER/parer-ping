@@ -187,7 +187,7 @@ public class NotificaTrasferimentoExt implements ISoapWSBase {
     }
 
     /**
-     * 
+     *
      * @return the tipoObject
      */
     public String getTipoObject() {
@@ -195,7 +195,7 @@ public class NotificaTrasferimentoExt implements ISoapWSBase {
     }
 
     /**
-     * 
+     *
      * @param tipoObject
      *            the tipoObject to set
      */

@@ -37,7 +37,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_XML_OBJECT_TRASF database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_XML_OBJECT_TRASF")

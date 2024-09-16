@@ -21,6 +21,7 @@ import software.amazon.awssdk.utils.IoUtils;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +41,9 @@ import software.amazon.awssdk.services.s3.model.UploadPartResponse;
  *
  * @author Iacolucci_M
  */
-public class S3UploadSessionSisma {
+public class S3UploadSessionSisma implements Serializable {
+
+    private static final long serialVersionUID = 925103772459971617L;
 
     private static final Logger log = LoggerFactory.getLogger(S3UploadSessionSisma.class);
     private BigDecimal idSisma = null;

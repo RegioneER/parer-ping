@@ -94,9 +94,9 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
      *
      * @param jobName
      *            the job name
-     * 
+     *
      * @return
-     * 
+     *
      * @throws EMFError
      */
     private Timestamp getActivationDateJob(String jobName) throws EMFError {
@@ -333,7 +333,7 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
      *
      * @param statoJob
      *            Rappresentazione dello stato <b>a livello di interfaccia grafica</b> del job.
-     * 
+     *
      * @throws EMFError
      *             in caso di errore generale
      */
@@ -773,7 +773,7 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
      *            nome dell'applicazione. <b>Obbligatorio per i job che elaborano i LOG "PREMIS"</b>
      * @param operazione
      *            una delle tre operazioni dell'enum
-     * 
+     *
      * @throws EMFError
      *             Errore di esecuzione
      */

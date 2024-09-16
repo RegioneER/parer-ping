@@ -50,7 +50,7 @@ public class NotificaOggettoTrasformato {
      *            numero degli eventuali errori della trasformazione.
      * @param report
      *            parametro opzionale sia in caso di trasformazione eseguita con successo sia in caso di errore.
-     * 
+     *
      * @return risposta a <em>kettle-server</em>.
      */
     @WebMethod(operationName = "notificaOggettoTrasformato")

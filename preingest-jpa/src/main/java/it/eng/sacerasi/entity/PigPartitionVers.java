@@ -34,7 +34,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_PARTITION_VERS database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_PARTITION_VERS")

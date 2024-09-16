@@ -40,7 +40,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_TIPO_FILE_OBJECT database table.
- * 
+ *
  */
 @Entity
 

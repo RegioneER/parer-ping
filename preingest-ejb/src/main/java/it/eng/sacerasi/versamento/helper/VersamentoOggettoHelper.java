@@ -71,7 +71,7 @@ public class VersamentoOggettoHelper extends GenericHelper {
      *            tipo versamento file
      * @param note
      *            campo note dell'oggetto
-     * 
+     *
      * @return la lista di record
      */
     @SuppressWarnings("unchecked")

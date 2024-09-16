@@ -17,18 +17,34 @@
 
 package it.eng.sacerasi.sisma.ejb;
 
+import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_FLAG;
+import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_VALORE;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.Query;
+
 import it.eng.paginator.util.HibernateUtils;
 import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.entity.PigSismaDocumenti;
-import it.eng.sacerasi.entity.PigSismaPianoDocReq;
-import it.eng.sacerasi.entity.PigSismaValDoc;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSisma.TiStato;
+import it.eng.sacerasi.entity.PigSismaDocumenti;
 import it.eng.sacerasi.entity.PigSismaFaseProgetto;
 import it.eng.sacerasi.entity.PigSismaFinanziamento;
+import it.eng.sacerasi.entity.PigSismaPianoDocReq;
 import it.eng.sacerasi.entity.PigSismaProgettiAg;
 import it.eng.sacerasi.entity.PigSismaStatoProgetto;
 import it.eng.sacerasi.entity.PigSismaValAtto;
+import it.eng.sacerasi.entity.PigSismaValDoc;
 import it.eng.sacerasi.entity.PigUnitaDocObject;
 import it.eng.sacerasi.entity.PigVers;
 import it.eng.sacerasi.grantEntity.OrgAmbiente;
@@ -36,25 +52,13 @@ import it.eng.sacerasi.grantEntity.OrgEnte;
 import it.eng.sacerasi.grantEntity.OrgStrut;
 import it.eng.sacerasi.grantEntity.SIOrgEnteSiam;
 import it.eng.sacerasi.helper.GenericHelper;
+import it.eng.sacerasi.sisma.dto.DatiAnagraficiDto;
 import it.eng.sacerasi.sisma.dto.RicercaSismaDTO;
 import it.eng.sacerasi.viewEntity.PigVSismaChecks;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_FLAG;
-import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_VALORE;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.Query;
 
 /**
  *
@@ -71,7 +75,7 @@ public class SismaHelper extends GenericHelper {
     private static final String COSTANTE_ID_SISMA = "idSisma";
     private static final String COSTANTE_ID_SISMA_FINANZIAMENTO = "idSismaFinanziamento";
 
-    public static Set<TiStato> getTuttiGliStatiSisma() {
+    public Set<TiStato> getTuttiGliStatiSisma() {
         return EnumSet.of(TiStato.BOZZA, TiStato.DA_VERIFICARE, TiStato.DA_RIVEDERE, TiStato.VERIFICATO,
                 TiStato.RICHIESTA_INVIO, TiStato.INVIO_IN_CORSO, TiStato.ERRORE, TiStato.IN_ELABORAZIONE,
                 TiStato.IN_TRASFORMAZIONE, TiStato.IN_VERSAMENTO, TiStato.IN_ELABORAZIONE_SA,
@@ -80,7 +84,7 @@ public class SismaHelper extends GenericHelper {
     }
 
     /* Torna un enumset con tutti gli stati tranne quelli passati come argomento */
-    public static Set<TiStato> getTuttiGliStatiSismaTranne(PigSisma.TiStato... stati) {
+    public Set<TiStato> getTuttiGliStatiSismaTranne(PigSisma.TiStato... stati) {
         EnumSet<TiStato> set = EnumSet.of(TiStato.BOZZA, TiStato.DA_VERIFICARE, TiStato.DA_RIVEDERE, TiStato.VERIFICATO,
                 TiStato.RICHIESTA_INVIO, TiStato.INVIO_IN_CORSO, TiStato.ERRORE, TiStato.IN_ELABORAZIONE,
                 TiStato.IN_TRASFORMAZIONE, TiStato.IN_VERSAMENTO, TiStato.IN_ELABORAZIONE_SA,
@@ -93,7 +97,7 @@ public class SismaHelper extends GenericHelper {
     }
 
     // MEV 26165
-    public static Set<TiStato> getStatiSismaTranne(EnumSet<TiStato> elencoStati, PigSisma.TiStato... stati) {
+    public Set<TiStato> getStatiSismaTranne(Set<TiStato> elencoStati, PigSisma.TiStato... stati) {
         for (TiStato tiStato : stati) {
             elencoStati.remove(tiStato);
         }
@@ -897,100 +901,6 @@ public class SismaHelper extends GenericHelper {
         registriDecodeMap.populatedMap(bt, CAMPO_VALORE, CAMPO_FLAG);
 
         return registriDecodeMap;
-    }
-
-    // // MEV 26165
-    // public DecodeMap getSismaNumeroAgenzia() {
-    // List<String> numeri = this.findPigSismaNumeroAgenzia();
-    // DecodeMap numeriDecodeMap = new DecodeMap();
-    // BaseTable bt = new BaseTable();
-    // for (String numero : numeri) {
-    // if (numero != null && !numero.isEmpty()) {
-    // BaseRow br = new BaseRow();
-    // br.setString(CAMPO_FLAG, numero);
-    // br.setString(CAMPO_VALORE, numero);
-    // bt.add(br);
-    // }
-    // }
-    // numeriDecodeMap.populatedMap(bt, CAMPO_VALORE, CAMPO_FLAG);
-    //
-    // return numeriDecodeMap;
-    // }
-    public static class DatiAnagraficiDto {
-
-        private BigDecimal idEnteSiam;
-        private String soggettoAttuatore;
-        private String naturaSoggettoAttuatore;
-        private String enteProprietario;
-        private String naturaEnteProprietario;
-        private String ubicazioneComune;
-        private String ubicazioneProvincia;
-        private boolean soggettoATutela;
-
-        public BigDecimal getIdEnteSiam() {
-            return idEnteSiam;
-        }
-
-        public void setIdEnteSiam(BigDecimal idEnteSiam) {
-            this.idEnteSiam = idEnteSiam;
-        }
-
-        public String getSoggettoAttuatore() {
-            return soggettoAttuatore;
-        }
-
-        public void setSoggettoAttuatore(String soggettoAttuatore) {
-            this.soggettoAttuatore = soggettoAttuatore;
-        }
-
-        public String getNaturaSoggettoAttuatore() {
-            return naturaSoggettoAttuatore;
-        }
-
-        public void setNaturaSoggettoAttuatore(String naturaSoggettoAttuatore) {
-            this.naturaSoggettoAttuatore = naturaSoggettoAttuatore;
-        }
-
-        public String getEnteProprietario() {
-            return enteProprietario;
-        }
-
-        public void setEnteProprietario(String enteProprietario) {
-            this.enteProprietario = enteProprietario;
-        }
-
-        public String getNaturaEnteProprietario() {
-            return naturaEnteProprietario;
-        }
-
-        public void setNaturaEnteProprietario(String naturaEnteProprietario) {
-            this.naturaEnteProprietario = naturaEnteProprietario;
-        }
-
-        public String getUbicazioneComune() {
-            return ubicazioneComune;
-        }
-
-        public void setUbicazioneComune(String ubicazioneComune) {
-            this.ubicazioneComune = ubicazioneComune;
-        }
-
-        public String getUbicazioneProvincia() {
-            return ubicazioneProvincia;
-        }
-
-        public void setUbicazioneProvincia(String ubicazioneProvincia) {
-            this.ubicazioneProvincia = ubicazioneProvincia;
-        }
-
-        public boolean isSoggettoATutela() {
-            return soggettoATutela;
-        }
-
-        public void setSoggettoATutela(boolean soggettoATutela) {
-            this.soggettoATutela = soggettoATutela;
-        }
-
     }
 
     public static class DatiRecuperoDto {

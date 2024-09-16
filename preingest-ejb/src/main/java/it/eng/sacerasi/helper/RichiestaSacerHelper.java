@@ -17,7 +17,6 @@
 
 package it.eng.sacerasi.helper;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
@@ -31,9 +30,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -62,7 +59,6 @@ import it.eng.sacerasi.job.dto.EsitoConnessione;
 import it.eng.sacerasi.job.dto.RichiestaSacerInput;
 import it.eng.sacerasi.job.preparaxml.util.XmlUtils;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
-import org.apache.http.ParseException;
 
 @Stateless(mappedName = "RichiestaSacerHelper")
 @LocalBean

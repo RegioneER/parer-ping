@@ -45,7 +45,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_XSD_DATI_SPEC database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_XSD_DATI_SPEC")

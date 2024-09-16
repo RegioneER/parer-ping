@@ -37,9 +37,9 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 /*
  * @Entity
- * 
+ *
  * @Table(name = "PIG_VERS_DA_TRASF_TRASF")
- * 
+ *
  * @NamedQuery(name = "PigVersDaTrasfTrasf.findAll", query = "SELECT p FROM PigVersDaTrasfTrasf p")
  *
  */

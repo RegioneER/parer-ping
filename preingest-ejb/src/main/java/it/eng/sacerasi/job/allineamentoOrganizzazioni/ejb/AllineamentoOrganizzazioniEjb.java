@@ -17,8 +17,27 @@
 
 package it.eng.sacerasi.job.allineamentoOrganizzazioni.ejb;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.naming.NamingException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.eng.integriam.client.ws.IAMSoapClients;
-import it.eng.integriam.client.ws.reporg.CancellaOrganizzazioneRisposta;
 import it.eng.integriam.client.ws.reporg.ListaTipiDato;
 import it.eng.integriam.client.ws.reporg.ReplicaOrganizzazione;
 import it.eng.integriam.client.ws.reporg.ReplicaOrganizzazioneRispostaAbstract;
@@ -33,23 +52,6 @@ import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.allineamentoOrganizzazioni.dto.ParametriInputOrganizzazioni;
 import it.eng.sacerasi.job.ejb.JobLogger;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.naming.NamingException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -86,9 +88,9 @@ public class AllineamentoOrganizzazioniEjb {
      *
      * @param organizList
      *            Lista deelle organizzazioni da replicare su IAM
-     * 
+     *
      * @return ritorna l'esito della lavorazione dell'ultimo elemento della lista passata comeparametro
-     * 
+     *
      * @throws ParerInternalError
      *             errore generico
      * @throws NamingException
@@ -114,7 +116,7 @@ public class AllineamentoOrganizzazioniEjb {
         /* Mi tengo una variabile che mi dice se la replica è andata o meno a buon fine */
         boolean replicaOK = true;
 
-        log.info("Replica Organizzazioni SACER PREINGEST - ottenute {0} organizzazioni da replicare",
+        log.info("Replica Organizzazioni SACER PREINGEST - ottenute {} organizzazioni da replicare",
                 organizList.size());
 
         /* Per ogni registrazione determinata */
@@ -131,7 +133,7 @@ public class AllineamentoOrganizzazioniEjb {
                 if (client != null) {
                     /* PREPARAZIONE ATTIVAZIONE SERVIZIO */
                     log.info(
-                            "Replica Organizzazioni SACER PREINGEST - Preparazione attivazione servizio per l'organizzazione {0}",
+                            "Replica Organizzazioni SACER PREINGEST - Preparazione attivazione servizio per l'organizzazione {}",
                             organizDaReplic.getNmOrganiz());
                     if (organizDaReplic.getTiOperReplic().equals(Constants.TiOperReplic.INS.name())
                             || organizDaReplic.getTiOperReplic().equals(Constants.TiOperReplic.MOD.name())) {
@@ -185,8 +187,8 @@ public class AllineamentoOrganizzazioniEjb {
 
                     String posNeg = esitoServizio.name().equals(Constants.EsitoServizio.OK.name()) ? "positiva"
                             : "negativa";
-                    log.info("Replica Organizzazioni SACER PREINGEST - Risposta WS {0} per l'organizzazione {1}",
-                            posNeg, organizDaReplic.getNmOrganiz());
+                    log.info("Replica Organizzazioni SACER PREINGEST - Risposta WS {} per l'organizzazione {}", posNeg,
+                            organizDaReplic.getNmOrganiz());
 
                     if (!esitoServizio.name().equals(Constants.EsitoServizio.OK.name())
                             && !resp.getCdErr().equals(Constants.SERVIZI_ORG_002)) {
@@ -199,7 +201,7 @@ public class AllineamentoOrganizzazioniEjb {
                     aoHelper.writeEsitoIamOrganizDaReplic(organizDaReplic.getIdOrganizDaReplic(),
                             Constants.EsitoServizio.KO, Constants.SERVIZI_ORG_001,
                             "Errore nella creazione del client per la chiamata al WS di ReplicaOrganizzazioni");
-                    log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione {0}",
+                    log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione {}",
                             organizDaReplic.getNmOrganiz());
                     break;
                 }
@@ -208,9 +210,11 @@ public class AllineamentoOrganizzazioniEjb {
                 aoHelper.writeEsitoIamOrganizDaReplic(organizDaReplic.getIdOrganizDaReplic(),
                         Constants.EsitoServizio.KO, Constants.SERVIZI_ORG_007,
                         e.getFault().getFaultCode() + ": " + e.getFault().getFaultString());
-                log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione "
-                        + organizDaReplic.getNmOrganiz() + " " + Constants.SERVIZI_ORG_007
-                        + " - Utente che attiva il servizio non riconosciuto o non abilitato", e);
+                log.error(
+                        "Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione {} "
+                                + Constants.SERVIZI_ORG_007
+                                + " - Utente che attiva il servizio non riconosciuto o non abilitato",
+                        organizDaReplic.getNmOrganiz(), e);
                 replicaOK = false;
                 break;
             } catch (WebServiceException e) {
@@ -218,9 +222,10 @@ public class AllineamentoOrganizzazioniEjb {
                 aoHelper.writeEsitoIamOrganizDaReplic(organizDaReplic.getIdOrganizDaReplic(),
                         Constants.EsitoServizio.NO_RISPOSTA, Constants.REPLICA_ORG_001,
                         "Il servizio di replica organizzazione non risponde");
-                log.error("Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione "
-                        + organizDaReplic.getNmOrganiz() + " " + Constants.REPLICA_ORG_001
-                        + " - Il servizio di replica organizzazione non risponde");
+                log.error(
+                        "Replica Organizzazioni SACER PREINGEST - Risposta WS negativa per l'organizzazione "
+                                + Constants.REPLICA_ORG_001 + " - Il servizio di replica organizzazione non risponde",
+                        organizDaReplic.getNmOrganiz(), e);
                 replicaOK = false;
                 break;
             } catch (Exception e) {

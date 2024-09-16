@@ -117,7 +117,7 @@ public class ConfigurationHelper {
      *
      * @param nmParamApplic
      *            codice del parametro
-     * 
+     *
      * @return valore del parametro filtrato per tipologia <em>APPLIC</em> .
      */
     public String getValoreParamApplicByApplic(String nmParamApplic) {
@@ -134,8 +134,8 @@ public class ConfigurationHelper {
      *            codice del parametro
      * @param idAmbienteVers
      *            id ambiente
-     * 
-     * 
+     *
+     *
      * @return valore del parametro filtrato per tipologia <em>AMBIENTEVERS</em> .
      */
     public String getValoreParamApplicByAmbienteVers(String nmParamApplic, BigDecimal idAmbienteVers) {
@@ -153,8 +153,8 @@ public class ConfigurationHelper {
      *            id ambiente
      * @param idVers
      *            id versatore
-     * 
-     * 
+     *
+     *
      * @return valore del parametro filtrato per tipologia <em>VERS</em> .
      */
     public String getValoreParamApplicByIdVers(String nmParamApplic, BigDecimal idAmbienteVers, BigDecimal idVers) {
@@ -174,8 +174,8 @@ public class ConfigurationHelper {
      *            id versatore
      * @param idTipoObject
      *            id tipo object
-     * 
-     * 
+     *
+     *
      * @return valore del parametro filtrato per tipologia <em>TIPOOBJECT</em> .
      */
     public String getValoreParamApplicByTipoObj(String nmParamApplic, BigDecimal idAmbienteVers, BigDecimal idVers,
@@ -196,7 +196,7 @@ public class ConfigurationHelper {
      *            id tipo oggetto
      * @param tipoPigVGetValAppart
      *            tipo valore
-     * 
+     *
      * @return il valore del parametro
      */
     private String getValoreParamApplic(String nmParamApplic, BigDecimal idAmbienteVers, BigDecimal idVers,

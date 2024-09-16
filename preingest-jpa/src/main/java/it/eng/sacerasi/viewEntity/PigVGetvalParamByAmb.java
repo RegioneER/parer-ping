@@ -28,7 +28,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the PIG_V_GETVAL_PARAM_BY_AMB database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_V_GETVAL_PARAM_BY_AMB")

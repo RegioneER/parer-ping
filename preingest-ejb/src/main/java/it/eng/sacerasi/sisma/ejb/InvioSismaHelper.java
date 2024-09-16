@@ -58,7 +58,7 @@ public class InvioSismaHelper extends GenericHelper {
      * .createQuery("SELECT sismaValDoc.nmDocumento FROM PigSismaDocumenti sismaDocumenti " +
      * "JOIN sismaDocumenti.pigSismaValDoc sismaValDoc " + "JOIN sismaDocumenti.pigSisma sisma " +
      * "WHERE sisma.idSisma = :idSisma " + "AND sismaValDoc.flDocPrincipale = '1' ");
-     * 
+     *
      * List<String> lista = (List<String>) q.getResultList(); if (lista.size() == 1) { return lista.get(0); } else {
      * return null; } }
      */

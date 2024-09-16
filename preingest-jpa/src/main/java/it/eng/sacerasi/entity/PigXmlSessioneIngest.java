@@ -36,7 +36,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_XML_SESSIONE_INGEST database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_XML_SESSIONE_INGEST")

@@ -39,9 +39,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.xml.bind.MarshalException;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.ValidationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -49,6 +48,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigObject;
@@ -67,6 +69,7 @@ import it.eng.sacerasi.helper.GenericHelper;
 import it.eng.sacerasi.job.ejb.JobLogger;
 import it.eng.sacerasi.job.util.NfsUtils;
 import it.eng.sacerasi.messages.MessaggiHelper;
+import it.eng.sacerasi.sisma.dto.DatiAnagraficiDto;
 import it.eng.sacerasi.sisma.xml.invioSisma.CamiciaFascicoloType;
 import it.eng.sacerasi.sisma.xml.invioSisma.ProgettiSisma;
 import it.eng.sacerasi.sisma.xml.invioSisma.ProgettiSisma.Ente;
@@ -84,12 +87,9 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 @Stateless(mappedName = "InvioSismaEjb")
 @LocalBean
@@ -130,10 +130,10 @@ public class InvioSismaEjb {
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
-    public void invioSisma() throws IOException {
-        log.info(InvioSismaEjb.class.getSimpleName() + " --- Chiamata JOB per invio sisma");
+    public void invioSisma() {
+        log.info("{} --- Chiamata JOB per invio sisma", InvioSismaEjb.class.getSimpleName());
         List<Long> ids = invioSismaHelper.getIdSismaDaInviare();
-        log.info("Recuperati " + ids.size() + " sisma da inviare");
+        log.info("Recuperati {} sisma da inviare", ids.size());
         for (Long idSismaDaInviare : ids) {
             // Apro una transazione (recupero un proxy per invocare il metodo con una nuova transazione)
             try {
@@ -146,11 +146,11 @@ public class InvioSismaEjb {
             }
         }
         jobLoggerEjb.writeAtomicLog(Constants.NomiJob.INVIO_SISMA, Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
-        log.info(InvioSismaEjb.class.getSimpleName() + " --- FINE chiamata per invio sisma");
+        log.info("{} --- FINE chiamata per invio sisma", InvioSismaEjb.class.getSimpleName());
     }
 
     @ApplicationException(rollback = true)
-    private static class InvioSismaException extends Exception {
+    private class InvioSismaException extends Exception {
 
         private static final long serialVersionUID = 1L;
         private final long idSismaDaInviare;
@@ -177,7 +177,8 @@ public class InvioSismaEjb {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void gestisciInvioSisma(long idSismaDaInviare) throws InvioSismaException, ObjectStorageException {
+    public void gestisciInvioSisma(long idSismaDaInviare)
+            throws InvioSismaException, ObjectStorageException, IOException {
         // Locko sisma
         PigSisma sismaDaInviare = genericHelper.findByIdWithLock(PigSisma.class, idSismaDaInviare);
         /*
@@ -211,7 +212,7 @@ public class InvioSismaEjb {
                 if (check.getFlVerificaErrata().equals(Constants.DB_TRUE)
                         || check.getFlVerificaInCorso().equals(Constants.DB_TRUE)
                         || check.getFlFileMancante().equals(Constants.DB_TRUE)) {
-                    log.error(InvioSismaEjb.class.getSimpleName() + " --- ERRORE condizioni invio sisma");
+                    log.error("{} --- ERRORE condizioni invio sisma", InvioSismaEjb.class.getSimpleName());
                     PigErrore errore = messaggiHelper.retrievePigErrore(ERR_01);
                     throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(), errore.getDsErrore());
                 }
@@ -265,31 +266,24 @@ public class InvioSismaEjb {
                                 // stile ack)
                                 boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, nmFileOs);
                                 if (doesObjectExist) {
-                                    File tempFile = null;
-                                    FileOutputStream fosTemp = null;
-                                    try {
+                                    File tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
+                                    try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
                                         ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper
                                                 .getObject(config, nmFileOs);
                                         // Creo il file in una cartella temporanea
-                                        tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
-                                        fosTemp = new FileOutputStream(tempFile);
                                         IOUtils.copy(object, fosTemp);
-                                        fosTemp.close();
                                         String nomeFileLowerCase = sismaDocumenti.getPigSismaValDoc()
                                                 .getNmTipoDocumento().replace(" ", "_").toLowerCase() + ".zip";
                                         // Aggiungo il file scaricato dall'OS al file zip
                                         addToZipFile(tempFile, zos, nomeFileLowerCase);
                                     } finally {
-                                        if (fosTemp != null) {
-                                            fosTemp.close();
-                                        }
                                         if (tempFile != null) {
-                                            tempFile.delete();
+                                            Files.delete(tempFile.toPath());
                                         }
                                     }
                                 } else {
-                                    log.error(InvioSismaEjb.class.getSimpleName()
-                                            + " --- ERRORE creazione ZIP invio sisma");
+                                    log.error("{} --- ERRORE creazione ZIP invio sisma",
+                                            InvioSismaEjb.class.getSimpleName());
                                     PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA04");
                                     String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
                                             sismaDocumenti.getNmFileOs());
@@ -298,8 +292,7 @@ public class InvioSismaEjb {
                             }
                         }
                     } catch (Exception ex) {
-                        log.error(InvioSismaEjb.class.getSimpleName() + " --- ERRORE creazione ZIP invio sisma: "
-                                + ex.getMessage());
+                        log.error("{} --- ERRORE creazione ZIP invio sisma", InvioSismaEjb.class.getSimpleName(), ex);
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA15");
                         throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(), errore.getDsErrore());
                     }
@@ -331,7 +324,7 @@ public class InvioSismaEjb {
                                     flFileCifrato, flForzaWarning, flForzaAccettazione, null, cdVersioneXML,
                                     xmlVersamento, null, null, null, null, null, null, null, null, priorita, null);
                         } catch (Exception e) {
-                            log.error(InvioSismaEjb.class.getSimpleName() + ERR_INVIO_SISMA);
+                            log.error("{}{}", InvioSismaEjb.class.getSimpleName(), ERR_INVIO_SISMA);
                             PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSISMA17");
                             throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(),
                                     errore.getDsErrore() + e);
@@ -424,10 +417,10 @@ public class InvioSismaEjb {
                     genericHelper.getEntityManager().flush();
                 } finally {
                     if (fileXmlVersamento != null) {
-                        fileXmlVersamento.delete();
+                        Files.delete(fileXmlVersamento.toPath());
                     }
                     if (fileTemporaneoGenerale != null) {
-                        fileTemporaneoGenerale.delete();
+                        Files.delete(fileTemporaneoGenerale.toPath());
                     }
                 }
             }
@@ -438,7 +431,7 @@ public class InvioSismaEjb {
         }
     }
 
-    public static void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase) throws IOException {
+    public void addToZipFile(File file, ZipOutputStream zos, String nomeFileLowerCase) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             ZipEntry zipEntry = new ZipEntry(nomeFileLowerCase);
             zos.putNextEntry(zipEntry);
@@ -452,7 +445,8 @@ public class InvioSismaEjb {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private String creaXml(PigSisma sismaDaInviare, PigVers pigVers, boolean daVersareInAgenzia) throws Exception {
+    private String creaXml(PigSisma sismaDaInviare, PigVers pigVers, boolean daVersareInAgenzia)
+            throws InvioSismaException, JAXBException {
         ProgettiSisma sisma = new ProgettiSisma();
         // Popolo l'ente
         sisma.setEnte(new Ente());
@@ -523,7 +517,7 @@ public class InvioSismaEjb {
         sisma.setIdentificativoAttoEnte(pigSismaValAtto.getTiTipoAtto() + "_" + sismaDaInviare.getNumero());
         sisma.setLineaFinanziamento(pigSismaFinanziamento.getDsTipoFinanziamento());
         sisma.setCodiceIntervento(pigSismaProgettiAg.getCodiceIntervento());
-        SismaHelper.DatiAnagraficiDto dto = sismaEjb
+        DatiAnagraficiDto dto = sismaEjb
                 .getDatiVersatoreByIdVers(BigDecimal.valueOf(sismaDaInviare.getPigVer().getIdVers()), sismaDaInviare);
         sisma.setSoggettoATutela(
                 sismaDaInviare.getFlInterventoSoggettoATutela().equals(Constants.DB_TRUE) ? "SI" : "NO");
@@ -583,7 +577,7 @@ public class InvioSismaEjb {
             tipoDocumento.setNomeFileVersato(nomeFileVersato + ".zip");
             tipiDocumento.getTipoDocumento().add(tipoDocumento);
         }
-        if (tipiDocumento.getTipoDocumento().size() > 0) {
+        if (!tipiDocumento.getTipoDocumento().isEmpty()) {
             sisma.setTipiDocumento(tipiDocumento);
         }
         sisma.setTipiDocumento(tipiDocumento);
@@ -593,7 +587,7 @@ public class InvioSismaEjb {
         return xml;
     }
 
-    private String marshallXmlInvioSisma(ProgettiSisma sisma) throws ValidationException, MarshalException, Exception {
+    private String marshallXmlInvioSisma(ProgettiSisma sisma) throws JAXBException {
         StringWriter tmpWriter = new StringWriter();
         // Eseguo il marshalling degli oggetti creati
         Marshaller udMarshaller = xmlContextCache.getInvioSismaCtx_InvioSisma().createMarshaller();

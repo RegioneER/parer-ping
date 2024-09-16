@@ -59,6 +59,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -1038,7 +1039,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         }
     }
 
-    public void download() throws EMFError {
+    public void download() throws EMFError, IOException {
         log.debug(">>>DOWNLOAD");
         String filename = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name());
         String path = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILEPATH.name());
@@ -1079,8 +1080,8 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                     freeze();
                 }
                 // Nel caso sia stato richiesto, elimina il file
-                if (deleteFile) {
-                    fileToDownload.delete();
+                if (deleteFile.booleanValue()) {
+                    Files.delete(fileToDownload.toPath());
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");

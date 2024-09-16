@@ -82,7 +82,7 @@ public class ControlliInvioOggettoAsincrono {
      *            codice versione xml
      * @param compat
      *            lista elementi di tipo String
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaVersioneXML(String cdVersioneXml, String[] compat) {
@@ -111,7 +111,7 @@ public class ControlliInvioOggettoAsincrono {
      *            flag 1/0 (true/false)
      * @param dlMotivazione
      *            descrizione motivazione
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaAccettazioneMotivazione(Long idTipoObject, boolean flForzaAccettazione,
@@ -140,7 +140,7 @@ public class ControlliInvioOggettoAsincrono {
      *            codice versione
      * @param xml
      *            contenuto xml
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaPresenzaXml(String cdVersioneXml, String xml) {
@@ -162,7 +162,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id tipo oggetto
      * @param xml
      *            contenuto xml
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaTipoVersamento(Long idTipoObject, String xml) {
@@ -213,7 +213,7 @@ public class ControlliInvioOggettoAsincrono {
      *            contenuto xml
      * @param cdKeyObject
      *            chiave oggetto
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaStudioDicom(Long idTipoObject, String xml, String cdKeyObject) {
@@ -236,7 +236,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id tipo oggetto
      * @param versioneDatiSpecifici
      *            versione dati specifici
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     // MEV27034 - rinominata da verificaVersioneDatiSpecifici(...)
@@ -300,7 +300,7 @@ public class ControlliInvioOggettoAsincrono {
      *            nome tipo file
      * @param versioneDatiSpecificiFile
      *            versione dati specifici
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaTipoFileObject(Long idTipoObject, String nmTipoFileObject,
@@ -355,7 +355,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id tipo oggetto
      * @param sizeUnitaDocs
      *            numero documento unita doc
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaUdInXml(Long idTipoObject, int sizeUnitaDocs) {
@@ -379,7 +379,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id tipo oggetto
      * @param chiave
      *            valore chiave
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaChiave(Long idTipoObject, it.eng.sacerasi.ws.xml.invioAsync.ChiaveType chiave) {
@@ -404,7 +404,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id tipo oggetto
      * @param files
      *            file di tipo {@link it.eng.sacerasi.ws.xml.invioAsync.UnitaDocumentariaType.Files}
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaFiles(Long idTipoObject,
@@ -431,7 +431,7 @@ public class ControlliInvioOggettoAsincrono {
      *
      * @param sopClassList
      *            elemento di tipo {@link SOPClassList}
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaSopClassList(SOPClassList sopClassList) {
@@ -452,7 +452,7 @@ public class ControlliInvioOggettoAsincrono {
      *
      * @param modalityInStudyList
      *            elemento di tipo {@link ModalityInStudyList}
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaModalityStudio(ModalityInStudyList modalityInStudyList) {
@@ -495,7 +495,7 @@ public class ControlliInvioOggettoAsincrono {
      *            path ftp
      * @param tiVersFile
      *            tipo file versamento
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaStatoOggetto(Long idObject, boolean flForzaAccettazione, String ftpPath,
@@ -581,7 +581,7 @@ public class ControlliInvioOggettoAsincrono {
      *            nome tipo oggetto
      * @param tiVersFile
      *            tipo file versamento
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaModificaTipoOggetto(Long idObject, String nmTipoObject, String tiVersFile) {
@@ -629,7 +629,7 @@ public class ControlliInvioOggettoAsincrono {
      *            hash
      * @param flForzaWarning
      *            flag 1/0 (true/false)
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaOggettoDicom(Long idTipoObj, String dcmHash, boolean flForzaWarning) {
@@ -706,7 +706,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id oggetto
      * @param stato
      *            stato oggetto
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaUltimaSessioneOggetto(Long idObject, Constants.StatoOggetto stato) {
@@ -740,7 +740,7 @@ public class ControlliInvioOggettoAsincrono {
      *            id padre
      * @param pgObjectFiglio
      *            id figlio
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaOggettoFiglio(Long idObjectPadre, BigDecimal pgObjectFiglio) {
@@ -800,7 +800,7 @@ public class ControlliInvioOggettoAsincrono {
      *
      * @param idObject
      *            id oggetto
-     * 
+     *
      * @return true se esiste almeno una unità doc
      */
     public RispostaControlli verificaFigliVersati(Long idObject) {

@@ -77,6 +77,7 @@ import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.ws.client.KettleWsClient;
 import it.eng.xformer.ws.client.KettleWsExecuteTrasformationClient;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 
 /**
@@ -201,9 +202,6 @@ public class RepositoryManagerEjb {
                 table = (XfoTrasfTableBean) Transform.entities2TableBean(trasformazioni);
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
                     | IllegalArgumentException | InvocationTargetException ex) {
-                logger.error(
-                        "Errore durante il recupero delle trasformazioni: " + ExceptionUtils.getRootCauseMessage(ex),
-                        ex);
                 throw new ParerUserError(
                         "Errore durante il recupero delle trasformazioni: " + ExceptionUtils.getRootCauseMessage(ex));
             }
@@ -285,7 +283,8 @@ public class RepositoryManagerEjb {
         }
     }
 
-    public boolean insertTransformationInKettleRepository(String versionComment, byte[] zipPackage, XfoTrasf xfoTrasf) {
+    public boolean insertTransformationInKettleRepository(String versionComment, byte[] zipPackage, XfoTrasf xfoTrasf)
+            throws IOException {
         // crea la cartella temporane dove decomprimerlo
         File workingDirectory = new File(
                 configurationHelper.getValoreParamApplicByApplic(Constants.XFO_WORK_DIR_PARAM_NAME));
@@ -332,18 +331,16 @@ public class RepositoryManagerEjb {
                                 kwsClient.inserisciCartella(entry.getName());
                             }
                         } else {
-                            logger.warn("Il file " + entry.getName()
-                                    + " è stato escluso durante l'inserimento della trasformazione "
-                                    + xfoTrasf.getCdTrasf());
+                            logger.warn("Il file {} è stato escluso durante l'inserimento della trasformazione {}",
+                                    entry.getName(), xfoTrasf.getCdTrasf());
                         }
                     }
                 }
             } catch (KettleException | IOException ke) {
-                logger.error("Errore nell'inserimento della trasformazione durante il dialogo con il repository: "
-                        + ke.getMessage());
+                logger.error("Errore nell'inserimento della trasformazione durante il dialogo con il repository", ke);
                 return false;
             } finally {
-                temporaryDirectory.delete();
+                Files.delete(temporaryDirectory.toPath());
             }
 
         } else {
@@ -511,8 +508,6 @@ public class RepositoryManagerEjb {
 
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
                     | IllegalArgumentException | InvocationTargetException ex) {
-                logger.error("Errore durante il recupero delle versioni della trasformazione: "
-                        + ExceptionUtils.getRootCauseMessage(ex), ex);
                 throw new ParerUserError("Errore durante il recupero delle versioni della trasformazione: "
                         + ExceptionUtils.getRootCauseMessage(ex));
             }
@@ -555,8 +550,6 @@ public class RepositoryManagerEjb {
 
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
                     | IllegalArgumentException | InvocationTargetException ex) {
-                logger.error("Errore durante il recupero delle versioni della trasformazione: "
-                        + ExceptionUtils.getRootCauseMessage(ex), ex);
                 throw new ParerUserError("Errore durante il recupero delle versioni della trasformazione: "
                         + ExceptionUtils.getRootCauseMessage(ex));
             }
@@ -598,7 +591,7 @@ public class RepositoryManagerEjb {
                         try {
                             me.deleteTransformationFromRepository(trasf.getBlTrasf());
                         } catch (KettleException ke) {
-                            logger.warn("Cancellazione della trasformazione da kettle fallita: " + ke.getMessage());
+                            logger.warn("Cancellazione della trasformazione da kettle fallita", ke);
                         }
                     }
 

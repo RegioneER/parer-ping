@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the MON_V_VIS_OBJ_TRASF database table.
- * 
+ *
  */
 @Entity
 @Table(name = "MON_V_VIS_OBJ_TRASF")

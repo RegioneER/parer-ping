@@ -30,7 +30,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the PIG_SISMA_FINANZIAMENTO database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_SISMA_FINANZIAMENTO")

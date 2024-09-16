@@ -22,37 +22,34 @@
  */
 package it.eng.sacerasi.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author MIacolucci
- */
-public class GenericDto {
+public class GenericDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private ArrayList<String> infoMessages = new ArrayList<>();
     private ArrayList<String> warnMessages = new ArrayList<>();
 
     public boolean existsMessages() {
-        if (infoMessages.isEmpty() && warnMessages.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return infoMessages.isEmpty() && warnMessages.isEmpty();
     }
 
     public boolean existsInfoMessages() {
-        return (infoMessages.isEmpty() ? false : true);
+        return !infoMessages.isEmpty();
     }
 
     public boolean existsWarnMessages() {
-        return (warnMessages.isEmpty() ? false : true);
+        return !warnMessages.isEmpty();
     }
 
-    public ArrayList<String> getInfoMessages() {
+    public List<String> getInfoMessages() {
         return infoMessages;
     }
 
-    public ArrayList<String> getWarnMessages() {
+    public List<String> getWarnMessages() {
         return warnMessages;
     }
 

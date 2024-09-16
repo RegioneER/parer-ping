@@ -28,7 +28,7 @@ package it.eng.sacerasi.exception;
 public class MessageBundleNotFoundException extends RuntimeException {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 6923294062644864262L;
 

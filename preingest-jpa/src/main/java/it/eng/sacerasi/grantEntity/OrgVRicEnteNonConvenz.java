@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the ORG_V_RIC_ENTE_NON_CONVENZ database table.
- * 
+ *
  */
 @Entity
 @Table(schema = "SACER_IAM", name = "ORG_V_RIC_ENTE_NON_CONVENZ")

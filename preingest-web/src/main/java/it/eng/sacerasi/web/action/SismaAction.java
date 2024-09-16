@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,16 +61,21 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.common.Constants.TipoVersatore;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
 import it.eng.sacerasi.entity.PigSismaProgettiAg;
 import it.eng.sacerasi.messages.MessaggiHelper;
+import it.eng.sacerasi.sisma.dto.DatiAnagraficiDto;
+import it.eng.sacerasi.sisma.dto.DocUploadDto;
+import it.eng.sacerasi.sisma.dto.EsitoSalvataggioSisma;
+import it.eng.sacerasi.sisma.dto.NavigazioneSismaDto;
 import it.eng.sacerasi.sisma.dto.RicercaSismaDTO;
+import it.eng.sacerasi.sisma.dto.SismaDto;
 import it.eng.sacerasi.sisma.ejb.SismaEjb;
-import it.eng.sacerasi.sisma.ejb.SismaEjb.DocUploadDto;
-import it.eng.sacerasi.sisma.ejb.SismaEjb.SismaDto;
 import it.eng.sacerasi.sisma.ejb.SismaHelper;
 import it.eng.sacerasi.sisma.ejb.VerificaDocumentiSismaEjb;
 import it.eng.sacerasi.slite.gen.Application;
@@ -94,7 +100,6 @@ import it.eng.spagoLite.message.Message.MessageLevel;
 import it.eng.spagoLite.message.MessageBox;
 import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.SuppressLogging;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 
 /**
  *
@@ -139,18 +144,13 @@ public class SismaAction extends SismaAbstractAction {
     @Override
     public void delete(Fields<Field> fields) throws EMFError {
         //
-        java.util.Enumeration<String> e = getSession().getAttributeNames();
-        while (e.hasMoreElements()) {
-            String nextElement = e.nextElement();
-
-        }
     }
 
     private boolean isUtenteAgenzia() {
         boolean flag = false;
         Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_UTENTE);
-        if (tipo.equals(tipo.AGENZIA)) {
+        if (tipo.equals(TipoVersatore.AGENZIA)) {
             flag = true;
         }
         return flag;
@@ -329,7 +329,7 @@ public class SismaAction extends SismaAbstractAction {
 
         } else if (stato.equals(PigSisma.TiStato.DA_VERIFICARE.name())
                 || stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
-            SismaEjb.SismaDto sismaDto = new SismaDto();
+            SismaDto sismaDto = new SismaDto();
 
             getForm().getDocumentiCaricatiList().post(getRequest());
 
@@ -416,7 +416,7 @@ public class SismaAction extends SismaAbstractAction {
         forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
     }
 
-    private void saveDettaglio1(SismaEjb.SismaDto sismaDto, BigDecimal idSisma) throws EMFError {
+    private void saveDettaglio1(SismaDto sismaDto, BigDecimal idSisma) throws EMFError {
         getForm().getDocumentiCaricatiList().post(getRequest());
         HashMap<BigDecimal, String> mappa = new HashMap<>();
         for (Iterator<? extends BaseRowInterface> iterator = getForm().getDocumentiCaricatiList().getTable()
@@ -635,7 +635,7 @@ public class SismaAction extends SismaAbstractAction {
         }
     }
 
-    private SismaHelper.DatiAnagraficiDto inizializzaWizard(BigDecimal idVersatore, BigDecimal idSisma) {
+    private DatiAnagraficiDto inizializzaWizard(BigDecimal idVersatore, BigDecimal idSisma) {
         getForm().getDatiGeneraliOutput().clear();
         getForm().getDatiGeneraliInput().clear();
         getForm().getDatiProfiloArchivistico().clear();
@@ -886,7 +886,7 @@ public class SismaAction extends SismaAbstractAction {
         } else {
             // TUTTI I PULSANTI SONO GIA' READONLY !!!
             if (statoSisma.equals(PigSisma.TiStato.BOZZA.name())) {
-                SismaEjb.NavigazioneSismaDto dto = sismaEjb.getDatiNavigazionePerSisma(idSisma);
+                NavigazioneSismaDto dto = sismaEjb.getDatiNavigazionePerSisma(idSisma);
                 if (dto.isFileMancante()) {
                     // Lascia tutti i pulsanti disabilitati
                 } else if (sismaEjb.existsPigSismaDocumentiDaVerificare(idSisma)) {
@@ -1010,8 +1010,8 @@ public class SismaAction extends SismaAbstractAction {
 
                         // MAC 30844
                         // I dati del versatore sono quelli del versatore dell'utente SA di qualsiasi tipo
-                        SismaHelper.DatiAnagraficiDto dtoDA = sismaEjb.getDatiVersatoreByIdVers(
-                                getVersatoreDellUtenteLoggato(), BigDecimal.valueOf(dto.getIdSisma()));
+                        DatiAnagraficiDto dtoDA = sismaEjb.getDatiVersatoreByIdVers(getVersatoreDellUtenteLoggato(),
+                                BigDecimal.valueOf(dto.getIdSisma()));
                         getForm().getDatiGeneraliOutput().getSoggetto_attuatore_out()
                                 .setValue(dtoDA.getSoggettoAttuatore());
 
@@ -1190,9 +1190,8 @@ public class SismaAction extends SismaAbstractAction {
 
     @Override
     public void versaSisma() throws Throwable {
-        SismaEjb.EsitoSalvataggioSisma esito = sismaEjb.versaSisma(
-                getForm().getDatiGeneraliOutput().getId_sisma_out().parse(), getUser().getIdUtente(),
-                getUser().getIdOrganizzazioneFoglia());
+        EsitoSalvataggioSisma esito = sismaEjb.versaSisma(getForm().getDatiGeneraliOutput().getId_sisma_out().parse(),
+                getUser().getIdUtente(), getUser().getIdOrganizzazioneFoglia());
         if (esito.isOk()) {
             loadSisma();
             forwardToPublisher(Application.Publisher.SISMA);
@@ -1226,7 +1225,7 @@ public class SismaAction extends SismaAbstractAction {
 
         if (getMessageBox().isEmpty()) {
             salvaDatiAgenzia(getForm().getDatiGeneraliOutput().getId_sisma_out().parse().longValueExact());
-            SismaEjb.EsitoSalvataggioSisma esitoSalvataggio = sismaEjb.versaSisma(
+            EsitoSalvataggioSisma esitoSalvataggio = sismaEjb.versaSisma(
                     getForm().getDatiGeneraliOutput().getId_sisma_out().parse(), getUser().getIdUtente(),
                     getUser().getIdOrganizzazioneFoglia());
             if (esitoSalvataggio.isOk()) {
@@ -1404,7 +1403,7 @@ public class SismaAction extends SismaAbstractAction {
         }
     }
 
-    public void download() throws EMFError {
+    public void download() throws EMFError, IOException {
         log.debug(">>>DOWNLOAD");
         String filename = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name());
         String path = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILEPATH.name());
@@ -1446,7 +1445,7 @@ public class SismaAction extends SismaAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (Boolean.TRUE.equals(deleteFile)) {
-                    fileToDownload.delete();
+                    Files.delete(fileToDownload.toPath());
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");
@@ -1732,9 +1731,9 @@ public class SismaAction extends SismaAbstractAction {
     }
 
     // MAC 30844
-    private SismaHelper.DatiAnagraficiDto inizializzaDatiGenerali(BigDecimal idVersatore, BigDecimal idSisma) {
+    private DatiAnagraficiDto inizializzaDatiGenerali(BigDecimal idVersatore, BigDecimal idSisma) {
         // I dati del versatore sono quelli del versatore dell'utente SA di qualsiasi tipo
-        SismaHelper.DatiAnagraficiDto dto = sismaEjb.getDatiVersatoreByIdVers(idVersatore, idSisma);
+        DatiAnagraficiDto dto = sismaEjb.getDatiVersatoreByIdVers(idVersatore, idSisma);
         getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(PigSisma.TiStato.BOZZA.name());
         if (dto != null) {
             getForm().getDatiGeneraliOutput().getEnte_proprietario_out().setValue(dto.getEnteProprietario());

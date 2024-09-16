@@ -73,11 +73,11 @@ public class KettleWsExecuteTrasformationClient {
      * caso di esito positivo deve essere <tt>TRASFORMAZIONE_IN_CORSO</tt> .
      *
      * @param idOggetto id del <tt>PIG_OBJECT</tt> relativo alla <em>Trasformazione</em>.
-     * 
+     *
      * @param nomeTrasformazione nome <em>univoco</em> della trasformazione
-     * 
+     *
      * @param parametri della trasformazioni (definiti sul repository kettle)
-     * 
+     *
      * @return Esito dell'avvenuto lancio della trasformazione
      */
     public Esito eseguiTrasformazione(long idOggetto, String nomeTrasformazione, Map<String, String> parametri)
@@ -99,12 +99,12 @@ public class KettleWsExecuteTrasformationClient {
 
     /**
      * Inserimento del job di kettle. Necessario utilizzare <em>MTOM</em> per trasferire il file.
-     * 
+     *
      * @param jobXmlFile
      *            file xml
      * @param versionComment
      *            versione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -123,12 +123,12 @@ public class KettleWsExecuteTrasformationClient {
 
     /**
      * Inserimento della trasformation di kettle. Necessario utilizzare <em>MTOM</em> per trasferire il file.
-     * 
+     *
      * @param transformationXmlFile
      *            file trasformazione xml
      * @param versionComment
      *            versione
-     * 
+     *
      * @throws KettleException
      *             errore generico
      */
@@ -150,10 +150,10 @@ public class KettleWsExecuteTrasformationClient {
      *
      * @param nomeCartella
      *            nome della cartella/trasformazione
-     * 
+     *
      * @throws KettleException
      *             errore generico
-     * 
+     *
      */
     public void inserisciCartella(String nomeCartella) throws KettleException {
         EsitoCartella esito = client.inserisciCartella(nomeCartella);
@@ -167,10 +167,10 @@ public class KettleWsExecuteTrasformationClient {
      *
      * @param nomeCartella
      *            nome della cartella/trasformazione
-     * 
+     *
      * @throws KettleException
      *             errore generico
-     * 
+     *
      */
     public void eliminaCartella(String nomeCartella) throws KettleException {
         EsitoCartella esito = client.eliminaCartella(nomeCartella);
@@ -184,14 +184,14 @@ public class KettleWsExecuteTrasformationClient {
      *
      * @param nomeTrasformazione
      *            nome della trasformazione/cartella.
-     * 
+     *
      * @return Lista dei parametri associati alla trasformazione/cartella.
-     * 
+     *
      * @throws KettleException
      *             errore generico
      * @throws KettleServiceException
      *             errore generico
-     * 
+     *
      */
     @WebResult(name = "ParametriList")
     public Map<String, String> ottieniParametri(String nomeTrasformazione)
@@ -220,12 +220,12 @@ public class KettleWsExecuteTrasformationClient {
      *
      * @param nomeCartella
      *            nome della trasformazione/cartella.
-     * 
+     *
      * @return esitenza della cartella
-     * 
+     *
      * @throws KettleException
      *             errore generico
-     * 
+     *
      */
     @WebResult(name = "Esistenza")
     public boolean esistenzaCartella(String nomeCartella) throws KettleException {

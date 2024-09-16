@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>6.0.1-SNAPSHOT</version>
+        <version>6.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sacerping-jboss-ejb</artifactId>
@@ -43,6 +43,10 @@
                     <groupId>commons-beanutils</groupId>
                     <artifactId>commons-beanutils</artifactId>
                 </exclusion>
+                <exclusion>
+                	<groupId>org.opensaml</groupId>
+                	<artifactId>opensaml</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -63,15 +67,10 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-        </dependency>
         <dependency>  
             <groupId>org.jboss.spec</groupId>  
             <artifactId>jboss-jakartaee-8.0</artifactId>  
             <type>pom</type>  
-            <scope>provided</scope>  
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -131,6 +130,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
@@ -208,7 +208,7 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <scope>provided</scope>
+            <scope>provided</scope>            
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -236,11 +236,10 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-        </dependency>		        
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+		</dependency>                     
     </dependencies>
 
     <build>

@@ -22,12 +22,10 @@
 		<href>${this.url}</href>
 	</bannerLeft>
 
-	<edit>${this.scm.url}</edit>
-
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
-		<version>1.9</version>
+		<version>1.11.0</version>
 	</skin>
 
 	<body>
@@ -35,39 +33,12 @@
 			<item name="Ref" href="../${this.version}/" />
 		</breadcrumbs>
 
-		<!-- <menu name="Overview"> -->
-		<!-- <item name="Introduction" href="index.html"/> -->
-		<!-- <item name="JavaDocs" href="apidocs/index.html"/> -->
-		<!-- <item name="Source" href="./index.html"/> -->
-		<!-- item name="FAQ" href="faq.html"/ -->
-		<!-- <item name="License" href="http://www.apache.org/licenses/"/> -->
-		<!-- <item name="Download" href="/download.html"/> -->
-		<!-- </menu> -->
-
-		<!-- <menu name="Descriptors Reference"> -->
-		<!-- <item name="POM" href="./maven-model/maven.html"/> -->
-		<!-- <item name="Settings" href="./maven-settings/settings.html"/> -->
-		<!-- <item name="Toolchains" href="./maven-core/toolchains.html"/> -->
-		<!-- </menu> -->
-
-		<!-- <menu name="Reference"> -->
-		<!-- <item name="Lifecycles" href="./maven-core/lifecycles.html"/> -->
-		<!-- <item name="Plugin Bindings to Default Lifecycle" href="./maven-core/default-bindings.html"/> -->
-		<!-- <item name="Artifact Handlers" href="./maven-core/artifact-handlers.html"/> -->
-		<!-- <item name="CLI options" href="./maven-embedder/cli.html"/> -->
-		<!-- </menu> -->
-
-		<!-- <menu name="Development"> -->
-		<!-- <item name="Maven Developer Centre" href="../../developers/index.html"/> -->
-		<!-- <item name="Maven Core ITs" href="../../core-its/index.html"/> -->
-		<!-- </menu> -->
-		
-		<!--punta ai file generati dalla CI in automatico -->
+    <!--punta ai file generati dalla CI in automatico -->
 		<menu name="What's new" inherit="top">
 			<item name="Release notes" href="RELEASE-NOTES.html"></item>
 			<item name="Changelog" href="CHANGELOG.html"></item>
 		</menu>
-		
+	
 		<menu ref="modules" inherit="top" />
 		<menu ref="reports" inherit="top" />
 	</body>

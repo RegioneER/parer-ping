@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -595,7 +596,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                     // MEV#14100 - De il file è già presente nella destinazione lo elimina così la move non esplode
                     File fileDestinazione = FileUtils.getFile(ftpPathDir, file.getName());
                     if (fileDestinazione != null) {
-                        fileDestinazione.delete();
+                        Files.delete(fileDestinazione.toPath());
                     }
                     FileUtils.moveFileToDirectory(file, ftpPathDir, true);
                     // Messaggio per l'utente

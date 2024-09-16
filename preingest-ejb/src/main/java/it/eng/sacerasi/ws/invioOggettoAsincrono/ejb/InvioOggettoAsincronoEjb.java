@@ -103,7 +103,7 @@ public class InvioOggettoAsincronoEjb {
 
         /*
          * MEV #15914: Accettare in automatico gli studi in warning, tenendo traccia del warning
-         * 
+         *
          * Nel caso in cui il parametro ACCETTA_STUDI_IN_WARNING (sul versatore o sull'ambiente o sull'applicazione) sia
          * impostato a TRUE, se la prima chiamata genera un warning allora riverso lo stesso oggetto con una forzatura e
          * una motivazione. La stessa cosa che dovrebbe fare il DPI facendolo a mano dall'applicazione.
@@ -496,9 +496,9 @@ public class InvioOggettoAsincronoEjb {
     private void setRispostaWsError(RispostaWSInvioOggettoAsincrono rispostaWs, RispostaControlli rispostaControlli,
             SeverityEnum sev, Constants.EsitoServizio esito) {
         /*
-         * 
+         *
          * rispostaWs.getSeverity().equals(SeverityEnum.WARNING)
-         * 
+         *
          * switch (rispostaWs.getSeverity()) { case OK: // Nessun errore nei controlli
          * ioaExt.setStatoSessione(Constants.StatoSessioneIngest.IN_ATTESA_FILE); ioaExt.setDtChiusura(null); break;
          * case WARNING: ioaExt.setStatoSessione(Constants.StatoSessioneIngest.WARNING); ioaExt.setDtChiusura(null);

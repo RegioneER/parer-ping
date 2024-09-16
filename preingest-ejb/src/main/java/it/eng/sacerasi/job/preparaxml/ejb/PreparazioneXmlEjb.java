@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -51,8 +53,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationException;
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -409,7 +409,7 @@ public class PreparazioneXmlEjb {
                         new File(oggettoInCoda.getListaFileObjectExt().get(0).getUrnFile()).getParentFile().toPath(),
                         "tp_", attributeDir);
 
-                Enumeration<? extends ZipArchiveEntry> zipEntries = zipFile.getEntries();
+                Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
                 // questi attributi POSIX verranno imposti ai file temporanei estratti dal file ZIP
                 Set<PosixFilePermission> permsFile = PosixFilePermissions.fromString("rw-rw-r--");
                 FileAttribute<Set<PosixFilePermission>> attributeFile = PosixFilePermissions.asFileAttribute(permsFile);
@@ -428,7 +428,7 @@ public class PreparazioneXmlEjb {
                 boolean isZipEmpty = true;
 
                 while (zipEntries.hasMoreElements() && oggettoInCoda.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                    ZipArchiveEntry tmpArchiveEntry = zipEntries.nextElement();
+                    ZipEntry tmpArchiveEntry = zipEntries.nextElement();
 
                     if (tmpArchiveEntry.isDirectory()) {
                         // evita di elaborare le entry di tipo directory
@@ -662,7 +662,7 @@ public class PreparazioneXmlEjb {
         }
     }
 
-    private void leggiDaZipFile(OutputStream os, ZipFile zipfile, ZipArchiveEntry entry) throws IOException {
+    private void leggiDaZipFile(OutputStream os, ZipFile zipfile, ZipEntry entry) throws IOException {
         final int CNST_BUFFER = 1024 * 512;
         BufferedOutputStream dest = new BufferedOutputStream(os, CNST_BUFFER);
         BufferedInputStream zis = new BufferedInputStream(zipfile.getInputStream(entry));
@@ -683,8 +683,7 @@ public class PreparazioneXmlEjb {
         return directoryBase + filePath.subpath(tmpCnt - 2, tmpCnt);
     }
 
-    private FileUnitaDoc gestEntryZipConXml(ZipArchiveEntry archiveEntry, UnitaDocObject unitaDocObject,
-            Matcher matcher) {
+    private FileUnitaDoc gestEntryZipConXml(ZipEntry archiveEntry, UnitaDocObject unitaDocObject, Matcher matcher) {
         if (matcher.group(CNST_FILE).equalsIgnoreCase(matcher.group(CNST_DIRECTORY) + ".xml")) {
             unitaDocObject.setUrnUDXml(archiveEntry.getName());
             // se il file si chiama come la directory più l'estensione .xml, devo leggerne il contenuto.
@@ -714,7 +713,7 @@ public class PreparazioneXmlEjb {
         }
     }
 
-    private FileUnitaDoc gestEntryZipNoXml(ZipArchiveEntry archiveEntry, UnitaDocObject unitaDocObject, Matcher matcher,
+    private FileUnitaDoc gestEntryZipNoXml(ZipEntry archiveEntry, UnitaDocObject unitaDocObject, Matcher matcher,
             OggettoInCoda oggettoInCoda, PigTipoObject pigTipoObject, PigObject pigObject) {
         /*
          * RegExp ^([^/\^]+)\^([^/]+)$
@@ -954,9 +953,9 @@ public class PreparazioneXmlEjb {
      * per caricare la struttura dichiarata
      *
      * @param tmpUnitaDocObject
-     * 
+     *
      * @return istanza di UnitaDocumentaria corrispondente all'XML del SIP
-     * 
+     *
      * @throws JAXBException
      */
     private it.eng.parer.ws.xml.versReq.UnitaDocumentaria caricaStruttAbilDaXmlSIP(UnitaDocObject tmpUnitaDocObject)

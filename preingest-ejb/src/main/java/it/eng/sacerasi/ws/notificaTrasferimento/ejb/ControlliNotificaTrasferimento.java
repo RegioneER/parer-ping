@@ -455,7 +455,7 @@ public class ControlliNotificaTrasferimento {
      *
      * @throws ObjectStorageException
      *             in caso di errore
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
     public RispostaControlli verificaNomeFileObjectStorage(String bucket, String nomeFileOs)

@@ -27,13 +27,13 @@ import java.util.List;
 
 /*
  * @author Quaranta_M
- * 
+ *
  * La trasformazione funziona purché siano soddisatte le seguenti condizioni:
  *  - nomeRowBean = nome Entity + "RowBean" (NB: Dali tronca una eventuale 's' posta alla fine del nome della entity)
  *  - nomeTableBean = nome Entity + "TableBean"
  *  - i nomi delle variabili degli oggetti referenziati dalle entity (e le PK di tali oggetti) hanno la parte finale del nome uguale alle FK dei rowBean
  *  - le PK Embeddable nelle entity devono avere il nome "id"
- * 
+ *
  */
 
 public class Transform {

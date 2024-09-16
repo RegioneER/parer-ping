@@ -204,7 +204,7 @@ public class AnnullamentoHelper extends GenericHelper {
      *            id padre
      * @param idObjectFiglio
      *            id figlio
-     * 
+     *
      * @return count conteggio
      */
     public Long countFigliNonAnnullati(long idObjectPadre, BigDecimal idObjectFiglio) {
@@ -223,7 +223,7 @@ public class AnnullamentoHelper extends GenericHelper {
      *            id padre
      * @param idObjectFiglio
      *            id figlio
-     * 
+     *
      * @return count conteggio
      */
     public Long countFigliNonAnnullatiOCorretti(long idObjectPadre, BigDecimal idObjectFiglio) {

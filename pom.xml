@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>6.0.1-SNAPSHOT</version>
+    <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -10,25 +10,33 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>parer-pom</artifactId>
-        <version>6.3.1</version>
+        <version>6.4.0</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <!-- Skiptests by default : esecuzione su CI -->
         <skipTests>true</skipTests>
-        <sacer.xmlmodule.version>2.9.0</sacer.xmlmodule.version>
-        <preingest.xmlmodule.version>3.0.17</preingest.xmlmodule.version>
+        <sacer.xmlmodule.version>2.11.0</sacer.xmlmodule.version>
+        <preingest.xmlmodule.version>3.1.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
-        <spagofat.version>6.14.1</spagofat.version>
+        <spagofat.version>6.15.0</spagofat.version>
         <parer-kettle-soap-client.version>2.0.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
         <xadisk.version>1.2.2.5</xadisk.version>
         <javacsv.version>2.0</javacsv.version>
-        <software.amazon.awssdk.version>2.19.26</software.amazon.awssdk.version>  
+        <software.amazon.awssdk.version>2.26.3</software.amazon.awssdk.version>
+        <netty.version>4.1.108.Final</netty.version>
+        <xml-resolver.version>1.2</xml-resolver.version>
+        <tika.version>2.9.2</tika.version>  
+        <opensaml.version>2.6.6</opensaml.version>
+        <!-- WEBJARS -->        
+        <plupload.version>2.3.9</plupload.version>
         <!-- Java 11 - Hibernate jpamodelgen -->
         <hibernate-jpamodelgen-version>5.6.14.Final-redhat-00001</hibernate-jpamodelgen-version>
+        <!-- JBoss EAP -->
+        <cxf-rt.version>3.3.9.redhat-00001</cxf-rt.version>        
     </properties>
 
     <distributionManagement>
@@ -93,11 +101,6 @@
                 <version>${xadisk.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons-compress.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>it.eng.parer</groupId>
                 <artifactId>sacer-xml</artifactId>
                 <version>${sacer.xmlmodule.version}</version>
@@ -132,6 +135,11 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>            
             <dependency>
                 <groupId>net.sourceforge.javacsv</groupId>
                 <artifactId>javacsv</artifactId>
@@ -142,19 +150,27 @@
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>${xerces.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>xml-resolver</groupId>
                 <artifactId>xml-resolver</artifactId>
                 <version>${xml-resolver.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
+                <scope>runtime</scope>
             </dependency>
-            
-            <!-- per xFormer -->
+			<dependency>
+				<groupId>xalan</groupId>
+				<artifactId>serializer</artifactId>
+				<version>${xalan.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- per xFormer -->
             <dependency>
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
@@ -179,13 +195,20 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-transports-http</artifactId>
                 <version>${cxf-rt.version}</version>
+				<exclusions>
+					<!-- JDK 11 org.w3c.dom already included (cant break jars https://issues.apache.org/jira/browse/BATIK-1249) -->				
+					<exclusion>
+						<groupId>xerces</groupId>
+						<artifactId>xercesImpl</artifactId>
+					</exclusion>
+				</exclusions>                
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxws</artifactId>
                 <version>${cxf-rt.version}</version>
             </dependency>
-            <!-- Nota : inserite dipendenze managed (non presenti su EAR) ma transitive su cfx { -->
+			<!-- Nota : inserite dipendenze managed (non presenti su EAR) ma transitive su cfx { -->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-ws-addr</artifactId>
@@ -221,14 +244,14 @@
                 <artifactId>cxf-api</artifactId>
                 <version>${cxf-api.version}</version>
             </dependency>
-            <!-- } -->
-            <!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
+			<!-- } -->
+			<!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
             <dependency>
                 <groupId>it.eng.parer</groupId>
                 <artifactId>idp-jaas-rdbms</artifactId>
                 <version>${idp-jaas-rdbms.version}</version>
             </dependency>
-            <!-- Framework -->
+			<!-- Framework -->
             <dependency>
                 <groupId>it.eng.parer</groupId>
                 <artifactId>spagofat</artifactId>
@@ -236,22 +259,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
-            <!-- Amazon S3
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda-time.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-bom</artifactId>
-                <version>${aws-java-sdk-bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency-->
-            
-            <!-- AWS -->
+
+			<!-- AWS -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
@@ -259,6 +268,48 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Netty AWS-->
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-common</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-buffer</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-transport</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-codec</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-handler</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-resolver</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-transport-native-unix-common</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-transport-classes-epoll</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+                        
             <dependency> 
                 <groupId>joda-time</groupId> 
                 <artifactId>joda-time</artifactId> 
@@ -274,20 +325,55 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>${jaxb-runtime.version}</version>
-            </dependency>   
-             <!--JDK 11 -->
+            </dependency>
             <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${jettison.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>stax</groupId>
+                        <artifactId>stax-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+				<groupId>org.apache.santuario</groupId>
+				<artifactId>xmlsec</artifactId>
+				<version>${xmlsec.version}</version>
+			</dependency>	
+			<!-- apache commons -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <!-- Provided by runtime (JB7) -->            
+			<dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <!--JDK 11 -->
             <dependency>
                 <groupId>javax.xml.ws</groupId>
                 <artifactId>jaxws-api</artifactId>
                 <version>${jaxws-api.version}</version>
                 <scope>provided</scope>
-            </dependency>                                                 			
+            </dependency>
+             <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>${xml-apis.version}</version>
+                <scope>provided</scope>               
+            </dependency>	   
+			<!-- JS webjars -->
+			<dependency>
+			    <groupId>org.webjars.bower</groupId>
+			    <artifactId>plupload</artifactId>
+			    <version>${plupload.version}</version>
+			</dependency>                                                             			
         </dependencies>
     </dependencyManagement>
     <build>
@@ -322,6 +408,14 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <!-- OWASP -->
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <configuration>
+                        <suppressionFile>src/site/owasp/suppress.xml</suppressionFile>
                     </configuration>
                 </plugin>
             </plugins>

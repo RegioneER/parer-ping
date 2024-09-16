@@ -22,10 +22,9 @@
  */
 package it.eng.sacerasi.web.servlet;
 
-import software.amazon.awssdk.utils.IoUtils;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +32,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.core.sync.RequestBody;
+
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
@@ -41,14 +43,15 @@ import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import software.amazon.awssdk.utils.IoUtils;
 
 /**
  *
  * @author Cappelli_F
  */
-public class S3UploadSessionVO {
+public class S3UploadSessionVO implements Serializable {
+
+    private static final long serialVersionUID = 5839957767781074755L;
 
     private static final Logger log = LoggerFactory.getLogger(S3UploadSessionVO.class);
     private BigDecimal idStrumentiUrbanistici;

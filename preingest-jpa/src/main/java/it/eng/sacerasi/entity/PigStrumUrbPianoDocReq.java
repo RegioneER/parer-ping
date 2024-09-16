@@ -30,7 +30,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the PIG_STRUM_URB_PIANO_DOC_REQ database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_STRUM_URB_PIANO_DOC_REQ")

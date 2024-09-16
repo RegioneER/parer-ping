@@ -54,7 +54,7 @@ public class ControlliReplicaUtente {
      *
      * @param idUserIam
      *            l'id dell'utente
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true se esiste l'utente
      *
      */
@@ -81,7 +81,7 @@ public class ControlliReplicaUtente {
      *
      * @param idUserIam
      *            l'id dell'utente
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true se esiste l'utente ed è attivo
      *
      */
@@ -112,7 +112,7 @@ public class ControlliReplicaUtente {
      *
      * @param nmUserid
      *            il nome utente da verificare
-     * 
+     *
      * @return RispostaControlli.isrBoolean() == true se esiste
      *
      */

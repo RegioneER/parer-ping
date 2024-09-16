@@ -53,6 +53,7 @@ public class DownloadSismaServlet extends HttpServlet {
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

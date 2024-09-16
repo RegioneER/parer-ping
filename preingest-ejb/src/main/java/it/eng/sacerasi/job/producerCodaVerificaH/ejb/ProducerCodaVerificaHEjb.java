@@ -61,6 +61,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author Fioravanti_F
  */
+@SuppressWarnings("unchecked")
 @Stateless(mappedName = "ProducerCodaVerificaHEjb")
 @LocalBean
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -103,7 +104,10 @@ public class ProducerCodaVerificaHEjb {
 
     public void inviaMessaggio(PigObject pigObject, String rootFtpValue) throws ParerInternalError {
 
-        try {
+        try (Connection connection = connectionFactory.createConnection();
+                Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+                MessageProducer messageProducer = session.createProducer(queue);) {
+
             PayloadCdPrepXml tmpPayloadCdPrepXml = new PayloadCdPrepXml();
             tmpPayloadCdPrepXml.setIdPigObject(pigObject.getIdObject());
             tmpPayloadCdPrepXml.setIdLastSessioneIngest(pigObject.getIdLastSessioneIngest().longValue());
@@ -112,70 +116,33 @@ public class ProducerCodaVerificaHEjb {
             ObjectMapper mapper = new ObjectMapper();
             String payloadCdPrepXmlJson = mapper.writeValueAsString(tmpPayloadCdPrepXml);
 
-            log.debug(String.format("Apro transazione per la sessione %s",
-                    pigObject.getIdLastSessioneIngest().longValue()));
+            log.debug("Apro transazione per la sessione {}", pigObject.getIdLastSessioneIngest().longValue());
 
-            try {
+            impostaLockStatoVerHash(pigObject.getIdLastSessioneIngest().longValue(),
+                    Constants.StatoVerificaHash.IN_CODA);
 
-                MessageProducer messageProducer = null;
-                Connection connection = null;
-                Session session = null;
-                try {
-                    impostaLockStatoVerHash(pigObject.getIdLastSessioneIngest().longValue(),
-                            Constants.StatoVerificaHash.IN_CODA);
+            TextMessage textMessage = null;
 
-                    TextMessage textMessage = null;
+            log.debug("Creo la connessione alla coda per la sessione {}",
+                    pigObject.getIdLastSessioneIngest().longValue());
 
-                    connection = connectionFactory.createConnection();
+            textMessage = session.createTextMessage();
 
-                    log.debug(String.format("Creo la connessione alla coda per la sessione %s",
-                            pigObject.getIdLastSessioneIngest().longValue()));
+            log.debug("Creo l'oggetto in coda per la sessione {}", pigObject.getIdLastSessioneIngest().longValue());
+            // app selector
+            textMessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_APP, Costanti.PING);
+            textMessage.setStringProperty("queueType", SELETTORE_CODA);
+            textMessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE,
+                    Costanti.PAYLOAD_TYPE_VERIFICAH);
+            textMessage.setText(payloadCdPrepXmlJson);
 
-                    session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
-                    messageProducer = session.createProducer(queue);
+            messageProducer.send(textMessage);
 
-                    textMessage = session.createTextMessage();
+            log.debug("Inviato l'oggetto in coda per la sessione {}", pigObject.getIdLastSessioneIngest().longValue());
 
-                    log.debug(String.format("Creo l'oggetto in coda per la sessione %s",
-                            pigObject.getIdLastSessioneIngest().longValue()));
-                    // app selector
-                    textMessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_APP, Costanti.PING);
-                    textMessage.setStringProperty("queueType", SELETTORE_CODA);
-                    textMessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE,
-                            Costanti.PAYLOAD_TYPE_VERIFICAH);
-                    textMessage.setText(payloadCdPrepXmlJson);
-
-                    messageProducer.send(textMessage);
-
-                    log.debug(String.format("Inviato l'oggetto in coda per la sessione %s",
-                            pigObject.getIdLastSessioneIngest().longValue()));
-
-                } catch (ParerInternalError ex) {
-                    throw ex;
-                } finally {
-                    if (messageProducer != null) {
-                        messageProducer.close();
-                    }
-                    if (session != null) {
-                        session.close();
-                    }
-                    if (connection != null) {
-                        connection.close();
-                    }
-                    log.debug(String.format("Chiusa la connessione per la sessione %s",
-                            pigObject.getIdLastSessioneIngest().longValue()));
-                }
-            } catch (JMSException ex) {
-                // può essere lanciata dalla createObjectMessage, dalla send o dalla close
-                throw new ParerInternalError(ex);
-            }
-            log.debug(String.format("Chiudo transazione per la sessione %s",
-                    pigObject.getIdLastSessioneIngest().longValue()));
-        } catch (SecurityException | IllegalStateException | JsonProcessingException ex) {
+        } catch (SecurityException | IllegalStateException | JsonProcessingException | JMSException ex) {
             throw new ParerInternalError(ex);
         }
-        log.debug("Chiudo transazione per la sessione {}", pigObject.getIdLastSessioneIngest());
-
     }
 
     /*
@@ -228,7 +195,6 @@ public class ProducerCodaVerificaHEjb {
             tmpSessioneIngest.setTiStatoVerificaHash(stato.name());
             entityManager.flush();
         } catch (Exception ex) {
-            log.error("Eccezione", ex);
             throw new ParerInternalError(ex);
         }
     }

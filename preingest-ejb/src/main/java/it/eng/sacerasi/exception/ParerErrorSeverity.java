@@ -19,17 +19,17 @@ package it.eng.sacerasi.exception;
 
 /**
  * Questa classe gestisce le possibili severity utilizzabili all'atto della costruzione di un errore.
- * 
+ *
  * @author Luigi Bellio
  */
 public class ParerErrorSeverity {
     /**
      * Ritorna un <code>boolean</code> con il seguente significato: <em>true</em> il parametro severity in input è
      * valido. <em>false</em> il parametro severity in input non è valido.
-     * 
+     *
      * @param severity
      *            livello log
-     * 
+     *
      * @return <code>boolean</code> la validità della severity passata in input.
      */
     public static boolean isSeverityValid(String severity) {

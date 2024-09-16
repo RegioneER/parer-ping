@@ -56,7 +56,7 @@ public class ControlliRicerca {
      *            xml dati specifici
      * @param xmlDatiSpecOrder
      *            xml dati specifici (ordinamento)
-     * 
+     *
      * @return rispostaControlli, l'esito della verifica
      */
     public RispostaControlli verificaNomeTipoObjectConXML(String nmTipoObject, String xmlDatiSpecFiltri,
@@ -81,7 +81,7 @@ public class ControlliRicerca {
      *            lista dati specifici di tipo {@link DatoSpecFiltroConNomeColonna}
      * @param attribDatiSpecBean
      *            lista attributi {@link AttribDatiSpecBean}
-     * 
+     *
      * @return rispostaControlli, l'esito della verifica e l'insieme dei filtri con l'aggiunta del nome colonna
      *         corrispondente su DB
      */
@@ -207,7 +207,7 @@ public class ControlliRicerca {
      *            lista dati specifici
      * @param listaAttribDatiSpecBean
      *            lista attributi dati specifici di tipo {@link AttribDatiSpecBean}
-     * 
+     *
      * @return rispostaControlli, l'esito della verifica e l'insieme dei dati spec di output con l'aggiunta del nome
      *         colonna corrispondente su DB
      */
@@ -280,7 +280,7 @@ public class ControlliRicerca {
      *            lista dati specifici ordinati per nome colonna di tipo {@link DatoSpecOrderConNomeColonna}
      * @param listaAttribDatiSpecBean
      *            lista attributi dati specifici di tipo {@link AttribDatiSpecBean}
-     * 
+     *
      * @return rispostaControlli, l'esito della verifica e l'insieme dei dati spec di output con relativo ordine, con
      *         l'aggiunta del nome colonna corrispondente su DB
      */
@@ -336,7 +336,7 @@ public class ControlliRicerca {
      *
      * @param idTipoObject
      *            id tipo oggetto
-     * 
+     *
      * @return listaAttribDatiSpecBean, la lista degli attributi dati specifici {@link AttribDatiSpecBean}
      */
     @SuppressWarnings("unchecked")

@@ -87,10 +87,10 @@ public enum OperatoreType {
 
     /**
      * Method fromValue.
-     * 
+     *
      * @param value
      *            stringa da convertire
-     * 
+     *
      * @return the constant for this value
      */
     public static OperatoreType fromValue(final java.lang.String value) {
@@ -102,8 +102,8 @@ public enum OperatoreType {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param value
      *            set del valore
      */
@@ -112,7 +112,7 @@ public enum OperatoreType {
 
     /**
      * Method toString.
-     * 
+     *
      * @return the value of this constant
      */
     public java.lang.String toString() {
@@ -121,7 +121,7 @@ public enum OperatoreType {
 
     /**
      * Method value.
-     * 
+     *
      * @return the value of this constant
      */
     public java.lang.String value() {

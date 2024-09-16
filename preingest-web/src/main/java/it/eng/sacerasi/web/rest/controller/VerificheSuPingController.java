@@ -38,7 +38,7 @@ import it.eng.sacerasi.ws.rest.ejb.ControlliRestWS;
 /**
  *
  * @author S257421
- * 
+ *
  *         MEV#30735 - Rendere indipendente PING da SIAM
  */
 @Controller

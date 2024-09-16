@@ -18,7 +18,6 @@
 package it.eng.sacerasi.exception;
 
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.StringWriter;
 
 import org.slf4j.Logger;
@@ -27,12 +26,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Un'istanza di <code>ParerInternalError</code> rappresenta un errore non codificato. Questo significa che non esiste
  * nessun repository contenente il riferimento a questo errore.
- * 
+ *
  * @version 1.0, 06/03/2002
- * 
+ *
  * @author Luigi Bellio
  */
-public class ParerInternalError extends ParerAbstractError implements Serializable {
+public class ParerInternalError extends ParerAbstractError {
 
     private static final long serialVersionUID = 1L;
     public static final String INTERNAL_ERROR_ELEMENT = "INTERNAL_ERROR";
@@ -58,7 +57,7 @@ public class ParerInternalError extends ParerAbstractError implements Serializab
     /**
      * Costruisce un oggetto di tipo <code>ParerInternalError</code> identificandolo tramite una severity , una
      * descrizione e un'eccezione.
-     * 
+     *
      * @param severity
      *            severity dell'errore.
      * @param description
@@ -100,7 +99,7 @@ public class ParerInternalError extends ParerAbstractError implements Serializab
 
     /**
      * Se l'oggetto è stato costruito ricevendo come parametro un' eccezione questa viene ritornata.
-     * 
+     *
      * @return <code>Exception</code> parametro passato in input.
      */
     public Exception getNativeException() {

@@ -74,7 +74,7 @@ public class RicercaRestituzioniOggettiExecuteQueries {
      *            i valori dei parametri da passare alla query
      * @param rispostaWs
      *            risposta ws {@link RispostaWSRicercaRestituzioniOggetti}
-     * 
+     *
      * @return conta, il risultato della query
      */
     public Long eseguiQueryConta(String queryConta, Map<?, ?> valoriParametriQuery,
@@ -125,7 +125,7 @@ public class RicercaRestituzioniOggettiExecuteQueries {
      *            numero oggetto
      * @param rispostaWs
      *            risposta ws
-     * 
+     *
      * @return ListaOggRicRestOggType, l'oggetto contenente la lista di oggetti, risultato della query ricerca
      */
     @SuppressWarnings("unchecked")

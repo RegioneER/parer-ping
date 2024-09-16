@@ -37,7 +37,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the IAM_ENTE_SIAM_DA_ALLINEA database table.
- * 
+ *
  */
 @Entity
 @Table(name = "IAM_ENTE_SIAM_DA_ALLINEA")

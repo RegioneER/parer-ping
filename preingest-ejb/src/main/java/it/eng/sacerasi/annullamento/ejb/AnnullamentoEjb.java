@@ -53,6 +53,7 @@ import it.eng.parer.ws.xml.richAnnullVers.RichiestaAnnullamentoVersamenti;
 import it.eng.parer.ws.xml.richAnnullVers.RichiestaAnnullamentoVersamenti.VersamentiDaAnnullare;
 import it.eng.parer.ws.xml.richAnnullVers.TipoVersamentoType;
 import it.eng.parer.ws.xml.richAnnullVers.VersamentoDaAnnullareType;
+import it.eng.sacerasi.annullamento.dto.ChiaveUd;
 import it.eng.sacerasi.annullamento.helper.AnnullamentoHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
@@ -638,7 +639,7 @@ public class AnnullamentoEjb {
                                 }
                             }
                         }
-                    } catch (Throwable ex) {
+                    } catch (Exception ex) {
                         throw new ParerUserError(ex.getMessage());
                     }
                     // MEV#14663 - Punto 4.5.5 dell'analisi
@@ -703,7 +704,7 @@ public class AnnullamentoEjb {
 
     /*
      * tiVers = tiVersFile di Tipo Object
-     * 
+     *
      * Annulla un eventuale Strumento urbanistico legato all'oggetto passato
      */
     private void annullamentoEventualeStrumentoUrbanistico(PigObject object, String tiVers) {
@@ -735,7 +736,7 @@ public class AnnullamentoEjb {
 
     /*
      * tiVers = tiVersFile di Tipo Object
-     * 
+     *
      * Annulla un eventuale Sisma legato all'oggetto passato #####DA USARE PER ANULLARE SISMA COME per STRUMENTI
      * URBANISTICI, cercare chiamate a eseguiAnnullamentoEventualeStrumentoUrbanistico!
      */
@@ -885,7 +886,8 @@ public class AnnullamentoEjb {
             logger.error("Eccezione", ex);
             throw new ParerUserError("Errore inatteso nella creazione della richiesta di annullamento");
         }
-        Integer timeout = new Integer(configurationHelper.getValoreParamApplicByApplic(Constants.TIMEOUT_VERS_SACER));
+        Integer timeout = Integer
+                .valueOf(configurationHelper.getValoreParamApplicByApplic(Constants.TIMEOUT_VERS_SACER));
 
         input = new RichiestaSacerInput(RichiestaSacerInput.TipoRichiestaSacer.ANNULLAMENTO,
                 configurationHelper.getValoreParamApplicByApplic(Constants.VERSIONE_XML_ANNUL),
@@ -901,7 +903,7 @@ public class AnnullamentoEjb {
      *            id object
      * @param username
      *            nome dell'utente che ha richiesto l'annullamento
-     * 
+     *
      * @throws ParerUserError
      *             errore generico
      * @throws ParerInternalError
@@ -1069,49 +1071,11 @@ public class AnnullamentoEjb {
                     chiaveUd = new ChiaveUd(annoFiglio, numeroFiglio, registroFiglio);
                 }
             }
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             throw new ParerUserError(ex.getMessage());
         }
 
         return chiaveUd;
-
-    }
-
-    private class ChiaveUd {
-
-        private String anno;
-        private String numero;
-        private String registro;
-
-        public ChiaveUd(String anno, String numero, String registro) {
-            this.anno = anno;
-            this.numero = numero;
-            this.registro = registro;
-        }
-
-        public String getAnno() {
-            return anno;
-        }
-
-        public void setAnno(String anno) {
-            this.anno = anno;
-        }
-
-        public String getNumero() {
-            return numero;
-        }
-
-        public void setNumero(String numero) {
-            this.numero = numero;
-        }
-
-        public String getRegistro() {
-            return registro;
-        }
-
-        public void setRegistro(String registro) {
-            this.registro = registro;
-        }
 
     }
 }

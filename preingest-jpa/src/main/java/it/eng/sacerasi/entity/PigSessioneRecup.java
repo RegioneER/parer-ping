@@ -38,7 +38,7 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_SESSIONE_RECUP database table.
- * 
+ *
  */
 @Entity
 @Table(name = "PIG_SESSIONE_RECUP")

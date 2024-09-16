@@ -101,7 +101,7 @@ public abstract class JobTimer implements JbossJobTimer {
      *
      * @param timer
      *            - timer
-     * 
+     *
      * @throws Exception
      *             errore generico
      */

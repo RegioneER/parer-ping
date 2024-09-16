@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2887,13 +2888,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                     "Errore di compilazione form: inserito il Tipo Calcolo Hash senza aver selezionato il valore in Calcolo Hash in Sacer<br/>");
         }
         /*
-         * 
+         *
          * nm_tipo_doc_sacer OBBLIGATORIO NO_ZIP
-         * 
+         *
          * ti_doc_sacer obbligatorio no_zip
-         * 
+         *
          * nm_tipo_strut_doc_sacer obbligatorio no_zip
-         * 
+         *
          * nm_tipo_comp_doc_sacer obbligatorio no_zip
          */
         String tiVers = getForm().getTipoObject().getTi_vers_file().parse();
@@ -5547,7 +5548,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 
     }
 
-    public void download() throws EMFError {
+    public void download() throws EMFError, IOException {
         log.debug(">>>DOWNLOAD");
         String filename = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name());
         String path = (String) getSession().getAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILEPATH.name());
@@ -5589,7 +5590,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (Boolean.TRUE.equals(deleteFile)) {
-                    fileToDownload.delete();
+                    Files.delete(fileToDownload.toPath());
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");

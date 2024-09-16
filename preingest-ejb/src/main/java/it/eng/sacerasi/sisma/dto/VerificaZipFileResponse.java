@@ -17,16 +17,25 @@
 
 package it.eng.sacerasi.sisma.dto;
 
+import java.io.Serializable;
+
 import it.eng.sacerasi.entity.PigErrore;
 
 /**
  *
  * @author Cappelli_F
  */
-public class VerificaZipFileResponse {
+public class VerificaZipFileResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     PigErrore errore;
     Integer filesCount;
     String report;
+
+    public VerificaZipFileResponse() {
+        super();
+    }
 
     public PigErrore getErrore() {
         return errore;

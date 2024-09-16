@@ -13,7 +13,7 @@ Il modulo software PING (PreINGest) gestisce il processo di preacquisizione nel 
 Requisiti minimi per installazione: 
 
 - Sistema operativo : consigliato Linux server (in alternativa compatibilità con Windows server);
-- Java versione 11 (OpenJDK / Oracle);
+- Java versione 8 (OpenJDK / Oracle);
 - JBoss 7 EAP;
 - Oracle DB (versione consigliata 19c).
 

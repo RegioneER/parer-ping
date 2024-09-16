@@ -22,15 +22,11 @@
  */
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
-import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import javax.ejb.EJB;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -44,9 +40,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
+import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 
 @WebServlet("/MultipartFileUploadToS3Servlet")
 public class MultipartFileUploadToS3Servlet extends HttpServlet {
@@ -75,6 +75,7 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
      * @param resp
      *            The HTTP response
      */
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String responseString = RESP_SUCCESS;
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);

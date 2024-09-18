@@ -30,7 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -44,7 +43,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "PIG_VALORE_SET_PARAM_TRASF")
-@NamedQuery(name = "PigValoreSetParamTrasf.findAll", query = "SELECT p FROM PigValoreSetParamTrasf p")
 public class PigValoreSetParamTrasf implements Serializable {
 
     private static final long serialVersionUID = 1L;

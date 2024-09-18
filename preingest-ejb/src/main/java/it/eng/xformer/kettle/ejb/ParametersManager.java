@@ -36,6 +36,7 @@ import it.eng.sacerasi.entity.XfoParamTrasf;
 import it.eng.sacerasi.entity.XfoSetParamTrasf;
 import it.eng.sacerasi.entity.XfoTrasf;
 import it.eng.sacerasi.exception.ParerUserError;
+import it.eng.sacerasi.slite.gen.tablebean.XfoParamTrasfRowBean;
 import it.eng.sacerasi.slite.gen.tablebean.XfoParamTrasfTableBean;
 import it.eng.sacerasi.slite.gen.tablebean.XfoSetParamTrasfRowBean;
 import it.eng.sacerasi.slite.gen.tablebean.XfoSetParamTrasfTableBean;
@@ -127,10 +128,17 @@ public class ParametersManager {
     public XfoParamTrasfTableBean searchParametersBySet(long idSetParamTrasf) throws ParerUserError {
         XfoParamTrasfTableBean table = new XfoParamTrasfTableBean();
 
-        List<XfoParamTrasf> paramters = helper.searchXfoParamTrasfbySet(idSetParamTrasf);
-        if (paramters != null && !paramters.isEmpty()) {
+        List<XfoParamTrasf> parameters = helper.searchXfoParamTrasfbySet(idSetParamTrasf);
+        if (parameters != null && !parameters.isEmpty()) {
             try {
-                table = (XfoParamTrasfTableBean) Transform.entities2TableBean(paramters);
+                for (XfoParamTrasf paramTrasf : parameters) {
+                    XfoParamTrasfRowBean row = (XfoParamTrasfRowBean) Transform.entity2RowBean(paramTrasf);
+                    if (row.getDsValoreParam() == null) {
+                        row.setDsValoreParam("--");
+                    }
+
+                    table.add(row);
+                }
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
                     | IllegalArgumentException | InvocationTargetException ex) {
                 logger.error("Errore durante il recupero dei parametri: " + ExceptionUtils.getRootCauseMessage(ex), ex);

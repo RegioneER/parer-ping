@@ -105,6 +105,14 @@ public class PigVersRowBean extends BaseRow implements JEEBaseRowInterface {
         setObject("ds_path_trasf", dsPathTrasf);
     }
 
+    public String getDsPathDaVersare() {
+        return getString("ds_path_da_versare");
+    }
+
+    public void setDsPathDaVersare(String dsPathTrasf) {
+        setObject("ds_path_da_versare", dsPathTrasf);
+    }
+
     public Timestamp getDtIniValAppartAmbiente() {
         return getTimestamp("dt_ini_val_appart_ambiente");
     }

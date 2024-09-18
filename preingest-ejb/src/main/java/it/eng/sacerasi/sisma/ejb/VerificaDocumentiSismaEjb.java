@@ -21,9 +21,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
@@ -35,12 +37,16 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
@@ -53,14 +59,8 @@ import it.eng.sacerasi.job.util.VerificheDocumentiSUSismaEtc;
 import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.sisma.dto.VerificaZipFileResponse;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.core.ResponseInputStream;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  *
@@ -188,7 +188,7 @@ public class VerificaDocumentiSismaEjb {
                     report = response.getReport();
                 } finally {
                     if (tempFile != null) {
-                        Files.delete(tempFile.toPath());
+                        FileUtils.deleteQuietly(tempFile);
                     }
                 }
             } else {

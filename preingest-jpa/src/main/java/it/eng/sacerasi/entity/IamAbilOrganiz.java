@@ -31,7 +31,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -45,7 +44,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "IAM_ABIL_ORGANIZ")
-@NamedQuery(name = "IamAbilOrganiz.deleteByIdUser", query = "DELETE FROM IamAbilOrganiz i where i.iamUser = :iamUser")
 public class IamAbilOrganiz implements Serializable {
 
     private static final long serialVersionUID = 1L;

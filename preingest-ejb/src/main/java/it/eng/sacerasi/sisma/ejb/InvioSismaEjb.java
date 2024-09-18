@@ -278,7 +278,7 @@ public class InvioSismaEjb {
                                         addToZipFile(tempFile, zos, nomeFileLowerCase);
                                     } finally {
                                         if (tempFile != null) {
-                                            Files.delete(tempFile.toPath());
+                                            FileUtils.deleteQuietly(tempFile);
                                         }
                                     }
                                 } else {
@@ -417,10 +417,10 @@ public class InvioSismaEjb {
                     genericHelper.getEntityManager().flush();
                 } finally {
                     if (fileXmlVersamento != null) {
-                        Files.delete(fileXmlVersamento.toPath());
+                        FileUtils.deleteQuietly(fileXmlVersamento);
                     }
                     if (fileTemporaneoGenerale != null) {
-                        Files.delete(fileTemporaneoGenerale.toPath());
+                        FileUtils.deleteQuietly(fileTemporaneoGenerale);
                     }
                 }
             }

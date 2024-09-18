@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
+    <version>6.2.0</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -20,7 +20,7 @@
         <sacer.xmlmodule.version>2.11.0</sacer.xmlmodule.version>
         <preingest.xmlmodule.version>3.1.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
-        <spagofat.version>6.15.0</spagofat.version>
+        <spagofat.version>6.15.1</spagofat.version>
         <parer-kettle-soap-client.version>2.0.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
@@ -39,14 +39,14 @@
         <cxf-rt.version>3.3.9.redhat-00001</cxf-rt.version>        
     </properties>
 
-    <distributionManagement>
+<distributionManagement>
         <repository>
 	   <id>github</id>
 	   <url>https://maven.pkg.github.com/RegioneER/parer-ping</url>
 	 </repository>      
     </distributionManagement>
 
-     <repositories>
+<repositories>
         <repository>
             <id>github</id>
             <url>https://maven.pkg.github.com/RegioneER/parer-framework-parerpom</url>            
@@ -452,7 +452,7 @@
         <module>preingest-slg</module>
         <module>preingest-jpa</module>
     </modules>
-    <scm>
+<scm>
         <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
         <tag>HEAD</tag>
     </scm>

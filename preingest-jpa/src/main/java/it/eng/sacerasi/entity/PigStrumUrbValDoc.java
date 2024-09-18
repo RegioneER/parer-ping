@@ -24,7 +24,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,7 +33,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PIG_STRUM_URB_VAL_DOC")
-@NamedQuery(name = "PigStrumUrbValDoc.findAll", query = "SELECT p FROM PigStrumUrbValDoc p")
 public class PigStrumUrbValDoc implements Serializable {
 
     private static final long serialVersionUID = 1L;

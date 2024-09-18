@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -31,7 +30,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PIG_V_VALORE_PARAM_TRASF")
-@NamedQuery(name = "PigVValoreParamTrasf.findAll", query = "SELECT p FROM PigVValoreParamTrasf p")
 public class PigVValoreParamTrasf implements Serializable {
 
     private static final long serialVersionUID = 1L;

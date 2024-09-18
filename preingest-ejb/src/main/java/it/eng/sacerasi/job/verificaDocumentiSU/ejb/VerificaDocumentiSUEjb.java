@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -39,6 +38,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -148,7 +148,7 @@ public class VerificaDocumentiSUEjb {
 
                         } finally {
                             if (tempFile != null) {
-                                Files.delete(tempFile.toPath());
+                                FileUtils.deleteQuietly(tempFile);
                             }
                         }
                     } else {
@@ -295,7 +295,7 @@ public class VerificaDocumentiSUEjb {
 
                 } finally {
                     if (tempFile != null) {
-                        Files.delete(tempFile.toPath());
+                        FileUtils.deleteQuietly(tempFile);
                     }
                 }
             } else {

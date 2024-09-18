@@ -519,7 +519,8 @@ public class SalvataggioDati {
         if (ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento() == null) {
             obj.impostaPrioritaVersamento(pigTipoObject.getTiPrioritaVersamento(), username);
         } else {
-            obj.impostaPrioritaVersamento(ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento(), username);
+            obj.impostaPrioritaVersamento(it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType
+                    .getValueByEnumName(ioaExt.getInvioOggettoAsincronoInput().getTiPrioritaVersamento()), username);
         }
 
         if (ioaExt.getInvioOggettoAsincronoInput() instanceof InvioOggettoAsincronoEstesoInput) {

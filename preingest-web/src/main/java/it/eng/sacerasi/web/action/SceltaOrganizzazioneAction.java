@@ -191,10 +191,6 @@ public class SceltaOrganizzazioneAction extends SceltaOrganizzazioneAbstractActi
             Map<String, String> organizzazione = new LinkedHashMap<>();
             organizzazione.put(WebConstants.organizzazione.AMBIENTE.name(), nmAmbienteVers);
             organizzazione.put(WebConstants.organizzazione.VERSATORE.name(), nmVers);
-            // Parametro messo in sessione per gestire il versatore linkabile lato framework in MenuTag.java
-            getRequest().getSession().setAttribute(WebConstants.organizzazione.VERSATORE_LINK.name(),
-                    "<a href=\"Amministrazione.html?operation=loadVersDaMenu\">" + nmVers + "</a>");
-
             user.setOrganizzazioneMap(organizzazione);
             user.setConfigurazione(configHelper.getConfiguration());
             autenticator.recuperoAutorizzazioni(getSession());

@@ -87,7 +87,7 @@ public class DetailController {
             @PathVariable BigDecimal id, Model model) {
         model.addAttribute("id", id);
 
-        PigVersRowBean row = amministrazioneEjb.getPigVersRowBean(id);
+        PigVersRowBean row = amministrazioneEjb.getPigVersSoloNomeRowBean(id);
         PigVersTableBean table = new PigVersTableBean();
         table.add(row);
         AmministrazioneForm form = new AmministrazioneForm();

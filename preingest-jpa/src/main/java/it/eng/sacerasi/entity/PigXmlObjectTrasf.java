@@ -28,7 +28,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -41,7 +40,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "PIG_XML_OBJECT_TRASF")
-@NamedQuery(name = "PigXmlObjectTrasf.findAll", query = "SELECT p FROM PigXmlObjectTrasf p")
 public class PigXmlObjectTrasf implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long idXmlObjectTrasf;

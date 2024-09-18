@@ -25,7 +25,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,7 +35,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "MON_V_VIS_UNITA_DOC_SESSIONE")
-@NamedQuery(name = "MonVVisUnitaDocSessione.findAll", query = "SELECT m FROM MonVVisUnitaDocSessione m")
 public class MonVVisUnitaDocSessione implements Serializable {
 
     private static final long serialVersionUID = 1L;

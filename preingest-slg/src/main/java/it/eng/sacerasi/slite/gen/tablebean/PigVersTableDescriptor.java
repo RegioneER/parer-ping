@@ -45,6 +45,7 @@ public class PigVersTableDescriptor extends TableDescriptor {
     public static final String COL_DS_PATH_INPUT_FTP = "ds_path_input_ftp";
     public static final String COL_DS_PATH_OUTPUT_FTP = "ds_path_output_ftp";
     public static final String COL_DS_PATH_TRASF = "ds_path_trasf";
+    public static final String COL_DS_PATH_DA_VERSARE = "ds_path_da_versare";
     public static final String COL_DT_INI_VAL_APPART_AMBIENTE = "dt_ini_val_appart_ambiente";
     public static final String COL_DT_FIN_VAL_APPART_AMBIENTE = "dt_fin_val_appart_ambiente";
     public static final String COL_ID_ENTE_CONVENZ = "id_ente_convenz";
@@ -66,6 +67,7 @@ public class PigVersTableDescriptor extends TableDescriptor {
         map.put(COL_DS_PATH_INPUT_FTP, new ColumnDescriptor(COL_DS_PATH_INPUT_FTP, Types.VARCHAR, 254, false));
         map.put(COL_DS_PATH_OUTPUT_FTP, new ColumnDescriptor(COL_DS_PATH_OUTPUT_FTP, Types.VARCHAR, 254, false));
         map.put(COL_DS_PATH_TRASF, new ColumnDescriptor(COL_DS_PATH_TRASF, Types.VARCHAR, 254, false));
+        map.put(COL_DS_PATH_DA_VERSARE, new ColumnDescriptor(COL_DS_PATH_DA_VERSARE, Types.VARCHAR, 254, false));
         map.put(COL_DT_INI_VAL_APPART_AMBIENTE,
                 new ColumnDescriptor(COL_DT_INI_VAL_APPART_AMBIENTE, Types.TIMESTAMP, 7, false));
         map.put(COL_DT_FIN_VAL_APPART_AMBIENTE,

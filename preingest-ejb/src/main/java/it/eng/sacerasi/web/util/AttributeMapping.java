@@ -50,7 +50,7 @@ public class AttributeMapping {
         list.add("cdSopClassDicom");
         list.add("dsSopClassDicom");
         list.add("pigAmbienteVer");
-        list.add("pigUsrAppartUserVers");
+        // list.add("pigUsrAppartUserVers");
 
     }
     // id list to be copied

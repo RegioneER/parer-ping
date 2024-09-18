@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -32,7 +31,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MON_V_LIS_OBJ_TRASF")
-@NamedQuery(name = "MonVLisObjTrasf.findAll", query = "SELECT m FROM MonVLisObjTrasf m")
 public class MonVLisObjTrasf implements Serializable {
     private static final long serialVersionUID = 1L;
     private String cdErr;

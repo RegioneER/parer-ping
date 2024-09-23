@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -33,9 +32,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MON_V_LIS_UNITA_DOC_SESSIONE")
-@NamedQueries({
-        @NamedQuery(name = "MonVLisUnitaDocSessione.findAll", query = "SELECT m FROM MonVLisUnitaDocSessione m"),
-        @NamedQuery(name = "MonVLisUnitaDocSessione.findByIdSessioneIngest", query = "SELECT m.cdErrSacer, min(m.dlErrSacer), min(m.cdConcatDlErrSacer) FROM MonVLisUnitaDocSessione m WHERE m.idSessioneIngest=:idSessioneIngest AND m.cdErrSacer IS NOT NULL GROUP BY m.cdErrSacer ORDER BY m.cdErrSacer") })
+@NamedQuery(name = "MonVLisUnitaDocSessione.findByIdSessioneIngest", query = "SELECT m.cdErrSacer, min(m.dlErrSacer), min(m.cdConcatDlErrSacer) FROM MonVLisUnitaDocSessione m WHERE m.idSessioneIngest=:idSessioneIngest AND m.cdErrSacer IS NOT NULL GROUP BY m.cdErrSacer ORDER BY m.cdErrSacer")
 public class MonVLisUnitaDocSessione implements Serializable {
 
     private static final long serialVersionUID = 1L;

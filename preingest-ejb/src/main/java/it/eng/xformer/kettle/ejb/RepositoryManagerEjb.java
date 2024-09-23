@@ -42,6 +42,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -340,7 +341,7 @@ public class RepositoryManagerEjb {
                 logger.error("Errore nell'inserimento della trasformazione durante il dialogo con il repository", ke);
                 return false;
             } finally {
-                Files.delete(temporaryDirectory.toPath());
+                FileUtils.deleteQuietly(temporaryDirectory);
             }
 
         } else {

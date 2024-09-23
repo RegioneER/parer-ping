@@ -22,6 +22,7 @@
  */
 package it.eng.sacerasi.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(schema = "SACER_IAM", name = "APL_APPLIC")
-public class SIAplApplic {
+public class SIAplApplic implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long idApplic;

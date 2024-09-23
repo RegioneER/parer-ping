@@ -30,7 +30,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -44,7 +43,6 @@ import it.eng.sacerasi.entity.constraint.ConstOrgCollegEntiConvenz.TiColleg;
  */
 @Entity
 @Table(schema = "SACER_IAM", name = "ORG_COLLEG_ENTI_CONVENZ")
-@NamedQuery(name = "OrgCollegEntiConvenz.findAll", query = "SELECT o FROM OrgCollegEntiConvenz o")
 public class OrgCollegEntiConvenz implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long idCollegEntiConvenz;

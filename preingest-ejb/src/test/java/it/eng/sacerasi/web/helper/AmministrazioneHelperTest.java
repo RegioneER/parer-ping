@@ -170,23 +170,6 @@ public class AmministrazioneHelperTest {
     }
 
     @Test
-    @Ignore("deprecato")
-    public void getPigVersDaTrasfTrasfQueryIsOk() {
-        BigDecimal idVers = aBigDecimal();
-        helper.getPigVersDaTrasfTrasf(idVers);
-        assertTrue(true);
-    }
-
-    @Test
-    @Ignore("deprecato")
-    public void getPigVersTrasfComboQueryIsOk() {
-        BigDecimal idAmbienteVers = aBigDecimal();
-        BigDecimal idVers = aBigDecimal();
-        helper.getPigVersTrasfCombo(idAmbienteVers, idVers);
-        assertTrue(true);
-    }
-
-    @Test
     public void getPigVersAbilitatiListQueryIsOk() {
         List<BigDecimal> idVersList = aListOfBigDecimal(2);
         Long idUserIam = aLong();

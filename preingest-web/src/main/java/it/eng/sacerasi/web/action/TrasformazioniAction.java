@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +46,7 @@ import javax.ejb.EJB;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -890,7 +890,7 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (deleteFile) {
-                    Files.delete(fileToDownload.toPath());
+                    FileUtils.deleteQuietly(fileToDownload);
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");
@@ -1096,11 +1096,11 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
             }
 
             if (StringUtils.isBlank(dsValoreTrasf)) {
-                // FIXME e se volessi impostare come parametro di default propio una stringa vuota? Sistemare il db.
-                dsValoreTrasf = "--";
+                dsValoreTrasf = null;
             }
 
-            if (dsValoreTrasf.length() > getForm().getInserimentoParametro().getDs_valore_trasf().getMaxLength()) {
+            if (dsValoreTrasf != null && dsValoreTrasf.length() > getForm().getInserimentoParametro()
+                    .getDs_valore_trasf().getMaxLength()) {
                 getMessageBox().addError("Il valore di dafault del parametro non deve superare i "
                         + getForm().getInserimentoParametro().getDs_valore_trasf().getMaxLength() + " caratteri.");
             }

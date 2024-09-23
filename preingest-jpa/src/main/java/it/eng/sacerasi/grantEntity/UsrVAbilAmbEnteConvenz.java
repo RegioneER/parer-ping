@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -31,7 +30,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(schema = "SACER_IAM", name = "USR_V_ABIL_AMB_ENTE_CONVENZ")
-@NamedQuery(name = "UsrVAbilAmbEnteConvenz.findAll", query = "SELECT u FROM UsrVAbilAmbEnteConvenz u")
 public class UsrVAbilAmbEnteConvenz implements Serializable {
 
     private static final long serialVersionUID = 1L;

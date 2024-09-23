@@ -632,6 +632,7 @@ public class SismaEjb {
             if (pigSismaValAtto.getIdSismaValAtto() != dto.getIdSismaValAtto().longValueExact()) {
                 dto.setTiTipoAtto(pigSismaValAttoUpdated.getTiTipoAtto());
                 pigSisma.setPigSismaValAtto(pigSismaValAttoUpdated);
+                dto.setNmTipoAtto(pigSismaValAttoUpdated.getNmTipoAtto());
             } else {
                 dto.setNmTipoAtto(pigSismaValAtto.getNmTipoAtto());
                 dto.setTiTipoAtto(pigSismaValAtto.getTiTipoAtto());

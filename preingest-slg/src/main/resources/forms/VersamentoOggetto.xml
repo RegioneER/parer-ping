@@ -24,7 +24,12 @@
         <!--FTP-->
         <ComboBox Name="fl_trasm_ftp" Description="File trasmesso via FTP" Type="STRING" Trigger="true" Required="true" />
         <Input Type="STRING" Description="Path area FTP" Name="ds_path_ftp" Readonly="true"/>
-        <Input Type="STRING" Description="Nome oggetto" Name="cd_key_object" Hidden="true" MaxLength="95"/>
+        <Input Type="STRING" Description="Nome oggetto" Name="cd_key_object" Hidden="true"/>
+        
+        <!-- MEV32647 - per cartella DA_VERSARE -->
+        <Input Type="STRING" Description="Path area archivio" Name="ds_path_archivio" Readonly="true"/>
+        <Input Type="STRING" Description="Nome oggetto" Name="ds_path_archivio_object" Hidden="true" MaxLength="95"/>
+        <Button Name="versaOggettoDaArchivio" Description="sposta su FTP" Type="STRING" />
         
         <!-- Oggetto da trasformare-->
         <ComboBox Type="INTEGER" Description="Ambiente" Name="nm_ambiente_vers_padre" Trigger="true" />

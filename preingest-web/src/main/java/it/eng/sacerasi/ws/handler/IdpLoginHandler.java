@@ -81,10 +81,10 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
             }
 
             try {
-                NodeList usernameEl = msgCtx.getMessage().getSOAPHeader()
-                        .getElementsByTagNameNS(WSSE_XSD_URI, "Username");
-                NodeList passwordEl = msgCtx.getMessage().getSOAPHeader()
-                        .getElementsByTagNameNS(WSSE_XSD_URI, "Password");
+                NodeList usernameEl = msgCtx.getMessage().getSOAPHeader().getElementsByTagNameNS(WSSE_XSD_URI,
+                        "Username");
+                NodeList passwordEl = msgCtx.getMessage().getSOAPHeader().getElementsByTagNameNS(WSSE_XSD_URI,
+                        "Password");
                 Node userNode = null;
                 Node passNode = null;
                 if (usernameEl != null && passwordEl != null && (userNode = usernameEl.item(0)) != null

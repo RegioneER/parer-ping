@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.helper;
 
 import java.io.Serializable;
@@ -60,7 +59,6 @@ import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigValoreParamApplic;
 import it.eng.sacerasi.entity.PigValoreSetParamTrasf;
 import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.entity.PigVersDaTrasfTrasf;
 import it.eng.sacerasi.entity.PigVersTipoObjectDaTrasf;
 import it.eng.sacerasi.entity.PigXsdDatiSpec;
 import it.eng.sacerasi.entity.XfoTrasf;
@@ -374,12 +372,12 @@ public class AmministrazioneHelper extends GenericHelper {
 
     // MEV 27543
     public List<String> getPigVRicVersAmbientiIam(Long idUserIam) {
-        StringBuilder queryStr = new StringBuilder(
-                "SELECT DISTINCT ricVers.nmAmbienteEnteConvenz " + "FROM IamAbilOrganiz iao, PigVRicVers ricVers "
-                        + "WHERE iao.idOrganizApplic = ricVers.id.idVers " + "AND iao.iamUser.idUserIam = :idUserIam ");
+        String queryStr = "SELECT DISTINCT b.nmAmbienteEnteConvenz FROM SIOrgEnteSiam a JOIN SIOrgAmbienteEnteConvenz b ON (a.siOrgAmbienteEnteConvenz.idAmbienteEnteConvenz = b.idAmbienteEnteConvenz)"
+                + " where a.nmEnteSiam IN( SELECT DISTINCT ricVers.nmEnteConvenz FROM IamAbilOrganiz iao, PigVRicVers ricVers"
+                + " WHERE iao.idOrganizApplic = ricVers.id.idVers" + " AND iao.iamUser.idUserIam = :idUserIam)"
+                + " ORDER BY b.nmAmbienteEnteConvenz";
 
-        queryStr.append(" ORDER BY ricVers.nmAmbienteEnteConvenz ");
-        Query query = getEntityManager().createQuery(queryStr.toString());
+        Query query = getEntityManager().createQuery(queryStr);
 
         query.setParameter("idUserIam", HibernateUtils.longFrom(idUserIam));
         return query.getResultList();
@@ -425,22 +423,6 @@ public class AmministrazioneHelper extends GenericHelper {
             return null;
         }
         return list.get(0);
-    }
-
-    /**
-     * @deprecated PigVersDaTrasfTrasf is not mapped
-     *
-     * @param idVers
-     *            versatore
-     *
-     * @return lista di {@link PigVersDaTrasfTrasf}
-     */
-    @Deprecated
-    public List<PigVersDaTrasfTrasf> getPigVersDaTrasfTrasf(BigDecimal idVers) {
-        Query query = getEntityManager().createQuery(
-                "SELECT p FROM PigVersDaTrasfTrasf p JOIN p.pigVersDaTrasf vers WHERE vers.idVers = :idVers ORDER BY p.pigVersTrasf.pigAmbienteVer.nmAmbienteVers, p.pigVersTrasf.nmVers");
-        query.setParameter("idVers", idVers);
-        return query.getResultList();
     }
 
     // MEV25814
@@ -1673,6 +1655,167 @@ public class AmministrazioneHelper extends GenericHelper {
         if (flAppartTipoOggetto != null) {
             queryStr.append(whereWord).append("paramApplic.flAppartTipoOggetto = :flAppartTipoOggetto ");
         }
+        queryStr.append("ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic ");
+        Query q = getEntityManager().createQuery(queryStr.toString());
+        if (tiParamApplic != null) {
+            q.setParameter("tiParamApplic", tiParamApplic);
+        }
+        if (tiGestioneParam != null) {
+            q.setParameter("tiGestioneParam", tiGestioneParam);
+        }
+        if (flAppartApplic != null) {
+            q.setParameter("flAppartApplic", flAppartApplic);
+        }
+        if (flAppartAmbiente != null) {
+            q.setParameter("flAppartAmbiente", flAppartAmbiente);
+        }
+        if (flAppartVers != null) {
+            q.setParameter("flAppartVers", flAppartVers);
+        }
+        if (flAppartTipoOggetto != null) {
+            q.setParameter("flAppartTipoOggetto", flAppartTipoOggetto);
+        }
+        return q.getResultList();
+    }
+
+    // MEV 32650
+    public List<PigParamApplic> getPigParamApplicListAmbiente(List<String> funzione, String tiGestioneParam,
+            boolean filterValid) {
+        String queryStr = "SELECT paramApplic FROM PigParamApplic paramApplic "
+                + "WHERE paramApplic.flAppartAmbiente = '1' ";
+
+        if (funzione != null && !funzione.isEmpty()) {
+            queryStr = queryStr + "AND paramApplic.tiParamApplic IN (:funzione) ";
+        }
+        if (tiGestioneParam != null) {
+            queryStr = queryStr + "AND paramApplic.tiGestioneParam = :tiGestioneParam ";
+        }
+        if (filterValid) {
+            queryStr = queryStr + "AND paramApplic.cdVersioneAppFine IS NULL ";
+        }
+        queryStr = queryStr + "ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic";
+
+        Query q = getEntityManager().createQuery(queryStr);
+        if (funzione != null && !funzione.isEmpty()) {
+            q.setParameter("funzione", funzione);
+        }
+        if (tiGestioneParam != null) {
+            q.setParameter("tiGestioneParam", tiGestioneParam);
+        }
+        return q.getResultList();
+
+    }
+
+    public List<PigParamApplic> getPigParamApplicListVers(List<String> funzione, String tiGestioneParam,
+            boolean filterValid) {
+        String queryStr = "SELECT paramApplic FROM PigParamApplic paramApplic "
+                + "WHERE paramApplic.flAppartVers = '1' ";
+
+        if (funzione != null && !funzione.isEmpty()) {
+            queryStr = queryStr + "AND paramApplic.tiParamApplic IN (:funzione) ";
+        }
+        if (tiGestioneParam != null) {
+            queryStr = queryStr + "AND paramApplic.tiGestioneParam = :tiGestioneParam ";
+        }
+        if (filterValid) {
+            queryStr = queryStr + "AND paramApplic.cdVersioneAppFine IS NULL ";
+        }
+
+        queryStr = queryStr + "ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic";
+
+        Query q = getEntityManager().createQuery(queryStr);
+
+        if (funzione != null && !funzione.isEmpty()) {
+            q.setParameter("funzione", funzione);
+        }
+        if (tiGestioneParam != null) {
+            q.setParameter("tiGestioneParam", tiGestioneParam);
+        }
+
+        return q.getResultList();
+    }
+
+    public List<PigParamApplic> getPigParamApplicListTipoOggetto(List<String> funzione, String tiGestioneParam,
+            boolean filterValid) {
+        String queryStr = "SELECT paramApplic FROM PigParamApplic paramApplic "
+                + "WHERE paramApplic.flAppartTipoOggetto = '1' ";
+
+        if (funzione != null && !funzione.isEmpty()) {
+            queryStr = queryStr + "AND paramApplic.tiParamApplic IN (:funzione) ";
+        }
+        if (tiGestioneParam != null) {
+            queryStr = queryStr + "AND paramApplic.tiGestioneParam = :tiGestioneParam ";
+        }
+        if (filterValid) {
+            queryStr = queryStr + "AND paramApplic.cdVersioneAppFine IS NULL ";
+        }
+
+        queryStr = queryStr + "ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic";
+
+        Query q = getEntityManager().createQuery(queryStr);
+
+        if (funzione != null && !funzione.isEmpty()) {
+            q.setParameter("funzione", funzione);
+        }
+        if (tiGestioneParam != null) {
+            q.setParameter("tiGestioneParam", tiGestioneParam);
+        }
+
+        return q.getResultList();
+    }
+
+    /**
+     * Metodo che ritorna i parametri di configurazione
+     *
+     * @param tiParamApplic
+     *            tipo parametro
+     * @param tiGestioneParam
+     *            tipo gestione parametro
+     * @param flAppartApplic
+     *            flag 1/0 (true/false)
+     * @param flAppartVers
+     *            flag 1/0 (true/false)
+     * @param flAppartAmbiente
+     *            flag 1/0 (true/false)
+     * @param flAppartTipoOggetto
+     *            flag 1/0 (true/false)
+     * @param filterValid
+     *            true o false per filtrare i parametri attivi (sulla base della versione applicativo)
+     *
+     * @return lista elementi di tipi {@link PigParamApplic}
+     */
+    public List<PigParamApplic> getPigParamApplicList(String tiParamApplic, String tiGestioneParam,
+            String flAppartApplic, String flAppartAmbiente, String flAppartVers, String flAppartTipoOggetto,
+            boolean filterValid) {
+        StringBuilder queryStr = new StringBuilder("SELECT paramApplic FROM PigParamApplic paramApplic ");
+        String whereWord = " WHERE ";
+        if (tiParamApplic != null) {
+            queryStr.append(whereWord).append("paramApplic.tiParamApplic = :tiParamApplic ");
+            whereWord = "AND ";
+        }
+        if (tiGestioneParam != null) {
+            queryStr.append(whereWord).append("paramApplic.tiGestioneParam = :tiGestioneParam ");
+            whereWord = "AND ";
+        }
+        if (flAppartApplic != null) {
+            queryStr.append(whereWord).append("paramApplic.flAppartApplic = :flAppartApplic ");
+            whereWord = "AND ";
+        }
+        if (flAppartAmbiente != null) {
+            queryStr.append(whereWord).append("paramApplic.flAppartAmbiente = :flAppartAmbiente ");
+            whereWord = "AND ";
+        }
+        if (flAppartVers != null) {
+            queryStr.append(whereWord).append("paramApplic.flAppartVers = :flAppartVers ");
+            whereWord = "AND ";
+        }
+        if (flAppartTipoOggetto != null) {
+            queryStr.append(whereWord).append("paramApplic.flAppartTipoOggetto = :flAppartTipoOggetto ");
+        }
+        if (filterValid) {
+            queryStr.append(whereWord).append("paramApplic.cdVersioneAppFine IS NULL ");
+        }
+
         queryStr.append("ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic ");
         Query q = getEntityManager().createQuery(queryStr.toString());
         if (tiParamApplic != null) {

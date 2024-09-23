@@ -30,7 +30,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,7 +44,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "PIG_STRUM_URB_DOCUMENTI")
-@NamedQuery(name = "PigStrumUrbDocumenti.findAll", query = "SELECT p FROM PigStrumUrbDocumenti p")
 public class PigStrumUrbDocumenti implements Serializable {
 
     private static final long serialVersionUID = 1L;

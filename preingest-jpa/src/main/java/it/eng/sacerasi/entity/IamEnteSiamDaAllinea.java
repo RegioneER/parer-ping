@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,7 +40,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "IAM_ENTE_SIAM_DA_ALLINEA")
-@NamedQuery(name = "IamEnteSiamDaAllinea.findAll", query = "SELECT i FROM IamEnteSiamDaAllinea i")
 public class IamEnteSiamDaAllinea implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long idEnteSiamDaAllinea;

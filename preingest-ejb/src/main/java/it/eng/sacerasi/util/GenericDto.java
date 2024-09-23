@@ -34,7 +34,7 @@ public class GenericDto implements Serializable {
     private ArrayList<String> warnMessages = new ArrayList<>();
 
     public boolean existsMessages() {
-        return infoMessages.isEmpty() && warnMessages.isEmpty();
+        return !infoMessages.isEmpty() || !warnMessages.isEmpty();
     }
 
     public boolean existsInfoMessages() {

@@ -32,8 +32,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -46,12 +44,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "XFO_PARAM_TRASF")
-@NamedQueries({ @NamedQuery(name = "XfoParamTrasf.findAll", query = "SELECT x FROM XfoParamTrasf x"),
-        @NamedQuery(name = "XfoParamTrasf.findByIdParamTrasf", query = "SELECT x FROM XfoParamTrasf x WHERE x.idParamTrasf = :idParamTrasf"),
-        @NamedQuery(name = "XfoParamTrasf.findByNmParamTrasf", query = "SELECT x FROM XfoParamTrasf x WHERE x.nmParamTrasf = :nmParamTrasf"),
-        @NamedQuery(name = "XfoParamTrasf.findByDsParamTrasf", query = "SELECT x FROM XfoParamTrasf x WHERE x.dsParamTrasf = :dsParamTrasf"),
-        @NamedQuery(name = "XfoParamTrasf.findByTiParamTrasf", query = "SELECT x FROM XfoParamTrasf x WHERE x.tiParamTrasf = :tiParamTrasf"),
-        @NamedQuery(name = "XfoParamTrasf.findByDsValoreParam", query = "SELECT x FROM XfoParamTrasf x WHERE x.dsValoreParam = :dsValoreParam") })
 public class XfoParamTrasf implements Serializable {
 
     private static final long serialVersionUID = 1L;

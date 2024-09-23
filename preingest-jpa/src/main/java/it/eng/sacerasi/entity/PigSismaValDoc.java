@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,7 +36,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PIG_SISMA_VAL_DOC")
-@NamedQuery(name = "PigSismaValDoc.findAll", query = "SELECT p FROM PigSismaValDoc p")
 public class PigSismaValDoc implements Serializable {
 
     private static final long serialVersionUID = 1L;

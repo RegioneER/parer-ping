@@ -29,7 +29,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,7 +43,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "PIG_XML_ANNUL_SESSIONE_INGEST")
-@NamedQuery(name = "PigXmlAnnulSessioneIngest.findAll", query = "SELECT p FROM PigXmlAnnulSessioneIngest p")
 public class PigXmlAnnulSessioneIngest implements Serializable {
 
     private static final long serialVersionUID = 1L;

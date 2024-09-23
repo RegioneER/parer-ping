@@ -5,7 +5,7 @@ verODT.init = function (extensions_filters) {
         browse_button: 'File_to_upload_Object_Storage', // you can pass in id...
         url: 'MultipartFileUploadToS3ForVersamentoOggettoServlet',
         runtimes: 'html5,html4',
-        max_file_size: '15gb',
+        max_file_size: '0', // unlimited, la dimensione viene gestita da controlli lato java.
         unique_names: false,
         chunk_size: '20mb',
         prevent_duplicates: true,

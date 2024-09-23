@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -1445,7 +1445,7 @@ public class SismaAction extends SismaAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (Boolean.TRUE.equals(deleteFile)) {
-                    Files.delete(fileToDownload.toPath());
+                    FileUtils.deleteQuietly(fileToDownload);
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");

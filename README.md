@@ -1177,6 +1177,7 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
  * lgpl_v3     : GNU General Lesser Public License (LGPL) version 3.0
  * mit         : MIT-License
 
+
 # Supporto
 
 Mantainer del progetto è [Engineering Ingegneria Informatica S.p.A.](https://www.eng.it/).

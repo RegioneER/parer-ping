@@ -21,12 +21,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -36,17 +33,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PIG_SISMA_VAL_ATTO")
-@NamedQuery(name = "PigSismaValAtto.findAll", query = "SELECT p FROM PigSismaValAtto p")
 public class PigSismaValAtto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long idSismaValAtto;
     private String nmTipoAtto;
     private String tiTipoAtto;
-
-    // public enum TiTipoAtto {
-    // PROT, DG, DC, DD;
-    // }
 
     public PigSismaValAtto() {
         // hibernate

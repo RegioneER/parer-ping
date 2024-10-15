@@ -55,6 +55,22 @@ public class PigParamApplicRowBean extends BaseRow implements JEEBaseRowInterfac
         setObject("id_param_applic", idParamApplic);
     }
 
+    public String getCdVersioneAppIni() {
+        return getString("cd_versione_app_ini");
+    }
+
+    public void setCdVersioneAppIni(String cdVersioneAppIni) {
+        setObject("cd_versione_app_ini", cdVersioneAppIni);
+    }
+
+    public String getCdVersioneAppFine() {
+        return getString("cd_versione_app_fine");
+    }
+
+    public void setCdVersioneAppFine(String cdVersioneAppFine) {
+        setObject("cd_versione_app_fine", cdVersioneAppFine);
+    }
+
     public String getNmParamApplic() {
         return getString("nm_param_applic");
     }
@@ -148,6 +164,8 @@ public class PigParamApplicRowBean extends BaseRow implements JEEBaseRowInterfac
         PigParamApplic entity = (PigParamApplic) obj;
 
         this.setIdParamApplic(new BigDecimal(entity.getIdParamApplic()));
+        this.setCdVersioneAppIni(entity.getCdVersioneAppIni());
+        this.setCdVersioneAppFine(entity.getCdVersioneAppFine());
         this.setNmParamApplic(entity.getNmParamApplic());
         this.setDsParamApplic(entity.getDsParamApplic());
         this.setDmParamApplic(entity.getDmParamApplic());
@@ -167,6 +185,8 @@ public class PigParamApplicRowBean extends BaseRow implements JEEBaseRowInterfac
         if (this.getIdParamApplic() != null) {
             entity.setIdParamApplic(this.getIdParamApplic().longValue());
         }
+        entity.setCdVersioneAppIni(this.getCdVersioneAppIni());
+        entity.setCdVersioneAppFine(this.getCdVersioneAppFine());
         entity.setNmParamApplic(this.getNmParamApplic());
         entity.setDsParamApplic(this.getDsParamApplic());
         entity.setDmParamApplic(this.getDmParamApplic());

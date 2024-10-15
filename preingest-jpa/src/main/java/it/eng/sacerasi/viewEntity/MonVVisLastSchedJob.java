@@ -35,7 +35,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "MON_V_VIS_LAST_SCHED_JOB")
-@NamedQuery(name = "MonVVisLastSchedJob.findAll", query = "SELECT m FROM MonVVisLastSchedJob m")
 @NamedQuery(name = "MonVVisLastSchedJob.findUltimaAttivazioneByJob", query = "SELECT v FROM MonVVisLastSchedJob v WHERE v.nmJob=:nmJob")
 public class MonVVisLastSchedJob implements Serializable {
     private static final long serialVersionUID = 1L;

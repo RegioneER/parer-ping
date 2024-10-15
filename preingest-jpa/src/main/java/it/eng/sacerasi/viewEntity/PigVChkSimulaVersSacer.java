@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -32,7 +31,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PIG_V_CHK_SIMULA_VERS_SACER")
-@NamedQuery(name = "PigVChkSimulaVersSacer.findAll", query = "SELECT p FROM PigVChkSimulaVersSacer p")
 public class PigVChkSimulaVersSacer implements Serializable {
 
     private static final long serialVersionUID = 1L;

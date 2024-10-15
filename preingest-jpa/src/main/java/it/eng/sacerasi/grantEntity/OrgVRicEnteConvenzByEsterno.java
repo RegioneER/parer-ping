@@ -24,7 +24,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,7 +35,6 @@ import javax.persistence.TemporalType;
 // @Immutable
 @Entity
 @Table(schema = "SACER_IAM", name = "ORG_V_RIC_ENTE_CONVENZ_BY_EST")
-@NamedQuery(name = "OrgVRicEnteConvenzByEsterno.findAll", query = "SELECT a FROM OrgVRicEnteConvenzByEsterno a")
 public class OrgVRicEnteConvenzByEsterno implements Serializable {
 
     private static final long serialVersionUID = 1L;

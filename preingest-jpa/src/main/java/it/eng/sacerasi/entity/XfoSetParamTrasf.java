@@ -35,8 +35,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -50,11 +48,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "XFO_SET_PARAM_TRASF")
-@NamedQueries({ @NamedQuery(name = "XfoSetParamTrasf.findAll", query = "SELECT x FROM XfoSetParamTrasf x"),
-        @NamedQuery(name = "XfoSetParamTrasf.findByIdSetParamTrasf", query = "SELECT x FROM XfoSetParamTrasf x WHERE x.idSetParamTrasf = :idSetParamTrasf"),
-        @NamedQuery(name = "XfoSetParamTrasf.findByNmSetParamTrasf", query = "SELECT x FROM XfoSetParamTrasf x WHERE x.nmSetParamTrasf = :nmSetParamTrasf"),
-        @NamedQuery(name = "XfoSetParamTrasf.findByDsSetParamTrasf", query = "SELECT x FROM XfoSetParamTrasf x WHERE x.dsSetParamTrasf = :dsSetParamTrasf"),
-        @NamedQuery(name = "XfoSetParamTrasf.findByFlSetParamArk", query = "SELECT x FROM XfoSetParamTrasf x WHERE x.flSetParamArk = :flSetParamArk") })
 public class XfoSetParamTrasf implements Serializable {
 
     private static final long serialVersionUID = 1L;

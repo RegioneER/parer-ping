@@ -684,12 +684,6 @@ public class MonitoraggioEjb {
                 for (PigObjectTrasf objectFiglio : object.getPigObjectTrasfs()) {
                     payloadManagerHelper.deleteDirTrasf(objectFiglio.getPigVer().getDsPathTrasf(),
                             objectFiglio.getDsPath());
-                    // BigDecimal idAmbienteVers = BigDecimal.valueOf(
-                    // objectFiglio.getPigTipoObject().getPigVer().getPigAmbienteVer().getIdAmbienteVers());
-                    // BigDecimal idVers = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getPigVer().getIdVers());
-                    // BigDecimal idTipoObject = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getIdTipoObject());
-                    // util.deleteDirTrasf(configurationHelper.getValoreParamApplic("DS_PATH_TRASF", idAmbienteVers,
-                    // idVers, idTipoObject, Constants.TipoPigVGetValAppart.TIPOOBJECT), objectFiglio.getDsPath());
                 }
                 break;
             case TRASFORMATO:

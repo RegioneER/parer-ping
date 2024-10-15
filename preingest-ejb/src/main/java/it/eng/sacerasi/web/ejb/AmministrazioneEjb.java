@@ -93,7 +93,6 @@ import it.eng.sacerasi.entity.PigValoreParamApplic;
 import it.eng.sacerasi.entity.PigValoreParamTrasf;
 import it.eng.sacerasi.entity.PigValoreSetParamTrasf;
 import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.entity.PigVersDaTrasfTrasf;
 import it.eng.sacerasi.entity.PigVersTipoObjectDaTrasf;
 import it.eng.sacerasi.entity.PigXmlObjectTrasf;
 import it.eng.sacerasi.entity.PigXsdDatiSpec;
@@ -553,6 +552,20 @@ public class AmministrazioneEjb {
         return versRowBean;
     }
 
+    public PigVersRowBean getPigVersSoloNomeRowBean(BigDecimal idVers) {
+        PigVersRowBean versRowBean = new PigVersRowBean();
+        PigVers vers = amministrazioneHelper.getPigVersById(idVers);
+        if (vers != null) {
+            try {
+                versRowBean = (PigVersRowBean) Transform.entity2RowBean(vers);
+                versRowBean.setString("nm_ambiente_vers", vers.getPigAmbienteVer().getNmAmbienteVers());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+        return versRowBean;
+    }
+
     public PigAmbienteVersRowBean getPigAmbienteVersRowBeanFromVers(BigDecimal idVers) {
         PigAmbienteVersRowBean ambienteVersRowBean = null;
         if (idVers != null) {
@@ -842,6 +855,11 @@ public class AmministrazioneEjb {
                 }
 
                 path = new File(basePath + "/TRASFORMATI/");
+                if (!xadConn.fileExists(path)) {
+                    xadConn.createFile(path, true);
+                }
+
+                path = new File(basePath + "/DA_VERSARE/");
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }
@@ -2741,39 +2759,6 @@ public class AmministrazioneEjb {
     }
 
     /**
-     * Ritorna la lista di associazioni di versatori per cui generare oggetti per il versatore idVers
-     *
-     * @param idVers
-     *            id del versatore
-     *
-     * @return la lista di associazioni
-     *
-     * @throws ParerUserError
-     *             errore generico
-     */
-    public PigVersTableBean getPigVersTrasfTableBean(BigDecimal idVers) throws ParerUserError {
-        List<PigVersDaTrasfTrasf> list = amministrazioneHelper.getPigVersDaTrasfTrasf(idVers);
-        PigVersTableBean table = new PigVersTableBean();
-        if (!list.isEmpty()) {
-            try {
-                for (PigVersDaTrasfTrasf pigVers : list) {
-                    PigVersRowBean row = (PigVersRowBean) Transform.entity2RowBean(pigVers.getPigVersTrasf());
-                    row.setBigDecimal("id_vers_da_trasf_trasf", new BigDecimal(pigVers.getIdVersDaTrasfTrasf()));
-                    row.setString("vers_trasf", pigVers.getPigVersTrasf().getPigAmbienteVer().getNmAmbienteVers() + ", "
-                            + pigVers.getPigVersTrasf().getNmVers());
-                    table.add(row);
-                }
-            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
-                    | IllegalArgumentException | InvocationTargetException ex) {
-                log.error("Errore durante il recupero dei versatori per cui generare oggetti "
-                        + ExceptionUtils.getRootCauseMessage(ex), ex);
-                throw new ParerUserError("Errore durante il recupero dei versatori per cui generare oggetti");
-            }
-        }
-        return table;
-    }
-
-    /**
      * Ritorna il tableBean dei versatori per cui generare oggetti, escludendo il versatore del parametro dato in input
      * (che è chi genera) e le sue associazioni
      *
@@ -2802,72 +2787,6 @@ public class AmministrazioneEjb {
             }
         }
         return table;
-    }
-
-    /**
-     * Esegue il salvataggio del versatore per cui generare oggetti
-     *
-     * @param param
-     *            parametri per il logging
-     * @param idVersDaTrasf
-     *            id versamento da trasferire
-     * @param idVersTrasf
-     *            id verstamento trasferito
-     *
-     * @throws ParerUserError
-     *             errore generico
-     */
-    @Interceptors({ TransactionInterceptor.class })
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void saveVersTrasf(LogParam param, BigDecimal idVersDaTrasf, BigDecimal idVersTrasf) throws ParerUserError {
-        try {
-            PigVers versDaTrasf = amministrazioneHelper.findById(PigVers.class, idVersDaTrasf);
-            PigVers versTrasf = amministrazioneHelper.findById(PigVers.class, idVersTrasf);
-
-            if (amministrazioneHelper.existPigVersDaTrasfTrasf(idVersDaTrasf, idVersTrasf)) {
-                throw new ParerUserError("Versatore per cui generare oggetti gi\u00E0 presente");
-            }
-
-            PigVersDaTrasfTrasf associazione = new PigVersDaTrasfTrasf();
-            associazione.setPigVersDaTrasf(versDaTrasf);
-            associazione.setPigVersTrasf(versTrasf);
-            amministrazioneHelper.insertEntity(associazione, true);
-            sacerLogEjb.log(param.getTransactionLogContext(), param.getNomeApplicazione(), param.getNomeUtente(),
-                    param.getNomeAzione(), SacerLogConstants.TIPO_OGGETTO_VERSATORE, idVersDaTrasf,
-                    param.getNomePagina());
-        } catch (Exception ex) {
-            log.error("Errore inatteso al salvataggio del versatore per cui generare oggetti "
-                    + ExceptionUtils.getRootCauseMessage(ex), ex);
-            throw new ParerUserError("Errore inatteso al salvataggio del versatore per cui generare oggetti");
-        }
-    }
-
-    /**
-     * Esegue la rimozione del record di associazione del versatore per cui generare oggetti
-     *
-     * @param param
-     *            parametri per lil ogging
-     * @param idVersDaTrasfTrasf
-     *            id versamento da trasferire
-     *
-     * @throws ParerUserError
-     *             errore generico
-     */
-    @Interceptors({ TransactionInterceptor.class })
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void deletePigVersDaTrasfTrasf(LogParam param, BigDecimal idVersDaTrasfTrasf) throws ParerUserError {
-        try {
-            PigVersDaTrasfTrasf pigVers = amministrazioneHelper.findById(PigVersDaTrasfTrasf.class, idVersDaTrasfTrasf);
-            PigVers pv = pigVers.getPigVersDaTrasf();
-            amministrazioneHelper.removeEntity(pigVers, true);
-            sacerLogEjb.log(param.getTransactionLogContext(), param.getNomeApplicazione(), param.getNomeUtente(),
-                    param.getNomeAzione(), SacerLogConstants.TIPO_OGGETTO_VERSATORE, new BigDecimal(pv.getIdVers()),
-                    param.getNomePagina());
-        } catch (Exception ex) {
-            log.error("Errore inatteso all'eliminazione del versatore per cui generare oggetti "
-                    + ExceptionUtils.getRootCauseMessage(ex), ex);
-            throw new ParerUserError("Errore inatteso all'eliminazione del versatore per cui generare oggetti");
-        }
     }
 
     /**
@@ -3258,8 +3177,8 @@ public class AmministrazioneEjb {
             String dsVers, BigDecimal idEnteConvenz, String nmEnteConvenz, BigDecimal idEnteFornitEstern,
             String nmEnteFornitEstern, Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, Date dtIniValVers,
             Date dtFineValVers, Date dtIniValAppartAmbiente, Date dtFinValAppartAmbiente, String dsPathInputFtp,
-            String dsPathOutputFtp, String dsPathTrasf, String tiDichVers, BigDecimal idOrganizIam, long idUserIamCor)
-            throws ParerUserError {
+            String dsPathOutputFtp, String dsPathTrasf, String dsPathDaVersare, String tiDichVers,
+            BigDecimal idOrganizIam, long idUserIamCor) throws ParerUserError {
 
         XADiskConnection xadConn = null;
 
@@ -3279,6 +3198,7 @@ public class AmministrazioneEjb {
         mappa.put("DS_PATH_INPUT_FTP", dsPathInputFtp);
         mappa.put("DS_PATH_OUTPUT_FTP", dsPathOutputFtp);
         mappa.put("DS_PATH_TRASF", dsPathTrasf == null ? "null" : dsPathTrasf);
+        mappa.put("DS_PATH_DA_VERSARE", dsPathDaVersare == null ? "null" : dsPathDaVersare);
 
         if (amministrazioneHelper.getPigVersByName(nmVers, idAmb) != null) {
             throw new ParerUserError("Nome Versatore gi\u00E0 utilizzato nel database.");
@@ -3334,6 +3254,11 @@ public class AmministrazioneEjb {
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }
+
+                path = new File(basePath + "/DA_VERSARE/");
+                if (!xadConn.fileExists(path)) {
+                    xadConn.createFile(path, true);
+                }
             } catch (Exception ex) {
                 log.error("Errore durante la creazione delle cartelle per il versatore " + versatore.getNmVers() + " : "
                         + ex.getMessage());
@@ -3375,8 +3300,8 @@ public class AmministrazioneEjb {
             String nmVers, String dsVers, BigDecimal idEnteConvenz, String nmEnteConvenz, BigDecimal idEnteFornitEstern,
             String nmEnteFornitEstern, Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, Date dtIniValVers,
             Date dtFineValVers, Date dtIniValAppartAmbiente, Date dtFinValAppartAmbiente, String dsPathInputFtp,
-            String dsPathOutputFtp, String dsPathTrasf, String tiDichVers, BigDecimal idOrganizIam, long idUserIamCor)
-            throws ParerUserError {
+            String dsPathOutputFtp, String dsPathTrasf, String dsPathDaVersare, String tiDichVers,
+            BigDecimal idOrganizIam, long idUserIamCor) throws ParerUserError {
         XADiskConnection xadConn = null;
 
         long idOggetto = 0;
@@ -3411,6 +3336,7 @@ public class AmministrazioneEjb {
             mappa.put("DS_PATH_INPUT_FTP", dsPathInputFtp);
             mappa.put("DS_PATH_OUTPUT_FTP", dsPathOutputFtp);
             mappa.put("DS_PATH_TRASF", dsPathTrasf == null ? "null" : dsPathTrasf);
+            mappa.put("DS_PATH_DA_VERSARE", dsPathDaVersare == null ? "null" : dsPathDaVersare);
 
             if (amministrazioneHelper.getPigVersByName(nmVers, idAmb) != null) {
                 throw new ParerUserError("Nome Versatore gi\u00E0 utilizzato nel database.");
@@ -3429,6 +3355,7 @@ public class AmministrazioneEjb {
             versatore.setDsPathInputFtp(prefisso + versatore.getNmVers() + "/INPUT_FOLDER/");
             versatore.setDsPathOutputFtp(prefisso + versatore.getNmVers() + "/OUTPUT_FOLDER/");
             versatore.setDsPathTrasf(prefisso + versatore.getNmVers() + "/TRASFORMATI/");
+            versatore.setDsPathTrasf(prefisso + versatore.getNmVers() + "/DA_VERSARE/");
 
             // MEV 30790 - creo le cartelle necessarie su filesystem se non esistono.
             try {
@@ -3454,6 +3381,11 @@ public class AmministrazioneEjb {
                 }
 
                 path = new File(basePath + "/TRASFORMATI/");
+                if (!xadConn.fileExists(path)) {
+                    xadConn.createFile(path, true);
+                }
+
+                path = new File(basePath + "/DA_VERSARE/");
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }
@@ -3522,6 +3454,36 @@ public class AmministrazioneEjb {
         return paramApplicTableBean;
     }
 
+    // MEV 32650
+    public PigParamApplicTableBean getPigParamApplicTableBean(String tiParamApplic, String tiGestioneParam,
+            String flAppartApplic, String flAppartAmbiente, String flAppartVers, String flAppartTipoOggetto,
+            boolean filterValid) {
+        PigParamApplicTableBean paramApplicTableBean = new PigParamApplicTableBean();
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicList(tiParamApplic,
+                tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVers, flAppartTipoOggetto, filterValid);
+
+        try {
+            if (paramApplicList != null && !paramApplicList.isEmpty()) {
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    paramApplicRowBean.setString("ds_valore_param_applic", "");
+                    for (PigValoreParamApplic valoreParamApplic : paramApplic.getPigValoreParamApplics()) {
+                        if (valoreParamApplic.getTiAppart().equals("APPLIC")) {
+                            paramApplicRowBean.setString("ds_valore_param_applic",
+                                    valoreParamApplic.getDsValoreParamApplic());
+                        }
+                    }
+                    paramApplicTableBean.add(paramApplicRowBean);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return paramApplicTableBean;
+    }
+    // end MEV 32650
+
     public boolean checkParamApplic(String nmParamApplic, BigDecimal idParamApplic) {
         return amministrazioneHelper.existsPigParamApplic(nmParamApplic, idParamApplic);
     }
@@ -3560,6 +3522,8 @@ public class AmministrazioneEjb {
             config.setFlAppartAmbiente(row.getFlAppartAmbiente());
             config.setFlAppartVers(row.getFlAppartVers());
             config.setFlAppartTipoOggetto(row.getFlAppartTipoOggetto());
+            config.setCdVersioneAppIni(row.getCdVersioneAppIni());
+            config.setCdVersioneAppFine(row.getCdVersioneAppFine());
 
             if (newRow) {
                 amministrazioneHelper.getEntityManager().persist(config);
@@ -5049,4 +5013,458 @@ public class AmministrazioneEjb {
         }
         return table;
     }
+
+    // MEV 33041
+    public String creaCartellaDaVersare(BigDecimal idVers) throws ParerUserError {
+        XADiskConnection xadConn = null;
+
+        PigVers vers = amministrazioneHelper.findById(PigVers.class, idVers);
+
+        String prefisso = configHelper.getValoreParamApplicByIdVers(it.eng.sacerasi.common.Constants.DS_PREFISSO_PATH,
+                BigDecimal.valueOf(vers.getPigAmbienteVer().getIdAmbienteVers()), BigDecimal.valueOf(vers.getIdVers()));
+
+        try {
+            File basePath = new File(configHelper.getValoreParamApplicByApplic(it.eng.xformer.common.Constants.ROOT_FTP)
+                    + File.separator + prefisso + vers.getNmVers());
+
+            xadConn = xadCf.getConnection();
+
+            if (!xadConn.fileExists(basePath)) {
+                xadConn.createFile(basePath, true);
+            }
+
+            File path = new File(basePath + "/DA_VERSARE/");
+            if (!xadConn.fileExists(path)) {
+                xadConn.createFile(path, true);
+            }
+
+            return prefisso + vers.getNmVers() + "/DA_VERSARE/";
+
+        } catch (Exception ex) {
+            log.error("Errore durante la creazione delle cartelle per il versatore " + vers.getNmVers() + " : "
+                    + ex.getMessage());
+            throw new ParerUserError("Errore tecnico nella creazione delle cartelle per il versatore.");
+        } finally {
+            if (xadConn != null) {
+                xadConn.close();
+            }
+        }
+    }
+
+    //
+    // MEV 32650
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di amministrazione dell'ambiente versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicAmministrazioneAmbiente(BigDecimal idAmbienteVers,
+            List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicAmministrazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di amministrazione definiti per l'AMBIENTE VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListAmbiente(funzione,
+                "amministrazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione e ambiente ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicAmbienteRowBean(paramApplicRowBean, idAmbienteVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicAmministrazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di amministrazione sull'ambiente versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError(
+                        "Errore durante il recupero dei parametri di amministrazione sull'ambiente versatore");
+            }
+        }
+        return paramApplicAmministrazioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di gestione dell'ambiente versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getAplParamApplicGestioneAmbiente(BigDecimal idAmbienteVers, List<String> funzione,
+            boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicGestioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di gestione definiti per l'AMBIENTE VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListAmbiente(funzione, "gestione",
+                filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione e ambiente ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicAmbienteRowBean(paramApplicRowBean, idAmbienteVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicGestioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di gestione sull'ambiente versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError(
+                        "Errore durante il recupero dei parametri di gestione sull'ambiente versatore");
+            }
+        }
+        return paramApplicGestioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di conservazione sull'ambiente versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getAplParamApplicConservazioneAmbiente(BigDecimal idAmbienteVers,
+            List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicConservazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di conservazione definiti per l'AMBIENTE VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListAmbiente(funzione,
+                "conservazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione e ambiente ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicAmbienteRowBean(paramApplicRowBean, idAmbienteVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicConservazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di conservazione sull'ambiente versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError(
+                        "Errore durante il recupero dei parametri di conservazione sull'ambiente versatore");
+            }
+        }
+        return paramApplicConservazioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di amministrazione del versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id versatore
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicAmministrazioneVersatore(BigDecimal idAmbienteVers,
+            BigDecimal idVers, List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicAmministrazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di amministrazione definiti per il VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListVers(funzione,
+                "amministrazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente e versatore ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicVersatoreRowBean(paramApplicRowBean, idAmbienteVers, idVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicAmministrazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di amministrazione sul versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError("Errore durante il recupero dei parametri di amministrazione sul versatore");
+            }
+        }
+        return paramApplicAmministrazioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di gestione del versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id versatore
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicGestioneVersatore(BigDecimal idAmbienteVers, BigDecimal idVers,
+            List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicGestioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di gestione definiti per il VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListAmbiente(funzione, "gestione",
+                filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente e versatore ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicVersatoreRowBean(paramApplicRowBean, idAmbienteVers, idVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicGestioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di gestione sul versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError("Errore durante il recupero dei parametri di gestione sul versatore");
+            }
+        }
+        return paramApplicGestioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di conservazione sul versatore
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id vers
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicConservazioneVersatore(BigDecimal idAmbienteVers, BigDecimal idVers,
+            List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicConservazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di conservazione definiti per il VERSATORE
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListVers(funzione,
+                "conservazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente e versatore ricavandoli da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicVersatoreRowBean(paramApplicRowBean, idAmbienteVers, idVers,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicConservazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di conservazione sul versatore "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError("Errore durante il recupero dei parametri di conservazione sul versatore");
+            }
+        }
+        return paramApplicConservazioneTableBean;//
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di amministrazione del tipo oggetto
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id versatore
+     * @param idTipoObject
+     *            id tipo oggetto
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicAmministrazioneTipoOggetto(BigDecimal idAmbienteVers,
+            BigDecimal idVers, BigDecimal idTipoObject, List<String> funzione, boolean filterValid)
+            throws ParerUserError {
+        PigParamApplicTableBean paramApplicAmministrazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di amministrazione definiti per il TIPO OGGETTO
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListTipoOggetto(funzione,
+                "amministrazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente, versatore e tipo oggetto ricavandoli
+                // da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicTipoOggettoRowBean(paramApplicRowBean, idAmbienteVers, idVers, idTipoObject,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicAmministrazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di amministrazione sul tipo oggetto "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError(
+                        "Errore durante il recupero dei parametri di amministrazione sul tipo oggetto");
+            }
+        }
+        return paramApplicAmministrazioneTableBean;
+    }////
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di gestione del tipo oggetto
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id versatore
+     * @param idTipoObject
+     *            id tipo oggetto
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicGestioneTipoOggetto(BigDecimal idAmbienteVers, BigDecimal idVers,
+            BigDecimal idTipoObject, List<String> funzione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean paramApplicGestioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di gestione definiti per il TIPO OGGETTO
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListTipoOggetto(funzione,
+                "gestione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente, versatore e tipo oggetto ricavandoli
+                // da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicTipoOggettoRowBean(paramApplicRowBean, idAmbienteVers, idVers, idTipoObject,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicGestioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di gestione sul tipo oggetto "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError("Errore durante il recupero dei parametri di gestione sul tipo oggetto");
+            }
+        }
+        return paramApplicGestioneTableBean;
+    }
+
+    /**
+     * Restituisce un array di object con i tablebean dei parametri di conservazione sul tipo oggetto
+     *
+     * @param idAmbienteVers
+     *            id ambiente versatore
+     * @param idVers
+     *            id vers
+     * @param idTipoObject
+     *            id tipo oggetto
+     * @param funzione
+     *            lista funzioni
+     * @param filterValid
+     *            visualizzare o meno i record parametri cessati
+     *
+     * @return il tablebean
+     *
+     * @throws ParerUserError
+     *             errore generico
+     */
+    public PigParamApplicTableBean getPigParamApplicConservazioneTipoOggetto(BigDecimal idAmbienteVers,
+            BigDecimal idVers, BigDecimal idTipoObject, List<String> funzione, boolean filterValid)
+            throws ParerUserError {
+        PigParamApplicTableBean paramApplicConservazioneTableBean = new PigParamApplicTableBean();
+
+        // Ricavo la lista dei parametri di conservazione definiti per il TIPO OGGETTO
+        List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicListTipoOggetto(funzione,
+                "conservazione", filterValid);
+        if (!paramApplicList.isEmpty()) {
+            try {
+                // Per ogni parametro, popolo i valori su applicazione, ambiente, versatore e tipo oggetto ricavandoli
+                // da
+                // PIG_VALORE_PARAM_APPLIC
+                for (PigParamApplic paramApplic : paramApplicList) {
+                    PigParamApplicRowBean paramApplicRowBean = (PigParamApplicRowBean) Transform
+                            .entity2RowBean(paramApplic);
+                    populateParamApplicTipoOggettoRowBean(paramApplicRowBean, idAmbienteVers, idVers, idTipoObject,
+                            paramApplic.getTiGestioneParam());
+                    paramApplicConservazioneTableBean.add(paramApplicRowBean);
+                }
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
+                log.error("Errore durante il recupero dei parametri di conservazione sul tipo oggetto "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                throw new ParerUserError("Errore durante il recupero dei parametri di conservazione sul tipo oggetto");
+            }
+        }
+        return paramApplicConservazioneTableBean;
+    }
+
 }

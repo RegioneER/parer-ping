@@ -29,8 +29,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -49,13 +47,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 @Entity
 @Table(name = "XFO_STORICO_TRASF")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "XfoStoricoTrasf.findAll", query = "SELECT x FROM XfoStoricoTrasf x"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByIdStoricoTrasf", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.idStoricoTrasf = :idStoricoTrasf"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByCdTrasf", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.cdTrasf = :cdTrasf"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByCdVersione", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.cdVersione = :cdVersione"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByDsVersione", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.dsVersione = :dsVersione"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByDtIstituz", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.dtIstituz = :dtIstituz"),
-        @NamedQuery(name = "XfoStoricoTrasf.findByDtSoppres", query = "SELECT x FROM XfoStoricoTrasf x WHERE x.dtSoppres = :dtSoppres") })
 public class XfoStoricoTrasf implements Serializable {
 
     private static final long serialVersionUID = 1L;

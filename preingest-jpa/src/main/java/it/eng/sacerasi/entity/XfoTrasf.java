@@ -30,8 +30,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -47,15 +45,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "XFO_TRASF")
-@NamedQueries({ @NamedQuery(name = "XfoTrasf.findAll", query = "SELECT x FROM XfoTrasf x"),
-        @NamedQuery(name = "XfoTrasf.findByIdTrasf", query = "SELECT x FROM XfoTrasf x WHERE x.idTrasf = :idTrasf"),
-        @NamedQuery(name = "XfoTrasf.findByCdTrasf", query = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf"),
-        @NamedQuery(name = "XfoTrasf.findByDsTrasf", query = "SELECT x FROM XfoTrasf x WHERE x.dsTrasf = :dsTrasf"),
-        @NamedQuery(name = "XfoTrasf.findByFlAttiva", query = "SELECT x FROM XfoTrasf x WHERE x.flAttiva = :flAttiva"),
-        @NamedQuery(name = "XfoTrasf.findByCdVersioneCor", query = "SELECT x FROM XfoTrasf x WHERE x.cdVersioneCor = :cdVersioneCor"),
-        @NamedQuery(name = "XfoTrasf.findByDsVersioneCor", query = "SELECT x FROM XfoTrasf x WHERE x.dsVersioneCor = :dsVersioneCor"),
-        @NamedQuery(name = "XfoTrasf.findByDtIstituz", query = "SELECT x FROM XfoTrasf x WHERE x.dtIstituz = :dtIstituz"),
-        @NamedQuery(name = "XfoTrasf.findByDtSoppres", query = "SELECT x FROM XfoTrasf x WHERE x.dtSoppres = :dtSoppres") })
 public class XfoTrasf implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long idTrasf;

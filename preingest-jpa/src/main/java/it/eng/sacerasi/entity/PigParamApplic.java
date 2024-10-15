@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,11 +39,12 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
  */
 @Entity
 @Table(name = "PIG_PARAM_APPLIC")
-@NamedQuery(name = "PigParamApplic.findAll", query = "SELECT p FROM PigParamApplic p")
 public class PigParamApplic implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long idParamApplic;
+    private String cdVersioneAppIni;
+    private String cdVersioneAppFine;
     private String dmParamApplic;
     private String dsListaValoriAmmessi;
     private String dsParamApplic;
@@ -74,6 +74,24 @@ public class PigParamApplic implements Serializable {
 
     public void setIdParamApplic(Long idParamApplic) {
         this.idParamApplic = idParamApplic;
+    }
+
+    @Column(name = "CD_VERSIONE_APP_INI")
+    public String getCdVersioneAppIni() {
+        return this.cdVersioneAppIni;
+    }
+
+    public void setCdVersioneAppIni(String cdVersioneAppIni) {
+        this.cdVersioneAppIni = cdVersioneAppIni;
+    }
+
+    @Column(name = "CD_VERSIONE_APP_FINE")
+    public String getCdVersioneAppFine() {
+        return this.cdVersioneAppFine;
+    }
+
+    public void setCdVersioneAppFine(String cdVersioneAppFine) {
+        this.cdVersioneAppFine = cdVersioneAppFine;
     }
 
     @Column(name = "DM_PARAM_APPLIC")

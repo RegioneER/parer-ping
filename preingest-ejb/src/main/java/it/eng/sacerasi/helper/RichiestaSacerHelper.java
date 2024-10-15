@@ -58,6 +58,7 @@ import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.job.dto.EsitoConnessione;
 import it.eng.sacerasi.job.dto.RichiestaSacerInput;
 import it.eng.sacerasi.job.preparaxml.util.XmlUtils;
+import it.eng.sacerasi.messages.MessaggiWSBundle;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
 
 @Stateless(mappedName = "RichiestaSacerHelper")
@@ -212,7 +213,7 @@ public class RichiestaSacerHelper {
             esitoConnessione.setErroreConnessione(false);
             esitoConnessione.setDescrErrConnessione(null);
             esitoConnessione.setCodiceEsito(Constants.EsitoVersamento.NEGATIVO.name());
-            esitoConnessione.setCodiceErrore(null);
+            esitoConnessione.setCodiceErrore(MessaggiWSBundle.ERR_666);
             esitoConnessione
                     .setMessaggioErrore("Errore nella risposta: l'xml di risposta non rispetta l'xsd associato");
             log.error("Errore nella risposta: l'xml di risposta non rispetta l'xsd associato", ex);

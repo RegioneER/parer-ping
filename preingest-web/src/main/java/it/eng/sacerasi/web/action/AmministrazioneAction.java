@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.action;
 
 import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.IMPORT_VERSATORE_MAX_FILE_SIZE;
@@ -32,7 +31,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +56,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -176,8 +175,6 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     @EJB(mappedName = "java:app/sacerlog-ejb/SacerLogEjb")
     private SacerLogEjb sacerLogEjb;
     private static final Logger log = LoggerFactory.getLogger(AmministrazioneAction.class);
-    @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
-    private ConfigurationHelper configurationHelper;
 
     private static final String AMMINISTRAZIONE = "amministrazione";
     private static final String CONSERVAZIONE = "conservazione";
@@ -631,7 +628,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         getForm().getVersList().getNm_ambiente_vers().setHidden(true);
 
         // Parametri
-        loadListeParametriAmbiente(idAmbienteVers, null, false, false, false, false, true);
+        // loadListeParametriAmbiente(idAmbienteVers, null, false, false, false, false, true);
+        loadListaParametriAmministrazioneAmbiente(idAmbienteVers, null, true, false,
+                getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriConservazioneAmbiente(idAmbienteVers, null, true, false,
+                getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriGestioneAmbiente(idAmbienteVers, null, true, false,
+                getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
 
         getForm().getParametriAmbienteButtonList().getParametriAmministrazioneAmbienteButton().setEditMode();
         getForm().getParametriAmbienteButtonList().getParametriConservazioneAmbienteButton().setEditMode();
@@ -776,6 +779,18 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getForm().getVers().getTi_stato_cartelle().setValue("KO");
         }
 
+        // MEV 33041
+        getForm().getVers().getDs_path_daversare_ftp().setValue(prefisso + versRowBean.getNmVers() + "/DA_VERSARE/");
+        getForm().getVers().getCreaCartellaDaVersare().setViewMode();
+        getForm().getVers().getCreaCartellaDaVersare().setHidden(true);
+
+        path = new File(basePath + "/DA_VERSARE/");
+        if (!path.exists() || !path.isDirectory()) {
+            getForm().getVers().getDs_path_daversare_ftp().setValue("");
+            getForm().getVers().getCreaCartellaDaVersare().setEditMode();
+            getForm().getVers().getCreaCartellaDaVersare().setHidden(false);
+        }
+
         mostraNascondiFlagArchivioRestituitoCessato();
 
         loadListeVersatore(idVers);
@@ -896,8 +911,17 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         // Parametri
         PigAmbienteVersRowBean pigAmbienteVersByVers = amministrazioneEjb
                 .getPigAmbienteVersByVers(tipoObjRowBean.getIdVers());
-        loadListeParametriTipoOggetto(pigAmbienteVersByVers.getIdAmbienteVers(), tipoObjRowBean.getIdVers(), idTipoObj,
-                null, false, false, false, false, true);
+        // loadListeParametriTipoOggetto(pigAmbienteVersByVers.getIdAmbienteVers(), tipoObjRowBean.getIdVers(),
+        // idTipoObj,
+        // null, false, false, false, false, true);
+        loadListaParametriAmministrazioneTipoOggetto(pigAmbienteVersByVers.getIdAmbienteVers(),
+                tipoObjRowBean.getIdVers(), idTipoObj, null, true, false,
+                getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriConservazioneTipoOggetto(pigAmbienteVersByVers.getIdAmbienteVers(),
+                tipoObjRowBean.getIdVers(), idTipoObj, null, true, false,
+                getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriGestioneTipoOggetto(pigAmbienteVersByVers.getIdAmbienteVers(), tipoObjRowBean.getIdVers(),
+                idTipoObj, null, true, false, getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
 
         getForm().getParametriTipoOggettoButtonList().getParametriAmministrazioneTipoOggettoButton().setEditMode();
         getForm().getParametriTipoOggettoButtonList().getParametriConservazioneTipoOggettoButton().setEditMode();
@@ -998,8 +1022,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         getForm().getParametriGestioneTipoOggettoSection().setLoadOpened(false);
         // Parametri
         PigAmbienteVersRowBean pigAmbienteVersByVers = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
-        loadListeParametriVersatore(pigAmbienteVersByVers.getIdAmbienteVers(), idVers, null, false, false, false, false,
-                true);
+        // loadListeParametriVersatore(pigAmbienteVersByVers.getIdAmbienteVers(), idVers, null, false, false, false,
+        // false,
+        // true);
+        loadListaParametriAmministrazioneVersatore(pigAmbienteVersByVers.getIdAmbienteVers(), idVers, null, true, false,
+                getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriConservazioneVersatore(pigAmbienteVersByVers.getIdAmbienteVers(), idVers, null, true, false,
+                getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriGestioneVersatore(pigAmbienteVersByVers.getIdAmbienteVers(), idVers, null, true, false,
+                getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
 
         getForm().getParametriVersatoreButtonList().getParametriAmministrazioneVersatoreButton().setEditMode();
         getForm().getParametriVersatoreButtonList().getParametriConservazioneVersatoreButton().setEditMode();
@@ -1301,6 +1332,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 getForm().getVers().getDs_path_input_ftp().setViewMode();
                 getForm().getVers().getDs_path_output_ftp().setViewMode();
                 getForm().getVers().getDs_path_trasf().setViewMode();
+                getForm().getVers().getDs_path_daversare_ftp().setViewMode();
                 populateComboVers();
                 setDateStandard();
 
@@ -2079,6 +2111,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
+        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         BigDecimal idAmb = vers.getId_ambiente_vers().parse();
         BigDecimal idEnteConvenzEc = vers.getId_ente_convenz_ec().parse();
         BigDecimal idEnteFornitEstern = vers.getId_ente_convenz_fe().parse();
@@ -2121,10 +2154,10 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             BigDecimal idVers = null;
 
             if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                    dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFineValAppartAmbiente,
-                    tipologia, flRestituzioneArchivio, flCessato, idEnteConvenzEc, dtIniValAppartEnteSiam,
-                    dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
-                    parametriConservazione, parametriGestione)) {
+                    dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
+                    dtFineValAppartAmbiente, tipologia, flRestituzioneArchivio, flCessato, idEnteConvenzEc,
+                    dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam,
+                    parametriAmministrazione, parametriConservazione, parametriGestione)) {
                 /*
                  * Codice aggiuntivo per il logging...
                  */
@@ -2308,6 +2341,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
+        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         String tiDichVers = vers.getTi_dich_vers().parse();
         BigDecimal idOrganizIam = vers.getId_organiz_iam().parse();
         getForm().getParametriAmministrazioneVersatoreList().post(getRequest());
@@ -2321,9 +2355,10 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 .getParametriGestioneVersatoreList().getTable();
 
         if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFinValAppartAmbiente, tipologia,
-                "0", "0", idEnteConvenzEc, dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern,
-                tiDichVers, idOrganizIam, parametriAmministrazione, parametriConservazione, parametriGestione)) {
+                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
+                dtFinValAppartAmbiente, tipologia, "0", "0", idEnteConvenzEc, dtIniValAppartEnteSiam,
+                dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
+                parametriConservazione, parametriGestione)) {
             try {
                 /*
                  * Codice aggiuntivo per il logging...
@@ -2337,8 +2372,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 Object[] dati = amministrazioneEjb.duplicaVersatore(param, idAmb, idVers, nmAmbiente, nmVers, dsVers,
                         idEnteConvenzEc, nmEnteConvenz, idEnteFornitEstern, nmEnteFornitEstern, dtIniValAppartEnteSiam,
                         dtFineValAppartEnteSiam, dtIniValVers, dtFineValVers, dtIniValAppartAmbiente,
-                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, tiDichVers, idOrganizIam,
-                        getUser().getIdUtente());
+                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare,
+                        tiDichVers, idOrganizIam, getUser().getIdUtente());
                 /* Si prepara tutto per andare nel dettaglio del versatore appena inserito */
                 BigDecimal idOggetto = (BigDecimal) dati[0];
                 String msg = (String) dati[1];
@@ -2374,14 +2409,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
      */
     private boolean validaPerSalvataggioVersatore(Status status, BigDecimal idAmbienteVers, String nmVers,
             String dsVers, Date dtIniValVers, Date dtFineValVers, String dsPathInputFtp, String dsPathOutputFtp,
-            String dsPathTrasf, Date dtIniValAppartAmbiente, Date dtFineValAppartAmbiente, String tipologia,
-            String flArchivioRestituito, String flCessato, BigDecimal idEnteConvenzEc, Date dtIniValAppartEnteSiam,
-            Date dtFineValAppartEnteSiam, BigDecimal idEnteFornitEstern, String tiDichVers, BigDecimal idOrganizIam,
-            PigParamApplicTableBean parametriAmministrazione, PigParamApplicTableBean parametriConservazione,
-            PigParamApplicTableBean parametriGestione) {
+            String dsPathTrasf, String dsPathDaVersare, Date dtIniValAppartAmbiente, Date dtFineValAppartAmbiente,
+            String tipologia, String flArchivioRestituito, String flCessato, BigDecimal idEnteConvenzEc,
+            Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, BigDecimal idEnteFornitEstern, String tiDichVers,
+            BigDecimal idOrganizIam, PigParamApplicTableBean parametriAmministrazione,
+            PigParamApplicTableBean parametriConservazione, PigParamApplicTableBean parametriGestione) {
         AmministrazioneValidator valid = new AmministrazioneValidator(getMessageBox());
         valid.validaDatiVersatoreBase(status, tipologia, idAmbienteVers, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dtIniValAppartAmbiente, dtFineValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf);
+                dtIniValAppartAmbiente, dtFineValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf,
+                dsPathDaVersare);
 
         // MEV 27921
         if (!getMessageBox().hasError()) {
@@ -5590,7 +5626,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 }
                 // Nel caso sia stato richiesto, elimina il file
                 if (Boolean.TRUE.equals(deleteFile)) {
-                    Files.delete(fileToDownload.toPath());
+                    FileUtils.deleteQuietly(fileToDownload);
                 }
             } else {
                 getMessageBox().addError("Errore durante il tentativo di download. File non trovato");
@@ -5635,6 +5671,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
+        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         String tiDichVers = vers.getTi_dich_vers().parse();
         BigDecimal idOrganizIam = vers.getId_organiz_iam().parse();
         getForm().getParametriAmministrazioneVersatoreList().post(getRequest());
@@ -5651,9 +5688,10 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getMessageBox().addError("Errore di compilazione form: selezionare il file da importare<br/>");
         }
         if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFinValAppartAmbiente, tipologia,
-                "0", "0", idEnteConvenz, dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern,
-                tiDichVers, idOrganizIam, parametriAmministrazione, parametriConservazione, parametriGestione)) {
+                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
+                dtFinValAppartAmbiente, tipologia, "0", "0", idEnteConvenz, dtIniValAppartEnteSiam,
+                dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
+                parametriConservazione, parametriGestione)) {
             String strXml = new String(fileBlob, StandardCharsets.UTF_8);
             try {
                 /*
@@ -5668,8 +5706,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 Object[] dati = amministrazioneEjb.importaVersatore(param, idAmb, strXml, nmAmbiente, nmVers, dsVers,
                         idEnteConvenz, nmEnteConvenz, idEnteFornitEstern, nmEnteFornitEstern, dtIniValAppartEnteSiam,
                         dtFineValAppartEnteSiam, dtIniValVers, dtFineValVers, dtIniValAppartAmbiente,
-                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, tiDichVers, idOrganizIam,
-                        getUser().getIdUtente());
+                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare,
+                        tiDichVers, idOrganizIam, getUser().getIdUtente());
 
                 /* Si prepara tutto per andare nel dettaglio del versatore appena inserito */
                 BigDecimal idOggetto = (BigDecimal) dati[0];
@@ -5733,9 +5771,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         /*
          * Codice aggiuntivo per il logging...
          */
-        LogParam param = SpagoliteLogUtil.getLogParam(
-                configurationHelper.getValoreParamApplicByApplic(Constants.NM_APPLIC), getUser().getUsername(),
-                SpagoliteLogUtil.getPageName(this));
+        LogParam param = SpagoliteLogUtil.getLogParam(configHelper.getValoreParamApplicByApplic(Constants.NM_APPLIC),
+                getUser().getUsername(), SpagoliteLogUtil.getPageName(this));
         param.setTransactionLogContext(sacerLogEjb.getNewTransactionLogContext());
         param.setNomeAzione(SpagoliteLogUtil.getDetailActionNameDelete(getForm(), getForm().getEnteConvenzOrgList()));
         if (!getMessageBox().hasError() && idEnteConvenzOrg != null) {
@@ -5761,7 +5798,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriAmministrazioneAmbienteButton() throws Throwable {
         BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
                 .getBigDecimal("id_ambiente_vers");
-        loadListeParametriAmbiente(idAmbienteVers, null, false, true, true, true, true);
+        // loadListeParametriAmbiente(idAmbienteVers, null, false, true, true, true, true);
+        loadListaParametriAmministrazioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriConservazioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriGestioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
         prepareRicercaParametriAmbiente(AMMINISTRAZIONE);
     }
 
@@ -5769,7 +5812,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriConservazioneAmbienteButton() throws Throwable {
         BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
                 .getBigDecimal("id_ambiente_vers");
-        loadListeParametriAmbiente(idAmbienteVers, null, false, false, true, true, true);
+        // loadListeParametriAmbiente(idAmbienteVers, null, false, false, true, true, true);
+        loadListaParametriAmministrazioneAmbiente(idAmbienteVers, null, false, false,
+                getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriConservazioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriGestioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
         prepareRicercaParametriAmbiente(CONSERVAZIONE);
     }
 
@@ -5777,7 +5826,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriGestioneAmbienteButton() throws Throwable {
         BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
                 .getBigDecimal("id_ambiente_vers");
-        loadListeParametriAmbiente(idAmbienteVers, null, false, false, false, true, true);
+        // loadListeParametriAmbiente(idAmbienteVers, null, false, false, false, true, true);
+        loadListaParametriAmministrazioneAmbiente(idAmbienteVers, null, false, false,
+                getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriConservazioneAmbiente(idAmbienteVers, null, false, false,
+                getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+        loadListaParametriGestioneAmbiente(idAmbienteVers, null, false, true,
+                getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
         prepareRicercaParametriAmbiente(GESTIONE);
     }
 
@@ -5804,13 +5859,31 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 String provenzienzaParametri = (String) getSession().getAttribute("provenienzaParametri");
                 switch (provenzienzaParametri) {
                 case AMMINISTRAZIONE:
-                    loadListeParametriAmbiente(idAmbienteVers, funzione, false, true, true, true, true);
+                    // loadListeParametriAmbiente(idAmbienteVers, funzione, false, true, true, true, true);
+                    loadListaParametriAmministrazioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriConservazioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriGestioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
                     break;
                 case CONSERVAZIONE:
-                    loadListeParametriAmbiente(idAmbienteVers, funzione, false, false, true, true, true);
+                    // loadListeParametriAmbiente(idAmbienteVers, funzione, false, false, true, true, true);
+                    loadListaParametriAmministrazioneAmbiente(idAmbienteVers, funzione, false, false,
+                            getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriConservazioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriGestioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
                     break;
                 case GESTIONE:
-                    loadListeParametriAmbiente(idAmbienteVers, funzione, false, false, false, true, true);
+                    // loadListeParametriAmbiente(idAmbienteVers, funzione, false, false, false, true, true);
+                    loadListaParametriAmministrazioneAmbiente(idAmbienteVers, funzione, false, false,
+                            getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriConservazioneAmbiente(idAmbienteVers, funzione, false, false,
+                            getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+                    loadListaParametriGestioneAmbiente(idAmbienteVers, funzione, false, true,
+                            getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
                     break;
                 default:
                     break;
@@ -5854,7 +5927,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getForm().getParametriConservazioneAmbienteList().setViewMode();
             getForm().getParametriGestioneAmbienteList().setViewMode();
             try {
-                loadAmbienteVers(idAmbienteVers);
+                // loadAmbienteVers(idAmbienteVers);
+                loadListaParametriAmministrazioneAmbiente(idAmbienteVers, null, false, false,
+                        getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords());
+                loadListaParametriConservazioneAmbiente(idAmbienteVers, null, false, false,
+                        getForm().getParametriConservazioneAmbienteList().isFilterValidRecords());
+                loadListaParametriGestioneAmbiente(idAmbienteVers, null, false, false,
+                        getForm().getParametriGestioneAmbienteList().isFilterValidRecords());
                 forwardToPublisher(Application.Publisher.AMBIENTE_VERS_DETAIL);
             } catch (ParerUserError e) {
                 getMessageBox().addError(e.getDescription());
@@ -5868,7 +5947,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriAmministrazioneVersatoreButton() throws Throwable {
         BigDecimal idAmbienteVers = getForm().getVers().getId_ambiente_vers().parse();
         BigDecimal idVers = getForm().getVersList().getTable().getCurrentRow().getBigDecimal("id_vers");
-        loadListeParametriVersatore(idAmbienteVers, idVers, null, false, true, true, true, true);
+        // loadListeParametriVersatore(idAmbienteVers, idVers, null, false, true, true, true, true);
+        loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriGestioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
         prepareRicercaParametriVersatore(AMMINISTRAZIONE);
     }
 
@@ -5876,7 +5961,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriConservazioneVersatoreButton() throws Throwable {
         BigDecimal idAmbienteVers = getForm().getVers().getId_ambiente_vers().parse();
         BigDecimal idVers = getForm().getVersList().getTable().getCurrentRow().getBigDecimal("id_vers");
-        loadListeParametriVersatore(idAmbienteVers, idVers, null, false, false, true, true, true);
+        // loadListeParametriVersatore(idAmbienteVers, idVers, null, false, false, true, true, true);
+        loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, null, false, false,
+                getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriGestioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
         prepareRicercaParametriVersatore(CONSERVAZIONE);
     }
 
@@ -5884,7 +5975,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     public void parametriGestioneVersatoreButton() throws Throwable {
         BigDecimal idAmbienteVers = getForm().getVers().getId_ambiente_vers().parse();
         BigDecimal idVers = getForm().getVersList().getTable().getCurrentRow().getBigDecimal("id_vers");
-        loadListeParametriVersatore(idAmbienteVers, idVers, null, false, false, false, true, true);
+        // loadListeParametriVersatore(idAmbienteVers, idVers, null, false, false, false, true, true);
+        loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, null, false, false,
+                getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, null, false, false,
+                getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+        loadListaParametriGestioneVersatore(idAmbienteVers, idVers, null, false, true,
+                getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
         prepareRicercaParametriVersatore(GESTIONE);
     }
 
@@ -5911,13 +6008,31 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 String provenzienzaParametri = (String) getSession().getAttribute("provenienzaParametri");
                 switch (provenzienzaParametri) {
                 case AMMINISTRAZIONE:
-                    loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, true, true, true, true);
+                    // loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, true, true, true, true);
+                    loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriGestioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
                     break;
                 case CONSERVAZIONE:
-                    loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, false, true, true, true);
+                    // loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, false, true, true, true);
+                    loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, funzione, false, false,
+                            getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriGestioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
                     break;
                 case GESTIONE:
-                    loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, false, false, true, true);
+                    // loadListeParametriVersatore(idAmbienteVers, idVers, funzione, false, false, false, true, true);
+                    loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, funzione, false, false,
+                            getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, funzione, false, false,
+                            getForm().getParametriConservazioneVersatoreList().isFilterValidRecords());
+                    loadListaParametriGestioneVersatore(idAmbienteVers, idVers, funzione, false, true,
+                            getForm().getParametriGestioneVersatoreList().isFilterValidRecords());
                     break;
                 default:
                     break;
@@ -5984,7 +6099,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         BigDecimal idVers = getForm().getVers().getId_vers().parse();
         BigDecimal idTipoObject = getForm().getTipoObjectList().getTable().getCurrentRow()
                 .getBigDecimal("id_tipo_object");
-        loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true, true, true, true);
+        // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true, true, true, true);
+        loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
         prepareRicercaParametriTipoOggetto(AMMINISTRAZIONE);
     }
 
@@ -5994,7 +6115,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         BigDecimal idVers = getForm().getVers().getId_vers().parse();
         BigDecimal idTipoObject = getForm().getTipoObjectList().getTable().getCurrentRow()
                 .getBigDecimal("id_tipo_object");
-        loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false, true, true, true);
+        // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false, true, true, true);
+        loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false,
+                getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
         prepareRicercaParametriTipoOggetto(CONSERVAZIONE);
     }
 
@@ -6004,7 +6131,13 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         BigDecimal idVers = getForm().getVers().getId_vers().parse();
         BigDecimal idTipoObject = getForm().getTipoObjectList().getTable().getCurrentRow()
                 .getBigDecimal("id_tipo_object");
-        loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false, false, true, true);
+        // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false, false, true, true);
+        loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false,
+                getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, false,
+                getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+        loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, null, false, true,
+                getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
         prepareRicercaParametriTipoOggetto(GESTIONE);
     }
 
@@ -6033,16 +6166,35 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 String provenzienzaParametri = (String) getSession().getAttribute("provenienzaParametri");
                 switch (provenzienzaParametri) {
                 case AMMINISTRAZIONE:
-                    loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, true, true,
-                            true, true);
+                    // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, true, true,
+                    // true, true);
+                    loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            true, getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            true, getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, true,
+                            getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
                     break;
                 case CONSERVAZIONE:
-                    loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, false, true,
-                            true, true);
+                    // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, false, true,
+                    // true, true);
+                    loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            false, getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            true, getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, true,
+                            getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
                     break;
                 case GESTIONE:
-                    loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, false, false,
-                            true, true);
+                    // loadListeParametriTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, false,
+                    // false,
+                    // true, true);
+                    loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            false, getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false,
+                            false, getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords());
+                    loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, false, true,
+                            getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords());
                     break;
                 default:
                     break;
@@ -6177,6 +6329,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         getForm().getConfigurationList().getNm_param_applic().setEditMode();
         getForm().getConfigurationList().getDm_param_applic().setEditMode();
         getForm().getConfigurationList().getDs_param_applic().setEditMode();
+        getForm().getConfigurationList().getCd_versione_app_ini().setEditMode();
+        getForm().getConfigurationList().getCd_versione_app_fine().setEditMode();
         getForm().getConfigurationList().getTi_valore_param_applic().setEditMode();
         getForm().getConfigurationList().getDs_lista_valori_ammessi().setEditMode();
         getForm().getConfigurationList().getDs_valore_param_applic().setEditMode();
@@ -6218,7 +6372,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 
         // Carico i valori della lista configurazioni
         PigParamApplicTableBean paramApplicTableBean = amministrazioneEjb.getPigParamApplicTableBean(tiParamApplic,
-                tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVers, flAppartTipoOggetto);
+                tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVers, flAppartTipoOggetto,
+                getForm().getConfigurationList().isFilterValidRecords());
 
         paramApplicTableBean = obfuscatePasswordParamApplic(paramApplicTableBean);
 
@@ -6264,6 +6419,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsValoreParamApplicName = getForm().getConfigurationList().getDs_valore_param_applic().getName();
         String flAppartApplicName = getForm().getConfigurationList().getFl_appart_applic().getName();
         String tiValoreParamApplic = getForm().getConfigurationList().getTi_valore_param_applic().getName();
+        String cdVersioneAppIni = getForm().getConfigurationList().getCd_versione_app_ini().getName();
         Set<Integer> completeRows = new HashSet<>();
         Set<String> nmParamApplicSet = new HashSet<>();
         // Tiro su i dati i request di tutti i record della lista
@@ -6276,14 +6432,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             String tiGestioneParamValue = r.getString(tiGestioneParamName);
             String nmParamApplicValue = r.getString(nmParamApplicName);
             String dsParamApplicValue = r.getString(dsParamApplicName);
-            String dsListaValoriAmmessiValue = r.getString(dsListaValoriAmmessiName);
-            String dsValoreParamApplicValue = r.getString(dsValoreParamApplicName);
-            String tiValoreParamApplicValue = r.getString(tiValoreParamApplic);
+            String dsListaValoriAmmessiValue = r.getString(dsListaValoriAmmessiName);//
+            String dsValoreParamApplicValue = r.getString(dsValoreParamApplicName);//
+            String tiValoreParamApplicValue = r.getString(tiValoreParamApplic);//
             String flAppartApplicValue = r.getString(flAppartApplicName);
+            String cdVersioneAppIniValue = r.getString(cdVersioneAppIni);
             if (StringUtils.isNotBlank(tiParamApplicValue) && StringUtils.isNotBlank(tiGestioneParamValue)
                     && StringUtils.isNotBlank(nmParamApplicValue) && StringUtils.isNotBlank(dsParamApplicValue)
                     && StringUtils.isNotBlank(tiValoreParamApplicValue) // &&
-            ) {
+                    && StringUtils.isNotBlank(cdVersioneAppIniValue)) {
                 if (StringUtils.isNotBlank(dsValoreParamApplicValue)) {
                     if (flAppartApplicValue.equals("1")) {
                         completeRows.add(i);
@@ -6376,6 +6533,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         getForm().getConfigurationList().getTi_valore_param_applic().setViewMode();
         getForm().getConfigurationList().getDs_lista_valori_ammessi().setViewMode();
         getForm().getConfigurationList().getDs_valore_param_applic().setViewMode();
+        getForm().getConfigurationList().getCd_versione_app_ini().setViewMode();
+        getForm().getConfigurationList().getCd_versione_app_fine().setViewMode();
         getForm().getConfigurationList().getFl_appart_applic().setEditMode();
         getForm().getConfigurationList().getFl_appart_ambiente().setEditMode();
         getForm().getConfigurationList().getFl_appart_vers().setEditMode();
@@ -7060,6 +7219,27 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         return getForm().getVisVers().asJSON();
     }
 
+    // MEV 33041
+    @Override
+    public void creaCartellaDaVersare() throws EMFError {
+        BigDecimal idVers = getForm().getVers().getId_vers().parse();
+        String path = "";
+
+        try {
+            path = amministrazioneEjb.creaCartellaDaVersare(idVers);
+        } catch (ParerUserError ex) {
+            getMessageBox().addError(ex.getDescription());
+        }
+
+        if (!getMessageBox().hasError()) {
+            getForm().getVers().getDs_path_daversare_ftp().setValue(path);
+            getForm().getVers().getCreaCartellaDaVersare().setViewMode();
+            getForm().getVers().getCreaCartellaDaVersare().setHidden(true);
+        }
+
+        forwardToPublisher(Publisher.VERS_DETAIL);
+    }
+
     private PigParamApplicTableBean obfuscatePasswordParamApplic(PigParamApplicTableBean paramApplicTableBean) {
         // MEV22933 - offusca le password
         Iterator<PigParamApplicRowBean> rowIt = paramApplicTableBean.iterator();
@@ -7119,5 +7299,450 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         }
 
         return paramApplicTableBean;
+    }
+
+    // MEV 32650
+    @Override
+    public void filterInactiveRecordsConfigurationList() throws EMFError {
+        int rowIndex = 0;
+        int pageSize = WebConstants.DEFAULT_PAGE_SIZE;
+        if (getForm().getConfigurationList().getTable() != null) {
+            rowIndex = getForm().getConfigurationList().getTable().getCurrentRowIndex();
+            pageSize = getForm().getConfigurationList().getTable().getPageSize();
+        }
+
+        getForm().getConfiguration().post(getRequest());
+        String tiParamApplic = getForm().getConfiguration().getTi_param_applic_combo().parse();
+        String tiGestioneParam = getForm().getConfiguration().getTi_gestione_param_combo().parse();
+        String flAppartApplic = getForm().getConfiguration().getFl_appart_applic_combo().parse();
+        String flAppartAmbiente = getForm().getConfiguration().getFl_appart_ambiente_combo().parse();
+        String flAppartVersatore = getForm().getConfiguration().getFl_appart_vers_combo().parse();
+        String flAppartTipoOggetto = getForm().getConfiguration().getFl_appart_tipo_oggetto_combo().parse();
+
+        // Carico i valori della lista configurazioni
+        PigParamApplicTableBean paramApplicTableBean = amministrazioneEjb.getPigParamApplicTableBean(tiParamApplic,
+                tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVersatore, flAppartTipoOggetto,
+                getForm().getConfigurationList().isFilterValidRecords());
+
+        paramApplicTableBean = obfuscatePasswordParamApplic(paramApplicTableBean);
+
+        getForm().getConfigurationList().setTable(paramApplicTableBean);
+
+        setConfigListReadOnly();
+
+        // se non ho trovato risultati nascondo il pulsate "Edita"
+        if (paramApplicTableBean.isEmpty()) {
+            getForm().getConfiguration().getEdit_config().setViewMode();
+        }
+
+        getForm().getConfigurationList().getTable().setCurrentRowIndex(rowIndex);
+        getForm().getConfigurationList().getTable().setPageSize(pageSize);
+
+        forwardToPublisher(Application.Publisher.REGISTRO_PARAMETRI);
+    }
+
+    //
+    @Override
+    public void filterInactiveRecordsParametriAmministrazioneAmbienteList() throws EMFError {
+        BigDecimal idAmbiente = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        boolean filterValid = getForm().getParametriAmministrazioneAmbienteList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_AMBIENTE_VERS)) {
+                loadListaParametriAmministrazioneAmbiente(idAmbiente, null, false, true, filterValid);
+            } else {
+                loadListaParametriAmministrazioneAmbiente(idAmbiente, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox()
+                    .addError("Errore durante il recupero dei parametri di amministrazione dell'ambiente versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriConservazioneAmbienteList() throws EMFError {
+        BigDecimal idAmbiente = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        boolean filterValid = getForm().getParametriConservazioneAmbienteList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_AMBIENTE_VERS)) {
+                loadListaParametriConservazioneAmbiente(idAmbiente, null, false, true, filterValid);
+            } else {
+                loadListaParametriConservazioneAmbiente(idAmbiente, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox()
+                    .addError("Errore durante il recupero dei parametri di conservazione dell'ambiente versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriGestioneAmbienteList() throws EMFError {
+        BigDecimal idAmbiente = ((BaseRowInterface) getForm().getAmbienteVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        boolean filterValid = getForm().getParametriGestioneAmbienteList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_AMBIENTE_VERS)) {
+                loadListaParametriGestioneAmbiente(idAmbiente, null, false, true, filterValid);
+            } else {
+                loadListaParametriGestioneAmbiente(idAmbiente, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di gestione dell'ambiente versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    // @Override
+
+    private void loadListaParametriAmministrazioneAmbiente(BigDecimal idAmbienteVers, List<String> funzione,
+            boolean hideDeleteButtons, boolean editModeAmministrazione, boolean filterValid) throws ParerUserError {
+
+        PigParamApplicTableBean parametriAmministrazione = amministrazioneEjb
+                .getPigParamApplicAmministrazioneAmbiente(idAmbienteVers, funzione, filterValid);
+
+        if (!editModeAmministrazione) {
+            parametriAmministrazione = obfuscatePasswordParamApplic(parametriAmministrazione);
+        }
+
+        getForm().getParametriAmministrazioneAmbienteList().setTable(parametriAmministrazione);
+        getForm().getParametriAmministrazioneAmbienteList().getTable().setPageSize(300);
+        getForm().getParametriAmministrazioneAmbienteList().getTable().first();
+        getForm().getParametriAmministrazioneAmbienteList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeAmministrazione) {
+            getForm().getParametriAmministrazioneAmbienteList().getDs_valore_param_applic_ambiente_amm().setEditMode();
+            getForm().getParametriAmministrazioneAmbienteList().setStatus(Status.update);
+        } else {
+            getForm().getParametriAmministrazioneAmbienteList().getDs_valore_param_applic_ambiente_amm().setViewMode();
+            getForm().getParametriAmministrazioneAmbienteList().setStatus(Status.view);
+        }
+    }
+
+    private void loadListaParametriConservazioneAmbiente(BigDecimal idAmbienteVers, List<String> funzione,
+            boolean hideDeleteButtons, boolean editModeConservazione, boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean parametriConservazione = amministrazioneEjb
+                .getAplParamApplicConservazioneAmbiente(idAmbienteVers, funzione, filterValid);
+
+        if (!editModeConservazione) {
+            parametriConservazione = obfuscatePasswordParamApplic(parametriConservazione);
+        }
+
+        getForm().getParametriConservazioneAmbienteList().setTable(parametriConservazione);
+        getForm().getParametriConservazioneAmbienteList().getTable().setPageSize(300);
+        getForm().getParametriConservazioneAmbienteList().getTable().first();
+        getForm().getParametriConservazioneAmbienteList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeConservazione) {
+            getForm().getParametriConservazioneAmbienteList().getDs_valore_param_applic_ambiente_cons().setEditMode();
+            getForm().getParametriConservazioneAmbienteList().setStatus(Status.update);
+        } else {
+            getForm().getParametriConservazioneAmbienteList().getDs_valore_param_applic_ambiente_cons().setViewMode();
+            getForm().getParametriConservazioneAmbienteList().setStatus(Status.view);
+        }
+    }
+
+    private void loadListaParametriGestioneAmbiente(BigDecimal idAmbienteVers, List<String> funzione,
+            boolean hideDeleteButtons, boolean editModeGestione, boolean filterValid) throws ParerUserError {
+
+        PigParamApplicTableBean parametriGestione = amministrazioneEjb.getAplParamApplicGestioneAmbiente(idAmbienteVers,
+                funzione, filterValid);
+
+        if (!editModeGestione) {
+            parametriGestione = obfuscatePasswordParamApplic(parametriGestione);
+        }
+
+        getForm().getParametriGestioneAmbienteList().setTable(parametriGestione);
+        getForm().getParametriGestioneAmbienteList().getTable().setPageSize(300);
+        getForm().getParametriGestioneAmbienteList().getTable().first();
+        getForm().getParametriGestioneAmbienteList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeGestione) {
+            getForm().getParametriGestioneAmbienteList().getDs_valore_param_applic_ambiente_gest().setEditMode();
+            getForm().getParametriGestioneAmbienteList().setStatus(Status.update);
+        } else {
+            getForm().getParametriGestioneAmbienteList().getDs_valore_param_applic_ambiente_gest().setViewMode();
+            getForm().getParametriGestioneAmbienteList().setStatus(Status.view);
+        }
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriAmministrazioneVersatoreList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        boolean filterValid = getForm().getParametriAmministrazioneVersatoreList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_VERSATORE)) {
+                loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, null, false, true, filterValid);
+            } else {
+                loadListaParametriAmministrazioneVersatore(idAmbienteVers, idVers, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di amministrazione del versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriConservazioneVersatoreList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        boolean filterValid = getForm().getParametriConservazioneVersatoreList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_VERSATORE)) {
+                loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, null, false, true, filterValid);
+            } else {
+                loadListaParametriConservazioneVersatore(idAmbienteVers, idVers, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di conservazione del versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriGestioneVersatoreList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        boolean filterValid = getForm().getParametriGestioneVersatoreList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_VERSATORE)) {
+                loadListaParametriGestioneVersatore(idAmbienteVers, idVers, null, false, true, filterValid);
+            } else {
+                loadListaParametriGestioneVersatore(idAmbienteVers, idVers, null, false, false, filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di gestione del versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    // @Override
+
+    private void loadListaParametriAmministrazioneVersatore(BigDecimal idAmbienteVers, BigDecimal idVers,
+            List<String> funzione, boolean hideDeleteButtons, boolean editModeAmministrazione, boolean filterValid)
+            throws ParerUserError {
+
+        PigParamApplicTableBean parametriAmministrazione = amministrazioneEjb
+                .getPigParamApplicAmministrazioneVersatore(idAmbienteVers, idVers, funzione, filterValid);
+
+        if (!editModeAmministrazione) {
+            parametriAmministrazione = obfuscatePasswordParamApplic(parametriAmministrazione);
+        }
+
+        getForm().getParametriAmministrazioneVersatoreList().setTable(parametriAmministrazione);
+        getForm().getParametriAmministrazioneVersatoreList().getTable().setPageSize(300);
+        getForm().getParametriAmministrazioneVersatoreList().getTable().first();
+        getForm().getParametriAmministrazioneVersatoreList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeAmministrazione) {
+            getForm().getParametriAmministrazioneVersatoreList().getDs_valore_param_applic_vers_amm().setEditMode();
+            getForm().getParametriAmministrazioneVersatoreList().setStatus(Status.update);
+        } else {
+            getForm().getParametriAmministrazioneVersatoreList().getDs_valore_param_applic_vers_amm().setViewMode();
+            getForm().getParametriAmministrazioneVersatoreList().setStatus(Status.view);
+        }
+    }
+
+    private void loadListaParametriConservazioneVersatore(BigDecimal idAmbienteVers, BigDecimal idVers,
+            List<String> funzione, boolean hideDeleteButtons, boolean editModeConservazione, boolean filterValid)
+            throws ParerUserError {
+        PigParamApplicTableBean parametriConservazione = amministrazioneEjb
+                .getPigParamApplicConservazioneVersatore(idAmbienteVers, idVers, funzione, filterValid);
+
+        if (!editModeConservazione) {
+            parametriConservazione = obfuscatePasswordParamApplic(parametriConservazione);
+        }
+
+        getForm().getParametriConservazioneVersatoreList().setTable(parametriConservazione);
+        getForm().getParametriConservazioneVersatoreList().getTable().setPageSize(300);
+        getForm().getParametriConservazioneVersatoreList().getTable().first();
+        getForm().getParametriConservazioneVersatoreList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeConservazione) {
+            getForm().getParametriConservazioneVersatoreList().getDs_valore_param_applic_vers_cons().setEditMode();
+            getForm().getParametriConservazioneVersatoreList().setStatus(Status.update);
+        } else {
+            getForm().getParametriConservazioneVersatoreList().getDs_valore_param_applic_vers_cons().setViewMode();
+            getForm().getParametriConservazioneVersatoreList().setStatus(Status.view);
+        }
+    }
+
+    //
+    //
+    private void loadListaParametriGestioneVersatore(BigDecimal idAmbienteVers, BigDecimal idVers,
+            List<String> funzione, boolean hideDeleteButtons, boolean editModeGestione, boolean filterValid)
+            throws ParerUserError {
+
+        PigParamApplicTableBean parametriGestione = amministrazioneEjb
+                .getPigParamApplicGestioneVersatore(idAmbienteVers, idVers, funzione, filterValid);
+
+        if (!editModeGestione) {
+            parametriGestione = obfuscatePasswordParamApplic(parametriGestione);
+        }
+
+        getForm().getParametriGestioneVersatoreList().setTable(parametriGestione);
+        getForm().getParametriGestioneVersatoreList().getTable().setPageSize(300);
+        getForm().getParametriGestioneVersatoreList().getTable().first();
+        getForm().getParametriGestioneVersatoreList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeGestione) {
+            getForm().getParametriGestioneVersatoreList().getDs_valore_param_applic_vers_gest().setEditMode();
+            getForm().getParametriGestioneVersatoreList().setStatus(Status.update);
+        } else {
+            getForm().getParametriGestioneVersatoreList().getDs_valore_param_applic_vers_gest().setViewMode();
+            getForm().getParametriGestioneVersatoreList().setStatus(Status.view);
+        }
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriAmministrazioneTipoOggettoList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        BigDecimal idTipoObj = ((PigTipoObjectRowBean) getForm().getTipoObjectList().getTable().getCurrentRow())
+                .getIdTipoObject();
+        boolean filterValid = getForm().getParametriAmministrazioneTipoOggettoList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_TIPO_OBJECT)) {
+                loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, true,
+                        filterValid);
+            } else {
+                loadListaParametriAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, false,
+                        filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di amministrazione del tipo oggetto");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriConservazioneTipoOggettoList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        BigDecimal idTipoObj = ((PigTipoObjectRowBean) getForm().getTipoObjectList().getTable().getCurrentRow())
+                .getIdTipoObject();
+        boolean filterValid = getForm().getParametriConservazioneTipoOggettoList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_TIPO_OBJECT)) {
+                loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, true,
+                        filterValid);
+            } else {
+                loadListaParametriConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, false,
+                        filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di conservazione del versatore");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filterInactiveRecordsParametriGestioneTipoOggettoList() throws EMFError {
+        BigDecimal idAmbienteVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_ambiente_vers");
+        BigDecimal idVers = ((BaseRowInterface) getForm().getVersList().getTable().getCurrentRow())
+                .getBigDecimal("id_vers");
+        BigDecimal idTipoObj = ((PigTipoObjectRowBean) getForm().getTipoObjectList().getTable().getCurrentRow())
+                .getIdTipoObject();
+        boolean filterValid = getForm().getParametriGestioneTipoOggettoList().isFilterValidRecords();
+        try {
+            if (getLastPublisher().equals(Application.Publisher.PARAMETRI_VERSATORE)) {
+                loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, true,
+                        filterValid);
+            } else {
+                loadListaParametriGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObj, null, false, false,
+                        filterValid);
+            }
+        } catch (ParerUserError ex) {
+            getMessageBox().addError("Errore durante il recupero dei parametri di gestione del tipo oggetto");
+        }
+        forwardToPublisher(getLastPublisher());
+    }
+
+    // @Override
+
+    private void loadListaParametriAmministrazioneTipoOggetto(BigDecimal idAmbienteVers, BigDecimal idVers,
+            BigDecimal idTipoObject, List<String> funzione, boolean hideDeleteButtons, boolean editModeAmministrazione,
+            boolean filterValid) throws ParerUserError {
+
+        PigParamApplicTableBean parametriAmministrazione = amministrazioneEjb
+                .getPigParamApplicAmministrazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione,
+                        filterValid);
+
+        if (!editModeAmministrazione) {
+            parametriAmministrazione = obfuscatePasswordParamApplic(parametriAmministrazione);
+        }
+
+        getForm().getParametriAmministrazioneTipoOggettoList().setTable(parametriAmministrazione);
+        getForm().getParametriAmministrazioneTipoOggettoList().getTable().setPageSize(300);
+        getForm().getParametriAmministrazioneTipoOggettoList().getTable().first();
+        getForm().getParametriAmministrazioneTipoOggettoList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeAmministrazione) {
+            getForm().getParametriAmministrazioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_amm()
+                    .setEditMode();
+            getForm().getParametriAmministrazioneTipoOggettoList().setStatus(Status.update);
+        } else {
+            getForm().getParametriAmministrazioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_amm()
+                    .setViewMode();
+            getForm().getParametriAmministrazioneTipoOggettoList().setStatus(Status.view);
+        }
+    }
+
+    private void loadListaParametriConservazioneTipoOggetto(BigDecimal idAmbienteVers, BigDecimal idVers,
+            BigDecimal idTipoObject, List<String> funzione, boolean hideDeleteButtons, boolean editModeConservazione,
+            boolean filterValid) throws ParerUserError {
+        PigParamApplicTableBean parametriConservazione = amministrazioneEjb
+                .getPigParamApplicConservazioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, filterValid);
+
+        if (!editModeConservazione) {
+            parametriConservazione = obfuscatePasswordParamApplic(parametriConservazione);
+        }
+
+        getForm().getParametriConservazioneTipoOggettoList().setTable(parametriConservazione);
+        getForm().getParametriConservazioneTipoOggettoList().getTable().setPageSize(300);
+        getForm().getParametriConservazioneTipoOggettoList().getTable().first();
+        getForm().getParametriConservazioneTipoOggettoList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeConservazione) {
+            getForm().getParametriConservazioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_cons()
+                    .setEditMode();
+            getForm().getParametriConservazioneTipoOggettoList().setStatus(Status.update);
+        } else {
+            getForm().getParametriConservazioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_cons()
+                    .setViewMode();
+            getForm().getParametriConservazioneTipoOggettoList().setStatus(Status.view);
+        }
+    }
+
+    //
+    //
+    private void loadListaParametriGestioneTipoOggetto(BigDecimal idAmbienteVers, BigDecimal idVers,
+            BigDecimal idTipoObject, List<String> funzione, boolean hideDeleteButtons, boolean editModeGestione,
+            boolean filterValid) throws ParerUserError {
+
+        PigParamApplicTableBean parametriGestione = amministrazioneEjb
+                .getPigParamApplicGestioneTipoOggetto(idAmbienteVers, idVers, idTipoObject, funzione, filterValid);
+
+        if (!editModeGestione) {
+            parametriGestione = obfuscatePasswordParamApplic(parametriGestione);
+        }
+
+        getForm().getParametriGestioneTipoOggettoList().setTable(parametriGestione);
+        getForm().getParametriGestioneTipoOggettoList().getTable().setPageSize(300);
+        getForm().getParametriGestioneTipoOggettoList().getTable().first();
+        getForm().getParametriGestioneTipoOggettoList().setHideDeleteButton(hideDeleteButtons);
+        if (editModeGestione) {
+            getForm().getParametriGestioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_gest().setEditMode();
+            getForm().getParametriGestioneTipoOggettoList().setStatus(Status.update);
+        } else {
+            getForm().getParametriGestioneTipoOggettoList().getDs_valore_param_applic_tipo_oggetto_gest().setViewMode();
+            getForm().getParametriGestioneTipoOggettoList().setStatus(Status.view);
+        }
     }
 }

@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -32,7 +31,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "MON_V_OBJ_ANNUL_RANGE_DT")
-@NamedQuery(name = "MonVObjAnnulRangeDt.findAll", query = "SELECT m FROM MonVObjAnnulRangeDt m")
 public class MonVObjAnnulRangeDt implements Serializable {
 
     private static final long serialVersionUID = 1L;

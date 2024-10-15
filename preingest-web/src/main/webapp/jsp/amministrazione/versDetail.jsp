@@ -130,6 +130,8 @@
                     <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_OUTPUT_FTP%>" width="w100" controlWidth="w60" labelWidth="w20" />
                     <sl:newLine />
                     <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_TRASF%>" width="w100" controlWidth="w60" labelWidth="w20" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_DAVERSARE_FTP%>" width="w100" controlWidth="w60" labelWidth="w20" />
                 </slf:section>
                 <sl:newLine />
                 <slf:section name="<%=AmministrazioneForm.CorrispondenzaSacerSection.NAME%>" styleClass="importantContainer">
@@ -143,7 +145,8 @@
                 <slf:lblField  name="<%=AmministrazioneForm.Vers.ASSOCIA_SOP_CLASS_BUTTON%>" colSpan="1" />                
                 <slf:lblField  name="<%=AmministrazioneForm.Vers.ESPORTA_VERSATORE%>" colSpan="1"/>
                 <slf:lblField  name="<%=AmministrazioneForm.Vers.LOG_EVENTI%>" colSpan="1"/>
-                <slf:lblField  name="<%=AmministrazioneForm.Vers.CESSA_VERSATORE%>" colSpan="1" />     
+                <slf:lblField  name="<%=AmministrazioneForm.Vers.CESSA_VERSATORE%>" colSpan="1" />
+                <slf:lblField  name="<%=AmministrazioneForm.Vers.CREA_CARTELLA_DA_VERSARE %>" colSpan="1" />
             </sl:pulsantiera>
 
             <sl:newLine skipLine="true"/>

@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -102,6 +101,10 @@ import it.eng.spagoLite.security.exception.AuthWSException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  *
@@ -192,7 +195,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         getForm().getVersamentoOggettoDetail().getTi_priorita_versamento()
                 .setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum("ti_priorita_versamento",
                         it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType.values()));
-        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setValue("");
+        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setValue(null);
         getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
         initVersamentoOggetto();
         postLoad();
@@ -247,6 +250,53 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         postLoad();
 
         forwardToPublisher(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE);
+    }
+
+    // MEV32647
+    @Secure(action = "Menu.Versamenti.VersamentoArchivio")
+    public void loadVersamentoArchivio() {
+        getUser().getMenu().reset();
+        getUser().getMenu().select("Menu.Versamenti.VersamentoArchivio");
+
+        // Inizializzo le combo per l'oggetto da inviare
+        getForm().getVersamentoOggettoDetail().reset();
+        getForm().getVersamentoOggettoDetail().clear();
+        setReadonlyVersamentoOggettoDaTrasformare(false);
+        // Ricavo i valori della combo TIPO OBJECT
+        BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
+        PigTipoObjectTableBean tipoObjectTableBean = comboHelper.getTipoObjectFromVersatore(getUser().getIdUtente(),
+                idVers, Constants.TipoVersamento.ZIP_CON_XML_SACER.name(),
+                Constants.TipoVersamento.DA_TRASFORMARE.name());
+        setTipoObjectDecodeMap(getForm().getVersamentoOggettoDetail().getNm_tipo_object(), tipoObjectTableBean);
+
+        // MEV27321
+        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento()
+                .setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum("ti_priorita_versamento",
+                        it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType.values()));
+        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setValue(null);
+        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
+
+        PigVersRowBean versRow = amministrazioneEjb.getPigVersRowBean(idVers);
+
+        String prefisso = configurationHelper.getValoreParamApplicByIdVers(
+                it.eng.sacerasi.common.Constants.DS_PREFISSO_PATH, versRow.getIdAmbienteVers(), versRow.getIdVers());
+        String dsPathArchivio = File.separator + prefisso + versRow.getNmVers() + "/DA_VERSARE/";
+        getForm().getVersamentoOggettoDetail().getDs_path_archivio().setValue(dsPathArchivio);
+
+        getForm().getVersamentoOggettoDetail().getDs_path_archivio_object().setEditMode();
+        getForm().getVersamentoOggettoDetail().getDs_path_archivio_object().setHidden(false);
+
+        getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(true);
+        getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(true);
+        getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(true);
+
+        initVersamentoOggetto();
+
+        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("1");
+        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(true);
+
+        postLoad();
+        forwardToPublisher(Application.Publisher.VERSAMENTO_DA_ARCHIVIO);
     }
 
     private void initVersamentoOggetto() {
@@ -312,6 +362,111 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         }
 
         redirectToAjax(result);
+    }
+
+    // ME 32647
+    @Override
+    public void versaOggettoDaArchivio() throws EMFError {
+        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("1"); // fatto qui per passare la validazione
+        // sotto.
+
+        if (getForm().getVersamentoOggettoDetail().validate(getMessageBox())) {
+            try {
+                BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
+                BigDecimal idTipoObject = getForm().getVersamentoOggettoDetail().getNm_tipo_object().parse();
+                String rootFtp = commonDb.getRootFtpParam();
+
+                String dsPathArchivio = getForm().getVersamentoOggettoDetail().getDs_path_archivio().parse();
+                String dsPathArchivioObject = getForm().getVersamentoOggettoDetail().getDs_path_archivio_object()
+                        .parse();
+
+                if (dsPathArchivioObject == null || dsPathArchivioObject.isEmpty()) {
+                    throw new ParerUserError("Il nome oggetto deve essere compilato.");
+                }
+
+                String fileName = new File(dsPathArchivioObject).getName();
+                String cdKeyObjectForm = fileName.substring(0, fileName.indexOf("."));
+
+                Path ftpPath = Paths.get(getFtpFilePath(rootFtp, idVers, cdKeyObjectForm));
+                Path fileInArchivio = Paths.get(rootFtp, dsPathArchivio, dsPathArchivioObject);
+
+                Path ftpFilePath = Paths.get(ftpPath.toString(), fileName);
+
+                if (!Files.exists(fileInArchivio)) {
+                    throw new ParerUserError("Il file richiesto non è stato trovato.");
+                }
+
+                // prima di spostarlo, eseguo i controlli che non saranno esguiti quando si simularà il versamento via
+                // ftp
+                PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
+                boolean oggettoDaTrasformare = pigTipoObjectRowBean.getTiVersFile()
+                        .equals(Constants.TipoVersamento.DA_TRASFORMARE.name());
+                checkFile(fileName, fileInArchivio.toFile(), oggettoDaTrasformare);
+
+                try {
+                    Files.createDirectories(ftpPath);
+                } catch (IOException ex) {
+                    log.error("Impossibile creare la cartella per la migrazione su FTP.", ex);
+                    throw new ParerUserError("Impossibile creare la cartella per la migrazione su FTP.");
+                }
+
+                try {
+                    Files.move(fileInArchivio, ftpFilePath, StandardCopyOption.ATOMIC_MOVE);
+                } catch (Exception ex) {
+                    log.error("Impossibile spostare il file per la migrazione su FTP.", ex);
+                    throw new ParerUserError("Impossibile spostare il file per la migrazione su FTP.");
+                }
+
+                getMessageBox().addInfo("File " + fileName + " spostato sull'FTP.");
+
+                // prepara i valori precalcolabili
+                initVersamentoOggetto();
+
+                setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean, Constants.TipoGestioneOggettiFigli.MANUALE.name());
+
+                if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
+                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonDaTrasformare(pigTipoObjectRowBean,
+                            false);
+                    getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli()
+                            .setValue(Constants.TipoGestioneOggettiFigli.AUTOMATICA.name());
+                } else {
+                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(pigTipoObjectRowBean,
+                            false);
+                }
+
+                getUser().getMenu().reset();
+                getUser().getMenu().select("Menu.Versamenti.VersamentoOggetto");
+
+                PigVersRowBean versRow = amministrazioneEjb.getPigVersRowBean(idVers);
+                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setViewMode();
+                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(false);
+                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setValue(versRow.getDsPathInputFtp());
+
+                getForm().getVersamentoOggettoDetail().getCd_key_object().setViewMode();
+                getForm().getVersamentoOggettoDetail().getCd_key_object().setHidden(false);
+                getForm().getVersamentoOggettoDetail().getCd_key_object().setValue(cdKeyObjectForm);
+
+                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setViewMode();
+                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(false);
+                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("1");
+
+                getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(true);
+                getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(true);
+                getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(true);
+
+                // per bloccare il trigger js su questo campo al primo caricamento
+                getSession().setAttribute("nm_tipo_object_dont_trigger", true);
+
+                forwardToPublisher(getDefaultPublsherName());
+
+            } catch (ParerUserError ex) {
+                getMessageBox().addError(ex.getDescription());
+                forwardToPublisher(Application.Publisher.VERSAMENTO_DA_ARCHIVIO);
+            }
+
+        } else {
+            forwardToPublisher(getLastPublisher());
+        }
     }
 
     @Override
@@ -596,7 +751,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                     // MEV#14100 - De il file è già presente nella destinazione lo elimina così la move non esplode
                     File fileDestinazione = FileUtils.getFile(ftpPathDir, file.getName());
                     if (fileDestinazione != null) {
-                        Files.delete(fileDestinazione.toPath());
+                        FileUtils.deleteQuietly(fileDestinazione);
                     }
                     FileUtils.moveFileToDirectory(file, ftpPathDir, true);
                     // Messaggio per l'utente
@@ -928,7 +1083,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         if (isMultipart) {
             if (getLastPublisher().equals(Application.Publisher.VERSAMENTO_OGGETTO)
                     || getLastPublisher().equals(Application.Publisher.VERSAMENTO_OGGETTO_DA_TRASFORMARE)
-                    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE)) {
+                    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE)
+                    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_DA_ARCHIVIO)) {
                 BigDecimal size = null;
                 try {
                     String dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE);
@@ -1218,168 +1374,143 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         return getForm().getVersamentoOggettoDetail().asJSON();
     }
 
-    // TODO poi rimuovere quando sicuri che non c'è nulla da recuperare
-    // public void triggerVersamentoOggettoDetailNm_tipo_objectDaTrasfOnTrigger() throws EMFError {
-    // getForm().getVersamentoOggettoDetail().post(getRequest());
-    // BigDecimal idTipoObject = getForm().getVersamentoOggettoDetail().getNm_tipo_object().parse();
-    //
-    // JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
-    //
-    // if (idTipoObject != null) {
-    // PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
-    //
-    // if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
-    // // MEV#21995 - se il tipo oggetto/versatore/ambiente sono configurati per OS allora attiviamo la
-    // // modalità corretta
-    // BigDecimal idVers = pigTipoObjectRowBean.getIdVers();
-    // PigAmbienteVersRowBean pigAmbienteVersRowBean = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
-    // BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
-    //
-    // Boolean useObjectStorage = configurationHelper
-    // .getValoreParamApplic(Constants.VERSAMENTO_SU_OBJECT_STORAGE, idAmbienteVers, idVers,
-    // idTipoObject, Constants.TipoPigVGetValAppart.TIPOOBJECT)
-    // .equals(Constants.PARAMETRO_OBJECT_STORAGE_ATTIVO);
-    //
-    // try {
-    // // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
-    // if (useObjectStorage) {
-    // jsonForm.put("useObjectStorage", true);
-    // } else {
-    // jsonForm.put("useObjectStorage", false);
-    // }
-    //
-    // } catch (Exception ex) {
-    // log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato. {}",
-    // getForm().getVersamentoOggettoDetail().getNm_tipo_object());
-    // }
-    // }
-    // } else {
-    // try {
-    // jsonForm.put("useObjectStorage", false);
-    // } catch (JSONException ex) {
-    // throw new EMFError(EMFError.ERROR, "Errore durante il settaggio dell'errore json", ex);
-    // }
-    // }
-    //
-    // redirectToAjax(jsonForm);
-    // }
     public void triggerVersamentoOggettoDetailNm_tipo_objectOnTrigger() throws EMFError {
-        getForm().getVersamentoOggettoDetail().post(getRequest());
-        BigDecimal idTipoObject = getForm().getVersamentoOggettoDetail().getNm_tipo_object().parse();
+        // MEV 32647 - per bloccare il trigger js su questo campo al primo caricamento
+        if (getSession().getAttribute("nm_tipo_object_dont_trigger") == null) {
 
-        getForm().getVersamentoOggettoDetail().getCd_key_object().setHidden(true);
-        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("0");
-        getForm().getVersamentoOggettoDetail().getDs_path_ftp().setValue("");
+            getForm().getVersamentoOggettoDetail().post(getRequest());
+            BigDecimal idTipoObject = getForm().getVersamentoOggettoDetail().getNm_tipo_object().parse();
 
-        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setValue("");
-        getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
+            getForm().getVersamentoOggettoDetail().getCd_key_object().setHidden(true);
+            getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("0");
+            getForm().getVersamentoOggettoDetail().getDs_path_ftp().setValue("");
 
-        if (idTipoObject != null) {
+            getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setValue("");
             getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
 
-            PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
-            setReadonlyVersamentoOggettoDaTrasformare(
-                    pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name()));
-            setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean, Constants.TipoGestioneOggettiFigli.MANUALE.name());
+            if (idTipoObject != null) {
+                getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
 
-            // MEV25601
-            Boolean useObjectStorage = isUsingObjectStorage(pigTipoObjectRowBean);
+                PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
+                setReadonlyVersamentoOggettoDaTrasformare(
+                        pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name()));
+                setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean, Constants.TipoGestioneOggettiFigli.MANUALE.name());
 
-            // MEV27034
-            DecodeMap cdVersioneXmlDecodeMap = DecodeMap.Factory.newInstance(
-                    amministrazioneEjb.getPigXsdDatiSpecTableBean(idTipoObject, null), "cd_versione_xsd",
-                    "cd_versione_xsd");
-            getForm().getVersamentoOggettoDetail().getCd_versione_xml().setDecodeMap(cdVersioneXmlDecodeMap);
-
-            if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
-                getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(false);
-                getForm().getVersamentoOggettoDetail().getTi_priorita()
-                        .setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum("ti_priorita",
-                                it.eng.sacerasi.web.util.Constants.ComboFlagPrioTrasfType.values()));
-                getForm().getVersamentoOggettoDetail().getTi_priorita()
-                        .setValue(it.eng.sacerasi.web.util.Constants.ComboFlagPrioTrasfType
-                                .getEnumByString(pigTipoObjectRowBean.getTiPriorita()));
-
-                // MEV26969
-                getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(false);
-                getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(false);
                 // MEV25601
-                setReadonlyVersamentoOggettoDaTrasformare(true);
+                Boolean useObjectStorage = isUsingObjectStorage(pigTipoObjectRowBean);
 
-                getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(useObjectStorage);
-                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(useObjectStorage);
-                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(useObjectStorage);
+                // MEV27034
+                DecodeMap cdVersioneXmlDecodeMap = DecodeMap.Factory.newInstance(
+                        amministrazioneEjb.getPigXsdDatiSpecTableBean(idTipoObject, null), "cd_versione_xsd",
+                        "cd_versione_xsd");
+                getForm().getVersamentoOggettoDetail().getCd_versione_xml().setDecodeMap(cdVersioneXmlDecodeMap);
 
-                JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
-                try {
-                    // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
-                    jsonForm.put("useObjectStorage", useObjectStorage);
-                    // MEV#25602
-                    jsonForm.put("isDaTrasformare", true);
+                if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
 
-                } catch (Exception ex) {
-                    log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
-                            + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonDaTrasformare(pigTipoObjectRowBean,
+                            useObjectStorage);
+
+                    JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
+                    try {
+                        // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
+                        jsonForm.put("useObjectStorage", useObjectStorage);
+                        // MEV#25602
+                        jsonForm.put("isDaTrasformare", true);
+
+                    } catch (Exception ex) {
+                        log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
+                                + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                    }
+
+                    redirectToAjax(jsonForm);
+
+                    return;
+
+                } else {
+
+                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(pigTipoObjectRowBean,
+                            useObjectStorage);
+
+                    JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
+                    try {
+
+                        // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
+                        jsonForm.put("useObjectStorage", useObjectStorage);
+
+                        // MEV#25602
+                        jsonForm.put("isDaTrasformare", false);
+
+                    } catch (Exception ex) {
+                        log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
+                                + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                    }
+
+                    redirectToAjax(jsonForm);
+
+                    return;
                 }
-
-                redirectToAjax(jsonForm);
-
-                return;
 
             } else {
-                getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(true);
-                getForm().getVersamentoOggettoDetail().getTi_priorita().setValue("");
-
-                // MEV25601
-                getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(false);
-                getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(false);
                 setReadonlyVersamentoOggettoDaTrasformare(false);
-
-                // MEV25602
-                getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(useObjectStorage);
-                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(useObjectStorage);
-                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(useObjectStorage);
-
-                // MEV#27321
-                if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.NO_ZIP.name())
-                        || pigTipoObjectRowBean.getTiVersFile()
-                                .equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
-                    getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(false);
-                    getForm().getVersamentoOggettoDetail().getTi_priorita_versamento()
-                            .setValue(it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType
-                                    .getEnumByString(pigTipoObjectRowBean.getTiPrioritaVersamento()));
-                }
-
-                JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
-                try {
-
-                    // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
-                    jsonForm.put("useObjectStorage", useObjectStorage);
-
-                    // MEV#25602
-                    jsonForm.put("isDaTrasformare", false);
-
-                } catch (Exception ex) {
-                    log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
-                            + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
-                }
-
-                redirectToAjax(jsonForm);
-
-                return;
+                getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setDecodeMap(new DecodeMap());
+                getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setValue(null);
+                getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
+                getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(true);
+                getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(true);
+                getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(false);
+                getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(false);
             }
-
+            redirectToAjax(getForm().getVersamentoOggettoDetail().asJSON());
         } else {
-            setReadonlyVersamentoOggettoDaTrasformare(false);
-            getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setDecodeMap(new DecodeMap());
-            getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setValue(null);
-            getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
-            getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(true);
-            getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(true);
-            getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(false);
-            getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(false);
+            getSession().removeAttribute("nm_tipo_object_dont_trigger");
         }
-        redirectToAjax(getForm().getVersamentoOggettoDetail().asJSON());
+    }
+
+    private void triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonDaTrasformare(
+            PigTipoObjectRowBean pigTipoObjectRowBean, boolean useObjectStorage) throws EMFError {
+        getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(false);
+        getForm().getVersamentoOggettoDetail().getTi_priorita().setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum(
+                "ti_priorita", it.eng.sacerasi.web.util.Constants.ComboFlagPrioTrasfType.values()));
+        getForm().getVersamentoOggettoDetail().getTi_priorita()
+                .setValue(it.eng.sacerasi.web.util.Constants.ComboFlagPrioTrasfType
+                        .getEnumByString(pigTipoObjectRowBean.getTiPriorita()));
+
+        // MEV26969
+        getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(false);
+        getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(false);
+        // MEV25601
+        setReadonlyVersamentoOggettoDaTrasformare(true);
+
+        getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(useObjectStorage);
+        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(useObjectStorage);
+        getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(useObjectStorage);
+    }
+
+    private void triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(
+            PigTipoObjectRowBean pigTipoObjectRowBean, boolean useObjectStorage) throws EMFError {
+        getForm().getVersamentoOggettoDetail().getTi_priorita().setHidden(true);
+        getForm().getVersamentoOggettoDetail().getTi_priorita().setValue("");
+
+        // MEV25601
+        getForm().getVersamentoOggettoDetail().getCd_versione_xml().setHidden(false);
+        getForm().getVersamentoOggettoDetail().getXml_to_upload().setHidden(false);
+        setReadonlyVersamentoOggettoDaTrasformare(false);
+
+        // MEV25602
+        getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(useObjectStorage);
+        getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(useObjectStorage);
+        getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(useObjectStorage);
+
+        // MEV#27321
+        if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.NO_ZIP.name())
+                || pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
+            getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(false);
+            getForm().getVersamentoOggettoDetail().getTi_priorita_versamento()
+                    .setValue(it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType
+                            .getEnumByString(pigTipoObjectRowBean.getTiPrioritaVersamento()));
+        }
+
+        getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setHidden(true);
     }
 
     private void setTiGestOggettiFigliDecodeMap(PigTipoObjectRowBean pigTipoObjectRowBean, String defaultTiGest) {

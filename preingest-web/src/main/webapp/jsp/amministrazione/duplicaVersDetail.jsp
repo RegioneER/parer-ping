@@ -104,7 +104,7 @@
                     <sl:newLine />
                     <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_TRASF%>" width="w100" controlWidth="w60" labelWidth="w20" />
                     <sl:newLine />
-                    <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_DA_VERSARE%>" width="w100" controlWidth="w60" labelWidth="w20" />
+                    <slf:lblField name="<%=AmministrazioneForm.Vers.DS_PATH_DAVERSARE_FTP%>" width="w100" controlWidth="w60" labelWidth="w20" />
                 </slf:section>
                 <sl:newLine />
                 <slf:section name="<%=AmministrazioneForm.CorrispondenzaSacerSection.NAME%>" styleClass="importantContainer">

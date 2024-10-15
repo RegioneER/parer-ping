@@ -147,7 +147,6 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
 
 # Librerie utilizzate
 
-
 |  GroupId | ArtifactId  | Version |
 |:---:|:---:|:---:|
 |none|||

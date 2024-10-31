@@ -23,6 +23,7 @@ import it.eng.sacerasi.viewEntity.MonVLisUnitaDocSessione;
 import it.eng.spagoLite.db.base.JEEBaseRowInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
+import java.sql.Timestamp;
 
 /**
  * RowBean per la tabella Mon_V_Lis_Unita_Doc_Sessione
@@ -175,6 +176,15 @@ public class MonVLisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         setObject("nm_ambiente", nmAmbiente);
     }
 
+    // MEV 27407
+    public Timestamp getDtStato() {
+        return getTimestamp("dt_stato");
+    }
+
+    public void setDtStato(Timestamp dtStato) {
+        setObject("dt_stato", dtStato);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVLisUnitaDocSessione entity = (MonVLisUnitaDocSessione) obj;
@@ -194,6 +204,10 @@ public class MonVLisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         this.setNmStrut(entity.getNmStrut());
         this.setNmEnte(entity.getNmEnte());
         this.setNmAmbiente(entity.getNmAmbiente());
+
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
     }
 
     @Override
@@ -215,6 +229,7 @@ public class MonVLisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         entity.setNmStrut(this.getNmStrut());
         entity.setNmEnte(this.getNmEnte());
         entity.setNmAmbiente(this.getNmAmbiente());
+        entity.setDtStato(this.getDtStato());
         return entity;
     }
 

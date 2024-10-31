@@ -75,7 +75,8 @@ public class RecuperaVersErrHelper {
         if (isValidObject) {
             log.debug("JOB {} - modifico lo stato dell'oggetto {} in IN_ATTESA_VERS",
                     Constants.NomiJob.RECUPERA_VERS_ERR.name(), obj.getCdKeyObject());
-            if (Constants.StatoOggetto.CHIUSO_ERR_VERS.name().equals(obj.getTiStatoObject())) {
+            if (Constants.StatoOggetto.CHIUSO_ERR_VERS.name().equals(obj.getTiStatoObject())
+                    || Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name().equals(obj.getTiStatoObject())) {
                 log.debug(
                         "JOB {} - l’oggetto ha stato = CHIUSO_ERR_VERS, rendo nullo l’indicatore che segnala che l’oggetto e’ da recuperare",
                         Constants.NomiJob.RECUPERA_VERS_ERR.name());
@@ -211,7 +212,8 @@ public class RecuperaVersErrHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public List<PigObject> getListaObjects(List<Long> idVersatori, String statoTimeout, String statoErrVers) {
+    public List<PigObject> getListaObjects(List<Long> idVersatori, String statoTimeout, String statoErrVers,
+            int olderThanMinutes) {
         String queryStr = "SELECT DISTINCT obj FROM PigObject obj " + "JOIN obj.pigSessioneIngests siIng "
                 + "WHERE ((obj.tiStatoObject = :statoTimeout AND siIng.dtChiusura <= :data) OR (obj.tiStatoObject = :statoErrVers AND obj.flVersSacerDaRecup = :flVersSacerDaRecup)) "
                 + "AND obj.pigVer.idVers IN (:idVers) " + "AND NOT EXISTS(" + "SELECT ud FROM PigUnitaDocObject ud "
@@ -227,7 +229,12 @@ public class RecuperaVersErrHelper {
         Date ades = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(ades);
-        calendar.add(Calendar.HOUR_OF_DAY, -1);
+
+        // MEV 31714 - la variabile olderThanMinutes deve essere positiva!
+        if (olderThanMinutes < 0)
+            olderThanMinutes = 0;
+
+        calendar.add(Calendar.MINUTE, -olderThanMinutes);
         query.setParameter("data", calendar.getTime());
         return query.getResultList();
     }
@@ -248,10 +255,15 @@ public class RecuperaVersErrHelper {
         for (PigUnitaDocObject pudo : pigUnitaDocObjects) {
             if (pudo.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name())
                     || pudo.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())) {
+
+                // MEV 27407
+                Date dtStato = new Date();
+
                 // Registra una UD della sessione per ogni UD dell'oggetto con stato = VERSATA_TIMEOUT o stato =
                 // VERSATA_ERR
                 PigUnitaDocSessione udSessione = new PigUnitaDocSessione();
                 udSessione.setTiStatoUnitaDocSessione(Constants.StatoUnitaDocObject.DA_VERSARE.name());
+                udSessione.setDtStato(dtStato);
                 udSessione.setPigSessioneIngest(sessione);
                 udSessione.setIdVers(sessione.getPigVer().getIdVers());
                 udSessione.setCdRegistroUnitaDocSacer(pudo.getCdRegistroUnitaDocSacer());
@@ -269,6 +281,7 @@ public class RecuperaVersErrHelper {
                  * stato = DA_VERSARE e annullo il codice e la descrizione dell’errore
                  */
                 pudo.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.DA_VERSARE.name());
+                pudo.setDtStato(dtStato);
                 pudo.setCdErrSacer(null);
                 pudo.setDlErrSacer(null);
 

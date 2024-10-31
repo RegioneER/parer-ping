@@ -100,6 +100,8 @@ import it.eng.spagoLite.message.Message.MessageLevel;
 import it.eng.spagoLite.message.MessageBox;
 import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.SuppressLogging;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 
 /**
  *
@@ -186,7 +188,6 @@ public class SismaAction extends SismaAbstractAction {
             }
 
         }
-
     }
 
     private SismaDto loadDettaglioSisma(BigDecimal idSisma) throws EMFError {
@@ -277,6 +278,12 @@ public class SismaAction extends SismaAbstractAction {
          */
         getSession().setAttribute(Constants.TIPO_VERSATORE_SISMA_SELEZIONATO,
                 sismaEjb.getTipoVersatore(dto.getIdVers()));
+
+        // MEV30936 Carico la lista stati
+        PigSismaStoricoStatiTableBean statiTb = sismaEjb.getPigSismaStoricoStatiFromPigObjectTableBean(idSisma);
+        getForm().getSismaDetailStatiList().setTable(statiTb);
+        getForm().getSismaDetailStatiList().getTable().setPageSize(10);
+        getForm().getSismaDetailStatiList().getTable().first();
 
         // FINE SETTAGGIO DATI DELLA PARTE DATI GENERALI OUTPUT E INPUT sia per Dettaglio che per MODIFICA
         // In caso di click sulla lente del dettaglio deve anche caricare i dati dinamici uguali all'ultima

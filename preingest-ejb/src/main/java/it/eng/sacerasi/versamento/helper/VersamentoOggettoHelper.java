@@ -103,7 +103,9 @@ public class VersamentoOggettoHelper extends GenericHelper {
             queryStr.append(clause).append("m.tiStatoEsterno LIKE :tiStatoEsterno");
         }
         if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
-            queryStr.append(clause).append("m.tiStatoObject IN (:tiStatoObject)");
+            queryStr.append(clause).append("m.tiStatoCalcolato IN (:tiStatoObject)"); // MEV 29266 - Gestione degli
+                                                                                      // stati fittizi in ricerca
+                                                                                      // oggetto
         }
         if (tiVersFile != null && !tiVersFile.isEmpty()) {
             queryStr.append(clause).append("m.tiVersFile IN (:tiVersFile)");

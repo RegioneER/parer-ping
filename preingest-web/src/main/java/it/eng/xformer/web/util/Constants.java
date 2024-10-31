@@ -35,7 +35,7 @@ public class Constants {
 
     public final static String DEFAULT_PARAMENTER_SET_NAME = "Parametri standard";
     public final static String DEFAULT_PARAMENTER_SET_DESCRIPTION = "Set di parametri standard applicati alla trasformazione";
-    public static final String DIM_MAX_FILE_DA_VERSARE = "DIM_MAX_FILE_DA_VERSARE";
+    public static final String DIM_MAX_FILE_DA_VERSARE_FTP = "DIM_MAX_FILE_DA_VERSARE_FTP";
     public static final String DIM_MAX_FILE_DA_VERSARE_OS = "DIM_MAX_FILE_DA_VERSARE_OS";
     public final static String XFO_MAIN_JOB_FILENAME = "main.kjb";
 

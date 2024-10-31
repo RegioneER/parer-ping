@@ -2111,7 +2111,6 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
-        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         BigDecimal idAmb = vers.getId_ambiente_vers().parse();
         BigDecimal idEnteConvenzEc = vers.getId_ente_convenz_ec().parse();
         BigDecimal idEnteFornitEstern = vers.getId_ente_convenz_fe().parse();
@@ -2154,10 +2153,10 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             BigDecimal idVers = null;
 
             if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                    dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
-                    dtFineValAppartAmbiente, tipologia, flRestituzioneArchivio, flCessato, idEnteConvenzEc,
-                    dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam,
-                    parametriAmministrazione, parametriConservazione, parametriGestione)) {
+                    dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFineValAppartAmbiente,
+                    tipologia, flRestituzioneArchivio, flCessato, idEnteConvenzEc, dtIniValAppartEnteSiam,
+                    dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
+                    parametriConservazione, parametriGestione)) {
                 /*
                  * Codice aggiuntivo per il logging...
                  */
@@ -2341,7 +2340,6 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
-        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         String tiDichVers = vers.getTi_dich_vers().parse();
         BigDecimal idOrganizIam = vers.getId_organiz_iam().parse();
         getForm().getParametriAmministrazioneVersatoreList().post(getRequest());
@@ -2355,10 +2353,9 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 .getParametriGestioneVersatoreList().getTable();
 
         if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
-                dtFinValAppartAmbiente, tipologia, "0", "0", idEnteConvenzEc, dtIniValAppartEnteSiam,
-                dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
-                parametriConservazione, parametriGestione)) {
+                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFinValAppartAmbiente, tipologia,
+                "0", "0", idEnteConvenzEc, dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern,
+                tiDichVers, idOrganizIam, parametriAmministrazione, parametriConservazione, parametriGestione)) {
             try {
                 /*
                  * Codice aggiuntivo per il logging...
@@ -2372,8 +2369,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 Object[] dati = amministrazioneEjb.duplicaVersatore(param, idAmb, idVers, nmAmbiente, nmVers, dsVers,
                         idEnteConvenzEc, nmEnteConvenz, idEnteFornitEstern, nmEnteFornitEstern, dtIniValAppartEnteSiam,
                         dtFineValAppartEnteSiam, dtIniValVers, dtFineValVers, dtIniValAppartAmbiente,
-                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare,
-                        tiDichVers, idOrganizIam, getUser().getIdUtente());
+                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, tiDichVers, idOrganizIam,
+                        getUser().getIdUtente());
                 /* Si prepara tutto per andare nel dettaglio del versatore appena inserito */
                 BigDecimal idOggetto = (BigDecimal) dati[0];
                 String msg = (String) dati[1];
@@ -2409,15 +2406,14 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
      */
     private boolean validaPerSalvataggioVersatore(Status status, BigDecimal idAmbienteVers, String nmVers,
             String dsVers, Date dtIniValVers, Date dtFineValVers, String dsPathInputFtp, String dsPathOutputFtp,
-            String dsPathTrasf, String dsPathDaVersare, Date dtIniValAppartAmbiente, Date dtFineValAppartAmbiente,
-            String tipologia, String flArchivioRestituito, String flCessato, BigDecimal idEnteConvenzEc,
-            Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, BigDecimal idEnteFornitEstern, String tiDichVers,
-            BigDecimal idOrganizIam, PigParamApplicTableBean parametriAmministrazione,
-            PigParamApplicTableBean parametriConservazione, PigParamApplicTableBean parametriGestione) {
+            String dsPathTrasf, Date dtIniValAppartAmbiente, Date dtFineValAppartAmbiente, String tipologia,
+            String flArchivioRestituito, String flCessato, BigDecimal idEnteConvenzEc, Date dtIniValAppartEnteSiam,
+            Date dtFineValAppartEnteSiam, BigDecimal idEnteFornitEstern, String tiDichVers, BigDecimal idOrganizIam,
+            PigParamApplicTableBean parametriAmministrazione, PigParamApplicTableBean parametriConservazione,
+            PigParamApplicTableBean parametriGestione) {
         AmministrazioneValidator valid = new AmministrazioneValidator(getMessageBox());
         valid.validaDatiVersatoreBase(status, tipologia, idAmbienteVers, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dtIniValAppartAmbiente, dtFineValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf,
-                dsPathDaVersare);
+                dtIniValAppartAmbiente, dtFineValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf);
 
         // MEV 27921
         if (!getMessageBox().hasError()) {
@@ -5671,7 +5667,6 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String dsPathInputFtp = vers.getDs_path_input_ftp().parse();
         String dsPathOutputFtp = vers.getDs_path_output_ftp().parse();
         String dsPathTrasf = vers.getDs_path_trasf().parse();
-        String dsPathDaVersare = vers.getDs_path_daversare_ftp().parse();
         String tiDichVers = vers.getTi_dich_vers().parse();
         BigDecimal idOrganizIam = vers.getId_organiz_iam().parse();
         getForm().getParametriAmministrazioneVersatoreList().post(getRequest());
@@ -5688,10 +5683,9 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getMessageBox().addError("Errore di compilazione form: selezionare il file da importare<br/>");
         }
         if (validaPerSalvataggioVersatore(vers.getStatus(), idAmb, nmVers, dsVers, dtIniValVers, dtFineValVers,
-                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare, dtIniValAppartAmbiente,
-                dtFinValAppartAmbiente, tipologia, "0", "0", idEnteConvenz, dtIniValAppartEnteSiam,
-                dtFineValAppartEnteSiam, idEnteFornitEstern, tiDichVers, idOrganizIam, parametriAmministrazione,
-                parametriConservazione, parametriGestione)) {
+                dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dtIniValAppartAmbiente, dtFinValAppartAmbiente, tipologia,
+                "0", "0", idEnteConvenz, dtIniValAppartEnteSiam, dtFineValAppartEnteSiam, idEnteFornitEstern,
+                tiDichVers, idOrganizIam, parametriAmministrazione, parametriConservazione, parametriGestione)) {
             String strXml = new String(fileBlob, StandardCharsets.UTF_8);
             try {
                 /*
@@ -5706,8 +5700,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 Object[] dati = amministrazioneEjb.importaVersatore(param, idAmb, strXml, nmAmbiente, nmVers, dsVers,
                         idEnteConvenz, nmEnteConvenz, idEnteFornitEstern, nmEnteFornitEstern, dtIniValAppartEnteSiam,
                         dtFineValAppartEnteSiam, dtIniValVers, dtFineValVers, dtIniValAppartAmbiente,
-                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, dsPathDaVersare,
-                        tiDichVers, idOrganizIam, getUser().getIdUtente());
+                        dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, tiDichVers, idOrganizIam,
+                        getUser().getIdUtente());
 
                 /* Si prepara tutto per andare nel dettaglio del versatore appena inserito */
                 BigDecimal idOggetto = (BigDecimal) dati[0];

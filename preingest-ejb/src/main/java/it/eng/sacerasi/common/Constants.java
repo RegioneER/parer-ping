@@ -46,11 +46,15 @@ public class Constants {
     public static final String URL_RECUP_NEWS = "URL_RECUP_NEWS";
     public static final String URL_MODIFICA_PASSWORD = "URL_MODIFICA_PASSWORD";
     public static final String ESTENSIONI_FILE_DA_TRASF = "ESTENSIONI_FILE_DA_TRASF";
-    public static final String DIM_MAX_FILE_DA_VERSARE = "DIM_MAX_FILE_DA_VERSARE";
+    public static final String DIM_MAX_FILE_DA_VERSARE_FTP = "DIM_MAX_FILE_DA_VERSARE_FTP";
+    public static final String DIM_MAX_FILE_DA_VERSARE_ARCH = "DIM_MAX_FILE_DA_VERSARE_ARCH";
     public static final String DIM_MAX_FILE_DA_VERSARE_OS = "DIM_MAX_FILE_DA_VERSARE_OS";
     public static final String URL_RECUP_HELP = "URL_RECUP_HELP";
     public static final String DS_PREFISSO_PATH = "DS_PREFISSO_PATH";
     public static final String ACCETTA_STUDI_IN_WARNING = "ACCETTA_STUDI_IN_WARNING";
+
+    // MEV 31714 espressa in minuti
+    public static final String ETA_MINIMA_RECUPERO_ERRORI = "ETA_MINIMA_RECUPERO_ERRORI";
 
     // Costanti per il log dei login ws e la disattivazione automatica utenti
     public static final String IDP_MAX_TENTATIVI_FALLITI = "MAX_TENTATIVI_FALLITI";

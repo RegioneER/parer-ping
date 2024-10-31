@@ -146,6 +146,8 @@ public class SalvataggioPrepXml {
                 //
                 tmpPigUnitaDocObject.setNiSizeFileByte(new BigDecimal(tmpUnitaDocObject.getSizeInByte()));
                 tmpPigUnitaDocObject.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.DA_VERSARE.name());
+                // MEV 27407
+                tmpPigUnitaDocObject.setDtStato(new Date());
                 tmpPigUnitaDocObject.setCdErrSacer(null);
                 tmpPigUnitaDocObject.setDlErrSacer(null);
                 tmpPigUnitaDocObject.setIdOrganizIam(tmpUnitaDocObject.getIdOrganizSacer());
@@ -205,6 +207,7 @@ public class SalvataggioPrepXml {
             tmpPigUnitaDocSessione.setCdRegistroUnitaDocSacer(tmpUnitaDocObject.getChiaveUd().getRegistro());
             tmpPigUnitaDocSessione.setNiSizeFileByte(new BigDecimal(tmpUnitaDocObject.getSizeInByte()));
             tmpPigUnitaDocSessione.setTiStatoUnitaDocSessione(tmpPigUnitaDocObject.getTiStatoUnitaDocObject());
+            tmpPigUnitaDocSessione.setDtStato(new Date());
             tmpPigUnitaDocSessione.setCdErrSacer(null);
             tmpPigUnitaDocSessione.setDlErrSacer(null);
             tmpPigUnitaDocSessione.setIdOrganizIam(tmpPigUnitaDocObject.getIdOrganizIam());

@@ -181,6 +181,12 @@ Si vuole procedere?</p>
                 <sl:pulsantiera>
                     <slf:buttonList name="<%=SismaForm.DettaglioButtonList.NAME%>" />
                 </sl:pulsantiera>
+                            
+                <sl:newLine skipLine="true"/>
+                <slf:section name="<%=SismaForm.SismaDetailStatiSection.NAME%>">  
+                    <slf:list   name="<%= SismaForm.SismaDetailStatiList.NAME%>" />
+                    <slf:listNavBar  name="<%= SismaForm.SismaDetailStatiList.NAME%>" />
+                </slf:section>
             </slf:fieldSet>
         </sl:content>
         <sl:footer />

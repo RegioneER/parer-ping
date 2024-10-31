@@ -43,6 +43,8 @@
                 <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.TI_STATO_UNITA_DOC_OBJECT%>" colSpan="4"/>
                 <sl:newLine />
+                <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.DT_STATO%>" colSpan="4"/>
+                <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.CD_ERR_SACER%>" colSpan="2"/>
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.DL_ERR_SACER%>" colSpan="2"/>
                 <sl:newLine />
@@ -59,6 +61,9 @@
 
             <sl:pulsantiera>
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.DOWNLOAD_XMLUNITA_DOC_OBJECT%>" width="w50" controlWidth="w30" labelWidth="w40"/>
+                <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.EDIT_UNITA_DOCUMENTARIA%>" width="w50" controlWidth="w30" labelWidth="w40"/>
+                <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.UNDO_UNITA_DOCUMENTARIA%>" width="w50" controlWidth="w30" labelWidth="w40"/>
+                <slf:lblField name="<%=MonitoraggioForm.UnitaDocDetail.SAVE_UNITA_DOCUMENTARIA%>" width="w50" controlWidth="w30" labelWidth="w40"/>
             </sl:pulsantiera>
 
         </sl:content>

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.sisma.ejb;
 
 import java.io.File;
@@ -59,6 +58,8 @@ import it.eng.sacerasi.job.util.VerificheDocumentiSUSismaEtc;
 import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.sisma.dto.VerificaZipFileResponse;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -175,17 +176,25 @@ public class VerificaDocumentiSismaEjb {
                         errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA11");
                     }
 
-                    if (!VerificheDocumentiSUSismaEtc.isValidZip(tempFile)) {
+                    Charset detectedCharset = null;
+
+                    if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
+                        detectedCharset = StandardCharsets.UTF_8;
+                    } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
+                        detectedCharset = StandardCharsets.ISO_8859_1;
+                    } else {
                         errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA05");
                         errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
                     }
 
-                    // Inizio i successivi controlli senza dover scompattare il file zip
-                    VerificaZipFileResponse response = checkTempZipFile(sismaDocumenti.getNmFileOrig(), tempFile,
-                            sismaDocumenti);
-                    errore = response.getErrore();
-                    numFiles = response.getFilesCount();
-                    report = response.getReport();
+                    if (errore == null) {
+                        // Inizio i successivi controlli senza dover scompattare il file zip
+                        VerificaZipFileResponse response = checkTempZipFile(sismaDocumenti.getNmFileOrig(), tempFile,
+                                sismaDocumenti, detectedCharset);
+                        errore = response.getErrore();
+                        numFiles = response.getFilesCount();
+                        report = response.getReport();
+                    }
                 } finally {
                     if (tempFile != null) {
                         FileUtils.deleteQuietly(tempFile);
@@ -208,13 +217,13 @@ public class VerificaDocumentiSismaEjb {
     }
 
     public VerificaZipFileResponse checkTempZipFile(String nomeFileZipOriginale, File file,
-            PigSismaDocumenti sismaDocumenti) throws IOException {
+            PigSismaDocumenti sismaDocumenti, Charset zipCharset) throws IOException {
         VerificaZipFileResponse response = new VerificaZipFileResponse();
         StringBuilder report = new StringBuilder("");
         ZipEntry entry;
         ZipFile zipFile;
         Enumeration<? extends ZipEntry> entries;
-        zipFile = new ZipFile(file);
+        zipFile = new ZipFile(file, zipCharset);
         entries = zipFile.entries();
         Integer numFiles = null;
         sismaHelper.cancellaEntryDocumenti(sismaDocumenti);

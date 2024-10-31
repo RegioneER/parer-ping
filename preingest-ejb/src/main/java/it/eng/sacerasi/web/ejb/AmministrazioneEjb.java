@@ -858,11 +858,6 @@ public class AmministrazioneEjb {
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }
-
-                path = new File(basePath + "/DA_VERSARE/");
-                if (!xadConn.fileExists(path)) {
-                    xadConn.createFile(path, true);
-                }
             } catch (Exception ex) {
                 log.error("Errore durante la creazione delle cartelle per il versatore " + vers.getNmVers() + " : "
                         + ex.getMessage());
@@ -3137,13 +3132,15 @@ public class AmministrazioneEjb {
     public void checkPigObjectFigliAndUpdate(BigDecimal idObjectPadre) {
         PigObject pigObjectPadre = amministrazioneHelper.findById(PigObject.class, idObjectPadre);
         Long countAll = amministrazioneHelper.countPigObjectFigli(idObjectPadre, null);
+        Long countInCodaHash = amministrazioneHelper.countPigObjectFigli(idObjectPadre,
+                Constants.StatoOggetto.IN_CODA_HASH.name());
         Long countInAttesaSched = amministrazioneHelper.countPigObjectFigli(idObjectPadre,
                 Constants.StatoOggetto.IN_ATTESA_SCHED.name());
         Long countChiusoOk = amministrazioneHelper.countPigObjectFigli(idObjectPadre,
                 Constants.StatoOggetto.CHIUSO_OK.name());
         Long countChiusoErrNotif = amministrazioneHelper.countPigObjectFigli(idObjectPadre,
                 Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name());
-        Long countStati = countInAttesaSched + countChiusoOk;
+        Long countStati = countInCodaHash + countInAttesaSched + countChiusoOk;
 
         // Se ho versato tutti gli oggetti figli
         if (pigObjectPadre.getPigObjectTrasfs() != null && pigObjectPadre.getNiTotObjectTrasf() != null) {
@@ -3177,8 +3174,8 @@ public class AmministrazioneEjb {
             String dsVers, BigDecimal idEnteConvenz, String nmEnteConvenz, BigDecimal idEnteFornitEstern,
             String nmEnteFornitEstern, Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, Date dtIniValVers,
             Date dtFineValVers, Date dtIniValAppartAmbiente, Date dtFinValAppartAmbiente, String dsPathInputFtp,
-            String dsPathOutputFtp, String dsPathTrasf, String dsPathDaVersare, String tiDichVers,
-            BigDecimal idOrganizIam, long idUserIamCor) throws ParerUserError {
+            String dsPathOutputFtp, String dsPathTrasf, String tiDichVers, BigDecimal idOrganizIam, long idUserIamCor)
+            throws ParerUserError {
 
         XADiskConnection xadConn = null;
 
@@ -3198,7 +3195,6 @@ public class AmministrazioneEjb {
         mappa.put("DS_PATH_INPUT_FTP", dsPathInputFtp);
         mappa.put("DS_PATH_OUTPUT_FTP", dsPathOutputFtp);
         mappa.put("DS_PATH_TRASF", dsPathTrasf == null ? "null" : dsPathTrasf);
-        mappa.put("DS_PATH_DA_VERSARE", dsPathDaVersare == null ? "null" : dsPathDaVersare);
 
         if (amministrazioneHelper.getPigVersByName(nmVers, idAmb) != null) {
             throw new ParerUserError("Nome Versatore gi\u00E0 utilizzato nel database.");
@@ -3254,11 +3250,6 @@ public class AmministrazioneEjb {
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }
-
-                path = new File(basePath + "/DA_VERSARE/");
-                if (!xadConn.fileExists(path)) {
-                    xadConn.createFile(path, true);
-                }
             } catch (Exception ex) {
                 log.error("Errore durante la creazione delle cartelle per il versatore " + versatore.getNmVers() + " : "
                         + ex.getMessage());
@@ -3300,8 +3291,8 @@ public class AmministrazioneEjb {
             String nmVers, String dsVers, BigDecimal idEnteConvenz, String nmEnteConvenz, BigDecimal idEnteFornitEstern,
             String nmEnteFornitEstern, Date dtIniValAppartEnteSiam, Date dtFineValAppartEnteSiam, Date dtIniValVers,
             Date dtFineValVers, Date dtIniValAppartAmbiente, Date dtFinValAppartAmbiente, String dsPathInputFtp,
-            String dsPathOutputFtp, String dsPathTrasf, String dsPathDaVersare, String tiDichVers,
-            BigDecimal idOrganizIam, long idUserIamCor) throws ParerUserError {
+            String dsPathOutputFtp, String dsPathTrasf, String tiDichVers, BigDecimal idOrganizIam, long idUserIamCor)
+            throws ParerUserError {
         XADiskConnection xadConn = null;
 
         long idOggetto = 0;
@@ -3336,7 +3327,6 @@ public class AmministrazioneEjb {
             mappa.put("DS_PATH_INPUT_FTP", dsPathInputFtp);
             mappa.put("DS_PATH_OUTPUT_FTP", dsPathOutputFtp);
             mappa.put("DS_PATH_TRASF", dsPathTrasf == null ? "null" : dsPathTrasf);
-            mappa.put("DS_PATH_DA_VERSARE", dsPathDaVersare == null ? "null" : dsPathDaVersare);
 
             if (amministrazioneHelper.getPigVersByName(nmVers, idAmb) != null) {
                 throw new ParerUserError("Nome Versatore gi\u00E0 utilizzato nel database.");
@@ -3381,11 +3371,6 @@ public class AmministrazioneEjb {
                 }
 
                 path = new File(basePath + "/TRASFORMATI/");
-                if (!xadConn.fileExists(path)) {
-                    xadConn.createFile(path, true);
-                }
-
-                path = new File(basePath + "/DA_VERSARE/");
                 if (!xadConn.fileExists(path)) {
                     xadConn.createFile(path, true);
                 }

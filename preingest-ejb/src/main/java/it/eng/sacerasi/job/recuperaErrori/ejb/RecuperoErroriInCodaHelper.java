@@ -170,6 +170,7 @@ public class RecuperoErroriInCodaHelper {
         udSessione.setPigSessioneIngest(sessione);
         udSessione.setIdVers(sessione.getPigVer().getIdVers());
         udSessione.setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.DA_VERSARE.name());
+        udSessione.setDtStato(new Date());
         // Aggiunti nuovi campi relativi alla trasformazione
         udSessione.setIdOrganizIam(udObj.getIdOrganizIam());
         udSessione.setFlVersSimulato(udObj.getFlVersSimulato());

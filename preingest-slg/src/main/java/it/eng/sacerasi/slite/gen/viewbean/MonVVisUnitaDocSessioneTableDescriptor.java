@@ -54,6 +54,7 @@ public class MonVVisUnitaDocSessioneTableDescriptor extends TableDescriptor {
     public static final String COL_CD_KEY_UNITA_DOC_SACER = "cd_key_unita_doc_sacer";
     public static final String COL_NI_SIZE_FILE_BYTE = "ni_size_file_byte";
     public static final String COL_TI_STATO_UNITA_DOC_OBJECT = "ti_stato_unita_doc_object";
+    public static final String COL_DT_STATO = "dt_stato";
     public static final String COL_CD_ERR_SACER = "cd_err_sacer";
     public static final String COL_DL_ERR_SACER = "dl_err_sacer";
     public static final String COL_BL_XML_VERS_SACER = "bl_xml_vers_sacer";
@@ -82,6 +83,7 @@ public class MonVVisUnitaDocSessioneTableDescriptor extends TableDescriptor {
         map.put(COL_NI_SIZE_FILE_BYTE, new ColumnDescriptor(COL_NI_SIZE_FILE_BYTE, Types.DECIMAL, 22, true));
         map.put(COL_TI_STATO_UNITA_DOC_OBJECT,
                 new ColumnDescriptor(COL_TI_STATO_UNITA_DOC_OBJECT, Types.VARCHAR, 20, true));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
         map.put(COL_CD_ERR_SACER, new ColumnDescriptor(COL_CD_ERR_SACER, Types.VARCHAR, 100, true));
         map.put(COL_DL_ERR_SACER, new ColumnDescriptor(COL_DL_ERR_SACER, Types.VARCHAR, 1024, true));
         map.put(COL_BL_XML_VERS_SACER, new ColumnDescriptor(COL_BL_XML_VERS_SACER, Types.CLOB, 4000, true));

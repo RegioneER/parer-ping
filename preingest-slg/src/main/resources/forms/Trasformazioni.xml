@@ -41,7 +41,7 @@
         <Input Name="trans_blob" Description="Pacchetto della trasformazione" Type="FILE"/>
         
         <Button Name="insertNewVersion" Description="Inserisci nuova versione" Type="STRING"/>
-        <Button Name="downloadPkg" Description="Scarica pacchetto" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="downloadPkg" Description="Scarica trasformazione" Type="STRING" DisableHourGlass="true"/>
         <Button Name="insertParametersSet" Description="Crea nuovo set di parametri" Type="STRING"/>
         <Button Name="insertDefaultParametersSet" Description="Crea set parametri standard" Type="STRING"/>
         <Button Name="updateParametersSets" Description="Aggiorna i set dei parametri" Type="STRING"/>

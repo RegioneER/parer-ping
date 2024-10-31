@@ -58,6 +58,7 @@ public class MonVVisUnitaDocObjectTableDescriptor extends TableDescriptor {
     public static final String COL_ID_ORGANIZ_IAM = "id_organiz_iam";
     public static final String COL_DL_COMPOSITO_ORGANIZ = "dl_composito_organiz";
     public static final String COL_FL_VERS_SIMULATO = "fl_vers_simulato";
+    public static final String COL_DT_STATO = "dt_stato";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
@@ -83,6 +84,7 @@ public class MonVVisUnitaDocObjectTableDescriptor extends TableDescriptor {
         map.put(COL_ID_ORGANIZ_IAM, new ColumnDescriptor(COL_ID_ORGANIZ_IAM, Types.DECIMAL, 22, true));
         map.put(COL_DL_COMPOSITO_ORGANIZ, new ColumnDescriptor(COL_DL_COMPOSITO_ORGANIZ, Types.VARCHAR, 4000, true));
         map.put(COL_FL_VERS_SIMULATO, new ColumnDescriptor(COL_FL_VERS_SIMULATO, Types.VARCHAR, 1, true));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {

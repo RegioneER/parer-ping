@@ -27,6 +27,7 @@ import it.eng.sacerasi.entity.PigStrumUrbAtto;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
 import it.eng.sacerasi.entity.PigStrumUrbPianoDocReq;
 import it.eng.sacerasi.entity.PigStrumUrbPianoStato;
+import it.eng.sacerasi.entity.PigStrumUrbStoricoStati;
 import it.eng.sacerasi.entity.PigStrumUrbValDoc;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici.TiStato;
@@ -234,8 +235,15 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         PigStrumentiUrbanistici pigStrumentiUrbanistici = null;
         pigStrumentiUrbanistici = getEntityManager().find(PigStrumentiUrbanistici.class,
                 su.getIdStrumentiUrbanistici());
+
+        // MEV 31096
+        creaStatoStorico(pigStrumentiUrbanistici, pigStrumentiUrbanistici.getTiStato().name(),
+                pigStrumentiUrbanistici.getDtStato(), pigStrumentiUrbanistici.getCdErr() != null
+                        ? pigStrumentiUrbanistici.getCdErr() + " - " + pigStrumentiUrbanistici.getDsErr() : "");
+
         pigStrumentiUrbanistici.setTiStato(tiStato);
         pigStrumentiUrbanistici.setDtStato(new Date());
+
         return pigStrumentiUrbanistici;
     }
 
@@ -512,5 +520,24 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         anniDecodeMap.populatedMap(bt, CAMPO_VALORE, CAMPO_FLAG);
 
         return anniDecodeMap;
+    }
+
+    // MEV 31096
+    public List<PigStrumUrbStoricoStati> PigStrumUrbStoricoStatiFromStrumentoUrbanistico(BigDecimal idStrumento) {
+        Query query = getEntityManager().createQuery(
+                "SELECT s FROM PigStrumUrbStoricoStati s WHERE s.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumento ORDER BY s.tsRegStato DESC");
+        query.setParameter("idStrumento", HibernateUtils.longFrom(idStrumento));
+        return query.getResultList();
+    }
+
+    // MEV 31096
+    public void creaStatoStorico(PigStrumentiUrbanistici pigStrumentiUrbanistici, String stato, Date dtRegStato,
+            String descrizione) {
+        PigStrumUrbStoricoStati pigStrumUrbStoricoStati = new PigStrumUrbStoricoStati();
+        pigStrumUrbStoricoStati.setPigStrumentiUrbanistici(pigStrumentiUrbanistici);
+        pigStrumUrbStoricoStati.setTiStato(stato);
+        pigStrumUrbStoricoStati.setTsRegStato(dtRegStato);
+        pigStrumUrbStoricoStati.setDescrizione(descrizione);
+        getEntityManager().persist(pigStrumUrbStoricoStati);
     }
 }

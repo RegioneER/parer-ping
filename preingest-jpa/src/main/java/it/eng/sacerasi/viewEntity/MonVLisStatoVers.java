@@ -71,6 +71,10 @@ public class MonVLisStatoVers implements Serializable {
 
     private String tiStatoEsterno;
 
+    // MEV 29266
+    private String tiStatoCalcolato;
+    private String tiStatoVisualizzato;
+
     private String tiStatoObject;
 
     private String tiVersFile;
@@ -282,6 +286,24 @@ public class MonVLisStatoVers implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Column(name = "TI_STATO_CALCOLATO")
+    public String getTiStatoCalcolato() {
+        return tiStatoCalcolato;
+    }
+
+    public void setTiStatoCalcolato(String tiStatoCalcolato) {
+        this.tiStatoCalcolato = tiStatoCalcolato;
+    }
+
+    @Column(name = "TI_STATO_VISUALIZZATO")
+    public String getTiStatoVisualizzato() {
+        return tiStatoVisualizzato;
+    }
+
+    public void setTiStatoVisualizzato(String tiStatoVisualizzato) {
+        this.tiStatoVisualizzato = tiStatoVisualizzato;
     }
 
     @EmbeddedId()

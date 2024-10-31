@@ -3,31 +3,31 @@
 
 <sl:html>
     <sl:head title="Sisma" >
-        <script type="text/javascript">
-            $(function () {
-                // Cerca l'area download del rapporto di versamento
-                $('.Download').each(function (indice) {
-                    // Torna indietro di 4 per prendere lo stato rispetto al download
-                    var statoSu = $(this).parent().prev().prev().prev().prev().prev().prev().prev().prev().text();
-                    // se non è bozza disabilita la cancellazione e la modifica!
-                    if (statoSu === 'BOZZA') {
-                        //
-                    } else if (statoSu === 'DA_RIVEDERE') {
-                        $(this).parent().next().next().next().empty(); // Disabilita solo la Cancellazione
-                    } else {
-                        // Disabilita tutto l'edit per tutti gli altri stati
-                        $(this).parent().next().next().empty(); // Disabilita modifica
-                        $(this).parent().next().next().next().empty(); // Disabilita Cancellazione
-                    }
-                    // Se non è COMPLETATO disabilità la possibilità di scaricare il rapporto di versamento
+<script type="text/javascript">
+    $(function () {
+        // Cerca l'area download del rapporto di versamento
+        $('.Download').each(function (indice) {
+            // Torna indietro di 4 per prendere lo stato rispetto al download
+            var statoSu = $(this).parent().prev().prev().prev().prev().prev().prev().prev().prev().text();
+            // se non è bozza disabilita la cancellazione e la modifica!
+            if (statoSu === 'BOZZA') {
+                //
+            } else if (statoSu === 'DA_RIVEDERE') {
+                $(this).parent().next().next().next().empty(); // Disabilita solo la Cancellazione
+            } else {
+                // Disabilita tutto l'edit per tutti gli altri stati
+                $(this).parent().next().next().empty(); // Disabilita modifica
+                $(this).parent().next().next().next().empty(); // Disabilita Cancellazione
+            }
+            // Se non è COMPLETATO disabilità la possibilità di scaricare il rapporto di versamento
 //                    if ((statoSu != 'COMPLETATO') && (statoSu != 'VERSATO')) {
 //                        $(this).parent().empty();
 //                    }
-                });
-                // Cambia l'icona informativa dall'eventuale messaggio di info in check (baffetto)
-                $('.ui-icon-info').toggleClass('ui-icon-info').addClass('ui-icon-check');
-            });
-        </script>    
+        });
+        // Cambia l'icona informativa dall'eventuale messaggio di info in check (baffetto)
+        $('.ui-icon-info').toggleClass('ui-icon-info').addClass('ui-icon-check');
+    });
+</script>    
     </sl:head>  
 
     <sl:body>
@@ -38,7 +38,7 @@
             <sl:contentTitle title="Progetti ricostruzione "/>
             <slf:fieldSet borderHidden="false">
             <slf:fieldSet  borderHidden="false" styleClass="importantContainer containerLeft w70">
-                <!-- piazzo i campi del filtro di ricerca -->
+<!-- piazzo i campi del filtro di ricerca -->
                 <slf:lblField name="<%=SismaForm.FiltriSisma.ID_SOGGETTO_ATT%>" colSpan="2" />
                 <slf:lblField name="<%=SismaForm.FiltriSisma.ID_LINEA_FIN%>" colSpan="2" />
                 <sl:newLine />

@@ -17,6 +17,7 @@
 
 package it.eng.sacerasi.slite.gen.viewbean;
 
+import static it.eng.sacerasi.slite.gen.viewbean.MonVVisUnitaDocSessioneTableDescriptor.COL_DT_STATO;
 import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,6 +56,7 @@ public class MonVLisUnitaDocSessioneTableDescriptor extends TableDescriptor {
     public static final String COL_NM_STRUT = "nm_strut";
     public static final String COL_NM_ENTE = "nm_ente";
     public static final String COL_NM_AMBIENTE = "nm_ambiente";
+    public static final String COL_DT_STATO = "dt_stato";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
@@ -78,6 +80,7 @@ public class MonVLisUnitaDocSessioneTableDescriptor extends TableDescriptor {
         map.put(COL_NM_STRUT, new ColumnDescriptor(COL_NM_STRUT, Types.VARCHAR, 4000, true));
         map.put(COL_NM_ENTE, new ColumnDescriptor(COL_NM_ENTE, Types.VARCHAR, 4000, true));
         map.put(COL_NM_AMBIENTE, new ColumnDescriptor(COL_NM_AMBIENTE, Types.VARCHAR, 4000, true));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {

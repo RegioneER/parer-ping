@@ -60,6 +60,8 @@ public class MonVVisUnitaDocSessione implements Serializable {
     private String nmAmbienteVers;
     private String nmVers;
     private String tiStatoUnitaDocObject;
+    // MEV 27407
+    private Date dtStato;
 
     public MonVVisUnitaDocSessione() {
     }
@@ -267,4 +269,14 @@ public class MonVVisUnitaDocSessione implements Serializable {
         this.tiStatoUnitaDocObject = tiStatoUnitaDocObject;
     }
 
+    // MEV 27407
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DT_STATO")
+    public Date getDtStato() {
+        return dtStato;
+    }
+
+    public void setDtStato(Date dtStato) {
+        this.dtStato = dtStato;
+    }
 }

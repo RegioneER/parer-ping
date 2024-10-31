@@ -119,6 +119,9 @@ public class AnnullamentoEjb {
     @Resource
     private SessionContext context;
 
+    @EJB
+    private AnnullamentoEjb self;
+
     public PigXmlAnnulSessioneIngestRowBean getPigXmlSessioneIngestRowBean(BigDecimal idSessioneIngest,
             String tiXmlAnnul) throws ParerUserError {
         PigXmlAnnulSessioneIngestRowBean rowBean = null;
@@ -165,9 +168,8 @@ public class AnnullamentoEjb {
     public void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
             boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento, String username)
             throws ParerUserError, ParerInternalError {
-        RichiestaSacerInput input = context.getBusinessObject(AnnullamentoEjb.class).eseguiAnnullamentoPing(idObject,
-                richiestoAnnullamentoVersamentiUD, richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento,
-                username);
+        RichiestaSacerInput input = self.eseguiAnnullamentoPing(idObject, richiestoAnnullamentoVersamentiUD,
+                richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento, username);
         if (input != null) {
             // E' stato generato un xml di invio richiesta di annullamento a Sacer, eseguo l'attivazione del servizio
             // Chiamata a richiesta sacer RecuperoUnitaDocumentariaSync
@@ -455,6 +457,8 @@ public class AnnullamentoEjb {
                             // dall'utente.
                             pigUnitaDocSessione
                                     .setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.ANNULLATA.name());
+                            // MEV 27407
+                            pigUnitaDocSessione.setDtStato(now);
                         }
                     }
                 }
@@ -469,6 +473,8 @@ public class AnnullamentoEjb {
                                     && richiestoAnnullamentoVersamentiUDDuplicati)) {
                                 pigUnitaDocObject
                                         .setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.ANNULLATA.name());
+                                // MEV 27407
+                                pigUnitaDocObject.setDtStato(now);
                             }
                         }
                     }
@@ -601,6 +607,7 @@ public class AnnullamentoEjb {
                                             if (nodes.getLength() > 0) {
                                                 pigUnitaDocSessione.setTiStatoUnitaDocSessione(
                                                         Constants.StatoUnitaDocSessione.ANNULLATA.name());
+                                                pigUnitaDocSessione.setDtStato(now);
                                             }
                                             break;
                                         }
@@ -632,6 +639,8 @@ public class AnnullamentoEjb {
                                             if (nodes.getLength() > 0) {
                                                 pigUnitaDocObject.setTiStatoUnitaDocObject(
                                                         Constants.StatoUnitaDocObject.ANNULLATA.name());
+                                                // MEV 27407
+                                                pigUnitaDocObject.setDtStato(now);
                                             }
                                             break;
                                         }
@@ -657,6 +666,9 @@ public class AnnullamentoEjb {
                                     pigUnitaDocSessione.setTiStatoUnitaDocSessione(
                                             Constants.StatoUnitaDocSessione.VERSATA_OK.name());
                                 }
+
+                                // MEV 27407
+                                pigUnitaDocSessione.setDtStato(now);
                             }
                         }
                     }
@@ -674,6 +686,9 @@ public class AnnullamentoEjb {
                                     pigUnitaDocObject
                                             .setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
                                 }
+
+                                // MEV 27407
+                                pigUnitaDocObject.setDtStato(now);
                             }
                         }
                     }

@@ -445,32 +445,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 else if (getForm().getOggettiDaVersamentiFallitiList().getName().equals(lista)) {
                     // MAC#24891: Correzione della funzionalità per settare a non risolubile una sessione annullata
                     caricaDettaglioProvenendoDaListaVersamentiFalliti();
-                } else if (getForm().getOggettoDetailOggettiTrasfList().getName().equals(lista)) {
-                    try {
-                        MonVLisObjTrasfRowBean currentRowBean = (MonVLisObjTrasfRowBean) getForm()
-                                .getOggettoDetailOggettiTrasfList().getTable().getCurrentRow();
-                        MonVVisObjTrasfRowBean detail = monitoraggioEjb
-                                .getMonVVisObjTrasfRowBean(currentRowBean.getIdObjectTrasf());
-                        getForm().getOggettoGeneratoTrasfDetail().copyFromBean(detail);
-                        getForm().getOggettoGeneratoTrasfDetail().getDownloadFileOggettoObjGenTrasf().setEditMode();
-                        getForm().getOggettoGeneratoTrasfDetail().getOggettoDaTrasformareObjGenTrasf().setEditMode();
-                        getForm().getOggettoGeneratoTrasfDetail().getOggettoVersatoPingObjGenTrasf().setEditMode();
-
-                        // Verifico se esiste la directory per il download
-                        String rootDir = commonDb.getRootTrasfParam();
-                        String versInputPath = detail.getDsPathTrasf();
-                        String dsPath = detail.getDsPath();
-
-                        File fileInput = new File(rootDir + versInputPath + dsPath);
-
-                        getForm().getOggettoGeneratoTrasfDetail().getDownloadFileOggettoObjGenTrasf()
-                                .setHidden(!fileInput.exists());
-                        getForm().getOggettoGeneratoTrasfDetail().getOggettoVersatoPingObjGenTrasf()
-                                .setHidden(StringUtils.isBlank(detail.getTiStatoTrasf()));
-                    } catch (ParerUserError ex) {
-                        getMessageBox().addError(ex.getDescription());
-                        forwardToPublisher(getLastPublisher());
-                    }
                 } else if (getForm().getUnitaDocDaVersamentiFallitiList().getName().equals(lista)) {
                     MonVLisUnitaDocSessioneRowBean currentRow = (MonVLisUnitaDocSessioneRowBean) getForm()
                             .getUnitaDocDaVersamentiFallitiList().getTable().getCurrentRow();
@@ -701,7 +675,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())
                     // MAC#21308 - Impossibile settare a non risolubile una sessione annullata
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name()) // MEV#14652
-            // && getForm().getOggettoDetailOggettiTrasfList().getTable().isEmpty()
             ) {
                 getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(false);
                 // MEV#14652 - Nuovo ramo - Punto 50 dell'analisi
@@ -754,11 +727,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
             boolean filtriUd = false;
             boolean inCorsoAnnul;
-            // MEV 31134 - ora controlliamo solo l'ultima sessione.
-            boolean isLastVerificata = monitoraggioHelper.isLastVerificata(objRB.getIdVers(), objRB.getCdKeyObject(),
-                    objRB.getNmTipoObject());
-            boolean isLastNonRisolubile = monitoraggioHelper.isLastNonRisolubile(objRB.getIdVers(),
-                    objRB.getCdKeyObject(), objRB.getNmTipoObject());
 
             // MAC 25207
             if (objRB.getTiPriorita() != null) {
@@ -863,12 +831,12 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                                                                                                     // oggetti in errore
                                                                                                     // (aggiunti 4 altri
                                                                                                     // test in OR)
-                    ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
-                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
-                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
-                            || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-                            && isLastVerificata && isLastNonRisolubile)) {
+                    objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
+                    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
+                    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())) {
+                // MEV 32543 tolto il controllo su sessione verificata e non risolubile.
                 getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(false);
             }
 
@@ -888,7 +856,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name())
                     || ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-                            && isLastVerificata && isLastNonRisolubile
                             && monitoraggioHelper.existsUDPerObjectVersataOkOrVersataErr(idObject,
                                     Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
                 getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail().setHidden(false);
@@ -951,9 +918,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getOggettoDetailButtonList().getRecuperoErrTrasformazione().setHidden(false);
         } else if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.ERRORE_VERSAMENTO_A_PING.name())) {
             getForm().getOggettoDetailButtonList().getRecuperoErrVersamentoPing().setHidden(false);
-        } else if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
-            // MEV 15741
-            getForm().getOggettoDetailButtonList().getRecuperoChiusErrVersamento().setHidden(false);
         }
 
         // Carico la lista file
@@ -1005,6 +969,19 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             } // MEV 21995 - se la cartella ftp esiste o object storage è spento
             else {
                 getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail().setHidden(!fileInput.exists());
+            }
+
+            // MEV 32542
+            if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
+                if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
+                        && (fileInput.exists()
+                                || (salvataggioBackendHelper.isActive() && areFileObjectsStoredInObjectStorage))) {
+                    getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setHidden(false);
+                    getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setEditMode();
+                } else {
+                    getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setHidden(true);
+                    getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setViewMode();
+                }
             }
         }
 
@@ -1310,6 +1287,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getOggettoDetailUnitaDocList().setStatus(Status.view);
             getForm().getUnitaDocDetail().getDownloadXMLUnitaDocObject().setDisableHourGlass(true);
             getForm().getUnitaDocDetail().getDownloadXMLUnitaDocObject().setEditMode();
+
+            // MEV 33098
+            getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setViewMode();
+            getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setViewMode();
+            getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setViewMode();
+            getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setHidden(false);
+            getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setHidden(true);
+            getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setHidden(true);
+            if (getForm().getOggettoDetail().getTi_stato_object().getValue()
+                    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
+                getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setEditMode();
+            }
             forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
         } else if (getForm().getOggettoDetailSessioniList().getName().equals(lista)) {
             getForm().getOggettoDetailSessioniList().setUserOperations(true, true, false, false);
@@ -1419,8 +1408,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 getMessageBox().addError(ex.getDescription());
             }
             forwardToPublisher(Application.Publisher.RIEPILOGO_VERSAMENTI_DETAIL);
-        } else if (getForm().getOggettoDetailOggettiTrasfList().getName().equals(lista)) {
-            forwardToPublisher(Application.Publisher.OGGETTO_GENERATO_DA_TRASFORMAZIONE_DETAIL);
         } else if (getForm().getUnitaDocDaVersamentiFallitiList().getName().equals(lista)) {
             if (!getMessageBox().hasError()) {
                 forwardToPublisher(Application.Publisher.UNITA_DOC_VERSAMENTO_DETAIL);
@@ -1540,7 +1527,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getOggettoDaVersamentiFallitiDetail().getFl_vers_sacer_da_recup().setViewMode();
             getForm().getOggettiDaVersamentiFallitiList().setStatus(Status.view);
             getMessageBox().addError(
-                    "ATTENZIONE: l'oggetto Ã¨ stato modificato in seguito all'esecuzione del job di recupero versamento e non Ã¨ dunque possibile accedervi o modificarlo");
+                    "ATTENZIONE: l'oggetto é stato modificato in seguito all'esecuzione del job di recupero versamento e non é dunque possibile accedervi o modificarlo");
             goBack();
         }
     }
@@ -4720,7 +4707,21 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             /* Ottengo i componenti selezionati del campo "Non risolubile" dalla lista risultato */
             String[] indiceAssolutoNonRisolubiliSettati = getRequest().getParameterValues("Fl_non_risolub");
 
-            if (indiceAssolutoNonRisolubiliSettati == null || indiceAssolutoNonRisolubiliSettati.length == 0) {
+            // MAC 34104
+            boolean showNonRisolubilePopup = false;
+            if (indiceAssolutoNonRisolubiliSettati != null && indiceAssolutoNonRisolubiliSettati.length > 0) {
+                for (String position : indiceAssolutoNonRisolubiliSettati) {
+                    if (CheckNumeric.isNumeric(position)) {
+                        int positionNum = Integer.parseInt(position);
+                        if (positionNum == 0) {
+                            // se il primo flag è settato a non risolubile allora mostro il popup
+                            showNonRisolubilePopup = true;
+                        }
+                    }
+                }
+            }
+
+            if (!showNonRisolubilePopup) {
                 // procedi lungo la strada standard
                 impostaVerificNonRisolubOggettiDaVersFallitiCommon();
             } else {
@@ -4968,44 +4969,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         }
         forwardToPublisher(Application.Publisher.OGGETTO_DA_VERSAMENTI_FALLITI_DETAIL);
     }
-
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // public void impostaValoreFlVersSacerDaRecup(BigDecimal idVers, String cdKeyObject, String nmTipoObject)
-    // throws ParerInternalError {
-    // boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
-    // boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-    //
-    // try {
-    // /* Gestione "Verificato" */
-    // if (allVerificate) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // } else {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // }
-    //
-    // /* Gestione "Non risolubile" */
-    // if (allNonRisolubili) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // /* Cancello la cartella nell'area FTP */
-    // monitoraggioEjb.deleteDir(idVers, cdKeyObject);
-    // getMessageBox().addMessage(new Message(MessageLevel.ERR,
-    // "Errore nella cancellazione della cartella '" + cdKeyObject + "' nell'area FTP"));
-    // } /*
-    // * Se tutte le sessioni hanno l'indicatore "Non risolubile" NON settato (condizione necessaria affinchÃ¨
-    // * l'oggetto sia nel complesso "risolubile"
-    // */ else {
-    // boolean tutteSessioniRisolubili = monitoraggioHelper.areAllRisolubili(idVers, cdKeyObject,
-    // nmTipoObject);
-    // if (tutteSessioniRisolubili) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // }
-    // }
-    // } catch (ParerInternalError e) {
-    // log.error("Errore", e);
-    // throw e;
-    // }
-    //
-    // }
 
     @Override
     public JSONObject triggerFiltriVersamentiVersamento_ti_statoOnTrigger() throws EMFError {
@@ -5268,30 +5231,20 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         oggettoDaTrasformare(idObjectPadre);
     }
 
-    @Override
     public void downloadFileOggettoObjGenTrasf() throws EMFError {
-        String cdKeyObject = getForm().getOggettoGeneratoTrasfDetail().getCd_key_object_trasf().getValue();
-        BigDecimal idVers = getForm().getOggettoGeneratoTrasfDetail().getId_vers_trasf().parse();
+        String riga = getRequest().getParameter("riga");
+        Integer nr = Integer.valueOf(riga);
+
+        String cdKeyObject = getForm().getOggettoDetailOggettiTrasfList().getTable().getRow(nr)
+                .getString("cd_key_object_trasf");
+        BigDecimal idVers = getForm().getOggettoDetailOggettiTrasfList().getTable().getRow(nr)
+                .getBigDecimal("id_vers_trasf");
+
         BaseTable tb = new BaseTable();
         BaseRow row = new BaseRow();
-        getForm().getOggettoGeneratoTrasfDetail().copyToBean(row);
+        getForm().getOggettoDetailOggettiTrasfList().copyToBean(row);
         tb.add(row);
         downloadFileOggetto(cdKeyObject, tb, idVers);
-    }
-
-    @Override
-    public void oggettoDaTrasformareObjGenTrasf() throws EMFError {
-        BigDecimal idObjectPadre = getForm().getOggettoGeneratoTrasfDetail().getId_object_da_trasf().parse();
-        SessionManager.removeLastExecutionHistory(getSession());
-        oggettoDaTrasformare(idObjectPadre);
-    }
-
-    @Override
-    public void oggettoVersatoPingObjGenTrasf() throws EMFError {
-        BigDecimal idVers = getForm().getOggettoGeneratoTrasfDetail().getId_vers_trasf().parse();
-        String cdKeyObject = getForm().getOggettoGeneratoTrasfDetail().getCd_key_object_trasf().parse();
-        SessionManager.removeLastExecutionHistory(getSession());
-        loadOggettoVersatoAPing(idVers, cdKeyObject);
     }
 
     // MEV26398
@@ -5309,8 +5262,19 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     public void annullaOggettoDetailAction() throws EMFError {
         BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
-        annullaOggetto(idObject);
-        forwardToPublisher(getLastPublisher());
+        try {
+            // MEV 32543 - impostiamo l'ultima sessione a verificata e non risolubile.
+            String errore = monitoraggioEjb.preAnnullamentoSetup(idObject);
+
+            if (errore != null) {
+                getMessageBox().addError(errore);
+            } else {
+                annullaOggetto(idObject);
+            }
+        } catch (Exception ex) {
+            throw new EMFError(EMFError.ERROR, ex.getMessage());
+        }
+        redirectToAjax(getForm().getOggettoDetail().asJSON());
     }
 
     /*
@@ -5349,14 +5313,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         motivazioneAnnullamento = StringEscapeUtils.escapeEcmaScript(motivazioneAnnullamento);
         motivazioneAnnullamento = StringEscapeUtils.escapeXml10(motivazioneAnnullamento);
 
-        // richiede cancellazione UD versate
-        annullaOggetto(idObject, true, richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento);
-
         try {
-            loadDettaglioObject(idObject);
-        } catch (ParerUserError ex) {
-            log.error(ex.getDescription());
-            getMessageBox().addError(ex.getDescription());
+            // MEV 32543 - impostiamo l'ultima sessione a verificata e non risolubile.
+            String errore = monitoraggioEjb.preAnnullamentoSetup(idObject);
+
+            if (errore != null) {
+                getMessageBox().addError(errore);
+            } else {
+                // richiede cancellazione UD versate
+                annullaOggetto(idObject, true, richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento);
+            }
+        } catch (Exception ex) {
+            throw new EMFError(EMFError.ERROR, ex.getMessage());
         }
 
         redirectToAjax(getForm().getOggettoDetail().asJSON());
@@ -5383,12 +5351,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     private void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
             boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento) throws EMFError {
         try {
+
             String username = getUser().getUsername();
             annullamentoEjb.annullaOggetto(idObject, richiestoAnnullamentoVersamentiUD,
                     richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento, username);
         } catch (ParerUserError | ParerInternalError ex) {
             getMessageBox().addError(ex.getDescription());
         }
+
         try {
             loadDettaglioObject(idObject);
         } catch (ParerUserError ex) {
@@ -5526,11 +5496,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     }
 
     @Override
-    public void recuperoChiusErrVersamento() throws Throwable {
+    public void recuperoChiusErrVers() throws Throwable {
         BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
         BigDecimal idTipoObject = getForm().getOggettoDetail().getId_tipo_object().parse();
         try {
-            monitoraggioEjb.recuperaErrore(idObject, Constants.StatoOggetto.IN_ATTESA_SCHED.name(),
+            monitoraggioEjb.recuperaErrore(idObject, Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name(),
                     Constants.StatoOggetto.CHIUSO_ERR_VERS.name(), idTipoObject);
             loadDettaglioObject(idObject);
         } catch (ParerUserError ex) {
@@ -6036,44 +6006,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         return getForm().getFiltriReplicaOrg().asJSON();
     }
 
-    /**
-     * Carica il dettaglio dell'oggetto "trasformato"
-     *
-     * @throws EMFError
-     *             errore generico
-     */
-    @Override
-    public void loadDettaglioOggettoTrasf() throws EMFError {
-        try {
-            BigDecimal idObjectTrasf = getForm().getOggettoDetail().getId_object_trasf().parse();
-            if (idObjectTrasf != null) {
-                MonVVisObjTrasfRowBean detail = monitoraggioEjb.getMonVVisObjTrasfRowBean(idObjectTrasf);
-                getForm().getOggettoGeneratoTrasfDetail().copyFromBean(detail);
-                getForm().getOggettoGeneratoTrasfDetail().getDownloadFileOggettoObjGenTrasf().setEditMode();
-                getForm().getOggettoGeneratoTrasfDetail().getOggettoDaTrasformareObjGenTrasf().setEditMode();
-                getForm().getOggettoGeneratoTrasfDetail().getOggettoVersatoPingObjGenTrasf().setEditMode();
-
-                // Verifico se esiste la directory per il download
-                String rootDir = commonDb.getRootTrasfParam();
-                String versInputPath = detail.getDsPathTrasf();
-                String dsPath = detail.getDsPath();
-
-                File fileInput = new File(rootDir + versInputPath + dsPath);
-                getForm().getOggettoGeneratoTrasfDetail().getDownloadFileOggettoObjGenTrasf()
-                        .setHidden(!fileInput.exists());
-                getForm().getOggettoGeneratoTrasfDetail().getOggettoVersatoPingObjGenTrasf()
-                        .setHidden(StringUtils.isBlank(detail.getTiStatoTrasf()));
-
-                forwardToPublisher(Application.Publisher.OGGETTO_GENERATO_DA_TRASFORMAZIONE_DETAIL);
-            } else {
-                forwardToPublisher(getLastPublisher());
-            }
-        } catch (ParerUserError ex) {
-            getMessageBox().addError(ex.getDescription());
-            forwardToPublisher(getLastPublisher());
-        }
-    }
-
     public void showOggettoVersatoAPing() throws EMFError {
         setTableName(getForm().getOggettoDetailOggettiTrasfList().getName());
         setRiga(getRequest().getParameter("riga"));
@@ -6136,7 +6068,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     @Override
     public void settaDaTrasformareDetail() throws EMFError {
-
         /*
          * MEV#15178 - Modifica Tipo oggetto in dettaglio oggetto per gli oggetti da trasformare
          *
@@ -6164,14 +6095,46 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     @Override
     public void update(Fields<Field> fields) throws EMFError {
-        // MEV 31639
-        if (getForm().getUnitaDocDetail().equals(fields)) {
-            updateUnitaDocDetail();
-            forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
-        } else {
-            updateOggettiList();
-            forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
-        }
+        updateOggettiList();
+        forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+
+    }
+
+    @Override
+    public void editUnitaDocumentaria() throws EMFError {
+        updateUnitaDocDetail();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setViewMode();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setHidden(true);
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setEditMode();
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setEditMode();
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setHidden(false);
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setHidden(false);
+
+        forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
+    }
+
+    // MEV 33098
+    @Override
+    public void undoUnitaDocumentaria() throws EMFError {
+        undoDettaglio();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setEditMode();
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setViewMode();
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setViewMode();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setHidden(false);
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setHidden(true);
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setHidden(true);
+    }
+
+    // MEV 33098
+    @Override
+    public void saveUnitaDocumentaria() throws EMFError {
+        saveDettaglio();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setEditMode();
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setViewMode();
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setViewMode();
+        getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setHidden(false);
+        getForm().getUnitaDocDetail().getUndoUnitaDocumentaria().setHidden(true);
+        getForm().getUnitaDocDetail().getSaveUnitaDocumentaria().setHidden(true);
     }
 
     public void scaricaReport() {

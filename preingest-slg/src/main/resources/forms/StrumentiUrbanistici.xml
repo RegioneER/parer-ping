@@ -40,6 +40,7 @@
     <Section Name="DocumentiCaricatiSection" Description="" Legend="Documenti caricati" ShowButton="false" LoadOpened="true"/>
     <Section Name="AggiuntaDocumentiFacoltativiSection" Description="" Legend="Aggiunta documenti facoltativi" ShowButton="false" LoadOpened="true"/>
     <Section Name="ErroriRiepilogoSection" Description="" Legend="Errori" ShowButton="false" LoadOpened="true"/>
+    <Section Name="SUDetailStatiSection" Descripction="" Legend="Lista Stati Strumento" ShowButton="true" LoadOpened="false"/>
     
     <Wizard Name="InserimentoWizard" Description="Versamento Strumenti Urbanistici">
         <Step Name="StrumentoUrbanistico" Description="Inserimento Dati"/>
@@ -118,5 +119,12 @@
         <Button Type="STRING" Description="Ricerca" Name="ricercaStrumentiUrbanistici"/>
         <Button Type="STRING" Description="Pulisci ricerca" Name="pulisciRicercaStrumentiUrbanistici"/>
     </Fields>
+    
+    <!-- Lista stati di unop strumento urbanistico -->
+    <List Name="SUDetailStatiList" Description="Lista stati strumento">
+        <Input Name="ti_stato" Description="Stato" Type="STRING" />
+        <Input Name="ts_reg_stato" Description="Data registrazione stato" Type="DATETIME" />
+        <Input Type="STRING" Description="Descrizione" Name="cd_desc" />
+    </List>
     
 </Form>

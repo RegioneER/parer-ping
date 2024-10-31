@@ -219,6 +219,11 @@ public class InvioSismaEjb {
                 /**
                  * ******** AVVIO IL PROCESSO DI INVIO ********
                  */
+
+                // MEV 30936
+                sismaHelper.creaStatoStorico(sismaDaInviare, sismaDaInviare.getTiStato().name(),
+                        sismaDaInviare.getDtStato(), "");
+
                 // Setta lo stato di PigSisma
                 sismaDaInviare.setTiStato(PigSisma.TiStato.INVIO_IN_CORSO);
                 sismaDaInviare.setDtStato(new Date());
@@ -404,6 +409,11 @@ public class InvioSismaEjb {
                         PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSISMA19");
                         throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(), errore.getDsErrore());
                     }
+
+                    // MEV 30936
+                    sismaHelper.creaStatoStorico(sismaDaInviare, sismaDaInviare.getTiStato().name(),
+                            sismaDaInviare.getDtStato(), "");
+
                     // Setta lo stato di PigSisma
                     Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(sismaDaInviare.getPigVer());
                     if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
@@ -598,6 +608,10 @@ public class InvioSismaEjb {
 
     private void registraErroreSisma(long idSismaDaInviare, String cdErr, String dsErr, TiStato tiStato) {
         PigSisma sisma = genericHelper.findById(PigSisma.class, idSismaDaInviare);
+
+        // MEV 30936
+        sismaHelper.creaStatoStorico(sisma, sisma.getTiStato().name(), sisma.getDtStato(), "");
+
         sisma.setCdErr(cdErr);
         sisma.setDsErr(dsErr);
         sisma.setTiStato(tiStato);

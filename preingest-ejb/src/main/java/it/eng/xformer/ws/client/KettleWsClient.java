@@ -102,7 +102,7 @@ public class KettleWsClient {
             return esito;
 
         } catch (WebServiceException ex) {
-            throw new KettleServiceException();
+            throw new KettleServiceException(ex.getMessage(), ex);
         }
     }
 

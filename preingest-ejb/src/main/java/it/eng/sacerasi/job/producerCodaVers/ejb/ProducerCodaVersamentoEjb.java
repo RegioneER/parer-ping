@@ -213,9 +213,16 @@ public class ProducerCodaVersamentoEjb {
             this.handleSendError(payload.getSessionId().longValue(), unitaDocId);
             throw ex;
         }
+
+        // MEV 27407
+        Date dtStato = new Date();
+
         // setto lo stato dell'UD inserita nella coda a IN_CODA_VERS
         unitaDoc.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.IN_CODA_VERS.name());
+        unitaDoc.setDtStato(dtStato);
         unitaDocSessione.setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.IN_CODA_VERS.name());
+        unitaDocSessione.setDtStato(dtStato);
+
         log.debug("{} :: setto lo stato dell'UD '{}' inserita nella coda in IN_CODA_VERS", infoLogUd, unitaDocId);
         if (isLastUdInObj) {
             // ho finito di processare le unità documentarie dell'oggetto corrente:

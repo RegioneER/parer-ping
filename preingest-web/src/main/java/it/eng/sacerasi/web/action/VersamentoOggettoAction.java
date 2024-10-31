@@ -401,7 +401,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
                 boolean oggettoDaTrasformare = pigTipoObjectRowBean.getTiVersFile()
                         .equals(Constants.TipoVersamento.DA_TRASFORMARE.name());
-                checkFile(fileName, fileInArchivio.toFile(), oggettoDaTrasformare);
+                checkFile(fileName, fileInArchivio.toFile(), oggettoDaTrasformare,
+                        Constants.DIM_MAX_FILE_DA_VERSARE_ARCH);
 
                 try {
                     Files.createDirectories(ftpPath);
@@ -541,7 +542,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                     getForm().getVersamentoOggettoDetail().getFile_to_upload().writeUploadedFile(file);
                     boolean oggettoDaTrasformare = pigTipoObjectRowBean.getTiVersFile()
                             .equals(Constants.TipoVersamento.DA_TRASFORMARE.name());
-                    checkFile(cdKeyObjectFile, file, oggettoDaTrasformare);
+                    checkFile(cdKeyObjectFile, file, oggettoDaTrasformare, Constants.DIM_MAX_FILE_DA_VERSARE_FTP);
                     if (pigTipoObjectRowBean.getFlContrHash().equals(WebConstants.DB_TRUE)
                             && StringUtils.isBlank(dsHashFileVers)) {
                         getMessageBox().addError("Il tipo oggetto prevede che sia controllato lo hash del file");
@@ -817,9 +818,10 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         forwardToPublisher(getLastPublisher());
     }
 
-    private void checkFile(String cdKeyObjectFile, File tmpFile, boolean tipoVersDaTrasformare) throws ParerUserError {
+    private void checkFile(String cdKeyObjectFile, File tmpFile, boolean tipoVersDaTrasformare,
+            String nmParamMaxFileDim) throws ParerUserError {
         final int maxLength = getForm().getVersamentoOggettoDetail().getFile_to_upload().getMaxLength();
-        String dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE);
+        String dim = configurationHelper.getValoreParamApplicByApplic(nmParamMaxFileDim);
         BigDecimal maxDim;
         if (!StringUtils.isNumeric(dim)) {
             throw new ParerUserError(
@@ -969,12 +971,14 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
             Input<String> fileToUpload = (Input<String>) formFields
                     .getComponent(getForm().getVersamentoOggettoDetail().getFile_to_upload().getName());
-            if (fileToUpload != null) {
-                fileToUpload.setHidden(useObjectStorage);
-            }
-
             ComboBox<String> flTrasmFtp = (ComboBox<String>) formFields
                     .getComponent(getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().getName());
+
+            if (fileToUpload != null) {
+                // MAC34454 nascosto anche se si trasmette via ftp.
+                fileToUpload.setHidden(useObjectStorage || WebConstants.DB_TRUE.equals(flTrasmFtp.getValue()));
+            }
+
             if (flTrasmFtp != null) {
                 flTrasmFtp.setHidden(useObjectStorage);
             }
@@ -1087,10 +1091,17 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                     || getLastPublisher().equals(Application.Publisher.VERSAMENTO_DA_ARCHIVIO)) {
                 BigDecimal size = null;
                 try {
-                    String dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE);
+                    String dim = configurationHelper
+                            .getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE_FTP);
+
+                    // MEV 34015
+                    if (getLastPublisher().equals(Application.Publisher.VERSAMENTO_DA_ARCHIVIO)) {
+                        dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE_ARCH);
+                    }
+
                     size = new BigDecimal(dim);
 
-                    String[] a = getForm().getVersamentoOggettoDetail().postMultipart(getRequest(), size.intValue());
+                    String[] a = getForm().getVersamentoOggettoDetail().postMultipart(getRequest(), size.longValue());
                     if (a != null) {
                         String operationMethod = a[0];
                         String[] navigationParams = Arrays.copyOfRange(a, 1, a.length);

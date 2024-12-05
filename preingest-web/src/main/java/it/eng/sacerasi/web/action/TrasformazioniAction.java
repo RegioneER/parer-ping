@@ -445,7 +445,7 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
         boolean isMultipart = ServletFileUpload.isMultipartContent(getRequest());
         if (isMultipart) {
             String[] a = null;
-            String dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE);
+            String dim = configurationHelper.getValoreParamApplicByApplic(Constants.DIM_MAX_FILE_DA_VERSARE_FTP);
             BigDecimal size = new BigDecimal(dim);
 
             try {

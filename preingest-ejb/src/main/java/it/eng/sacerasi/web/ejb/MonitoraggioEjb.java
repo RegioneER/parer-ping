@@ -182,220 +182,52 @@ public class MonitoraggioEjb {
         }
     }
 
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // public boolean writeFlagsDeleteDirOggettiDerivanti(BigDecimal idVers, String cdKeyObject, String nmTipoObject,
-    // Set<Integer> verificatiNonRisolubiliModificati, Set<BigDecimal> idSessioneHS,
-    // Set<BigDecimal> idSessioneHSNoRis, MonVLisVersObjNonVersTableBean tb)
-    // throws ParerUserError, ParerInternalError {
-    // boolean isFlVersSacerRecupEditable = false;
-    // try {
-    // /* AGGIORNA I FLAG "VERIFICATO" E "NON RISOLUBILE" DELLE SESSIONI */
-    // aggiornaSessioni(verificatiNonRisolubiliModificati, idSessioneHS, idSessioneHSNoRis, tb);
-    // /* AGGIORNA FLAG "VERSAMENTO A SACER DA RECUPERARE" ****/
-    // /* (modifica automatica a seconda di varie condizioni) */
-    // String tiStatoObject = monitoraggioHelper.getTiStatoObject(idVers, cdKeyObject);
-    // /* Se l'oggetto derivante dai versamenti falliti è definito con stato CHIUSO_ERR_VERS */
-    // // MEV#14100
-    // impostaValoreFlVersSacerDaRecupDaDettOggListaVersFalliti(idVers, cdKeyObject, nmTipoObject, tiStatoObject);
-    // /* RICAVA INFO SE FLAG ""VERSAMENTO A SACER DA RECUPERARE" */
-    // /*
-    // * ************** ANDRA' MESSO EDITABILE ******************
-    // */
-    // /*
-    // * Controlla se adesso il flag "Verificato" dell'oggetto derivante da versamenti falliti vale 0 o 1, (può
-    // * essere cambiato in base alle modifiche di aggiornamento sessioni)
-    // */
-    // String flVerifAggiornato = monitoraggioHelper.getObjNonVersFlVerif(idVers, cdKeyObject);
-    // /* Controllo se adesso devo rendere editabile il flag fl_vers_sacer_da_recup */
-    // isFlVersSacerRecupEditable = isFlVersSacerDaRecupEditable(idVers, cdKeyObject, nmTipoObject,
-    // flVerifAggiornato);
-    //
-    // boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-    // if (tiStatoObject != null
-    // && (tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-    // || tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
-    // || tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-    // && allNonRisolubili) {
-    //
-    // PigObjectRowBean tmpRow = monitoraggioHelper.getPigObjectRowBean(idVers, cdKeyObject);
-    // List<BigDecimal> ids = new ArrayList<>();
-    // ids.add(tmpRow.getIdObject());
-    //
-    // List<PigObject> pigObjectPadriTB = monitoraggioHelper.getPigObjectsPadri(ids);
-    // // Date now = Calendar.getInstance().getTime();
-    // for (PigObject padre : pigObjectPadriTB) {
-    // // MEV#14100 - DefinisciStatoOggetto padre
-    // payloadManagerHelper.definisciStatoOggettoPadre(padre.getIdObject());
-    // // gestisciPadreVersFallito(padre, now);
-    // }
-    // }
-    // } catch (ParerInternalError e) {
-    // ctx.setRollbackOnly();
-    // throw e;
-    // } catch (Exception e) {
-    // /*
-    // * Il rollback va settato visto che sono in modalità cmt in modo tale da gestire le eccezioni non di tipo
-    // * RuntimeException (che vengono gestite automaticamente)
-    // */
-    // ctx.setRollbackOnly();
-    // log.error(e.getMessage());
-    // throw new ParerUserError(
-    // "Attenzione: l'operazione non è stata eseguita perchè si è verificato un errore a runtime durante il salvataggio
-    // dei flag");
-    // }
-    // return isFlVersSacerRecupEditable;
-    // }
-
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // public boolean writeFlagsDeleteDir(Set<Integer> verificatiNonRisolubiliModificati, Set<BigDecimal> idSessioneHS,
-    // Set<BigDecimal> idSessioneHSNoRis, MonVLisVersFallitiTableBean tb)
-    // throws ParerUserError, ParerInternalError {
-    // boolean isFlVersSacerRecupEditable = false;
-    // try {
-    // /* AGGIORNA I FLAG "VERIFICATO" E "NON RISOLUBILE" DELLE SESSIONI */
-    // Set<BigDecimal> idSesModificate = aggiornaSessioni(verificatiNonRisolubiliModificati, idSessioneHS,
-    // idSessioneHSNoRis, tb);
-    //
-    // /*
-    // * AGGIORNO IL FLAG "VERSAMENTO A SACER DA RECUPERARE" PER GLI OGGETTI IN QUESTIONE Ricavo gli oggetti
-    // * associati alle sessioni modificate: le sessioni che mi interessa considerare devono avere stato
-    // * NON_RISOLTO e nmTipoObject != null (questo lo controlla già la vista). Gli oggetti, se ci sono
-    // */
-    // PigObjectTableBean pigObjectTB = monitoraggioHelper.getPigObjectsFromSessions(idSesModificate);
-    // if (!pigObjectTB.isEmpty()) {
-    // List<BigDecimal> ids = Arrays.asList(pigObjectTB.toList(PigObjectTableDescriptor.COL_ID_OBJECT)
-    // .toArray(new BigDecimal[pigObjectTB.toList(PigObjectTableDescriptor.COL_ID_OBJECT).size()]));
-    // /*
-    // * OTTENGO GLI OGGETTI PADRI DEI FIGLI CON STATO CHIUSO_ERR_VERS, CHIUSO_ERR_SCHED E CHIUSO_ERR_CODA, E
-    // * GESTISCO IL PADRE
-    // */
-    // List<PigObject> pigObjectPadriTB = monitoraggioHelper.getPigObjectsPadri(ids);
-    //
-    // for (PigObjectRowBean pigObjectRB : pigObjectTB) {
-    // // MEV#14100 - Tolto il controllo dello stato = CHIUSO_ERR_VERS
-    // impostaValoreFlVersSacerDaRecup(pigObjectRB.getIdVers(), pigObjectRB.getCdKeyObject(),
-    // pigObjectRB.getString("nm_tipo_object"), pigObjectRB.getTiStatoObject());
-    // }
-    // // Date now = Calendar.getInstance().getTime();
-    // for (PigObject padre : pigObjectPadriTB) {
-    // // MEV#14100 - DefinisciStatoOggetto padre
-    // payloadManagerHelper.definisciStatoOggettoPadre(padre.getIdObject());
-    // }
-    // }
-    // } catch (ParerInternalError e) {
-    // ctx.setRollbackOnly();
-    // throw e;
-    // } catch (Exception e) {
-    // /*
-    // * Il rollback va settato visto che sono in modalità cmt in modo tale da gestire le eccezioni non di tipo
-    // * RuntimeException (che vengono gestite automaticamente)
-    // */
-    // ctx.setRollbackOnly();
-    // log.error(e.getMessage());
-    // throw new ParerUserError(
-    // "Attenzione: l'operazione non è stata eseguita perchè si è verificato un errore a runtime durante il salvataggio
-    // dei flag");
-    // }
-    // return isFlVersSacerRecupEditable;
-    // }
-
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // private Set<BigDecimal> aggiornaSessioni(Set<Integer> verificatiNonRisolubiliModificati,
-    // Set<BigDecimal> idSessioneHS, Set<BigDecimal> idSessioneHSNoRis, AbstractBaseTable<?> tb) throws Exception {
-    // Set<BigDecimal> idSesModificate = new HashSet<>();
-    // /* Scorro i flag (Verificato o Non risolubile) modificati */
-    // for (Integer index : verificatiNonRisolubiliModificati) {
-    // BigDecimal idSesErr = tb.getRow(index).getBigDecimal("id_sessione_ingest");
-    // idSesModificate.add(idSesErr);
-    //
-    // // Se ho impostato a "1" il flag "verificato"
-    // if (idSessioneHS.contains(idSesErr)) {
-    // // Se ho impostato a "1" il flag "non risolubile"
-    // if (idSessioneHSNoRis.contains(idSesErr)) {
-    // monitoraggioHelper.saveFlVerificatiNonRisolubili(idSesErr, "1", "1");
-    // } else {
-    // monitoraggioHelper.saveFlVerificatiNonRisolubili(idSesErr, "1", "0");
-    // }
-    // } else {
-    // // Metti il flag flNonRisolubile a "null" visto che è l'unica opzione consentita
-    // monitoraggioHelper.saveFlVerificatiNonRisolubili(idSesErr, "0", null);
-    // }
-    // }
-    // return idSesModificate;
-    // }
-
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // public void impostaValoreFlVersSacerDaRecup(BigDecimal idVers, String cdKeyObject, String nmTipoObject,
-    // String tiStatoObject) throws Exception {
-    // boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
-    // boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-    //
-    // // MEV#14100
-    // if (tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
-    // /* Gestione "Verificato" */
-    // if (allVerificate) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // } else {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // }
-    // }
-    // /* Gestione "Non risolubile" */
-    // if (allNonRisolubili) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // /* Cancello la cartella nell'area FTP */
-    // deleteDir(idVers, cdKeyObject);
-    // } /*
-    // * Se tutte le sessioni hanno l'indicatore "Non risolubile" NON settato (condizione necessaria affinchè
-    // * l'oggetto sia nel complesso "risolubile"
-    // */ else {
-    // boolean isLastRisolubile = monitoraggioHelper.isLastRisolubile(idVers, cdKeyObject, nmTipoObject);
-    // if (isLastRisolubile) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // }
-    // }
-    //
-    // }
-
-    // MEV 31134 - TODO rimouvere quando verificato che non serve più
-    // public void impostaValoreFlVersSacerDaRecupDaDettOggListaVersFalliti(BigDecimal idVers, String cdKeyObject,
-    // String nmTipoObject, String tiStatoObject) throws Exception {
-    // boolean allNonRisolubili = monitoraggioHelper.areAllNonRisolubili(idVers, cdKeyObject, nmTipoObject);
-    //
-    // /* Gestione "Verificato" */
-    // // MEV#14100
-    // if (tiStatoObject != null && tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
-    // boolean allVerificate = monitoraggioHelper.areAllVerificate(idVers, cdKeyObject, nmTipoObject);
-    // if (allVerificate) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // } else {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // }
-    // }
-    // /* Gestione "Non risolubile" */
-    // if (allNonRisolubili) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, null);
-    // /* Cancello la cartella nell'area FTP */
-    // deleteDir(idVers, cdKeyObject);
-    // } /*
-    // * Se tutte le sessioni hanno l'indicatore "Non risolubile" NON settato (condizione necessaria affinchè
-    // * l'oggetto sia nel complesso "risolubile"
-    // */ else {
-    // // MEV#14100
-    // if (tiStatoObject != null && tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())) {
-    // boolean tutteSessioniRisolubili = monitoraggioHelper.areAllRisolubili(idVers, cdKeyObject,
-    // nmTipoObject);
-    // if (tutteSessioniRisolubili) {
-    // monitoraggioHelper.salvaFlVersSacerDaRecup(idVers, cdKeyObject, "0");
-    // }
-    // }
-    // }
-    //
-    // }
-
     public void aggiornaNoteSessione(BigDecimal idSessioneIngest, String note) {
         PigSessioneIngest pigSessioneIngest = monitoraggioHelper.getEntityManager().find(PigSessioneIngest.class,
                 idSessioneIngest.longValueExact());
         pigSessioneIngest.setNote(note);
+    }
+
+    // MEV 32543 funzione di appoggio per preparare l'annullamento
+    public String preAnnullamentoSetup(BigDecimal idObject) throws Exception {
+        String errore = null;
+        PigObject pigObject = monitoraggioHelper.findById(PigObject.class, idObject);
+        PigTipoObject pigTipoObject = pigObject.getPigTipoObject();
+
+        String flagDaRecuperare = pigObject.getFlVersSacerDaRecup();
+        if (!(flagDaRecuperare == null || flagDaRecuperare.equals(Constants.DB_FALSE))) {
+            errore = "Non e' possibile resettare l'indicazione  di sessione verificata, perche' l'oggetto "
+                    + pigObject.getCdKeyObject() + " ha l'indicazione che il versamento a SACER deve essere recuperato";
+            return errore;
+        }
+
+        PigSessioneIngest pigSessioneIngest = monitoraggioHelper.findById(PigSessioneIngest.class,
+                pigObject.getIdLastSessioneIngest());
+        pigSessioneIngest.setFlSesErrVerif(Constants.DB_TRUE);
+
+        if (!pigTipoObject.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name()))
+            pigSessioneIngest.setFlSesErrNonRisolub(Constants.DB_TRUE);
+
+        pigObject.setFlVersSacerDaRecup(null);
+
+        String statoOggetto = pigObject.getTiStatoObject();
+        if (statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR.name())
+                || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
+                || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+                || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+                || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
+                || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())) {
+
+            /* Cancello la cartella nell'area FTP */
+            deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()), pigSessioneIngest.getCdKeyObject());
+        }
+
+        PigObject oggPadre = pigObject.getPigObjectPadre();
+        if (oggPadre != null) {
+            payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
+        }
+
+        return errore;
     }
 
     /*
@@ -508,7 +340,6 @@ public class MonitoraggioEjb {
                 payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
 
                 // gestisci sisma e SU
-
             }
         }
         return errore;
@@ -551,7 +382,6 @@ public class MonitoraggioEjb {
     // return tiStatoObject != null && tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
     // && allNonRisolubili && allVerificate;
     // }
-
     /**
      * Ritorna il tableBean contenente la lista di oggetti generati da trasformazione
      *
@@ -573,7 +403,10 @@ public class MonitoraggioEjb {
                     rowBean.setString("fl_exist_pg", row.getPgOggettoTrasf() != null ? "1" : "0");
                     boolean versatoAPing = StringUtils.isNotBlank(row.getTiStatoTrasf());
                     rowBean.setString("fl_versato_ping", versatoAPing ? "1" : "0");
-                    rowBean.setString("showOggettoVersatoAPing", versatoAPing ? "Visualizza oggetto" : null);
+                    rowBean.setString("showOggettoVersatoAPing", versatoAPing ? "Visualizza" : null);
+                    // MEV 33255
+                    rowBean.setString("download_oggetto_generato", "1");
+                    rowBean.setString("downloadFileOggettoObjGenTrasf", "Scarica");
                     // MEV 27037
                     rowBean.setBigDecimal("ni_ud_prodotte", row.getNiUdProdotte());
                     table.add(rowBean);
@@ -684,6 +517,12 @@ public class MonitoraggioEjb {
                 for (PigObjectTrasf objectFiglio : object.getPigObjectTrasfs()) {
                     payloadManagerHelper.deleteDirTrasf(objectFiglio.getPigVer().getDsPathTrasf(),
                             objectFiglio.getDsPath());
+                    // BigDecimal idAmbienteVers = BigDecimal.valueOf(
+                    // objectFiglio.getPigTipoObject().getPigVer().getPigAmbienteVer().getIdAmbienteVers());
+                    // BigDecimal idVers = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getPigVer().getIdVers());
+                    // BigDecimal idTipoObject = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getIdTipoObject());
+                    // util.deleteDirTrasf(configurationHelper.getValoreParamApplic("DS_PATH_TRASF", idAmbienteVers,
+                    // idVers, idTipoObject, Constants.TipoPigVGetValAppart.TIPOOBJECT), objectFiglio.getDsPath());
                 }
                 break;
             case TRASFORMATO:
@@ -730,6 +569,19 @@ public class MonitoraggioEjb {
                     payloadManagerHelper.deleteDirTrasf(objectFiglio.getPigVer().getDsPathTrasf(),
                             objectFiglio.getDsPath());
                 }
+                break;
+            case CHIUSO_ERR_RECUPERABILE:
+                idSessione = object.getIdLastSessioneIngest();
+                monitoraggioHelper.creaStatoSessione(idSessione, tiStato, now);
+                session.setDtChiusura(now);
+                session.setTiStato(tiStato);
+                session.setFlSesErrVerif("1");
+                session.setFlSesErrNonRisolub("0");
+
+                object.setIdLastSessioneIngest(idSessione);
+                object.setTiStatoObject(tiStato);
+
+                object.setFlVersSacerDaRecup(Constants.DB_TRUE);
                 break;
             default:
                 throw new ParerUserError("Errore inaspettato nella scelta dello stato oggetto");

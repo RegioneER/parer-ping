@@ -43,6 +43,7 @@ import it.eng.sacerasi.entity.PigSismaFinanziamento;
 import it.eng.sacerasi.entity.PigSismaPianoDocReq;
 import it.eng.sacerasi.entity.PigSismaProgettiAg;
 import it.eng.sacerasi.entity.PigSismaStatoProgetto;
+import it.eng.sacerasi.entity.PigSismaStoricoStati;
 import it.eng.sacerasi.entity.PigSismaValAtto;
 import it.eng.sacerasi.entity.PigSismaValDoc;
 import it.eng.sacerasi.entity.PigUnitaDocObject;
@@ -64,6 +65,7 @@ import it.eng.spagoLite.db.oracle.decode.DecodeMap;
  *
  * @author MIacolucci
  */
+
 @SuppressWarnings("unchecked")
 @Stateless
 @LocalBean
@@ -529,6 +531,11 @@ public class SismaHelper extends GenericHelper {
 
     public PigSisma aggiornaStato(PigSisma su, PigSisma.TiStato tiStato) {
         PigSisma pigSisma = getEntityManager().find(PigSisma.class, su.getIdSisma());
+
+        // MEV 30936
+        creaStatoStorico(pigSisma, pigSisma.getTiStato().name(), pigSisma.getDtStato(),
+                pigSisma.getCdErr() != null ? pigSisma.getCdErr() + " - " + pigSisma.getDsErr() : "");
+
         pigSisma.setTiStato(tiStato);
         pigSisma.setDtStato(new Date());
         return pigSisma;
@@ -901,6 +908,24 @@ public class SismaHelper extends GenericHelper {
         registriDecodeMap.populatedMap(bt, CAMPO_VALORE, CAMPO_FLAG);
 
         return registriDecodeMap;
+    }
+
+    // MEV 30936
+    public List<PigSismaStoricoStati> getPigSismaStoricoStatiFromSisma(BigDecimal idSisma) {
+        Query query = getEntityManager().createQuery(
+                "SELECT s FROM PigSismaStoricoStati s WHERE s.pigSisma.idSisma = :idSisma ORDER BY s.tsRegStato DESC");
+        query.setParameter("idSisma", HibernateUtils.longFrom(idSisma));
+        return query.getResultList();
+    }
+
+    // MEV 30936
+    public void creaStatoStorico(PigSisma pigSisma, String stato, Date dtRegStato, String descrizione) {
+        PigSismaStoricoStati pigSismaStoricoStati = new PigSismaStoricoStati();
+        pigSismaStoricoStati.setPigSisma(pigSisma);
+        pigSismaStoricoStati.setTiStato(stato);
+        pigSismaStoricoStati.setTsRegStato(dtRegStato);
+        pigSismaStoricoStati.setDescrizione(descrizione);
+        getEntityManager().persist(pigSismaStoricoStati);
     }
 
     public static class DatiRecuperoDto {

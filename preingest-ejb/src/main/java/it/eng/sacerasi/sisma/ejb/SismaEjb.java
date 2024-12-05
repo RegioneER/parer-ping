@@ -47,6 +47,7 @@ import it.eng.sacerasi.entity.PigSismaFinanziamento;
 import it.eng.sacerasi.entity.PigSismaPianoDocReq;
 import it.eng.sacerasi.entity.PigSismaProgettiAg;
 import it.eng.sacerasi.entity.PigSismaStatoProgetto;
+import it.eng.sacerasi.entity.PigSismaStoricoStati;
 import it.eng.sacerasi.entity.PigSismaValAtto;
 import it.eng.sacerasi.entity.PigSismaValDoc;
 import it.eng.sacerasi.entity.PigVers;
@@ -58,16 +59,22 @@ import it.eng.sacerasi.sisma.dto.EsitoSalvataggioSisma;
 import it.eng.sacerasi.sisma.dto.NavigazioneSismaDto;
 import it.eng.sacerasi.sisma.dto.RicercaSismaDTO;
 import it.eng.sacerasi.sisma.dto.SismaDto;
+import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 import it.eng.sacerasi.util.DateUtil;
+import it.eng.sacerasi.util.GenericDto;
 import it.eng.sacerasi.viewEntity.PigVSismaChecks;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.util.ComboGetter;
+import it.eng.sacerasi.web.util.Transform;
 import it.eng.sacerasi.web.util.Utils;
 import it.eng.sacerasi.ws.replicaUtente.ejb.ModificaUtenteEjb;
+import it.eng.spagoCore.error.EMFError;
 import it.eng.spagoLite.db.base.BaseTableInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.decodemap.DecodeMapIF;
+import java.lang.reflect.InvocationTargetException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  *
@@ -705,7 +712,9 @@ public class SismaEjb {
         if (pigVSismaChecks.getFlFileMancante().equals(Constants.DB_FALSE)
                 && pigVSismaChecks.getFlVerificaErrata().equals(Constants.DB_FALSE)
                 && pigVSismaChecks.getFlVerificaInCorso().equals(Constants.DB_FALSE)) {
-            pigSisma.setTiStato(PigSisma.TiStato.RICHIESTA_INVIO);
+
+            sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.RICHIESTA_INVIO);
+
             retOk.setStato(pigSisma.getTiStato());
             retOk.setOk(true);
             if (pigSisma.getIamUser().getIdUserIam() != idUserIamCorrente) {
@@ -721,6 +730,11 @@ public class SismaEjb {
     public void riportaInBozza(BigDecimal idSisma) {
         // Locca Sisma e tutti i suoi DOC!!
         PigSisma pigSisma = sismaHelper.findByIdWithLock(PigSisma.class, idSisma);
+
+        // MEV 30936
+        sismaHelper.creaStatoStorico(pigSisma, pigSisma.getTiStato().name(), pigSisma.getDtStato(),
+                pigSisma.getCdErr() != null ? pigSisma.getCdErr() + " - " + pigSisma.getDsErr() : "");
+
         pigSisma.setTiStato(PigSisma.TiStato.BOZZA); // RIMETTE IN BOZZA
         pigSisma.setDtStato(new Date());
 
@@ -738,7 +752,7 @@ public class SismaEjb {
                 || pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE)
                 || pigSisma.getTiStato().equals(PigSisma.TiStato.DA_RIVEDERE)) {
             if (pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE)) {
-                pigSisma.setTiStato(PigSisma.TiStato.BOZZA); // RIMETTE IN BOZZA
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.BOZZA); // RIMETTE IN BOZZA
             } // Altrimenti lascia lo stato che aveva trovato (BOZZA, DA_RIVEDERE ecc.
             PigSismaDocumenti pigSismaDocumenti = sismaHelper.getPigSismaDocumentiBySismaNmFileOrig(pigSisma,
                     nmFileOrig);
@@ -845,7 +859,7 @@ public class SismaEjb {
         PigSismaDocumenti pigSismaDocumenti = new PigSismaDocumenti();
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, dto.getIdSisma());
         if (pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE)) {
-            pigSisma.setTiStato(PigSisma.TiStato.DA_VERIFICARE);
+            sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.DA_VERIFICARE);
         }
         PigSismaValDoc pigSismaValDoc = sismaHelper.getPigSismaValDocByNomeTipoDoc(dto.getNmTipoDocumento());
         pigSismaDocumenti.setPigSisma(pigSisma);
@@ -930,7 +944,8 @@ public class SismaEjb {
                 } else {
                     nuovoStato = PigSisma.TiStato.DA_RIVEDERE;
                 }
-                pigSisma.setTiStato(nuovoStato);
+
+                sismaHelper.aggiornaStato(pigSisma, nuovoStato);
             }
             // Se invece si era in VERIFICATO l'agenzia può ancora modificare i dati e far retrocedere lo stato a
             // DA_VERIFICARE
@@ -958,7 +973,8 @@ public class SismaEjb {
                 // Retrocede a DA_VERIFICARE perché agenzia potrebbe aver ANNULLATO almeno un flag
                 nuovoStato = PigSisma.TiStato.DA_VERIFICARE;
             }
-            pigSisma.setTiStato(nuovoStato);
+
+            sismaHelper.aggiornaStato(pigSisma, nuovoStato);
         }
         return nuovoStato;
     }
@@ -979,8 +995,8 @@ public class SismaEjb {
 
     public Date recuperoErroreSisma(BigDecimal idSu, String nuovoStato) {
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSu);
-        pigSisma.setTiStato(PigSisma.TiStato.valueOf(nuovoStato));
-        pigSisma.setDtStato(new Date());
+
+        sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.valueOf(nuovoStato));
 
         if (nuovoStato.equals(PigSisma.TiStato.BOZZA.name())) {
             // MEV 27430 - pulisco lo stato della verifica agenzia sui documenti
@@ -1012,9 +1028,8 @@ public class SismaEjb {
 
     public void cambiaStatoSisma(BigDecimal idSisma, PigSisma.TiStato tiStato) {
         PigSisma pigSisma = sismaHelper.findViewById(PigSisma.class, idSisma.longValueExact());
-        // Controlli sui documenti di sisma attraverso i valori della vista
-        pigSisma.setTiStato(tiStato);
-        pigSisma.setDtStato(new Date());
+
+        sismaHelper.aggiornaStato(pigSisma, tiStato);
     }
 
     public boolean existsPigSismaDocumentiDaVerificare(BigDecimal idSisma) {
@@ -1031,16 +1046,15 @@ public class SismaEjb {
         if (pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
             Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(pigSisma.getPigVer());
             if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)) {
-                pigSisma.setTiStato(PigSisma.TiStato.VERSATO);
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.VERSATO);
             } else {
-                pigSisma.setTiStato(PigSisma.TiStato.COMPLETATO);
+                sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.COMPLETATO);
             }
             // In questo caso flegga come effettuato il primo invio all'ente!
             pigSisma.setFlInviatoAEnte(Constants.DB_TRUE);
         } else {
-            pigSisma.setTiStato(PigSisma.TiStato.COMPLETATO);
+            sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.COMPLETATO);
         }
-        pigSisma.setDtStato(new Date());
         return pigSisma;
     }
 
@@ -1065,4 +1079,237 @@ public class SismaEjb {
         return pigSismas.isEmpty();
     }
 
+    // MEV30936
+    public PigSismaStoricoStatiTableBean getPigSismaStoricoStatiFromPigObjectTableBean(BigDecimal idObject)
+            throws EMFError {
+        PigSismaStoricoStatiTableBean table = new PigSismaStoricoStatiTableBean();
+        List<PigSismaStoricoStati> list = sismaHelper.getPigSismaStoricoStatiFromSisma(idObject);
+        if (list != null && !list.isEmpty()) {
+            try {
+                table = (PigSismaStoricoStatiTableBean) Transform.entities2TableBean(list);
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
+                    | IllegalArgumentException | InvocationTargetException ex) {
+                String msg = "Errore durante il recupero della lista di stati del sisma "
+                        + ExceptionUtils.getRootCauseMessage(ex);
+                throw new EMFError(EMFError.ERROR, msg);
+            }
+        }
+        return table;
+    }
+
+    public static class AutorizzazioneDto {
+
+        private boolean autorizzato;
+        private String messaggioDiErrore;
+
+        public boolean isAutorizzato() {
+            return autorizzato;
+        }
+
+        public void setAutorizzato(boolean autorizzato) {
+            this.autorizzato = autorizzato;
+        }
+
+        public String getMessaggioDiErrore() {
+            return messaggioDiErrore;
+        }
+
+        public void setMessaggioDiErrore(String messaggioDiErrore) {
+            this.messaggioDiErrore = messaggioDiErrore;
+        }
+
+    }
+
+    public static class ListaSismaDto {
+
+        private long idSisma;
+        private String nmTipoSisma;
+        private String tiFaseSisma;
+        private String dsFaseSisma;
+        private String codiceIntervento;
+        private long anno;
+        private String cdKey;
+        private String tiStato;
+        private String statoProgetto;
+        private String dsDescrizione;
+        private Date dtCreazione;
+        private BigDecimal dimensione;
+        private long idVersatore;
+        private String nmVersatore;
+        private String nmSoggettoAttuatore;
+        private BigDecimal annoAg;
+        private String numeroAg;
+        private String registroAg;
+        private String dsTipoFinanziamento;
+        private String oggetto;
+        private Enum<Constants.TipoVersatore> tipoVersatore;
+
+        public long getIdSisma() {
+            return idSisma;
+        }
+
+        public void setIdSisma(long idSisma) {
+            this.idSisma = idSisma;
+        }
+
+        public String getCodiceIntervento() {
+            return codiceIntervento;
+        }
+
+        public void setCodiceIntervento(String codiceIntervento) {
+            this.codiceIntervento = codiceIntervento;
+        }
+
+        public String getNmTipoSisma() {
+            return nmTipoSisma;
+        }
+
+        public void setNmTipoSisma(String nmTipoSisma) {
+            this.nmTipoSisma = nmTipoSisma;
+        }
+
+        public String getTiFaseSisma() {
+            return tiFaseSisma;
+        }
+
+        public void setTiFaseSisma(String tiFaseSisma) {
+            this.tiFaseSisma = tiFaseSisma;
+        }
+
+        public String getDsFaseSisma() {
+            return dsFaseSisma;
+        }
+
+        public void setDsFaseSisma(String dsFaseSisma) {
+            this.dsFaseSisma = dsFaseSisma;
+        }
+
+        public long getAnno() {
+            return anno;
+        }
+
+        public void setAnno(long anno) {
+            this.anno = anno;
+        }
+
+        public String getCdKey() {
+            return cdKey;
+        }
+
+        public void setCdKey(String cdKey) {
+            this.cdKey = cdKey;
+        }
+
+        public String getTiStato() {
+            return tiStato;
+        }
+
+        public void setTiStato(String tiStato) {
+            this.tiStato = tiStato;
+        }
+
+        public String getStatoProgetto() {
+            return statoProgetto;
+        }
+
+        public void setStatoProgetto(String statoProgetto) {
+            this.statoProgetto = statoProgetto;
+        }
+
+        public String getDsDescrizione() {
+            return dsDescrizione;
+        }
+
+        public void setDsDescrizione(String dsDescrizione) {
+            this.dsDescrizione = dsDescrizione;
+        }
+
+        public Date getDtCreazione() {
+            return dtCreazione;
+        }
+
+        public void setDtCreazione(Date dtCreazione) {
+            this.dtCreazione = dtCreazione;
+        }
+
+        public BigDecimal getDimensione() {
+            return dimensione;
+        }
+
+        public void setDimensione(BigDecimal dimensione) {
+            this.dimensione = dimensione;
+        }
+
+        public long getIdVersatore() {
+            return idVersatore;
+        }
+
+        public void setIdVersatore(long idVersatore) {
+            this.idVersatore = idVersatore;
+        }
+
+        public String getNmVersatore() {
+            return nmVersatore;
+        }
+
+        public void setNmVersatore(String nmVersatore) {
+            this.nmVersatore = nmVersatore;
+        }
+
+        public String getNmSoggettoAttuatore() {
+            return nmSoggettoAttuatore;
+        }
+
+        public void setNmSoggettoAttuatore(String nmSoggettoAttuatore) {
+            this.nmSoggettoAttuatore = nmSoggettoAttuatore;
+        }
+
+        public BigDecimal getAnnoAg() {
+            return annoAg;
+        }
+
+        public void setAnnoAg(BigDecimal annoAg) {
+            this.annoAg = annoAg;
+        }
+
+        public String getNumeroAg() {
+            return numeroAg;
+        }
+
+        public void setNumeroAg(String numeroAg) {
+            this.numeroAg = numeroAg;
+        }
+
+        public String getRegistroAg() {
+            return registroAg;
+        }
+
+        public void setRegistroAg(String registroAg) {
+            this.registroAg = registroAg;
+        }
+
+        public String getDsTipoFinanziamento() {
+            return dsTipoFinanziamento;
+        }
+
+        public void setDsTipoFinanziamento(String dsTipoFinanziamento) {
+            this.dsTipoFinanziamento = dsTipoFinanziamento;
+        }
+
+        public String getOggetto() {
+            return oggetto;
+        }
+
+        public void setOggetto(String oggetto) {
+            this.oggetto = oggetto;
+        }
+
+        public Enum<Constants.TipoVersatore> getTipoVersatore() {
+            return tipoVersatore;
+        }
+
+        public void setTipoVersatore(Enum<Constants.TipoVersatore> tipoVersatore) {
+            this.tipoVersatore = tipoVersatore;
+        }
+    }
 }

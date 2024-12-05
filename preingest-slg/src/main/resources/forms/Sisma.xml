@@ -49,6 +49,7 @@
     <Section Name="DocumentiCaricatiSection" Description="" Legend="Documenti caricati" ShowButton="false" LoadOpened="true"/>
     <Section Name="AggiuntaDocumentiFacoltativiSection" Description="" Legend="Aggiunta documenti facoltativi" ShowButton="false" LoadOpened="true"/>
     <Section Name="ErroriRiepilogoSection" Description="" Legend="Errori" ShowButton="false" LoadOpened="true"/>
+    <Section Name="SismaDetailStatiSection" Descripction="" Legend="Lista Stati Sisma" ShowButton="true" LoadOpened="false"/>
     
     <Wizard Name="InserimentoWizard" Description="Versamento progetto ricostruzione">
         <Step Name="Sisma" Description="Inserimento Dati"/>
@@ -153,5 +154,12 @@
         <Button Type="STRING" Description="Ricerca" Name="ricercaSisma"/>
         <Button Type="STRING" Description="Pulisci ricerca" Name="pulisciRicercaSisma"/>
     </Fields>
+    
+    <!-- Lista stati di un sisma -->
+    <List Name="SismaDetailStatiList" Description="Lista stati sisma">
+        <Input Name="ti_stato" Description="Stato" Type="STRING" />
+        <Input Name="ts_reg_stato" Description="Data registrazione stato" Type="DATETIME" />
+        <Input Type="STRING" Description="Descrizione" Name="cd_desc" />
+    </List>
     
 </Form>

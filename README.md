@@ -147,6 +147,7 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
 
 # Librerie utilizzate
 
+
 |  GroupId | ArtifactId  | Version |
 |:---:|:---:|:---:|
 |none|||
@@ -1176,7 +1177,6 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
  * lgpl_v2_1   : GNU General Lesser Public License (LGPL) version 2.1
  * lgpl_v3     : GNU General Lesser Public License (LGPL) version 3.0
  * mit         : MIT-License
-
 
 # Supporto
 

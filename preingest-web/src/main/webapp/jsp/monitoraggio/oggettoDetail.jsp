@@ -3,332 +3,346 @@
 <c:set scope="request" var="navTable" value="${(empty param.mainNavTable) ? fn:escapeXml(param.table) : fn:escapeXml(param.mainNavTable)  }" />
 <sl:html>
     <sl:head  title="Monitoraggio - Dettaglio oggetto" >
-        <script src="<c:url value='/js/help/inithighlightingjs.js' />" type="text/javascript"></script> 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                //MEV28877
-                $('.confermaModificaTipoOggetto').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                            var tipoOggetto = $("#Id_tipo_object").val();
-                            if (tipoOggetto) {
-                                $.post("Monitoraggio.html", {operation: "confermaModificaTipoOggetto", Id_tipo_object: tipoOggetto}).done(function (data) {
-                                    CAjaxDataFormWalk(data);
+<script src="<c:url value='/js/help/inithighlightingjs.js' />" type="text/javascript"></script> 
+<script type="text/javascript">
+    $(document).ready(function () {
+        //MEV28877
+        $('.confermaModificaTipoOggetto').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    var tipoOggetto = $("#Id_tipo_object").val();
+                    if (tipoOggetto) {
+                        $.post("Monitoraggio.html", {operation: "confermaModificaTipoOggetto", Id_tipo_object: tipoOggetto}).done(function (data) {
+                            CAjaxDataFormWalk(data);
 
-                                    window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
+                            window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
+                        });
                     }
-                });
-
-                $('.confermaRecuperoErrore').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                            var stato = $("#Ti_stato_popup").val();
-                            var tipo = $("#Ti_recupero").val();
-                            var tipoOggetto = $("#Id_tipo_object").val();
-                            if (stato) {
-                                $.post("Monitoraggio.html", {operation: "confermaRecuperoErrore", Ti_stato_popup: stato, Ti_recupero: tipo, Id_tipo_object: tipoOggetto}).done(function (data) {
-                                    CAjaxDataFormWalk(data);
-                                    // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
-                                    $('input[type="submit"][name*="recuperoErr"]').hide();
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-                //SUE26200
-                $('.confermaAnnullamentoUD').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    title: "Conferma annullamento unità documentarie",
-                    buttons: {
-                        "Conferma": function () {
-                            //MEV 26942 - nascondo i pulsanti di annullamento.
-                            $(this).dialog("close");
-                            var idObject = $("#Id_object_hidden").val();
-                            var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
-                            var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
-                            if (idObject) {
-                                $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDetailAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
-
-                                    CAjaxDataFormWalk(data);
-
-                                    window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-                //MEV26398
-                $('.confermaAnnullamentoOggetto').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    title: "Conferma annullamento",
-                    buttons: {
-                        "Conferma": function () {
-                            $(this).dialog("close");
-                            
-                            //MEV 26942 - nascondi pulsanti annullamento.
-                            $('input[name="operation__annullaOggettoDetail"]').parent().hide();
-                            $('input[name="operation__annullaVersamentiUDDetail"]').parent().hide();
-                            
-                            var idObject = $("#Id_object_hidden").val();
-                            if (idObject) {
-                                $.post("Monitoraggio.html", {operation: "annullaOggettoDetailAction"}).done(function (data) {
-                                    CAjaxDataFormWalk(data);
-
-                                    window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-                $('.setAnnullatoInDaTrasformare').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                            var stato = $("#Ti_stato_popup").val();
-                            var tipoOggetto = $("#Id_tipo_object").val();
-                            if (stato) {
-                                $.post("Monitoraggio.html", {operation: "confermaSetAnnullatoDaTrasformare", Ti_stato_popup: stato, Id_tipo_object: tipoOggetto}).done(function (data) {
-                                    CAjaxDataFormWalk(data);
-                                    // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
-                                    $('input[type="submit"][name*="settaDa"]').hide();
-                                });
-                            }
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-                $('.setErroreTrasformazione').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                            $.post("Monitoraggio.html", {operation: "confermaSettaErroreTrasformazione"}).done(function (data) {
-                                CAjaxDataFormWalk(data);
-                                // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
-                                $('input[type="submit"][name*="settaEr"]').hide();
-                            });
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-                
-                $('.setChiusoErrVersamento').dialog({
-                    autoOpen: true,
-                    width: 600,
-                    modal: true,
-                    closeOnEscape: true,
-                    resizable: false,
-                    dialogClass: "alertBox",
-                    buttons: {
-                        "Ok": function () {
-                            $(this).dialog("close");
-                            $.post("Monitoraggio.html", {operation: "confermaSettaChiusoErrVersamento"}).done(function (data) {
-                                CAjaxDataFormWalk(data);
-                                // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
-                                $('input[type="submit"][name*="setChiusoErr"]').hide();
-                            });
-                        },
-                        "Annulla": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-
-                // Vale sia per il popup di recupero errore che di set annullato in da trasformare
-                $("#Ti_stato_popup").on('change', function () {
-                    var valore = this.value;
-                    if (valore === 'DA_TRASFORMARE') {
-                        $('#Id_tipo_object').parent().show();
-                    } else {
-                        $('#Id_tipo_object').parent().hide();
-                    }
-                });
-                if ($('#Ti_stato_popup').find('option:selected').val() === 'DA_TRASFORMARE') {
-                    $('#Id_tipo_object').parent().show();
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
                 }
-            });
-        </script>
+            }
+        });
+
+        $('.confermaRecuperoErrore').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    var stato = $("#Ti_stato_popup").val();
+                    var tipo = $("#Ti_recupero").val();
+                    var tipoOggetto = $("#Id_tipo_object").val();
+                    if (stato) {
+                        $.post("Monitoraggio.html", {operation: "confermaRecuperoErrore", Ti_stato_popup: stato, Ti_recupero: tipo, Id_tipo_object: tipoOggetto}).done(function (data) {
+                            CAjaxDataFormWalk(data);
+                            // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
+                            $('input[type="submit"][name*="recuperoErr"]').hide();
+                        });
+                    }
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        //SUE26200
+        $('.confermaAnnullamentoUD').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            title: "Conferma annullamento unità documentarie",
+            buttons: {
+                "Conferma": function () {
+                    //MEV 26942 - nascondo i pulsanti di annullamento.
+                    $(this).dialog("close");
+                    var idObject = $("#Id_object_hidden").val();
+                    var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
+                    var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
+                    if (idObject) {
+                        $.post("Monitoraggio.html", {operation: "annullaVersamentiUDDetailAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
+
+                            CAjaxDataFormWalk(data);
+
+                            //window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
+                        });
+                    }
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        //MEV26398
+        $('.confermaAnnullamentoOggetto').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            title: "Conferma annullamento",
+            buttons: {
+                "Conferma": function () {
+                    $(this).dialog("close");
+                    
+                    //attiva lo spinner, codice copiato dal framework usato per i bottoni "submit"
+                    $("body").append("<div class='overlay dialog_spinner'><div class='overlay__inner'><div class='overlay__content'><span class='spinner'></span></div></div></div>");
+                            
+                    //MEV 26942 - nascondi pulsanti annullamento.
+                    $('input[name="operation__annullaOggettoDetail"]').parent().hide();
+                    $('input[name="operation__annullaVersamentiUDDetail"]').parent().hide();
+                            
+                    var idObject = $("#Id_object_hidden").val();
+                    if (idObject) {
+                        $.post("Monitoraggio.html", {operation: "annullaOggettoDetailAction"}).done(function (data) {
+                            CAjaxDataFormWalk(data);
+                            
+                            //rimove lo spinner
+                            $("div.dialog_spinner").remove();
+
+                            //window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiList&navigationEvent=elenco&riga=-1&forceReload=false";
+                        });
+                    }
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('.setAnnullatoInDaTrasformare').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    var stato = $("#Ti_stato_popup").val();
+                    var tipoOggetto = $("#Id_tipo_object").val();
+                    if (stato) {
+                        $.post("Monitoraggio.html", {operation: "confermaSetAnnullatoDaTrasformare", Ti_stato_popup: stato, Id_tipo_object: tipoOggetto}).done(function (data) {
+                            CAjaxDataFormWalk(data);
+                            // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
+                            $('input[type="submit"][name*="settaDa"]').hide();
+                        });
+                    }
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $('.setErroreTrasformazione').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    $.post("Monitoraggio.html", {operation: "confermaSettaErroreTrasformazione"}).done(function (data) {
+                        CAjaxDataFormWalk(data);
+                        // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
+                        $('input[type="submit"][name*="settaEr"]').hide();
+                    });
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+                
+        $('.setChiusoErrVersamento').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    $.post("Monitoraggio.html", {operation: "confermaSettaChiusoErrVersamento"}).done(function (data) {
+                        CAjaxDataFormWalk(data);
+                        // Al momento il bottone non può essere nascosto dal framework, faccio a manoni
+                        $('input[type="submit"][name*="setChiusoErr"]').hide();
+                    });
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        // Vale sia per il popup di recupero errore che di set annullato in da trasformare
+        $("#Ti_stato_popup").on('change', function () {
+            var valore = this.value;
+            if (valore === 'DA_TRASFORMARE') {
+                $('#Id_tipo_object').parent().show();
+            } else {
+                $('#Id_tipo_object').parent().hide();
+            }
+        });
+        if ($('#Ti_stato_popup').find('option:selected').val() === 'DA_TRASFORMARE') {
+            $('#Id_tipo_object').parent().show();
+        }
+    });
+</script>
     </sl:head>
     <sl:body>
+        <c:set value="${sessionScope['###_FORM_CONTAINER']}" var="form" />
         <sl:header changeOrganizationBtnDescription="Cambia versatore"/>
         <sl:menu showChangePasswordBtn="true" />
         <sl:content>
             <slf:messageBox  />
             <c:if test="${!empty requestScope.confermaAnnullamentoUD}">
                 <c:if test="${requestScope.ni_unita_doc_vers_dup != 0}">
-                    <div class="messages confermaAnnullamentoUD">
-                        <div class="message info ">
-                            <p>
-                                <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate, di cui <c:out value="${requestScope.ni_unita_doc_vers_dup}" /> UD in stato di errore per chiave già presente (potrebbero essere stati versati da altri oggetti).</span>
-                                <br/>
+<div class="messages confermaAnnullamentoUD">
+    <div class="message info ">
+        <p>
+            <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate, di cui <c:out value="${requestScope.ni_unita_doc_vers_dup}" /> UD in stato di errore per chiave già presente (potrebbero essere stati versati da altri oggetti).</span>
+            <br/>
                                 <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-                                <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
                             </c:if>
-                            <span>Selezionare l'operazione da completare: </span>
-                            </p>
-                        </div>
-                        <div class="message">
-                            <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
-                            <label for="ti_annullamento_ud_1">preservare queste <c:out value="${requestScope.ni_unita_doc_vers_dup}" />  UD e annullare le UD rimanenti.</label>
-                        </div>
-                        <div class="message">
-                            <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
-                            <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
-                        </div>
-                        <div class="message">
-                            <p>
-                                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
-                            <div>
-                                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
-                            </div>
-                            </p>
-                        </div>
-                    </div>
+        <span>Selezionare l'operazione da completare: </span>
+        </p>
+    </div>
+    <div class="message">
+        <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
+        <label for="ti_annullamento_ud_1">preservare queste <c:out value="${requestScope.ni_unita_doc_vers_dup}" />  UD e annullare le UD rimanenti.</label>
+    </div>
+    <div class="message">
+        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
+        <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
+    </div>
+    <div class="message">
+        <p>
+            <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+        <div>
+            <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+        </div>
+        </p>
+    </div>
+</div>
                 </c:if>
                 <c:if test="${requestScope.ni_unita_doc_vers_dup == 0}">
-                    <div class="messages confermaAnnullamentoUD">
-                        <div class="message info ">
-                            <p>
-                                <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate.</span>
-                                <br/>
+<div class="messages confermaAnnullamentoUD">
+    <div class="message info ">
+        <p>
+            <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate.</span>
+            <br/>
                                 <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-                                    <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
                                 </c:if>
-                                <div class="message">
-                                    <p>
-                                        <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
-                                    <div>
-                                        <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
-                                    </div>
-                                    </p>
-                                </div>
-                                <span>Procedere con l'annullamento?</span>
+        <div class="message">
+            <p>
+                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+            <div>
+                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+            </div>
+            </p>
+        </div>
+        <span>Procedere con l'annullamento?</span>
 
-                            </p>
-                        </div>
-                        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="0" checked style="display: none"/>
-                    </div>
+        </p>
+    </div>
+    <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="0" checked style="display: none"/>
+</div>
                 </c:if>
             </c:if>
             <c:if test="${!empty requestScope.confermaAnnullamentoOggetto}">
-                <div class="messages confermaAnnullamentoOggetto">
-                    <div class="message info ">
+<div class="messages confermaAnnullamentoOggetto">
+    <div class="message info ">
                         <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
-                        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche</p>
+                            <c:choose>
+                                <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
+                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
+                                </c:when>
+                                <c:otherwise>
+                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
+                                </c:otherwise>
+                            </c:choose>
                         </c:if>
                         <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
                         </c:if>
-                    </div>
-                </div>
+    </div>
+</div>
             </c:if>
             <c:if test="${!empty requestScope.confermaRecuperoErrore}">
-                <div class="messages confermaRecuperoErrore ">
-                    <ul>
-                        <li class="message info ">
-                            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
+<div class="messages confermaRecuperoErrore ">
+    <ul>
+        <li class="message info ">
+            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_STATO_POPUP%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.ID_TIPO_OBJECT%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_RECUPERO%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-                        </li>
-                    </ul>
-                </div>
+        </li>
+    </ul>
+</div>
             </c:if>
             <c:if test="${!empty requestScope.setAnnullatoInDaTrasformare}">
-                <div class="messages setAnnullatoInDaTrasformare ">
-                    <ul>
-                        <li class="message info ">
-                            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
+<div class="messages setAnnullatoInDaTrasformare ">
+    <ul>
+        <li class="message info ">
+            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_STATO_POPUP%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.ID_TIPO_OBJECT%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-                        </li>
-                    </ul>
-                </div>
+        </li>
+    </ul>
+</div>
             </c:if>
             <c:if test="${!empty requestScope.setErroreTrasformazione}">
-                <div class="messages setErroreTrasformazione ">
-                    <ul>
-                        <li class="message info ">
-                            <p>Confermi l'operazione?</p><br/>
-                        </li>
-                    </ul>
-                </div>
+<div class="messages setErroreTrasformazione ">
+    <ul>
+        <li class="message info ">
+            <p>Confermi l'operazione?</p><br/>
+        </li>
+    </ul>
+</div>
             </c:if>
             <c:if test="${!empty requestScope.setChiusoErrVersamento}">
-                <div class="messages setChiusoErrVersamento ">
-                    <ul>
-                        <li class="message info ">
-                            <p>Confermi l'operazione?</p><br/>
-                        </li>
-                    </ul>
-                </div>
+<div class="messages setChiusoErrVersamento ">
+    <ul>
+        <li class="message info ">
+            <p>Confermi l'operazione?</p><br/>
+        </li>
+    </ul>
+</div>
             </c:if>
             <c:if test="${!empty requestScope.confermaModificaTipoOggetto}">
-                <div class="messages confermaModificaTipoOggetto ">
-                    <ul>
-                        <li class="message info ">
-                            <p>Seleziona il tipo oggetto da assegnare.</p><br/>
+<div class="messages confermaModificaTipoOggetto ">
+    <ul>
+        <li class="message info ">
+            <p>Seleziona il tipo oggetto da assegnare.</p><br/>
                             <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.ID_TIPO_OBJECT%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-                        </li>
-                    </ul>
-                </div>
+        </li>
+    </ul>
+</div>
             </c:if>
             <sl:newLine skipLine="true"/>
             <sl:contentTitle title="DETTAGLIO OGGETTO"/>
@@ -531,7 +545,7 @@
             <sl:pulsantiera>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_ERR_TRASFORMAZIONE%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_ERR_VERSAMENTO_PING%>"/>
-                <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_CHIUS_ERR_VERSAMENTO%>"/>
+                <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_CHIUS_ERR_VERS%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.MODIFICA_TIPO_OGGETTO%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ANNULLA_OGGETTO_DETAIL%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ANNULLA_VERSAMENTI_UDDETAIL%>"/>
@@ -575,7 +589,7 @@
                 <slf:listNavBar  name="<%= MonitoraggioForm.OggettoDetailPrioritaVersamentoList.NAME%>" />
             </slf:tab>
 
-            <div><input name="mainNavTable" type="hidden" value="${(empty param.mainNavTable) ? fn:escapeXml(param.table) : fn:escapeXml(param.mainNavTable)  }" /></div>
+<div><input name="mainNavTable" type="hidden" value="${(empty param.mainNavTable) ? fn:escapeXml(param.table) : fn:escapeXml(param.mainNavTable)  }" /></div>
             </sl:content>
             <sl:footer />
         </sl:body>

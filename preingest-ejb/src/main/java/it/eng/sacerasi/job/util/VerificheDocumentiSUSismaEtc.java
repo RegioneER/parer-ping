@@ -19,6 +19,8 @@ package it.eng.sacerasi.job.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
@@ -67,11 +69,13 @@ public class VerificheDocumentiSUSismaEtc {
      *
      * @param file
      *            il file da verificare
+     * @param charset
+     *            il charset dello zip
      *
      * @return true se file è uno zip valido
      */
-    public static boolean isValidZip(final File file) {
-        try (ZipFile zipfile = new ZipFile(file);) {
+    public static boolean isValidZip(final File file, Charset charset) {
+        try (ZipFile zipfile = new ZipFile(file, charset);) {
             return true;
         } catch (IOException e) {
             return false;

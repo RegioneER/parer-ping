@@ -373,8 +373,8 @@ public class AmministrazioneHelper extends GenericHelper {
     // MEV 27543
     public List<String> getPigVRicVersAmbientiIam(Long idUserIam) {
         String queryStr = "SELECT DISTINCT b.nmAmbienteEnteConvenz FROM SIOrgEnteSiam a JOIN SIOrgAmbienteEnteConvenz b ON (a.siOrgAmbienteEnteConvenz.idAmbienteEnteConvenz = b.idAmbienteEnteConvenz)"
-                + " where a.nmEnteSiam IN( SELECT DISTINCT ricVers.nmEnteConvenz FROM IamAbilOrganiz iao, PigVRicVers ricVers"
-                + " WHERE iao.idOrganizApplic = ricVers.id.idVers" + " AND iao.iamUser.idUserIam = :idUserIam)"
+                + " where a.idEnteSiam IN( SELECT DISTINCT vers.idEnteConvenz FROM IamAbilOrganiz iao, PigVers vers"
+                + " WHERE iao.idOrganizApplic = vers.idVers" + " AND iao.iamUser.idUserIam = :idUserIam)"
                 + " ORDER BY b.nmAmbienteEnteConvenz";
 
         Query query = getEntityManager().createQuery(queryStr);

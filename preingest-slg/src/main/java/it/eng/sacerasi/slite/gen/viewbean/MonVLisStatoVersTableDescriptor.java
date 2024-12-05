@@ -59,6 +59,8 @@ public class MonVLisStatoVersTableDescriptor extends TableDescriptor {
     public static final String COL_ID_USER_IAM_VERS = "id_user_iam_vers";
     public static final String COL_NM_USERID_VERS = "nm_userid_vers";
     public static final String COL_TI_STATO_OBJECT = "ti_stato_object";
+    public static final String COL_TI_STATO_CALCOLATO = "ti_stato_calcolato";
+    public static final String COL_TI_STATO_VISUALIZZATO = "ti_stato_visualizzato";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
@@ -83,6 +85,8 @@ public class MonVLisStatoVersTableDescriptor extends TableDescriptor {
         map.put(COL_ID_USER_IAM_VERS, new ColumnDescriptor(COL_ID_USER_IAM_VERS, Types.DECIMAL, 22, true));
         map.put(COL_NM_USERID_VERS, new ColumnDescriptor(COL_NM_USERID_VERS, Types.VARCHAR, 100, true));
         map.put(COL_TI_STATO_OBJECT, new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, true));
+        map.put(COL_TI_STATO_CALCOLATO, new ColumnDescriptor(COL_TI_STATO_CALCOLATO, Types.VARCHAR, 30, true));
+        map.put(COL_TI_STATO_VISUALIZZATO, new ColumnDescriptor(COL_TI_STATO_VISUALIZZATO, Types.VARCHAR, 30, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {

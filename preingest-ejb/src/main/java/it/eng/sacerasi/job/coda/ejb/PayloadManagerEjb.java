@@ -164,8 +164,13 @@ public class PayloadManagerEjb {
                     if (esitoConnessione.isErroreConnessione()) {
                         log.debug("{} UD '{}' andata in timeout", infoLog, unitaDoc.getIdUnitaDocObject());
                         unitaDoc.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name());
+                        // MEV 27407
+                        Date dtStato = new Date();
+                        unitaDoc.setDtStato(dtStato);
                         unitaDocSessione
                                 .setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.VERSATA_TIMEOUT.name());
+                        unitaDocSessione.setDtStato(dtStato);
+
                         incrementaVersateTimeout = true;
                         String messaggioErrore = esitoConnessione.getDescrErrConnessione();
                         log.error("{} {}", infoLog, messaggioErrore);
@@ -261,7 +266,7 @@ public class PayloadManagerEjb {
                                 session.setCdErr(MessaggiWSBundle.PING_CONSCODA_002);
                                 // setto dlErr = Il versamento di almeno una unità documentaria è fallito
                                 session.setDlErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_CONSCODA_002));
-                                // aggiorno l'oggetto assegnado stato = CHIUSO_OK
+                                // aggiorno l'oggetto assegnando stato = CHIUSO_ERR_RECUPERABILE
                                 object.setTiStatoObject(Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name());
                                 session.setDtChiusura(now);
                                 codaHelper.creaStatoSessione(session,
@@ -600,6 +605,12 @@ public class PayloadManagerEjb {
                 infoLog, unitaDoc.getIdUnitaDocObject(), codiceEsito);
         unitaDoc.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
         unitaDocSessione.setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.VERSATA_OK.name());
+
+        // MEV 27407
+        Date dtStato = new Date();
+        unitaDoc.setDtStato(dtStato);
+        unitaDocSessione.setDtStato(dtStato);
+
         log.debug("{} Stato UD '{}' {}", infoLog, unitaDoc.getIdUnitaDocObject(), unitaDoc.getTiStatoUnitaDocObject());
         // incremento il numero delle unità documentarie versate con successo
     }
@@ -609,13 +620,19 @@ public class PayloadManagerEjb {
         log.debug("{} Esito versamento UD '{}' {} modifico lo stato della UD SESSIONE in VERSATA_ERR", infoLog,
                 unitaDoc.getIdUnitaDocObject(), codiceEsito);
         unitaDocSessione.setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
+
+        // MEV 27407
+        Date dtStato = new Date();
+
         // setto codice e descrizione dell'errore determinati da Sacer
+        unitaDocSessione.setDtStato(dtStato);
         unitaDocSessione.setCdErrSacer(codiceErrore);
         unitaDocSessione.setDlErrSacer(messaggioErrore);
 
         log.debug("{} modifico lo stato della UD in VERSATA_ERR", infoLog);
         unitaDoc.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_ERR.name());
         // setto codice e descrizione dell'errore determinati da Sacer
+        unitaDoc.setDtStato(dtStato);
         unitaDoc.setCdErrSacer(codiceErrore);
         unitaDoc.setDlErrSacer(messaggioErrore);
     }

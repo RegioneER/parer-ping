@@ -17,6 +17,7 @@
 
 package it.eng.sacerasi.slite.gen.tablebean;
 
+import static it.eng.sacerasi.slite.gen.viewbean.MonVVisUnitaDocSessioneTableDescriptor.COL_DT_STATO;
 import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class PigUnitaDocSessioneTableDescriptor extends TableDescriptor {
     public static final String COL_CD_KEY_UNITA_DOC_SACER = "cd_key_unita_doc_sacer";
     public static final String COL_TI_STATO_UNITA_DOC_SESSIONE = "ti_stato_unita_doc_sessione";
     public static final String COL_NI_SIZE_FILE_BYTE = "ni_size_file_byte";
+    public static final String COL_DT_STATO = "dt_stato";
     public static final String COL_CD_ERR_SACER = "cd_err_sacer";
     public static final String COL_DL_ERR_SACER = "dl_err_sacer";
 
@@ -62,6 +64,7 @@ public class PigUnitaDocSessioneTableDescriptor extends TableDescriptor {
         map.put(COL_TI_STATO_UNITA_DOC_SESSIONE,
                 new ColumnDescriptor(COL_TI_STATO_UNITA_DOC_SESSIONE, Types.VARCHAR, 20, false));
         map.put(COL_NI_SIZE_FILE_BYTE, new ColumnDescriptor(COL_NI_SIZE_FILE_BYTE, Types.DECIMAL, 22, false));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
         map.put(COL_CD_ERR_SACER, new ColumnDescriptor(COL_CD_ERR_SACER, Types.VARCHAR, 100, false));
         map.put(COL_DL_ERR_SACER, new ColumnDescriptor(COL_DL_ERR_SACER, Types.VARCHAR, 1024, false));
     }

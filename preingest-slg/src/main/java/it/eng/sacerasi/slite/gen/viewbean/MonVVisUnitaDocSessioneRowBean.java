@@ -168,6 +168,15 @@ public class MonVVisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
     }
 
+    // MEV 27407
+    public Timestamp getDtStato() {
+        return getTimestamp("dt_stato");
+    }
+
+    public void setDtStato(Timestamp dtStato) {
+        setObject("dt_stato", dtStato);
+    }
+
     public String getCdErrSacer() {
         return getString("cd_err_sacer");
     }
@@ -253,6 +262,10 @@ public class MonVVisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         this.setIdOrganizIam(entity.getIdOrganizIam());
         this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
         this.setFlVersSimulato(entity.getFlVersSimulato());
+
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
     }
 
     @Override
@@ -280,6 +293,7 @@ public class MonVVisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
         entity.setIdOrganizIam(this.getIdOrganizIam());
         entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
         entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setDtStato(this.getDtStato());
         return entity;
     }
 

@@ -38,6 +38,8 @@
                 <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocVersamentoDetail.TI_STATO_UNITA_DOC_OBJECT%>" colSpan="4"/>
                 <sl:newLine />
+                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocVersamentoDetail.DT_STATO%>" colSpan="4"/>
+                <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocVersamentoDetail.CD_ERR_SACER%>" colSpan="2"/>
                 <slf:lblField name="<%=MonitoraggioForm.UnitaDocVersamentoDetail.DL_ERR_SACER%>" colSpan="2"/>
                 <sl:newLine />

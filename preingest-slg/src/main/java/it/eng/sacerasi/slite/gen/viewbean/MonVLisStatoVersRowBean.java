@@ -233,6 +233,22 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         setObject("note", note);
     }
 
+    public String getTiStatoVisualizzato() {
+        return getString("ti_stato_visualizzato");
+    }
+
+    public void setTiStatoVisaulizzato(String tiStatoVisualizzato) {
+        setObject("ti_stato_visualizzato", tiStatoVisualizzato);
+    }
+
+    public String getTiStatoCalcolato() {
+        return getString("ti_stato_calcolato");
+    }
+
+    public void setTiStatoCalcolato(String tiStatoCalcolato) {
+        setObject("ti_stato_calcolato", tiStatoCalcolato);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVLisStatoVers entity = (MonVLisStatoVers) obj;
@@ -262,6 +278,8 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         this.setNiUdProdotte(entity.getNiUdProdotte());
         this.setTiGestOggettiFigli(entity.getTiGestOggettiFigli());
         this.setNote(entity.getNote());
+        this.setTiStatoVisaulizzato(entity.getTiStatoVisualizzato());
+        this.setTiStatoCalcolato(entity.getTiStatoCalcolato());
     }
 
     @Override
@@ -291,6 +309,8 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         entity.setNiUdProdotte(this.getNiUdProdotte());
         entity.setTiGestOggettiFigli(this.getTiGestOggettiFigli());
         entity.setNote(this.getNote());
+        entity.setTiStatoVisualizzato(this.getTiStatoVisualizzato());
+        entity.setTiStatoCalcolato(this.getTiStatoCalcolato());
         return entity;
     }
 

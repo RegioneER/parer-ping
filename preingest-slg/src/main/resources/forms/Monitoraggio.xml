@@ -489,8 +489,9 @@
         <Input Type="INTEGER" Description="Num. UD versate KO" Name="ni_unita_doc_vers_err" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Num. UD versate con timeout" Name="ni_unita_doc_vers_timeout" GroupingDecimal="true" />
         <Input Type="STRING" Description="Tipo storage" Name="ti_conservato_su_os" />
-        <Link Tooltip="Dettaglio oggetto generato da trasformazione" Target="loadDettaglioOggettoTrasf" 
-              isTargetList="false" Name="pg_oggetto_trasf" Description="Progr. oggetto generato da trasformazione" Type="INTEGER"/>
+<!--        <Link Tooltip="Dettaglio oggetto generato da trasformazione" Target="loadDettaglioOggettoTrasf" 
+              isTargetList="false" Name="pg_oggetto_trasf" Description="Progr. oggetto generato da trasformazione" Type="INTEGER"/>-->
+        <Input Type="INTEGER" Description="Progr. oggetto generato da trasformazione" Name="pg_oggetto_trasf" />
         <Input Type="STRING" Description="Note" Name="note" />
         
         <!-- Oggetto da trasformare -->
@@ -533,7 +534,7 @@
         <Button Name="recuperoErrTrasformazione" Description="Recupero errori di traformazione" Type="STRING" />
         <Button Name="modificaTipoOggetto" Description="Modifica il tipo oggetto" Type="STRING" />
         <Button Name="recuperoErrVersamentoPing" Description="Recupero errori di versamento a Ping" Type="STRING" />
-        <Button Name="recuperoChiusErrVersamento" Description="Riporta in attesa scheduler" Type="STRING" />
+        <Button Name="recuperoChiusErrVers" Description="Imposta come errore recuperabile" Type="STRING" />
         <Button Name="annullaOggettoDetail" Description="Annulla oggetto" Type="STRING" />
         <Button Name="annullaVersamentiUDDetail" Description="Annulla versamenti unità documentarie" Type="STRING" />
         <Button Name="settaDaTrasformareDetail" Description="Set ANNULLATO in DA TRASFORMARE" Type="STRING" />
@@ -604,6 +605,7 @@
         <Input Type="STRING" Description="Chiave" Name="chiave_ud" />
         <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
         <Input Type="STRING" Description="Stato" Name="ti_stato_unita_doc_object" />
+        <Input Type="DATETIME" Description="Data stato" Name="dt_stato"/>
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
     </List>
@@ -620,13 +622,17 @@
         <Input Type="STRING" Description="Chiave unità doc." Name="chiave_ud" />
         <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
         <Input Type="STRING" Description="Stato unità doc." Name="ti_stato_unita_doc_object" />
+        <Input Type="DATETIME" Description="Data stato" Name="dt_stato"/>
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
         <CheckBox Type="STRING" Description="Versamento simulato" Name="fl_vers_simulato" Readonly="true"/>
         <CheckBox Type="STRING" Description="XML versato modificato" Name="fl_xml_modificato" Readonly="true"/>
         <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
         <TextArea Name="bl_xml_indice_sacer" Description="XML indice" Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
-        <Button Name="downloadXMLUnitaDocObject" Description="Download XML unità documentaria" Type="STRING" DisableHourGlass="true"/> 
+        <Button Name="downloadXMLUnitaDocObject" Description="Download XML unità documentaria" Type="STRING" DisableHourGlass="true"/>
+        <Button Name="editUnitaDocumentaria" Description="Modifica Indice SIP" Type="STRING"/>
+        <Button Name="saveUnitaDocumentaria" Description="Salva Indice SIP" Type="STRING"/>
+        <Button Name="undoUnitaDocumentaria" Description="Annulla modifica Indice SIP" Type="STRING"/>
     </Fields>
  
     <!-- Lista versamenti -->
@@ -654,20 +660,23 @@
     </List>
     
     <!-- Lista degli oggetti generati da trasformazione -->
-    <List Name="OggettoDetailOggettiTrasfList" Description="Lista oggetti generati da trasformazione" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+    <List Name="OggettoDetailOggettiTrasfList" Description="Lista oggetti generati da trasformazione" hideDetailButton="true" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true" >
+        <Link Name="showOggettoVersatoAPing" Description="Dettaglio oggetto" Type="STRING" Tooltip="Visualizza" 
+              isTargetList="false" VisibilityProperty="fl_versato_ping" Target="showOggettoVersatoAPing"/>
+<!--        <Link Name="downloadFileOggettoObjGenTrasf" Description="File oggetto" Type="STRING" Tooltip="Scarica" 
+              isTargetList="false" VisibilityProperty="download_oggetto_generato" Target="downloadFileOggettoObjGenTrasf"/>-->
+        <Input Name="id_vers_trasf" Description="ID Versatore trasf" Type="INTEGER" Hidden="true" />
         <Input Name="nm_ambiente_vers_trasf" Description="Ambiente versatore" Type="STRING" />
         <Input Name="nm_vers_trasf" Description="Versatore" Type="STRING" />
         <Input Name="pg_oggetto_trasf" Description="Progressivo" Type="INTEGER"/>
         <Input Name="cd_key_object_trasf" Description="Chiave" Type="STRING" />
         <Input Name="nm_tipo_object_trasf" Description="Tipo oggetto" Type="STRING" />
-        <Input Name="ds_path" Description="Path" Type="STRING" />
+<!--        <Input Name="ds_path" Description="Path" Type="STRING" />-->
         <Input Name="ds_object_trasf" Description="Descrizione" Type="STRING" />
         <Input Name="ti_stato_trasf" Description="Stato in Ping" Type="STRING" />
         <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
         <Input Name="cd_err" Description="Codice errore" Type="STRING" />
         <Input Name="dl_err" Description="Descrizione errore" Type="STRING" />
-        <Link Name="showOggettoVersatoAPing" Description="Oggetto versato a PING" Type="STRING" Tooltip="Visualizza oggetto" 
-              isTargetList="false" VisibilityProperty="fl_versato_ping" Target="showOggettoVersatoAPing"/>
     </List>
     
     <!-- Lista stati versamenti di un oggetto -->
@@ -822,6 +831,7 @@
         <Input Type="STRING" Description="Chiave" Name="chiave_ud" />
         <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
         <Input Type="STRING" Description="Stato" Name="ti_stato_unita_doc_sessione" />
+        <Input Type="DATETIME" Description="Data stato" Name="dt_stato"/>
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
     </List>
@@ -865,6 +875,7 @@
         <Input Type="STRING" Description="Chiave unità doc." Name="chiave_ud" />
         <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
         <Input Type="STRING" Description="Stato unità doc." Name="ti_stato_unita_doc_object" />
+        <Input Type="DATETIME" Description="Data stato" Name="dt_stato"/>
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
         <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
@@ -1044,41 +1055,8 @@
     <!-- Dettaglio oggetto generato da trasformazione-->
     <Section Name="OggettoDaTrasformareSection" Description="" Legend="Oggetto da trasformare" LoadOpened="true"/>
     <Section Name="OggettoTrasformatoSection" Description="" Legend="Oggetto generato da trasformazione" LoadOpened="true"/>
-    <!-- Oggetto da trasformare -->
-    <Fields Name="OggettoGeneratoTrasfDetail" Description="Dettaglio oggetto generato da trasformazione" >
-        <!--Oggetto da trasformare-->
-        <Input Name="id_object_da_trasf" Description="Id" Type="INTEGER" Hidden="true" />
-        <Input Name="id_vers_trasf" Description="ID Versatore trasf" Type="INTEGER" Hidden="true" />
-        <Input Name="id_vers_da_trasf" Description="ID Versatore da trasf" Type="INTEGER" Hidden="true" />
-        
-        <Input Name="nm_ambiente_vers_da_trasf" Description="Ambiente" Type="STRING" />
-        <Input Name="nm_vers_da_trasf" Description="Versatore" Type="STRING" />
-        <Input Name="cd_key_object_da_trasf" Description="Chiave" Type="STRING" />
-        <Input Name="nm_tipo_object_da_trasf" Description="Tipo oggetto" Type="STRING" />
-        <Input Name="ds_object_da_trasf" Description="Descrizione" Type="STRING" />
-        <Input Name="ni_tot_object_trasf" Description="Num. oggetti generati" Type="INTEGER" GroupingDecimal="true"/>
-        <Input Name="ti_stato_object_da_trasf" Description="Stato" Type="STRING" />
-        <Input Name="dt_stato_cor_da_trasf" Description="Data registrazione stato" Type="DATETIME" />
-        <!--Oggetto generato da trasformazione-->
-        <Input Type="STRING" Description="Ambiente" Name="nm_ambiente_vers_trasf" />
-        <Input Type="STRING" Description="Versatore" Name="nm_vers_trasf" />
-        <Input Type="INTEGER" Description="Progressivo" Name="pg_oggetto_trasf" />
-        <Input Type="STRING" Description="Chiave" Name="cd_key_object_trasf" />
-        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object_trasf" />
-        <Input Type="STRING" Description="Descrizione" Name="ds_object_trasf" />
-        <Input Type="STRING" Description="Path" Name="ds_path" />
-        <Input Type="STRING" Description="Hash file" Name="ds_hash_file_vers" />
-        <Input Type="STRING" Description="Algoritmo calcolo hash" Name="ti_algo_hash_file_vers" />
-        <Input Type="STRING" Description="Encoding hash" Name="cd_encoding_hash_file_vers" />
-        <Input Type="STRING" Description="Stato in Ping" Name="ti_stato_trasf" />
-        <Input Type="STRING" Description="Codice errore" Name="cd_err" />
-        <Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
-        
-        <Button Name="downloadFileOggettoObjGenTrasf" Description="Download" Type="STRING" DisableHourGlass="true"/>
-        <Button Name="oggettoDaTrasformareObjGenTrasf" Description="Oggetto da trasformare" Type="STRING" />
-        <Button Name="oggettoVersatoPingObjGenTrasf" Description="Oggetto versato a PING" Type="STRING" />
-    </Fields>
-
+    
+    
     <!-- Lista cambi priorità -->
     <List Name="OggettoDetailPrioritaVersamentoList" Description="Lista priorità versamento">
         <Input Name="dt_modifica" Description="Data modifica" Type="DATETIME" />

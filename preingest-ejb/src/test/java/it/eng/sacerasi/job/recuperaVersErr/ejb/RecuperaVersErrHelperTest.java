@@ -59,7 +59,7 @@ public class RecuperaVersErrHelperTest {
         List<Long> idVersatori = aListOfLong(2);
         String statoTimeout = aString();
         String statoErrVers = aString();
-        helper.getListaObjects(idVersatori, statoTimeout, statoErrVers);
+        helper.getListaObjects(idVersatori, statoTimeout, statoErrVers, 60);
         assertTrue(true);
     }
 

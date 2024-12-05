@@ -752,10 +752,11 @@ public class EseguiTrasformazione {
                     PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
 
         } catch (KettleServiceException ex) {
-            String messaggio = "Errore durante nella comunicazione con in webservices di Parer Kettle Server";
+            String messaggio = "Errore durante nella comunicazione con in webservices di Parer Kettle Server: "
+                    + ex.getMessage();
             jobHelper.changePigObjectAndSessionStateAtomic(po.getIdObject(), Constants.Stato.DA_TRASFORMARE.name(),
                     Constants.XF_WARNING_CODE, messaggio);
-            logger.error(messaggio);
+            logger.error(messaggio, ex);
         } catch (IOException ex) {
             String messaggio = "Eccezione imprevista nell'apertura del pacchetto della trasformazione ";
             messaggio += ExceptionUtils.getRootCauseMessage(ex);

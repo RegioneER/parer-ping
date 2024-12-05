@@ -1,28 +1,34 @@
+
+## 6.3.0 (31-10-2024)
+
+### Bugfix: 4
+- [#34454](https://parermine.regione.emilia-romagna.it/issues/34454) Corrrezione del versamento oggetto da trasformare con modalità figli manuale
+- [#34111](https://parermine.regione.emilia-romagna.it/issues/34111) Ping: segnalazione controllo bloccante sulla dimensione del file da "Versamento da archivio" 
+- [#34104](https://parermine.regione.emilia-romagna.it/issues/34104) Correzione gestione oggetti non risolubili
+- [#34042](https://parermine.regione.emilia-romagna.it/issues/34042) Gestione della verifica file degli strumenti urbanistici e sisma
+
+### Novità: 15
+- [#34456](https://parermine.regione.emilia-romagna.it/issues/34456) Implementazione stacktrace chiamata servizi di trasformazione Kettle
+- [#34450](https://parermine.regione.emilia-romagna.it/issues/34450) Modifica caricamento lista Ambiente Sacer
+- [#34100](https://parermine.regione.emilia-romagna.it/issues/34100) Gestione dell'xsd fascicolo per versamento fascicolo da PING
+- [#34015](https://parermine.regione.emilia-romagna.it/issues/34015) Creazione nuovo parametro per dimesione max file da archivio
+- [#33255](https://parermine.regione.emilia-romagna.it/issues/33255) Modifiche a Lista oggetti generati da trasformazione nel dettaglio oggetto
+- [#33098](https://parermine.regione.emilia-romagna.it/issues/33098) Creazione del pulsante per la modifica dell'Indice SIP
+- [#33066](https://parermine.regione.emilia-romagna.it/issues/33066) SU - Gestione dellla modifica del campo Data strumento dopo averlo inserito
+- [#33065](https://parermine.regione.emilia-romagna.it/issues/33065) SU - Modifica della pop-up di errore tra il passo 2 e il passo 3 nell'inserimento nuovo SU
+- [#32543](https://parermine.regione.emilia-romagna.it/issues/32543) Da chiuso_err_vers a annullato
+- [#32542](https://parermine.regione.emilia-romagna.it/issues/32542) Da chiuso_err_vers a set da recuperare
+- [#31714](https://parermine.regione.emilia-romagna.it/issues/31714) Creazione del parametro di applicazione relativo al tempo di attesa per il recupero dell'oggetto da parte del job RECUPERA_VERS_ERR 
+- [#31096](https://parermine.regione.emilia-romagna.it/issues/31096) SU - Lista stati strumento urbanistico
+- [#30936](https://parermine.regione.emilia-romagna.it/issues/30936) SISMA - Lista stati in dettaglio sisma
+- [#29266](https://parermine.regione.emilia-romagna.it/issues/29266) Gestione degli stati fittizi in ricerca oggetto
+- [#27407](https://parermine.regione.emilia-romagna.it/issues/27407) Inserimento della data versamento nel DETTAGLIO VERSAMENTO  e nel DETTAGLIO UNITA' DOCUMENTARIA VERSAMENTO
+
 ## 6.2.1 (23-09-2024)
 
 ### Bugfix: 2
 - [#34053](https://parermine.regione.emilia-romagna.it/issues/34053) Correzione dell'errore alla creazione di versatore
 - [#34047](https://parermine.regione.emilia-romagna.it/issues/34047) Correzione degli errori sulla duplicazione e importazione di versatori
-
-## 6.2.0 (18-09-2024)
-
-### Bugfix: 6
-- [#33953](https://parermine.regione.emilia-romagna.it/issues/33953) Correzione dell'errore in cancellazione cartella temporanee in inserimento trasformazione
-- [#33870](https://parermine.regione.emilia-romagna.it/issues/33870) Correzione del comportamento di oggetto verificato con sessioni precedenti non verificate
-- [#33868](https://parermine.regione.emilia-romagna.it/issues/33868) correzione dell'errore critico quando si modifica un progetto sisma
-- [#33865](https://parermine.regione.emilia-romagna.it/issues/33865) Correzione descrizione versatore mostrato nell'intestazione a sinistra all'apertura di organizzazione da Siam
-- [#31002](https://parermine.regione.emilia-romagna.it/issues/31002) Correzione della mancata codifica in caso di UnmarshalException
-- [#27890](https://parermine.regione.emilia-romagna.it/issues/27890) Correzione errore di inserimento parametro trasformazione con valore null
-
-### Novità: 8
-- [#33956](https://parermine.regione.emilia-romagna.it/issues/33956) Correzione del problema di progetto in ERRORE con oggetto in versamento senza errori
-- [#33866](https://parermine.regione.emilia-romagna.it/issues/33866) Modifica caricamento lista Ambiente Sacer
-- [#33815](https://parermine.regione.emilia-romagna.it/issues/33815) Modifica al dettaglio versatore per mostrare il path della cartella DA_VERSARE
-- [#33155](https://parermine.regione.emilia-romagna.it/issues/33155) Rimuovere il limite hardcodato in versamento oggetto per object storage
-- [#33041](https://parermine.regione.emilia-romagna.it/issues/33041) Creazione del pulsante per la creazione della cartella DA_VERSARE su path FTP del versatore
-- [#32650](https://parermine.regione.emilia-romagna.it/issues/32650) Associazione tra parametri e versione dell'applicazione
-- [#32647](https://parermine.regione.emilia-romagna.it/issues/32647) Realizzazione della funzione di versamento oggetto da path puntuale su FTP
-- [#30347](https://parermine.regione.emilia-romagna.it/issues/30347) Pulizia mappaggi jpa
 
 ## 6.2.0 (18-09-2024)
 

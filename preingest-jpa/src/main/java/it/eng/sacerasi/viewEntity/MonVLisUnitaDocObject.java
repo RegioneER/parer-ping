@@ -19,12 +19,15 @@ package it.eng.sacerasi.viewEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the MON_V_LIS_UNITA_DOC_OBJECT database table.
@@ -49,6 +52,8 @@ public class MonVLisUnitaDocObject implements Serializable {
     private BigDecimal idUnitaDocObject;
     private BigDecimal niSizeFileByte;
     private String tiStatoUnitaDocObject;
+    // MEV 27407
+    private Date dtStato;
 
     public MonVLisUnitaDocObject() {
     }
@@ -171,4 +176,14 @@ public class MonVLisUnitaDocObject implements Serializable {
         this.tiStatoUnitaDocObject = tiStatoUnitaDocObject;
     }
 
+    // MEV 27407
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DT_STATO")
+    public Date getDtStato() {
+        return dtStato;
+    }
+
+    public void setDtStato(Date dtStato) {
+        this.dtStato = dtStato;
+    }
 }

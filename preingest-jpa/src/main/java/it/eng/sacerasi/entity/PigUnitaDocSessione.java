@@ -20,6 +20,7 @@ package it.eng.sacerasi.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -33,6 +34,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -61,6 +64,8 @@ public class PigUnitaDocSessione implements Serializable {
     private PigSessioneIngest pigSessioneIngest;
     private List<PigXmlSacerUnitaDocSes> pigXmlSacerUnitaDocSes = new ArrayList<>();
     private Long idVers;
+    // MEV 27407
+    private Date dtStato;
 
     public PigUnitaDocSessione() {
         // for Hibernate
@@ -215,4 +220,14 @@ public class PigUnitaDocSessione implements Serializable {
         this.idVers = idVers;
     }
 
+    // MEV 27407
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DT_STATO")
+    public Date getDtStato() {
+        return dtStato;
+    }
+
+    public void setDtStato(Date dtStato) {
+        this.dtStato = dtStato;
+    }
 }

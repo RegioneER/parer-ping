@@ -126,6 +126,12 @@
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.RiepilogoButtonList.VERSA_SU%>" />
                     <slf:buttonList name="<%=StrumentiUrbanisticiForm.DettaglioButtonList.NAME%>" />
                 </sl:pulsantiera>
+                
+                <sl:newLine skipLine="true"/>
+                <slf:section name="<%=StrumentiUrbanisticiForm.SUDetailStatiSection.NAME%>">  
+                    <slf:list   name="<%= StrumentiUrbanisticiForm.SUDetailStatiList.NAME%>" />
+                    <slf:listNavBar  name="<%= StrumentiUrbanisticiForm.SUDetailStatiList.NAME%>" />
+                </slf:section>
             </slf:fieldSet>
         </sl:content>
         <sl:footer />

@@ -23,6 +23,7 @@ import it.eng.sacerasi.viewEntity.MonVVisUnitaDocObject;
 import it.eng.spagoLite.db.base.JEEBaseRowInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
+import java.sql.Timestamp;
 
 /**
  * RowBean per la tabella Mon_V_Vis_Unita_Doc_Object
@@ -207,6 +208,15 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         setObject("fl_xml_mod", flXmlMod);
     }
 
+    // MEV 27407
+    public Timestamp getDtStato() {
+        return getTimestamp("dt_stato");
+    }
+
+    public void setDtStato(Timestamp dtStato) {
+        setObject("dt_stato", dtStato);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVVisUnitaDocObject entity = (MonVVisUnitaDocObject) obj;
@@ -230,6 +240,10 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
         this.setFlVersSimulato(entity.getFlVersSimulato());
         this.setFlXmlMod(entity.getFlXMlMod());
+
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
     }
 
     @Override
@@ -255,6 +269,7 @@ public class MonVVisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
         entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
         entity.setFlVersSimulato(this.getFlVersSimulato());
         entity.setFlXMlMod(this.getFlXmlMod());
+        entity.setDtStato(this.getDtStato());
         return entity;
     }
 

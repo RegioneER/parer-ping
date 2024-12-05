@@ -65,6 +65,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.entity.PigStrumUrbStoricoStati;
+import it.eng.sacerasi.exception.ParerUserError;
+import it.eng.sacerasi.sisma.dto.DocUploadDto;
+import it.eng.sacerasi.slite.gen.tablebean.PigStrumUrbStoricoStatiTableBean;
+import it.eng.sacerasi.web.util.Transform;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -450,6 +458,10 @@ public class StrumentiUrbanisticiEjb {
 
             pigStrumentiUrbanistici.setPigStrumUrbPianoStato(pigStrumUrbPianoStato);
             if (pigStrumentiUrbanistici.getTiStato().equals(PigStrumentiUrbanistici.TiStato.ERRORE)) {
+                // MEV 31096
+                strumentiUrbanisticiHelper.creaStatoStorico(pigStrumentiUrbanistici,
+                        pigStrumentiUrbanistici.getTiStato().name(), pigStrumentiUrbanistici.getDtStato(), "");
+
                 pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.BOZZA);
             }
             pigStrumentiUrbanistici.setData(dto.getData());
@@ -543,6 +555,11 @@ public class StrumentiUrbanisticiEjb {
         if (pigVSuCheck.getFlFileMancante().equals(Constants.DB_FALSE)
                 && pigVSuCheck.getFlVerificaErrata().equals(Constants.DB_FALSE)
                 && pigVSuCheck.getFlVerificaInCorso().equals(Constants.DB_FALSE)) {
+
+            // MEV 31096
+            strumentiUrbanisticiHelper.creaStatoStorico(pigStrumentiUrbanistici,
+                    pigStrumentiUrbanistici.getTiStato().name(), pigStrumentiUrbanistici.getDtStato(), "");
+
             pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
             if (pigStrumentiUrbanistici.getIamUser().getIdUserIam() != idUserIamCorrente) {
                 pigStrumentiUrbanistici
@@ -558,6 +575,11 @@ public class StrumentiUrbanisticiEjb {
         // Locca SU e tutti i suoi DOC!!
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findByIdWithLock(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
+
+        // MEV 31096
+        strumentiUrbanisticiHelper.creaStatoStorico(pigStrumentiUrbanistici,
+                pigStrumentiUrbanistici.getTiStato().name(), pigStrumentiUrbanistici.getDtStato(), "");
+
         pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.BOZZA); // RIMETTE IN BOZZA
         pigStrumentiUrbanistici.setDtStato(new Date());
     }
@@ -708,6 +730,26 @@ public class StrumentiUrbanisticiEjb {
         strumentiUrbanisticiHelper.insertEntity(pigStrumUrbDocumenti, true);
         dto.setIdStrumUrbDocumenti(new BigDecimal(pigStrumUrbDocumenti.getIdStrumUrbDocumenti()));
         return dto;
+    }
+
+    // MEV31096
+    public PigStrumUrbStoricoStatiTableBean getPigStrumUrbStoricoStatiFromPigObjectTableBean(BigDecimal idObject)
+            throws ParerUserError {
+        PigStrumUrbStoricoStatiTableBean table = new PigStrumUrbStoricoStatiTableBean();
+        List<PigStrumUrbStoricoStati> list = strumentiUrbanisticiHelper
+                .PigStrumUrbStoricoStatiFromStrumentoUrbanistico(idObject);
+        if (list != null && !list.isEmpty()) {
+            try {
+                table = (PigStrumUrbStoricoStatiTableBean) Transform.entities2TableBean(list);
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
+                    | IllegalArgumentException | InvocationTargetException ex) {
+                String msg = "Errore durante il recupero della lista di stati dello strumento urbanistico "
+                        + ExceptionUtils.getRootCauseMessage(ex);
+                log.error(msg, ex);
+                throw new ParerUserError(msg);
+            }
+        }
+        return table;
     }
 
     // Torna la deodemap con i due stati per il recupero errori
@@ -899,101 +941,6 @@ public class StrumentiUrbanisticiEjb {
 
         public void setDtCaricamento(Date dtCaricamento) {
             this.dtCaricamento = dtCaricamento;
-        }
-
-    }
-
-    public static class DocUploadDto extends GenericDto {
-
-        private String nmTipoDocumento;
-        private boolean obbligatorio;
-        private boolean principale;
-        private String nmFileOrig;
-        private String cdErr;
-        private String dsErr;
-        private boolean flEsitoVerifica;
-        private BigDecimal dimensione;
-        private String dimensioneStringa;
-        private String dataDoc;
-
-        public String getNmTipoDocumento() {
-            return nmTipoDocumento;
-        }
-
-        public void setNmTipoDocumento(String nmTipoDocumento) {
-            this.nmTipoDocumento = nmTipoDocumento;
-        }
-
-        public String getCdErr() {
-            return cdErr;
-        }
-
-        public void setCdErr(String cdErr) {
-            this.cdErr = cdErr;
-        }
-
-        public String getDsErr() {
-            return dsErr;
-        }
-
-        public void setDsErr(String dsErr) {
-            this.dsErr = dsErr;
-        }
-
-        public boolean isFlEsitoVerifica() {
-            return flEsitoVerifica;
-        }
-
-        public void setFlEsitoVerifica(boolean flEsitoVerifica) {
-            this.flEsitoVerifica = flEsitoVerifica;
-        }
-
-        public boolean isObbligatorio() {
-            return obbligatorio;
-        }
-
-        public void setObbligatorio(boolean obbligatorio) {
-            this.obbligatorio = obbligatorio;
-        }
-
-        public boolean isPrincipale() {
-            return principale;
-        }
-
-        public void setPrincipale(boolean principale) {
-            this.principale = principale;
-        }
-
-        public String getNmFileOrig() {
-            return nmFileOrig;
-        }
-
-        public void setNmFileOrig(String nmFileOrig) {
-            this.nmFileOrig = nmFileOrig;
-        }
-
-        public BigDecimal getDimensione() {
-            return dimensione;
-        }
-
-        public void setDimensione(BigDecimal dimensione) {
-            this.dimensione = dimensione;
-        }
-
-        public String getDimensioneStringa() {
-            return dimensioneStringa;
-        }
-
-        public void setDimensioneStringa(String dimensioneStringa) {
-            this.dimensioneStringa = dimensioneStringa;
-        }
-
-        public String getDataDoc() {
-            return dataDoc;
-        }
-
-        public void setDataDoc(String dataDoc) {
-            this.dataDoc = dataDoc;
         }
 
     }

@@ -52,6 +52,7 @@ public class MonVLisUnitaDocObjectTableDescriptor extends TableDescriptor {
     public static final String COL_FL_VERS_SIMULATO = "fl_vers_simulato";
     public static final String COL_DL_COMPOSITO_ORGANIZ = "dl_composito_organiz";
     public static final String COL_CD_CONCAT_DL_ERR_SACER = "cd_concat_dl_err_sacer";
+    public static final String COL_DT_STATO = "dt_stato";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
@@ -72,6 +73,7 @@ public class MonVLisUnitaDocObjectTableDescriptor extends TableDescriptor {
         map.put(COL_DL_COMPOSITO_ORGANIZ, new ColumnDescriptor(COL_DL_COMPOSITO_ORGANIZ, Types.VARCHAR, 4000, true));
         map.put(COL_CD_CONCAT_DL_ERR_SACER,
                 new ColumnDescriptor(COL_CD_CONCAT_DL_ERR_SACER, Types.VARCHAR, 1125, true));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {

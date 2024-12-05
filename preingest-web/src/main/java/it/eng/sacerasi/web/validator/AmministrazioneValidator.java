@@ -39,7 +39,7 @@ public class AmministrazioneValidator extends TypeValidator {
 
     public void validaDatiVersatoreBase(Status status, String tipologia, BigDecimal idAmbienteVers, String nmVers,
             String dsVers, Date dtIniValVers, Date dtFineValVers, Date dtIniValAmbienteVers, Date dtFineValAmbienteVers,
-            String dsPathInputFtp, String dsPathOutputFtp, String dsPathTrasf, String dsPathDaVersare) {
+            String dsPathInputFtp, String dsPathOutputFtp, String dsPathTrasf) {
         if (status.equals(Status.insert)) {
             if (tipologia == null) {
                 getMessageBox().addError("Errore di compilazione form: tipologia non inserita<br/>");
@@ -62,9 +62,6 @@ public class AmministrazioneValidator extends TypeValidator {
         }
         if (dsPathTrasf == null) {
             getMessageBox().addError("Errore di compilazione form: path trasformazione non inserito<br/>");
-        }
-        if (dsPathDaVersare == null) {
-            getMessageBox().addError("Errore di compilazione form: path archivio non inserito<br/>");
         }
         if (dtIniValVers == null) {
             getMessageBox()

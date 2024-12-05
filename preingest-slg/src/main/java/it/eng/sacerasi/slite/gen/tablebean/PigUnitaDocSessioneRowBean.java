@@ -25,6 +25,7 @@ import it.eng.sacerasi.entity.PigUnitaDocSessione;
 import it.eng.spagoLite.db.base.JEEBaseRowInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
+import java.sql.Timestamp;
 
 /**
  * RowBean per la tabella Pig_Unita_Doc_Sessione
@@ -130,6 +131,15 @@ public class PigUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRowInt
         setObject("id_vers", idVers);
     }
 
+    // MEV 27407
+    public Timestamp getDtStato() {
+        return getTimestamp("dt_stato");
+    }
+
+    public void setDtStato(Timestamp dtStato) {
+        setObject("dt_stato", dtStato);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         PigUnitaDocSessione entity = (PigUnitaDocSessione) obj;
@@ -146,6 +156,9 @@ public class PigUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRowInt
         this.setNiSizeFileByte(entity.getNiSizeFileByte());
         this.setCdErrSacer(entity.getCdErrSacer());
         this.setDlErrSacer(entity.getDlErrSacer());
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
         this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers()) : null);
     }
 
@@ -166,6 +179,7 @@ public class PigUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRowInt
         entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
         entity.setTiStatoUnitaDocSessione(this.getTiStatoUnitaDocSessione());
         entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setDtStato(this.getDtStato());
         entity.setCdErrSacer(this.getCdErrSacer());
         entity.setDlErrSacer(this.getDlErrSacer());
         entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);

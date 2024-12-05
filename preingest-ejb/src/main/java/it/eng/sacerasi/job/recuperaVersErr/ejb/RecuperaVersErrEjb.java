@@ -22,6 +22,7 @@ import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.ejb.JobHelper;
 import it.eng.sacerasi.job.ejb.JobLogger;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -47,8 +48,20 @@ public class RecuperaVersErrEjb {
     private JobHelper helper;
     @EJB
     private RecuperaVersErrHelper recHelper;
+    @EJB
+    private ConfigurationHelper configurationHelper;
 
     public void recuperaVersErr() throws ParerInternalError, NamingException {
+        // MEV 31714
+        String olderThanMinutesStr = configurationHelper
+                .getValoreParamApplicByApplic(Constants.ETA_MINIMA_RECUPERO_ERRORI);
+        int olderThanMinutes;
+
+        try {
+            olderThanMinutes = Integer.parseInt(olderThanMinutesStr);
+        } catch (NumberFormatException nfe) {
+            throw new ParerInternalError(nfe.getMessage());
+        }
         // Recupero la lista di id dei versatori
         List<Long> versatori = helper.getListaVersatori();
         // Recupero, per ogni versatore, l’insieme degli oggetti con stato = CHIUSO_ERR_RECUPERABILE o
@@ -56,7 +69,8 @@ public class RecuperaVersErrEjb {
         // per i quali non siano presenti unità documentarie con stato = IN_CODA_VERS
         // e non siano presenti unità documentarie con stato = DA_VERSARE
         List<PigObject> tmpOggetti = recHelper.getListaObjects(versatori,
-                Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name(), Constants.StatoOggetto.CHIUSO_ERR_VERS.name());
+                Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name(), Constants.StatoOggetto.CHIUSO_ERR_VERS.name(),
+                olderThanMinutes);
         log.info("JOB " + Constants.NomiJob.RECUPERA_VERS_ERR.name() + " - ottenuti " + tmpOggetti.size()
                 + " oggetti con stato CHIUSO_ERR_RECUPERABILE "
                 + "o CHIUSO_ERR_VERS con settato l’indicatore che segnala che l’oggetto e’ da recuperare, senza UD con stato IN_CODA_VERS "

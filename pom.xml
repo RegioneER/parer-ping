@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>6.2.2-SNAPSHOT</version>
+    <version>6.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -17,7 +17,7 @@
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <!-- Skiptests by default : esecuzione su CI -->
         <skipTests>true</skipTests>
-        <sacer.xmlmodule.version>2.11.0</sacer.xmlmodule.version>
+        <sacer.xmlmodule.version>2.11.1</sacer.xmlmodule.version>
         <preingest.xmlmodule.version>3.1.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
         <spagofat.version>6.15.1</spagofat.version>

@@ -62,18 +62,20 @@ import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigStrumUrbAtto;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
+import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.job.verificaDocumentiSU.ejb.VerificaDocumentiSUEjb;
 import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.slite.gen.Application;
 import it.eng.sacerasi.slite.gen.action.StrumentiUrbanisticiAbstractAction;
+import it.eng.sacerasi.slite.gen.tablebean.PigStrumUrbStoricoStatiTableBean;
 import it.eng.sacerasi.strumentiUrbanistici.dto.RicercaStrumentiUrbanisticiDTO;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
-import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb.DocUploadDto;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb.SUDto;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiHelper;
 import it.eng.sacerasi.util.DateUtil;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.util.ComboGetter;
+import it.eng.sacerasi.sisma.dto.DocUploadDto;
 import it.eng.sacerasi.web.util.WebConstants;
 import it.eng.spagoCore.error.EMFError;
 import it.eng.spagoLite.actions.form.ListAction;
@@ -153,14 +155,19 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 // ----
                 BigDecimal id = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
                         .getBigDecimal(ID_STRUMENTI_URBANISTICI);
-                loadDettaglioStrumentoUrbanistico(id);
+                try {
+                    loadDettaglioStrumentoUrbanistico(id);
+                } catch (ParerUserError ex) {
+                    getMessageBox().addError(String
+                            .format("Errore durante il caricamento dello strumento urbanistico {}", ex.getMessage()));
+                }
             }
         } else if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_INSERT)) {
             inizializzaWizard();
         }
     }
 
-    private void loadDettaglioStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico) throws EMFError {
+    private void loadDettaglioStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico) throws EMFError, ParerUserError {
         SUDto dto = strumentiUrbanisticiEjb.getSUById(idStrumentoUrbanistico);
         getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out()
                 .setValue(dto.getIdStrumentiUrbanistici() + "");
@@ -346,6 +353,13 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         } else {
             getForm().getDettaglioButtonList().getRecuperaErrori().setViewMode();
         }
+
+        // MEV31096 Carico la lista stati
+        PigStrumUrbStoricoStatiTableBean statiTb = strumentiUrbanisticiEjb
+                .getPigStrumUrbStoricoStatiFromPigObjectTableBean(idStrumentoUrbanistico);
+        getForm().getSUDetailStatiList().setTable(statiTb);
+        getForm().getSUDetailStatiList().getTable().setPageSize(10);
+        getForm().getSUDetailStatiList().getTable().first();
     }
 
     @Override
@@ -408,6 +422,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 forwardToPublisher(Application.Publisher.DETTAGLIO_STRUMENTI_URBANISTICI);
             } else {
                 getForm().getDatiGeneraliInput().setStatus(Status.update);
+                getForm().getDatiGeneraliInput().getData().setEditMode();
                 forwardToPublisher(Application.Publisher.STRUMENTI_URBANISTICI_WIZARD);
             }
         }
@@ -1127,7 +1142,12 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 getMessageBox().addInfo(
                         String.format("Lo strumento urbanistico è stato riportato allo stato '%s'.", tiNuovoStato));
                 setNavigationEvent(NE_DETTAGLIO_VIEW);
-                loadDettaglioStrumentoUrbanistico(idSu);
+                try {
+                    loadDettaglioStrumentoUrbanistico(idSu);
+                } catch (ParerUserError ex) {
+                    getMessageBox().addError(String
+                            .format("Errore durante il caricamento dello strumento urbanistico {}", ex.getMessage()));
+                }
                 getMessageBox().setViewMode(MessageBox.ViewMode.plain);
                 getForm().getRecuperoErrori().setViewMode();
             }

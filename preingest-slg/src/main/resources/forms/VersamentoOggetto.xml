@@ -70,7 +70,9 @@
         <Input Name="ds_object" Description="Descrizione oggetto" Type="STRING" />
         <Input Name="dt_vers" Description="Data versamento" Type="DATE" />
         <Input Name="ti_stato_esterno" Description="Stato" Type="STRING" />
-        <Input Name="ti_stato_object" Description="Dettaglio stato" Type="STRING" />
+<!--        <Input Name="ti_stato_object" Description="Dettaglio stato" Type="STRING" />-->
+        <Input Name="ti_stato_calcolato" Description="Dettaglio stato calcolato" Type="STRING" Hidden="true"/>
+        <Input Name="ti_stato_visualizzato" Description="Dettaglio stato" Type="STRING" />
         <Input Name="ni_byte_file_vers" Description="Size" Type="INTEGER" GroupingDecimal="true" />
         <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
         <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />

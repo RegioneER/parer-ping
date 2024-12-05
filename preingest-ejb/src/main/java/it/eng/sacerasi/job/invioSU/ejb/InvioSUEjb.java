@@ -217,6 +217,11 @@ public class InvioSUEjb {
                  * ******** AVVIO IL PROCESSO DI INVIO ********
                  */
                 // Setta lo stato di PigStrumentiUrbanistici
+                // MEV 31096
+                strumentiUrbanisticiHelper.creaStatoStorico(strumentoUrbanisticoDaInviare,
+                        strumentoUrbanisticoDaInviare.getTiStato().name(), strumentoUrbanisticoDaInviare.getDtStato(),
+                        "");
+
                 strumentoUrbanisticoDaInviare.setTiStato(PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO);
                 strumentoUrbanisticoDaInviare.setDtStato(new Date());
                 genericHelper.getEntityManager().flush();
@@ -429,6 +434,11 @@ public class InvioSUEjb {
                                 errore.getDsErrore());
                     }
                     // Setta lo stato di PigStrumentiUrbanistici
+                    // MEV 31096
+                    strumentiUrbanisticiHelper.creaStatoStorico(strumentoUrbanisticoDaInviare,
+                            strumentoUrbanisticoDaInviare.getTiStato().name(),
+                            strumentoUrbanisticoDaInviare.getDtStato(), "");
+
                     strumentoUrbanisticoDaInviare.setTiStato(TiStato.IN_ELABORAZIONE);
                     strumentoUrbanisticoDaInviare.setDtStato(new Date());
                     genericHelper.getEntityManager().flush();
@@ -579,6 +589,11 @@ public class InvioSUEjb {
             TiStato tiStato) {
         PigStrumentiUrbanistici strumentiUrbanistici = genericHelper.findById(PigStrumentiUrbanistici.class,
                 idStrumentoUrbanisticoDaInviare);
+
+        // MEV 31096
+        strumentiUrbanisticiHelper.creaStatoStorico(strumentiUrbanistici, strumentiUrbanistici.getTiStato().name(),
+                strumentiUrbanistici.getDtStato(), "");
+
         strumentiUrbanistici.setCdErr(cdErr);
         strumentiUrbanistici.setDsErr(dsErr);
         strumentiUrbanistici.setTiStato(tiStato);

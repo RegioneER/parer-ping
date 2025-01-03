@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>6.3.1-SNAPSHOT</version>
+    <version>6.4.0</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -10,7 +10,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>parer-pom</artifactId>
-        <version>6.4.0</version>
+        <version>6.5.0</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +20,7 @@
         <sacer.xmlmodule.version>2.11.1</sacer.xmlmodule.version>
         <preingest.xmlmodule.version>3.1.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
-        <spagofat.version>6.15.1</spagofat.version>
+        <spagofat.version>6.16.0</spagofat.version>
         <parer-kettle-soap-client.version>2.0.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
@@ -321,7 +321,7 @@
                 <version>${slf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>${jaxb-runtime.version}</version>
@@ -347,20 +347,6 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
-            </dependency>
-            <!-- Provided by runtime (JB7) -->            
-			<dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>${jaxb.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <!--JDK 11 -->
-            <dependency>
-                <groupId>javax.xml.ws</groupId>
-                <artifactId>jaxws-api</artifactId>
-                <version>${jaxws-api.version}</version>
-                <scope>provided</scope>
             </dependency>
              <dependency>
                 <groupId>xml-apis</groupId>

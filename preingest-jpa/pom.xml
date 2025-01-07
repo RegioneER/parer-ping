@@ -4,7 +4,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>sacerping-jboss</artifactId>
-        <version>6.3.1-SNAPSHOT</version>
+        <version>6.4.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sacerping-jboss-jpa</artifactId>
@@ -30,7 +30,6 @@
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
-            <version>3.1.0.GA</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -39,13 +38,6 @@
             <version>3.1.0.Final</version>
             <scope>provided</scope>
         </dependency>
-           
-        <dependency>  
-            <groupId>org.jboss.spec</groupId>  
-            <artifactId>jboss-jakartaee-8.0</artifactId>  
-            <type>pom</type>  
-            <scope>provided</scope>  
-        </dependency> 
         
         <dependency>
             <groupId>it.eng.parer</groupId>
@@ -56,7 +48,22 @@
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-sl-jpa</artifactId>
             <scope>compile</scope>
-        </dependency>        
+        </dependency>
+
+        <!-- BOM per JBoss EAP 7.4 (jboss-eap-jakartaee8) dependencies -->
+        <!-- JBoss Jakarta EJB Api_spec -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JAXB Runtime -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>

@@ -243,7 +243,8 @@ public class RecuperaVersErrHelper {
         List<PigUnitaDocObject> list = new ArrayList<>();
         for (PigUnitaDocObject ud : obj.getPigUnitaDocObjects()) {
             if (ud.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name())
-                    || ud.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())) {
+                    || (ud.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
+                            && !ud.getCdErrSacer().equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
                 list.add(ud);
             }
         }
@@ -254,7 +255,8 @@ public class RecuperaVersErrHelper {
             PigSessioneIngest oldSession) {
         for (PigUnitaDocObject pudo : pigUnitaDocObjects) {
             if (pudo.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name())
-                    || pudo.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())) {
+                    || (pudo.getTiStatoUnitaDocObject().equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
+                            && !pudo.getCdErrSacer().equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
 
                 // MEV 27407
                 Date dtStato = new Date();

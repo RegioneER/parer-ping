@@ -559,5 +559,4 @@ public class PigSessioneIngest implements Serializable {
 
         return pigXmlAnnulSessioneIngest;
     }
-
 }

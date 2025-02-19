@@ -440,6 +440,14 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
         setObject("ti_priorita_versamento", tiPrioritaVersamento);
     }
 
+    public String getNmUseridVers() {
+        return getString("nm_userid_vers");
+    }
+
+    public void setNmUseridVers(String nmUseridVers) {
+        setObject("nm_userid_vers", nmUseridVers);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVVisObj entity = (MonVVisObj) obj;
@@ -498,6 +506,7 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
         this.setIdObjectTrasf(entity.getIdObjectTrasf());
         this.setTiPriorita(entity.getTiPriorita());
         this.setTiPrioritaVersamento(entity.getTiPrioritaVersamento());
+        this.setNmUseridVers(entity.getNmUseridVers());
     }
 
     @Override
@@ -556,6 +565,7 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
         entity.setIdObjectTrasf(this.getIdObjectTrasf());
         entity.setTiPriorita(this.getTiPriorita());
         entity.setTiPrioritaVersamento(this.getTiPrioritaVersamento());
+        entity.setNmUseridVers(this.getNmUseridVers());
         return entity;
     }
 

@@ -249,7 +249,7 @@ public class InvioOggettoAsincronoEjb {
             }
             tmpRispostaControlli.reset();
             tmpRispostaControlli = salvataggioDati.creaSessione(ioaExt, rispostaWs.getErrorCode(),
-                    rispostaWs.getErrorMessage());
+                    rispostaWs.getErrorMessage(), userName);
             if (tmpRispostaControlli.getCodErr() != null) {
                 prosegui = false;
                 setRispostaWsError(rispostaWs, tmpRispostaControlli, SeverityEnum.ERROR, Constants.EsitoServizio.KO);
@@ -275,21 +275,17 @@ public class InvioOggettoAsincronoEjb {
                             Constants.EsitoServizio.KO);
                 }
             }
-            Long idOggettoPadre = null;
             BigDecimal pgOggettoTrasf = null;
             BigDecimal niUnitaDocAttese = null;
             String dsObject = null;
-            String cdVersGen = null;
             if (ioaExt.getInvioOggettoAsincronoInput() instanceof InvioOggettoAsincronoEstesoInput) {
                 InvioOggettoAsincronoEstesoInput input = (InvioOggettoAsincronoEstesoInput) ioaExt
                         .getInvioOggettoAsincronoInput();
-                idOggettoPadre = ioaExt.getIdOggettoPadre();
                 pgOggettoTrasf = input.getPgObjectFiglio();
                 niUnitaDocAttese = input.getNiUnitaDocAttese();
                 dsObject = input.getDsObject();
-                cdVersGen = ioaExt.getCdVersGen();
 
-                if (idOggettoPadre != null && prosegui) {
+                if (ioaExt.getIdOggettoPadre() != null && prosegui) {
                     tmpRispostaControlli.reset();
                     log.debug("Controllo oggetto padre");
                     tmpRispostaControlli = salvataggioDati.updateOggettoPadre(ioaExt.getIdOggettoPadre(),
@@ -301,13 +297,7 @@ public class InvioOggettoAsincronoEjb {
                                 Constants.EsitoServizio.KO);
                     }
                 }
-                // RAMO INSERITO PER LA MAC #14809 - WS invio oggetto: non viene calcolato il versatore per cui generare
-                // oggetti
-                // Anche nel caso di invio oggetto ridotto quando il CD_GEN viene calcolato deve essere aggiornato il
-                // codice sull'Oggetto
-            } else if (ioaExt.getInvioOggettoAsincronoInput() instanceof InvioOggettoAsincronoInput) {
-                cdVersGen = ioaExt.getCdVersGen();
-            }
+            } 
 
             if (prosegui) {
                 if (ioaExt.isFlRegistraObject()) {
@@ -390,9 +380,8 @@ public class InvioOggettoAsincronoEjb {
                             log.debug("Modifico lo stato oggetto in {} e gli assegno la sessione creata",
                                     ioaExt.getStatoSessione());
                             tmpRispostaControlli.reset();
-                            tmpRispostaControlli = salvataggioDati.modificaOggetto(idObject, ioaExt.getStatoSessione(),
-                                    idSessione, userName, idOggettoPadre, pgOggettoTrasf, niUnitaDocAttese, dsObject,
-                                    cdVersGen, ioaExt.getTiGestOggettiFigli());
+                            tmpRispostaControlli = salvataggioDati.modificaOggetto(idObject, ioaExt, idSessione, userName, pgOggettoTrasf,
+                                    niUnitaDocAttese, dsObject);
                             if (tmpRispostaControlli.getCodErr() != null) {
                                 prosegui = false;
                                 setRispostaWsError(rispostaWs, tmpRispostaControlli, SeverityEnum.ERROR,

@@ -77,9 +77,7 @@ public class MonitoraggioHelperTest {
         BigDecimal idTipoObject = aBigDecimal();
         BigDecimal idObject = aBigDecimal();
         String cdObjectKey = aString();
-        String tiClasseVersFile = aString();
-        helper.getMonVObjRangeDtTableBean(idUser, idAmbienteVers, idVers, idTipoObject, idObject, cdObjectKey,
-                tiClasseVersFile);
+        helper.getMonVObjRangeDtTableBean(idUser, idAmbienteVers, idVers, idTipoObject, idObject, cdObjectKey);
         assertTrue(true);
     }
 

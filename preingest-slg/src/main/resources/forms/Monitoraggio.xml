@@ -525,6 +525,8 @@
         
         <!-- SUE26200 -->
         <ComboBox Type="STRING" Description=""  Name="ti_annullamento_ud" AddBlank="false"/>
+        <!-- MEV 34034 -->
+        <Input Name="nm_userid_vers" Description="Nome utente" Type="STRING" Readonly="true"/>
     </Fields>
     
     <ButtonList Name="OggettoDetailButtonList" Description="">
@@ -1061,7 +1063,7 @@
     <List Name="OggettoDetailPrioritaVersamentoList" Description="Lista priorità versamento">
         <Input Name="dt_modifica" Description="Data modifica" Type="DATETIME" />
         <Input Name="ti_priorita_versamento" Description="Stato" Type="STRING" />
-        <Input Name="nm_user" Description="Stato" Type="STRING" />
+        <Input Name="nm_user" Description="Utente" Type="STRING" />
     </List>
  
 </Form>

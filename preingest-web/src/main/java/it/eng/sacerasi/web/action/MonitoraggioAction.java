@@ -2093,10 +2093,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
          */
         if (getForm().getFiltriRiepilogoVersamenti().validate(getMessageBox())) {
             // Comincia a calcolare i totali di RIEPILOGO OGGETTI VERSATI
-            MonVObjRangeDtTableBean contaOggettiVersatiTB = monitoraggioHelper.getMonVObjRangeDtTableBean(
-                    getUser().getIdUtente(), idAmbienteVers, idVers, idTipoObject, idObject, cdKeyObject,
+            MonVObjRangeDtTableBean contaOggettiTB = monitoraggioHelper.getMonVObjRangeDtTableBean(
+                    getUser().getIdUtente(), idAmbienteVers, idVers, idTipoObject, idObject, cdKeyObject);
+            Map<String, Map<Enum, Integer>> countersVersati = calcolaTotaliOggetti(contaOggettiTB,
                     Constants.TipoClasseVersamento.NON_DA_TRASFORMARE.name());
-            Map<String, Map<Enum, Integer>> countersVersati = calcolaTotaliOggetti(contaOggettiVersatiTB);
 
             // Setto i valori nella form
             // MEV26211
@@ -2224,10 +2224,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
              * Map<hmKey, int>> in modo da ottenere piÃ¹ facilmente gli oggetti che saranno organizzati quindi per STATO
              * e CONTEGGIO (OGGI, ULTIMI 7 e TOTALI)
              */
-            MonVObjRangeDtTableBean contaOggettiTrasformatiTB = monitoraggioHelper.getMonVObjRangeDtTableBean(
-                    getUser().getIdUtente(), idAmbienteVers, idVers, idTipoObject, idObject, cdKeyObject,
+            Map<String, Map<Enum, Integer>> countersTrasformati = calcolaTotaliOggetti(contaOggettiTB,
                     Constants.TipoClasseVersamento.DA_TRASFORMARE.name());
-            Map<String, Map<Enum, Integer>> countersTrasformati = calcolaTotaliOggetti(contaOggettiTrasformatiTB);
             // Setto i valori nella form
             /* IN CODA HASH */ // MEV 31102
             getForm().getRiepilogoOggettiVersati().getNi_in_coda_hash_trasf_corr().setValue(
@@ -2413,7 +2411,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
              * FALLITE
              *
              * Per gestire meglio i contatori, creo una mappa Map<String, Map<Stato, Map<hmKey, int>>> in modo da
-             * ottenere piÃ¹ facilmente gli oggetti che saranno organizzati quindi per STATO, per STATO RISOLUZIONE e
+             * ottenere più facilmente gli oggetti che saranno organizzati quindi per STATO, per STATO RISOLUZIONE e
              * CONTEGGIO (OGGI, ULTIMI 7 e TOTALI)
              *
              */
@@ -3024,7 +3022,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
              */
             MonVObjAnnulRangeDtTableBean contaOggettiAnnullatiTB = monitoraggioHelper
                     .getMonVObjAnnulRangeDtTableBean(getUser().getIdUtente(), idAmbienteVers, idVers, idTipoObject);
-            Map<String, Map<Enum, Integer>> countersAnnullati = calcolaTotaliOggetti(contaOggettiAnnullatiTB);
+            Map<String, Map<Enum, Integer>> countersAnnullati = calcolaTotaliOggetti(contaOggettiAnnullatiTB, "");
 
             // TOTALI - Li ottengo dalla somma dei counter degli oggetti trasformati e versati per entrambi gli stati
             getForm().getRiepilogoOggettiAnnullatiInCorso().getNi_ogg_annul_tot_corr()
@@ -3061,7 +3059,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         }
     }
 
-    private Map<String, Map<Enum, Integer>> calcolaTotaliOggetti(AbstractBaseTable<? extends BaseRow> contaOggettiTB) {
+    private Map<String, Map<Enum, Integer>> calcolaTotaliOggetti(AbstractBaseTable<? extends BaseRow> contaOggettiTB,
+            String tiClasseVersFile) {
         Map<String, Map<Enum, Integer>> totaliPerStato = new HashMap<>();
         Map<Enum, Integer> tmpTot = new HashMap<>();
         initHashMapTotali(tmpTot);
@@ -3071,12 +3070,21 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             initHashMapTotali(tmp);
             totaliPerStato.put(stato.name(), tmp);
         }
-        contaOggettiTb(contaOggettiTB, totaliPerStato, tmpTot);
+
+        if (tiClasseVersFile.equals(Constants.TipoClasseVersamento.NON_DA_TRASFORMARE.name())) {
+            contaOggettiTb(contaOggettiTB, totaliPerStato, tmpTot, "ni_ogg_vers");
+        } else if (tiClasseVersFile.equals(Constants.TipoClasseVersamento.DA_TRASFORMARE.name())) {
+            contaOggettiTb(contaOggettiTB, totaliPerStato, tmpTot, "ni_ogg_trasformati_vers");
+        } else {
+            contaOggettiTb(contaOggettiTB, totaliPerStato, tmpTot, "ni_ogg_vers");
+        }
+
         return totaliPerStato;
     }
 
     private void contaOggettiTb(AbstractBaseTable<? extends BaseRow> contaOggettiTB,
-            Map<String, Map<Enum, Integer>> totaliPerStato, Map<Enum, Integer> tmpTot) throws IllegalArgumentException {
+            Map<String, Map<Enum, Integer>> totaliPerStato, Map<Enum, Integer> tmpTot, String countFieldName)
+            throws IllegalArgumentException {
         for (BaseRow rb : contaOggettiTB) {
             Map<Enum, Integer> totaliPerGiorno = totaliPerStato.get(rb.getString("ti_stato_object"));
             if (totaliPerGiorno == null) {
@@ -3098,8 +3106,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 throw new IllegalArgumentException("Valore di TiDtCreazione non valido");
             }
 
-            calcolaMappaTotale(totaliPerGiorno, key, rb.getBigDecimal("ni_ogg_vers").intValue());
-            calcolaMappaTotale(tmpTot, key, rb.getBigDecimal("ni_ogg_vers").intValue());
+            calcolaMappaTotale(totaliPerGiorno, key, rb.getBigDecimal(countFieldName).intValue());
+            calcolaMappaTotale(tmpTot, key, rb.getBigDecimal(countFieldName).intValue());
             totaliPerStato.put(rb.getString("ti_stato_object"), totaliPerGiorno);
             totaliPerStato.put("TOTALI", tmpTot);
         }

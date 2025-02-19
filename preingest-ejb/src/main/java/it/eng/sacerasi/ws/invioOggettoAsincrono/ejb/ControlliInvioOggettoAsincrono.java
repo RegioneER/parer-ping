@@ -598,14 +598,16 @@ public class ControlliInvioOggettoAsincrono {
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_CRASH_FS_PRIM.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_CRASH_FS_SECOND.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.ANNULLATO.name())
-                || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
                 || obj.getTiStatoObject().equals(StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name())) {
             if (!obj.getPigTipoObject().getNmTipoObject().equals(nmTipoObject)) {
                 // MEV#15178 - Modifica Tipo oggetto in dettaglio oggetto per gli oggetti da trasformare
                 String tipoVersEsistente = obj.getPigTipoObject().getTiVersFile();
+                // MEV 34105 - disabilitato controllo su cambiamento tipo oggetto anche per oggetti generati da una
+                // trasformazione e non.
                 if (tiVersFile != null && tiVersFile.equals(tipoVersEsistente)
-                        && tiVersFile.equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
+                        && (tiVersFile.equals(Constants.TipoVersamento.DA_TRASFORMARE.name())
+                                || tiVersFile.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name()))) {
                     // Se il tipoVersFile dell'oggetto precedente e quello che si sta versando sono uguali e
                     // DA_TRASFORMARE
                     // allora è possibile andare avanti altrimenti messaggio di errore.

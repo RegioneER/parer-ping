@@ -215,6 +215,9 @@ public class PayloadManagerEjb {
                         // MEV 30209 - Quante ud in ERR_666?
                         long err666Ud = codaHelper.countUdInObj(object,
                                 Constants.StatoUnitaDocObject.VERSATA_ERR.name(), MessaggiWSBundle.ERR_666);
+                        // MEV 33855 - Quante ud in ERR_666P?
+                        long err666PUd = codaHelper.countUdInObj(object,
+                                Constants.StatoUnitaDocObject.VERSATA_ERR.name(), MessaggiWSBundle.ERR_666P);
 
                         boolean deleteFtp = false;
                         Date now = Calendar.getInstance().getTime();
@@ -253,13 +256,14 @@ public class PayloadManagerEjb {
                             session.setFlSesErrVerif(Constants.DB_FALSE);
                             log.debug("{} imposto flSessioneErrVerificata '{}'", infoLog, session.getFlSesErrVerif());
                             // PUNTO c
-                            if (timeoutUd > 0 || err666Ud > 0) {
+                            if (timeoutUd > 0 || err666Ud > 0 || err666PUd > 0) {
                                 // Esistono UD chiuse con TIMEOUT Imposto oggetto e sessione con stato
                                 // CHIUSO_ERR_RECUPERABILE
                                 // MEV 30209 Esistono UD chiuse in VERSATA_ERR con codice d'errore ERR_666 -> Imposto
                                 // oggetto e sessione con stato CHIUSO_ERR_RECUPERABILE
                                 log.debug("{} Nello zip sono presenti {} UD versate con TIMEOUT", infoLog, timeoutUd);
                                 log.debug("{} Nello zip sono presenti {} UD versate con ERR_666", infoLog, err666Ud);
+                                log.debug("{} Nello zip sono presenti {} UD versate con ERR_666P", infoLog, err666PUd);
                                 // la sessione viene chiusa negativamente ed assume lo stato CHIUSO_ERR_RECUPERABILE
                                 session.setTiStato(Constants.StatoSessioneIngest.CHIUSO_ERR_RECUPERABILE.name());
                                 // assegno codice di errore = PING-CONSCODA-002 e setto dlErr
@@ -487,7 +491,7 @@ public class PayloadManagerEjb {
                             // Punto 5) Aggiorna tutte le sessioni dell'oggetto padre
                             for (PigSessioneIngest ses : oggettoPadre.getPigSessioneIngests()) {
                                 ses.setFlSesErrVerif("1");
-                                ses.setFlSesErrNonRisolub("1");
+                                // MAC34492 ora la flag non risolubile non viene più impostata.
                             }
                             // Punto 6) Elimina le cartelle degli oggetti generati da trasformazione a partire dal
                             // parametro "ROOT_FTP"

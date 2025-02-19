@@ -157,7 +157,8 @@ public class Constants {
         public static StatoOggetto[] getStatiTrasformazione() {
             return getEnums(IN_ATTESA_FILE, DA_TRASFORMARE, TRASFORMAZIONE_NON_ATTIVA, PREPARAZIONE_OGG_IN_CORSO,
                     TRASFORMAZIONE_IN_CORSO, ERRORE_TRASFORMAZIONE, WARNING_TRASFORMAZIONE, TRASFORMATO, VERSATO_A_PING,
-                    ERRORE_VERSAMENTO_A_PING, IN_CORSO_VERS_SACER, PROBLEMA_VERS_SACER, IN_CODA_HASH);
+                    ERRORE_VERSAMENTO_A_PING, IN_CORSO_VERS_SACER, PROBLEMA_VERS_SACER, IN_CODA_HASH,
+                    PROBLEMA_PREPARAZIONE_SIP);
         }
 
         public static StatoOggetto[] getStatiNoTrasformazione() {

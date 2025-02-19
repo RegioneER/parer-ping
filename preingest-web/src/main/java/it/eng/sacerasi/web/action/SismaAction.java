@@ -102,6 +102,7 @@ import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.SuppressLogging;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -1291,6 +1292,9 @@ public class SismaAction extends SismaAbstractAction {
             // Inizio chiamata al WS
             HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
             clientHttpRequestFactory.setConnectTimeout(timeout);
+            clientHttpRequestFactory.setReadTimeout(timeout);
+
+            RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
             try {
                 // Creo l'header della richiesta
                 HttpHeaders header = new HttpHeaders();

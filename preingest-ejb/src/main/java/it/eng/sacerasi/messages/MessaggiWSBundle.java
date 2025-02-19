@@ -94,6 +94,7 @@ public class MessaggiWSBundle {
     //
     // ERRORI IMPREVISTI
     public static final String ERR_666 = "666";
+    public static final String ERR_666P = "666P";
     public static final String ERR_PERSISTENCE = "ERR-PERSISTENCE";
     public static final String ERR_UPDATE = "ERR-UPDATE";
     public static final String ERR_XML_MALFORMED = "ERR-XML-MALFORMED";

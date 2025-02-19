@@ -87,6 +87,7 @@ public class MonVVisObj implements Serializable {
     private String tiVersFile;
     private String tiPriorita;
     private String tiPrioritaVersamento;
+    private String nmUseridVers;
 
     public MonVVisObj() {
     }
@@ -535,5 +536,14 @@ public class MonVVisObj implements Serializable {
 
     public void setTiPrioritaVersamento(String tiPrioritaVersamento) {
         this.tiPrioritaVersamento = tiPrioritaVersamento;
+    }
+
+    @Column(name = "NM_USERID_VERS")
+    public String getNmUseridVers() {
+        return nmUseridVers;
+    }
+
+    public void setNmUseridVers(String nmUseridVers) {
+        this.nmUseridVers = nmUseridVers;
     }
 }

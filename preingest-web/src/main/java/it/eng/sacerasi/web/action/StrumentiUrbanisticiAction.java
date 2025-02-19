@@ -968,6 +968,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             // Inizio chiamata al WS
             HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
             clientHttpRequestFactory.setConnectTimeout(timeout);
+            clientHttpRequestFactory.setReadTimeout(timeout);
             RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
             try {
                 // Croo l'header della richiesta

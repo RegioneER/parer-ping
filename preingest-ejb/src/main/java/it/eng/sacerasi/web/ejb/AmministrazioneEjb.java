@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.ejb;
 
 import java.io.ByteArrayInputStream;
@@ -181,6 +180,20 @@ import it.eng.spagoLite.db.base.BaseTableInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.sorting.SortingRule;
 import it.eng.spagoLite.db.base.table.BaseTable;
+import it.eng.spagoLite.message.MessageBox;
+import it.eng.xformer.helper.TrasformazioniHelper;
+import java.io.StringReader;
+import java.io.StringWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 @Stateless(mappedName = "AmministrazioneEjb")
 @LocalBean
@@ -208,6 +221,8 @@ public class AmministrazioneEjb {
     private ExportImportFotoHelper exportImportFotoHelper;
     @EJB
     private AllineamentoEntiConvenzionatiEjb aecEjb;
+    @EJB
+    private TrasformazioniHelper trasformazioniHelper;
 
     @Resource(mappedName = "jca/xadiskLocal")
     private XADiskConnectionFactory xadCf;
@@ -5452,4 +5467,56 @@ public class AmministrazioneEjb {
         return paramApplicConservazioneTableBean;
     }
 
+    // MEV 33260
+    public String checkTrasfForTipoObject(String versXml, MessageBox msgBox) throws Exception {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            // Parse the XML file
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            Document document = builder.parse(new InputSource(new StringReader(versXml)));
+            NodeList listaTipiOggetto = (NodeList) xPath
+                    .compile("/fotoOggetto/recordChild[tipoRecord=\"Tipo oggetto versabile\"]/child")
+                    .evaluate(document, XPathConstants.NODESET);
+            for (int i = 0; i < listaTipiOggetto.getLength(); i++) {
+                Element tipoOggettoElement = (Element) listaTipiOggetto.item(i);
+                NodeList cdTrasfList = (NodeList) xPath.compile("./datoRecord[colonnaDato=\"cd_trasf\"]/valoreDato")
+                        .evaluate(tipoOggettoElement, XPathConstants.NODESET);
+                // è sempre una sola
+                if (cdTrasfList.getLength() > 0) {
+                    String trasfName = cdTrasfList.item(0).getTextContent();
+                    if (!trasfName.equals("null")
+                            && !trasformazioniHelper.isTransformationPresentByCdTrasf(trasfName)) {
+
+                        String tipoOggettoName = ((Element) xPath
+                                .compile("./keyRecord/datoKey[colonnaKey=\"nm_tipo_object\"]/valoreKey")
+                                .evaluate(tipoOggettoElement, XPathConstants.NODE)).getTextContent();
+                        msgBox.addWarning("Non è stato possibile creare il tipo oggetto " + tipoOggettoName
+                                + ", trasformazione " + trasfName + " non trovata.");
+
+                        tipoOggettoElement.getParentNode().removeChild(tipoOggettoElement);
+                    }
+                }
+            }
+
+            // Setup pretty print options
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            // Return pretty print xml string
+            StringWriter stringWriter = new StringWriter();
+            transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+            return stringWriter.toString();
+        } catch (Exception ex) {
+            log.error("Errore parsando xml di importazione del versatore: " + ex.getMessage(), ex);
+            throw new ParerUserError("Errore parsando xml di importazione del versatore: " + ex.getMessage());
+        }
+    }
 }

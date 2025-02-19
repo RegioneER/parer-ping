@@ -1405,7 +1405,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
                 setReadonlyVersamentoOggettoDaTrasformare(
                         pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name()));
-                setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean, Constants.TipoGestioneOggettiFigli.MANUALE.name());
+                setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean,
+                        Constants.TipoGestioneOggettiFigli.AUTOMATICA.name());
 
                 // MEV25601
                 Boolean useObjectStorage = isUsingObjectStorage(pigTipoObjectRowBean);
@@ -1495,6 +1496,9 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         getForm().getVersamentoOggettoDetail().getFile_to_upload().setHidden(useObjectStorage);
         getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setHidden(useObjectStorage);
         getForm().getVersamentoOggettoDetail().getDs_path_ftp().setHidden(useObjectStorage);
+
+        // MAC 33955
+        getForm().getVersamentoOggettoDetail().getTi_gest_oggetti_figli().setHidden(false);
     }
 
     private void triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(

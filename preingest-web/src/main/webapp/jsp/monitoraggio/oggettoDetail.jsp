@@ -280,10 +280,10 @@
                         <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
                             <c:choose>
                                 <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
-                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
+        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
                                 </c:when>
                                 <c:otherwise>
-                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
+        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
                                 </c:otherwise>
                             </c:choose>
                         </c:if>
@@ -440,6 +440,8 @@
                         <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.DL_MOTIVO_FORZA_ACCETTAZIONE%>" colSpan="2"/>
                         <sl:newLine />
                         <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.DL_MOTIVO_CHIUSO_WARNING%>" colSpan="4"/>
+                        <sl:newLine />
+                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NM_USERID_VERS%>" colSpan="4"/>
                     </slf:section>
                 </slf:fieldSet>
             </slf:tab>

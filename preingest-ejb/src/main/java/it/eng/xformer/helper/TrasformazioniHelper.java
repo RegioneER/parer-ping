@@ -534,6 +534,16 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
         return !transfs.isEmpty();
     }
 
+    public boolean isTransformationPresentByCdTrasf(String cdTrasf) {
+        String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf";
+
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("cdTrasf", cdTrasf);
+
+        List<XfoTrasf> transfs = query.getResultList();
+        return !transfs.isEmpty();
+    }
+
     public PigObject findPigObjectById(Long id) {
         PigObject po = getEntityManager().find(PigObject.class, id);
         return po;

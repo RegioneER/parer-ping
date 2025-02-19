@@ -293,11 +293,18 @@ public class SalvataggioDati {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public RispostaControlli modificaOggetto(Long idOggetto, StatoSessioneIngest stato, Long idLastSession,
-            String username, Long idOggettoPadre, BigDecimal pgOggettoTrasf, BigDecimal niUnitaDocAttese,
-            String dsObject, String cdVersGen, String tiGestOggettiFigli) {
+    public RispostaControlli modificaOggetto(Long idOggetto, InvioOggettoAsincronoExt ioaExt,
+            Long idLastSession, String username, BigDecimal pgOggettoTrasf,
+            BigDecimal niUnitaDocAttese, String dsObject) {
         RispostaControlli risp = new RispostaControlli();
         risp.setrBoolean(true);
+        
+        Long idTipoOggetto = ioaExt.getIdTipoObject();
+        StatoSessioneIngest stato = ioaExt.getStatoSessione();
+        String cdVersGen = ioaExt.getCdVersGen();
+        String tiGestOggettiFigli = ioaExt.getTiGestOggettiFigli();
+        Long idOggettoPadre = ioaExt.getIdOggettoPadre();
+        
         try {
             PigObject oggetto = entityManager.find(PigObject.class, idOggetto);
             if (stato != null) {
@@ -318,6 +325,12 @@ public class SalvataggioDati {
             oggetto.setDsObject(dsObject);
             oggetto.setCdVersGen(cdVersGen);
             oggetto.setTiGestOggettiFigli(tiGestOggettiFigli);
+
+            // MEV 34105 - possibilità di modificare il tipo oggetto
+            if (idTipoOggetto != null) {
+                PigTipoObject pigTipoObject = entityManager.find(PigTipoObject.class, idTipoOggetto);
+                oggetto.setPigTipoObject(pigTipoObject);
+            }
 
             entityManager.flush();
         } catch (Exception e) {
@@ -367,7 +380,7 @@ public class SalvataggioDati {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public RispostaControlli creaSessione(InvioOggettoAsincronoExt ioae, String cdErr, String dsErr) {
+    public RispostaControlli creaSessione(InvioOggettoAsincronoExt ioae, String cdErr, String dsErr, String username) {
         RispostaControlli risp = new RispostaControlli();
         risp.setrBoolean(true);
         PigSessioneIngest sessione = new PigSessioneIngest();
@@ -392,6 +405,7 @@ public class SalvataggioDati {
         sessione.setCdVersioneXmlVers(ioae.getInvioOggettoAsincronoInput().getCdVersioneXml());
         sessione.setCdErr(cdErr);
         sessione.setDlErr(dsErr);
+
         if (ioae.getInvioOggettoAsincronoInput() instanceof InvioOggettoAsincronoEstesoInput) {
             InvioOggettoAsincronoEstesoInput input = (InvioOggettoAsincronoEstesoInput) ioae
                     .getInvioOggettoAsincronoInput();

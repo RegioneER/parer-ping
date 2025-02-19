@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.annullamento.ejb;
 
 import java.io.StringReader;
@@ -415,6 +414,9 @@ public class AnnullamentoEjb {
                 }
 
                 object.setFlRichAnnulTimeout("0");
+
+                annullaEventualeOggettoPadre(object);
+
                 // MAC #13060 - Chiamata al servizio di richiesta annullamento di un oggetto contenente solo UD in stato
                 // VERSATA_ERR
                 // Punto 7 dell'analisi
@@ -479,6 +481,8 @@ public class AnnullamentoEjb {
                         }
                     }
                 }
+
+                annullaEventualeOggettoPadre(object);
                 // MEV#20819
                 annullamentoEventualeStrumentoUrbanistico(object, tipoObject.getTiVersFile());
                 annullamentoEventualeSisma(object, tipoObject.getTiVersFile());
@@ -488,14 +492,7 @@ public class AnnullamentoEjb {
                 monitoraggioHelper.creaStatoSessione(object.getIdLastSessioneIngest(),
                         Constants.StatoSessioneIngest.ANNULLATA.name(), now);
                 // MEV#14100 punto 8.4.1 dell'analisi - Definisci oggetto padre
-                PigObject oggPadre = object.getPigObjectPadre();
-                if (oggPadre != null) {
-                    try {
-                        payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
-                    } catch (Exception ex) {
-                        throw new ParerUserError(ex.getMessage());
-                    }
-                }
+                annullaEventualeOggettoPadre(object);
                 // MEV#20819
                 annullamentoEventualeStrumentoUrbanistico(object, tipoObject.getTiVersFile());
                 annullamentoEventualeSisma(object, tipoObject.getTiVersFile());
@@ -745,6 +742,18 @@ public class AnnullamentoEjb {
                 // Nuova transazione
                 strumentiUrbanisticiHelper.aggiornaStatoInNuovaTransazione(s,
                         PigStrumentiUrbanistici.TiStato.ANNULLATO);
+            }
+        }
+    }
+
+    private void annullaEventualeOggettoPadre(PigObject object) throws ParerUserError {
+        // MEV#14100 punto 8.4.1 dell'analisi - Definisci oggetto padre
+        PigObject oggPadre = object.getPigObjectPadre();
+        if (oggPadre != null) {
+            try {
+                payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
+            } catch (Exception ex) {
+                throw new ParerUserError(ex.getMessage());
             }
         }
     }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.helper;
 
 import java.io.StringReader;
@@ -119,6 +118,7 @@ import it.eng.spagoLite.db.base.BaseTableInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.sorting.SortingRule;
 import it.eng.spagoLite.db.base.table.BaseTable;
+import javax.persistence.Parameter;
 
 /**
  *
@@ -169,54 +169,28 @@ public class MonitoraggioHelper extends GenericHelper {
         return monTableBean;
     }
 
+    // MEV 34096
     public MonVObjRangeDtTableBean getMonVObjRangeDtTableBean(Long idUser, BigDecimal idAmbienteVers, BigDecimal idVers,
-            BigDecimal idTipoObject, BigDecimal idObject, String cdKeyObject, String tiClasseVersFile) {
-        StringBuilder queryStr = new StringBuilder("SELECT vista.tiStatoObject, vista.tiDtCreazione, count(vista) "
-                + "from IamAbilOrganiz abilOrganiz, MonVObjRangeDt vista, PigVers vers "
-                + "WHERE vista.idVers = abilOrganiz.idOrganizApplic " + "AND vers.idVers = vista.idVers "
-                + "AND abilOrganiz.iamUser.idUserIam = :idUser " + "AND vista.tiClasseVersFile = :tiClasseVersFile ");
+            BigDecimal idTipoObject, BigDecimal idObject, String cdKeyObject) {
 
-        // Se ho solo il campo idAmbieteVers settato
-        if (idAmbienteVers != null && idVers == null && idTipoObject == null) {
-            queryStr.append("and vers.pigAmbienteVer.idAmbienteVers = :idAmbienteVers ");
-        } else if (idAmbienteVers != null && idVers != null && idTipoObject == null) {
-            queryStr.append("and abilOrganiz.idOrganizApplic = :idVers ");
-        } else {
-            queryStr.append("and abilOrganiz.idOrganizApplic = :idVers ");
-            queryStr.append("and vista.idTipoObject = :idTipoObject ");
-        }
+        String queryStr = "SELECT * FROM RIEPILOGO_OGGETTI_VERSATI(:idUser, :idAmbienteVers, :idVers, :idTipoObject, :idObject, :cdKeyObject)";
+        Query query = getEntityManager().createNativeQuery(queryStr);
 
-        // MEV 26979
-        if (idObject != null) {
-            queryStr.append("and vista.idObject = :idObject ");
-        }
-        // MEV 26979
-        if (cdKeyObject != null && !cdKeyObject.isEmpty()) {
-            queryStr.append("and LOWER(vista.cdKeyObject) like LOWER(:cdKeyObject) ");
-        }
-
-        queryStr.append("GROUP BY vista.tiStatoObject, vista.tiDtCreazione ");
-
-        Query query = getEntityManager().createQuery(queryStr.toString());
         query.setParameter("idUser", idUser);
-        query.setParameter("tiClasseVersFile", tiClasseVersFile);
-
-        if (idAmbienteVers != null && idVers == null && idTipoObject == null) {
-            query.setParameter("idAmbienteVers", HibernateUtils.longFrom(idAmbienteVers));
-        } else if (idAmbienteVers != null && idVers != null && idTipoObject == null) {
-            query.setParameter("idVers", idVers);
-        } else {
-            query.setParameter("idVers", idVers);
-            query.setParameter("idTipoObject", idTipoObject);
-        }
-
-        // MEV 26979
-        if (idObject != null) {
-            query.setParameter("idObject", idObject);
-        }
-        // MEV 26979
-        if (cdKeyObject != null && !cdKeyObject.isEmpty()) {
+        query.setParameter("idAmbienteVers", HibernateUtils.longFrom(idAmbienteVers));
+        query.setParameter("idVers", idVers);
+        query.setParameter("idTipoObject", 0L); // Questo viene fatto per suggerire il tipo se il valore è null, ci deve
+                                                // essere un modo migliore per farlo.
+        query.setParameter("idTipoObject", HibernateUtils.longFrom(idTipoObject));
+        query.setParameter("idObject", 0L); // Questo viene fatto per suggerire il tipo se il valore è null, ci deve
+                                            // essere un modo migliore per farlo.
+        query.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        query.setParameter(CD_KEY_OBJECT, new String()); // Questo viene fatto per suggerire il tipo se il valore è
+                                                         // null, ci deve essere un modo migliore per farlo.
+        if (cdKeyObject != null) {
             query.setParameter(CD_KEY_OBJECT, "%" + cdKeyObject + "%");
+        } else {
+            query.setParameter(CD_KEY_OBJECT, null);
         }
 
         List<Object[]> contaOggetti = query.getResultList();
@@ -226,9 +200,11 @@ public class MonitoraggioHelper extends GenericHelper {
             // trasformo la lista di Object[] (risultante della query) in un tablebean
             for (Object[] row : contaOggetti) {
                 MonVObjRangeDtRowBean rowBean = new MonVObjRangeDtRowBean();
-                rowBean.setTiStatoObject(row[0] != null ? row[0].toString() : null);
-                rowBean.setTiDtCreazione(row[1] != null ? row[1].toString() : null);
-                rowBean.setBigDecimal("ni_ogg_vers", row[2] != null ? new BigDecimal((Long) row[2]) : BigDecimal.ZERO);
+                rowBean.setTiStatoObject(row[1] != null ? row[1].toString() : null);
+                rowBean.setTiDtCreazione(row[2] != null ? row[2].toString() : null);
+                rowBean.setBigDecimal("ni_ogg_trasformati_vers",
+                        row[3] != null ? (BigDecimal) row[3] : BigDecimal.ZERO);
+                rowBean.setBigDecimal("ni_ogg_vers", row[4] != null ? (BigDecimal) row[4] : BigDecimal.ZERO);
                 contaOggettiTableBean.add(rowBean);
             }
         } catch (Exception e) {

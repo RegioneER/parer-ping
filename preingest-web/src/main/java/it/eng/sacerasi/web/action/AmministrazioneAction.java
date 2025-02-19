@@ -5697,7 +5697,11 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 param.setTransactionLogContext(sacerLogEjb.getNewTransactionLogContext());
                 param.setNomeAzione(SpagoliteLogUtil.getButtonActionName(getForm(), getForm().getVers(),
                         getForm().getVers().getImportaVersatore().getName()));
-                Object[] dati = amministrazioneEjb.importaVersatore(param, idAmb, strXml, nmAmbiente, nmVers, dsVers,
+
+                // MEV 33260
+                String cleanXml = amministrazioneEjb.checkTrasfForTipoObject(strXml, getMessageBox());
+
+                Object[] dati = amministrazioneEjb.importaVersatore(param, idAmb, cleanXml, nmAmbiente, nmVers, dsVers,
                         idEnteConvenz, nmEnteConvenz, idEnteFornitEstern, nmEnteFornitEstern, dtIniValAppartEnteSiam,
                         dtFineValAppartEnteSiam, dtIniValVers, dtFineValVers, dtIniValAppartAmbiente,
                         dtFinValAppartAmbiente, dsPathInputFtp, dsPathOutputFtp, dsPathTrasf, tiDichVers, idOrganizIam,

@@ -297,7 +297,7 @@ public class InvioOggettoAsincronoEjb {
                                 Constants.EsitoServizio.KO);
                     }
                 }
-            } 
+            }
 
             if (prosegui) {
                 if (ioaExt.isFlRegistraObject()) {
@@ -380,8 +380,8 @@ public class InvioOggettoAsincronoEjb {
                             log.debug("Modifico lo stato oggetto in {} e gli assegno la sessione creata",
                                     ioaExt.getStatoSessione());
                             tmpRispostaControlli.reset();
-                            tmpRispostaControlli = salvataggioDati.modificaOggetto(idObject, ioaExt, idSessione, userName, pgOggettoTrasf,
-                                    niUnitaDocAttese, dsObject);
+                            tmpRispostaControlli = salvataggioDati.modificaOggetto(idObject, ioaExt, idSessione,
+                                    userName, pgOggettoTrasf, niUnitaDocAttese, dsObject);
                             if (tmpRispostaControlli.getCodErr() != null) {
                                 prosegui = false;
                                 setRispostaWsError(rispostaWs, tmpRispostaControlli, SeverityEnum.ERROR,

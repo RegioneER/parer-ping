@@ -26,7 +26,7 @@ Consigliata adozione della OpenJDK alla versione 8, guida all'installazione http
 Richiesta l'esecuzione delle seguenti guide secondo l'ordine riportato di seguito: 
 
 1. guida per la configurazione **base** di [guida 1](src/docs/JBoss7_configurazione_generale.md);
-2. guida con le configurazioni **specifiche** per il contesto applicativo **SIAM**  di [guida 2](src/docs/JBoss7_configurazione_siam.md).
+2. guida con le configurazioni **specifiche** per il contesto applicativo **PING**  di [guida 2](src/docs/JBoss7_configurazione_ping.md).
 
 
 ### Deploy su JBoss 7
@@ -724,7 +724,6 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
 |software.amazon.awssdk|utils|2.26.3|
 |software.amazon.eventstream|eventstream|1.0.1|
 |wsdl4j|wsdl4j|1.6.3.redhat-1|
-|xerces|xercesImpl|2.12.2|
 |xml-apis|xml-apis|1.4.01|
 |xml-resolver|xml-resolver|1.2|
 |com.fasterxml.jackson.core|jackson-annotations|2.12.7.redhat-00003|
@@ -1150,9 +1149,6 @@ Contiene l'anagrafe delle trasformazioni gestite dal sistema e un cruscotto di m
 |software.amazon.awssdk|third-party-jackson-core|2.26.3|
 |software.amazon.awssdk|utils|2.26.3|
 |software.amazon.eventstream|eventstream|1.0.1|
-|xalan|serializer|2.7.3|
-|xalan|xalan|2.7.3|
-|xerces|xercesImpl|2.12.2|
 |xml-apis|xml-apis|1.4.01|
 |xml-resolver|xml-resolver|1.2|
 

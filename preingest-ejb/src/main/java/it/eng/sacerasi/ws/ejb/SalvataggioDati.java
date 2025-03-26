@@ -293,18 +293,17 @@ public class SalvataggioDati {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public RispostaControlli modificaOggetto(Long idOggetto, InvioOggettoAsincronoExt ioaExt,
-            Long idLastSession, String username, BigDecimal pgOggettoTrasf,
-            BigDecimal niUnitaDocAttese, String dsObject) {
+    public RispostaControlli modificaOggetto(Long idOggetto, InvioOggettoAsincronoExt ioaExt, Long idLastSession,
+            String username, BigDecimal pgOggettoTrasf, BigDecimal niUnitaDocAttese, String dsObject) {
         RispostaControlli risp = new RispostaControlli();
         risp.setrBoolean(true);
-        
+
         Long idTipoOggetto = ioaExt.getIdTipoObject();
         StatoSessioneIngest stato = ioaExt.getStatoSessione();
         String cdVersGen = ioaExt.getCdVersGen();
         String tiGestOggettiFigli = ioaExt.getTiGestOggettiFigli();
         Long idOggettoPadre = ioaExt.getIdOggettoPadre();
-        
+
         try {
             PigObject oggetto = entityManager.find(PigObject.class, idOggetto);
             if (stato != null) {

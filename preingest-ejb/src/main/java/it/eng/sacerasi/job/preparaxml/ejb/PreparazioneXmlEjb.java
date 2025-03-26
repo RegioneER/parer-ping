@@ -93,6 +93,8 @@ import it.eng.sacerasi.ws.xml.invioAsync.FileType;
 import it.eng.sacerasi.ws.xml.invioAsync.ListaUnitaDocumentarieType;
 import it.eng.sacerasi.ws.xml.invioAsync.UnitaDocumentariaType;
 import it.eng.sacerasixml.xsd.util.Utils;
+import java.util.logging.Level;
+import javax.xml.parsers.ParserConfigurationException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -189,6 +191,9 @@ public class PreparazioneXmlEjb {
                         oggettoInCoda.setParsedListaUnitaDoc(elemento.getValue());
                     } catch (JAXBException | SAXException e) {
                         throw new ParerInternalError(e);
+                    } catch (ParserConfigurationException ex) {
+                        java.util.logging.Logger.getLogger(PreparazioneXmlEjb.class.getName()).log(Level.SEVERE, null,
+                                ex);
                     }
                 }
                 log.debug("Parsing dell'XML di versamento asincrono - OK");

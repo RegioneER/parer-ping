@@ -120,14 +120,15 @@ public class VerificaDocumentiSUEjb {
 
                     if (doesObjectExist) {
                         File tempFile = null;
-                        try {
-                            ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                                    .getObject(config, strumUrbDocumenti.getNmFileOs());
+                        try (ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
+                                .getObject(config, strumUrbDocumenti.getNmFileOs())) {
                             // Partendo dall'input stream S3 Amazon, recupero il file
                             // Creo il file (che mi aspetto zip) in una cartella temporanea
                             tempFile = File.createTempFile(strumUrbDocumenti.getNmFileOs(), null,
                                     new File(System.getProperty("java.io.tmpdir")));
-                            IOUtils.copy(objectContent, new FileOutputStream(tempFile));
+                            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                                IOUtils.copy(objectContent, out);
+                            }
 
                             // 1° Controllo che sia effettivamente un file zip
                             if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {
@@ -267,10 +268,9 @@ public class VerificaDocumentiSUEjb {
 
             if (doesObjectExist) {
                 File tempFile = null;
-                try {
-                    // Recupero l'oggetto
-                    ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper.getObject(config,
-                            strumUrbDocumenti.getNmFileOs());
+                // Recupero l'oggetto
+                try (ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper.getObject(config,
+                        strumUrbDocumenti.getNmFileOs())) {
                     // Partendo dall'input stream S3 Amazon, recupero il file
                     // Creo il file (che mi aspetto zip) in una cartella temporanea
                     String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
@@ -283,7 +283,9 @@ public class VerificaDocumentiSUEjb {
                     // Ci piazzo il file zip temporaneo sul quale farò i controlli
                     tempFile = File.createTempFile("SU_", null, new File(dirCompletaFtp));
                     // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
-                    IOUtils.copy(objectContent, new FileOutputStream(tempFile));
+                    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                        IOUtils.copy(objectContent, fos);
+                    }
 
                     // Controllo che sia effettivamente un file zip
                     if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {

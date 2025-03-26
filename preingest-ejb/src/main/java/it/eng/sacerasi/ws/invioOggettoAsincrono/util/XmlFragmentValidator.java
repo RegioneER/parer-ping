@@ -28,6 +28,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -79,8 +81,10 @@ public class XmlFragmentValidator {
      */
     public void validateXmlFragment(String xsdString, String xmlString, String codErr, String... params) {
         Schema xsdSchema;
-        SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             xsdSchema = schemaFactory.newSchema(new Source[] { new StreamSource(new StringReader(xsdString)) });
             Validator validator = xsdSchema.newValidator();
             validator.setErrorHandler(new SimpleErrorHandler(codErr, params));

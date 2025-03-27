@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>6.5.1-SNAPSHOT</version>
+    <version>6.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -18,7 +18,7 @@
         <!-- Skiptests by default : esecuzione su CI -->
         <skipTests>true</skipTests>
         <sacer.xmlmodule.version>2.11.1</sacer.xmlmodule.version>
-        <preingest.xmlmodule.version>3.1.0</preingest.xmlmodule.version>
+        <preingest.xmlmodule.version>3.2.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
         <spagofat.version>6.16.0</spagofat.version>
         <parer-kettle-soap-client.version>2.0.0</parer-kettle-soap-client.version>
@@ -36,7 +36,9 @@
         <!-- Java 11 - Hibernate jpamodelgen -->
         <hibernate-jpamodelgen-version>5.6.14.Final-redhat-00001</hibernate-jpamodelgen-version>
         <!-- JBoss EAP -->
-        <cxf-rt.version>3.3.9.redhat-00001</cxf-rt.version>        
+        <cxf-rt.version>3.3.9.redhat-00001</cxf-rt.version>
+        <!-- jaxp-jdk11 -->
+        <jaxp-jdk11.version>0.0.3</jaxp-jdk11.version>      
     </properties>
 
 <distributionManagement>
@@ -145,31 +147,12 @@
                 <artifactId>javacsv</artifactId>
                 <version>${javacsv.version}</version>
             </dependency>
-            <!-- Xerces & co -->
-            <dependency>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>${xerces.version}</version>
-                <scope>runtime</scope>
-            </dependency>
             <dependency>
                 <groupId>xml-resolver</groupId>
                 <artifactId>xml-resolver</artifactId>
                 <version>${xml-resolver.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>xalan</groupId>
-                <artifactId>xalan</artifactId>
-                <version>${xalan.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-			<dependency>
-				<groupId>xalan</groupId>
-				<artifactId>serializer</artifactId>
-				<version>${xalan.version}</version>
-				<scope>runtime</scope>
-			</dependency>
 			<!-- per xFormer -->
             <dependency>
                 <groupId>org.apache.tika</groupId>

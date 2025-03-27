@@ -99,6 +99,8 @@ import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.kettle.ejb.RepositoryManagerEjb;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import javax.xml.XMLConstants;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -1290,7 +1292,8 @@ public class EseguiTrasformazione {
         try {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
-
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             // Use the factory to create a template containing the xsl file
             Templates template = factory.newTemplates(new StreamSource(getClass().getResourceAsStream(xslFilename)));
 

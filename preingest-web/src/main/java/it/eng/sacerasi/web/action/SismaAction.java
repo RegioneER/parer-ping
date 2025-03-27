@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.action;
 
 import java.io.BufferedOutputStream;
@@ -1380,19 +1379,19 @@ public class SismaAction extends SismaAbstractAction {
 
     public void downloadSismaListOperation() {
         File tmpFile = null;
-        FileOutputStream out = null;
-        try {
-            String riga = getRequest().getParameter("riga");
-            Integer nr = Integer.parseInt(riga);
-            BigDecimal idSisma = getForm().getSismaList().getTable().getRow(nr).getBigDecimal("id_Sisma");
 
-            Date dat = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
-            String nomeFile = "lista_versamento_" + sdf.format(dat) + ".txt";
+        String riga = getRequest().getParameter("riga");
+        Integer nr = Integer.parseInt(riga);
+        BigDecimal idSisma = getForm().getSismaList().getTable().getRow(nr).getBigDecimal("id_Sisma");
 
-            tmpFile = new File(System.getProperty("java.io.tmpdir"), nomeFile);
-            String str = sismaEjb.getListaVersamentoString(idSisma);
-            out = new FileOutputStream(tmpFile);
+        Date dat = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+        String nomeFile = "lista_versamento_" + sdf.format(dat) + ".txt";
+
+        tmpFile = new File(System.getProperty("java.io.tmpdir"), nomeFile);
+        String str = sismaEjb.getListaVersamentoString(idSisma);
+
+        try (FileOutputStream out = new FileOutputStream(tmpFile)) {
             IOUtils.write(str, out, StandardCharsets.UTF_8);
             getRequest().setAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_ACTION.name(), getControllerName());
             getSession().setAttribute(WebConstants.DOWNLOAD_ATTRS.DOWNLOAD_FILENAME.name(), tmpFile.getName());
@@ -1403,8 +1402,6 @@ public class SismaAction extends SismaAbstractAction {
         } catch (Exception ex) {
             log.error("Errore in download " + ExceptionUtils.getRootCauseMessage(ex), ex);
             getMessageBox().addError("Errore inatteso nella preparazione del download<br/>");
-        } finally {
-            IOUtils.closeQuietly(out);
         }
 
         if (getMessageBox().hasError() || getMessageBox().hasWarning()) {
@@ -1429,15 +1426,13 @@ public class SismaAction extends SismaAbstractAction {
                  * Definiamo l'output previsto che sarà  un file in formato zip di cui si occuperà  la servlet per fare
                  * il download
                  */
-                OutputStream outUD = getServletOutputStream();
                 getResponse().setContentType(
                         StringUtils.isBlank(contentType) ? WebConstants.MIME_TYPE_GENERIC : contentType);
                 getResponse().setHeader(CONTENT_DISPOSITION, "attachment; filename=\"" + filename);
 
-                FileInputStream inputStream = null;
-                try {
+                try (FileInputStream inputStream = new FileInputStream(fileToDownload);
+                        OutputStream outUD = getServletOutputStream()) {
                     getResponse().setHeader("Content-Length", String.valueOf(fileToDownload.length()));
-                    inputStream = new FileInputStream(fileToDownload);
                     byte[] bytes = new byte[8000];
                     int bytesRead;
                     while ((bytesRead = inputStream.read(bytes)) != -1) {
@@ -1448,10 +1443,6 @@ public class SismaAction extends SismaAbstractAction {
                     log.error("Eccezione nel recupero del documento ", e);
                     getMessageBox().addError("Eccezione nel recupero del documento");
                 } finally {
-                    IOUtils.closeQuietly(inputStream);
-                    IOUtils.closeQuietly(outUD);
-                    inputStream = null;
-                    outUD = null;
                     freeze();
                 }
                 // Nel caso sia stato richiesto, elimina il file

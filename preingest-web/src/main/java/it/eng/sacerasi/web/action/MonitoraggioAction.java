@@ -181,6 +181,8 @@ import it.eng.spagoLite.message.MessageBox.ViewMode;
 import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.menu.impl.Menu;
 import it.eng.xformer.helper.TrasformazioniHelper;
+import java.util.logging.Level;
+import javax.xml.XMLConstants;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -769,6 +771,33 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                             String messaggioErrore = null;
 
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                            // XXE: This is the PRIMARY defense. If DTDs (doctypes) are disallowed,
+                            // almost all XML entity attacks are prevented
+                            final String FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+                            factory.setFeature(FEATURE, true);
+                            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+
+                            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                            // ... and these as well, per Timothy Morgan's 2014 paper:
+                            // "XML Schema, DTD, and Entity Attacks" (see reference below)
+                            factory.setXIncludeAware(false);
+                            factory.setExpandEntityReferences(false);
+                            // As stated in the documentation, "Feature for Secure Processing (FSP)" is the central
+                            // mechanism that will
+                            // help you safeguard XML processing. It instructs XML processors, such as parsers,
+                            // validators,
+                            // and transformers, to try and process XML securely, and the FSP can be used as an
+                            // alternative to
+                            // dbf.setExpandEntityReferences(false); to allow some safe level of Entity Expansion
+                            // Exists from JDK6.
+                            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                            // ... and, per Timothy Morgan:
+                            // "If for some reason support for inline DOCTYPEs are a requirement, then
+                            // ensure the entity settings are disabled (as shown above) and beware that SSRF
+                            // attacks
+                            // (http://cwe.mitre.org/data/definitions/918.html) and denial
+                            // of service attacks (such as billion laughs or decompression bombs via "jar:")
+                            // are a risk."
                             DocumentBuilder builder = factory.newDocumentBuilder();
                             XPath xPath = XPathFactory.newInstance().newXPath();
 
@@ -1254,6 +1283,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
                 } catch (JAXBException | SAXException ex) {
                     getMessageBox().addError("ATTENZIONE: l'xml di versamento non è conforme.");
+                } catch (ParserConfigurationException ex) {
+                    java.util.logging.Logger.getLogger(MonitoraggioAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 getMessageBox().addError("ATTENZIONE: l'xml di versamento non può essere vuoto.");

@@ -153,10 +153,9 @@ public class VerificaDocumentiSismaEjb {
             boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, sismaDocumenti.getNmFileOs());
             if (doesObjectExist) {
                 File tempFile = null;
-                try {
-                    // Recupero l'oggetto
-                    ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper.getObject(config,
-                            sismaDocumenti.getNmFileOs());
+                // Recupero l'oggetto
+                try (ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper.getObject(config,
+                        sismaDocumenti.getNmFileOs())) {
                     // Creo il file (che mi aspetto zip) in una cartella temporanea
                     String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
                     String dsPathInputFtp = sismaDocumenti.getPigSisma().getPigVer().getDsPathInputFtp();
@@ -167,9 +166,9 @@ public class VerificaDocumentiSismaEjb {
                     // Ci piazzo il file zip temporaneo sul quale farò i controlli
                     tempFile = File.createTempFile("SISMA_", null, new File(dirCompletaFtp));
                     // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
-                    FileOutputStream fos = new FileOutputStream(tempFile);
-                    IOUtils.copy(object, fos);
-                    fos.close();
+                    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                        IOUtils.copy(object, fos);
+                    }
 
                     // Controllo che sia effettivamente un file zip
                     if (!FilenameUtils.getExtension(sismaDocumenti.getNmFileOrig()).equals("zip")) {

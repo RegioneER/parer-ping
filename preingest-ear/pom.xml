@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>6.5.1-SNAPSHOT</version>
+        <version>6.6.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sacerping-jboss-ear</artifactId>
@@ -133,29 +133,15 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
-        <!-- xalan & co -->
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-        </dependency>
         <dependency>
             <groupId>xml-resolver</groupId>
             <artifactId>xml-resolver</artifactId>
         </dependency>
+		<!-- Jaxb -->
         <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
         </dependency>
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>serializer</artifactId>
-        </dependency>
-        <!-- Jaxb -->
-        <dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
-
         <!-- Incluso per l'ejb del logging applicativo -->
         <dependency>
             <groupId>it.eng.parer</groupId>
@@ -173,6 +159,12 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-        </dependency>        
+        </dependency> 
+        <dependency>
+            <groupId>jaxp.jdk</groupId>
+            <artifactId>jaxp-jdk11</artifactId>
+            <version>${jaxp-jdk11.version}</version>
+            <scope>runtime</scope>
+        </dependency>       
     </dependencies>
 </project>

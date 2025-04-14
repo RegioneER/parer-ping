@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>6.6.1-SNAPSHOT</version>
+        <version>7.0.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-ear</artifactId>
@@ -66,6 +66,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>sacerping-jboss-ejb</artifactId>
             <type>ejb</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>stax2-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -107,20 +113,7 @@
             <artifactId>spagofat-paginator-ejb</artifactId>
             <type>ejb</type>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security.extensions</groupId>
-            <artifactId>spring-security-saml2-core</artifactId>            
-            <exclusions>				
-                <exclusion>
-                    <artifactId>xalan</artifactId>
-                    <groupId>xalan</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xercesImpl</artifactId>
-                    <groupId>xerces</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-si-client</artifactId>
@@ -142,6 +135,16 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
         </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+        </dependency>
+        <!-- Jaxb -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+
         <!-- Incluso per l'ejb del logging applicativo -->
         <dependency>
             <groupId>it.eng.parer</groupId>
@@ -159,12 +162,28 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-        </dependency> 
+        </dependency>     
+        
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-saml2-service-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>        
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.woodstox/woodstox-core -->
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>${woodstox-core.version}</version>
+        </dependency>
         <dependency>
             <groupId>jaxp.jdk</groupId>
             <artifactId>jaxp-jdk11</artifactId>
             <version>${jaxp-jdk11.version}</version>
             <scope>runtime</scope>
-        </dependency>       
+        </dependency> 
+              
     </dependencies>
 </project>

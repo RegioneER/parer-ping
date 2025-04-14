@@ -1,9 +1,7 @@
-## 6.6.0 (26-03-2025)
+## 7.0.0 (14-04-2025)
 
-### Bugfix: 2
-- [#37526](https://parermine.regione.emilia-romagna.it/issues/37526) Correzione per la mancata chiusura dei file e protocollo NFS
-- [#35253](https://parermine.regione.emilia-romagna.it/issues/35253) Correzione errore di caricamento parametri versatore da file CSV
+### Bugfix: 1
+- [#34751](https://parermine.regione.emilia-romagna.it/issues/34751) Correzione warning: Illegal reflective access
 
-### Novità: 2
-- [#35551](https://parermine.regione.emilia-romagna.it/issues/35551) Configurazione modulo jaxp-jdk per JBoss 7 per JDK 11
-- [#34003](https://parermine.regione.emilia-romagna.it/issues/34003) Migrazione alle nuove dipendenze / pattern legate a xecers, xalan, jaxb, ecc
+### Novità: 1
+- [#37217](https://parermine.regione.emilia-romagna.it/issues/37217) Aggiornamento librerie ESAPI (OWASP) e SAML + Spring Security 5

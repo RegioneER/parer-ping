@@ -30,11 +30,13 @@ import javax.servlet.http.HttpSessionListener;
 import it.eng.sacerasi.web.helper.LoginLogHelper;
 import it.eng.spagoLite.SessionManager;
 import it.eng.spagoLite.security.User;
+import javax.servlet.annotation.WebListener;
 
 /**
  *
  * @author fioravanti_f
  */
+@WebListener
 public class AuditSessionListener implements HttpSessionListener {
 
     @EJB

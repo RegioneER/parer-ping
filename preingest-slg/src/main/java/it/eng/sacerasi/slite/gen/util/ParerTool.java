@@ -49,10 +49,6 @@ public class ParerTool extends SpringLiteTool {
 
         System.out.println("Percorso corrente : " + new File(".").getAbsolutePath());
 
-        System.setProperty("file.encoding", "UTF-8");
-        java.lang.reflect.Field charset = Charset.class.getDeclaredField("defaultCharset");
-        charset.setAccessible(true);
-        charset.set(null, null);
         String actionPath = basedir.replaceAll("\\\\", "/")
                 + "/../preingest-web/src/main/java/it/eng/sacerasi/web/action";
 

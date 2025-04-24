@@ -16,11 +16,11 @@
  */
 package it.eng.sacerasi.web.action;
 
-import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.IMPORT_VERSATORE_MAX_FILE_SIZE;
-import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.LOAD_XSD_APP_MAX_FILE_SIZE;
-import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.LOAD_XSD_APP_MAX_REQUEST_SIZE;
-import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.LOAD_XSD_APP_UPLOAD_DIR;
-import static it.eng.spagoCore.configuration.ConfigProperties.StandardProperty.PARAMS_CSV_MAX_FILE_SIZE;
+import static it.eng.spagoCore.ConfigProperties.StandardProperty.IMPORT_VERSATORE_MAX_FILE_SIZE;
+import static it.eng.spagoCore.ConfigProperties.StandardProperty.LOAD_XSD_APP_MAX_FILE_SIZE;
+import static it.eng.spagoCore.ConfigProperties.StandardProperty.LOAD_XSD_APP_MAX_REQUEST_SIZE;
+import static it.eng.spagoCore.ConfigProperties.StandardProperty.LOAD_XSD_APP_UPLOAD_DIR;
+import static it.eng.spagoCore.ConfigProperties.StandardProperty.PARAMS_CSV_MAX_FILE_SIZE;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -141,7 +141,7 @@ import it.eng.sacerasi.web.util.Constants.TipoSelettore;
 import it.eng.sacerasi.web.util.Util;
 import it.eng.sacerasi.web.util.WebConstants;
 import it.eng.sacerasi.web.validator.AmministrazioneValidator;
-import it.eng.spagoCore.configuration.ConfigSingleton;
+import it.eng.spagoCore.ConfigSingleton;
 import it.eng.spagoCore.error.EMFError;
 import it.eng.spagoLite.ExecutionHistory;
 import it.eng.spagoLite.SessionManager;

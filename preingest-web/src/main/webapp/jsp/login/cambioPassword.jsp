@@ -1,6 +1,6 @@
 <%@page import="java.util.Date"%>
 <%@page import="it.eng.spagoLite.security.menu.MenuEntry"%>
-<%@page import="it.eng.spagoCore.configuration.ConfigSingleton"%>
+<%@page import="it.eng.spagoCore.ConfigSingleton"%>
 <%@ include file="../../include.jsp"%>
 
 <sl:html>

@@ -55,6 +55,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 
 import it.eng.paginator.util.HibernateUtils;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.sacerasi.entity.PigKSInstance;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigObjectTrasf;
@@ -63,9 +64,11 @@ import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigVersTipoObjectDaTrasf;
 import it.eng.sacerasi.entity.XfoFileTrasf;
 import it.eng.sacerasi.entity.XfoParamTrasf;
+import it.eng.sacerasi.entity.XfoReportObjectStorage;
 import it.eng.sacerasi.entity.XfoSetParamTrasf;
 import it.eng.sacerasi.entity.XfoStoricoTrasf;
 import it.eng.sacerasi.entity.XfoTrasf;
+import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.viewEntity.PigVValoreParamTrasf;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.spagoLite.db.base.BaseTableInterface;
@@ -73,6 +76,7 @@ import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.xformer.common.Constants;
 import it.eng.xformer.dto.RicercaTrasformazioneBean;
+import java.util.Optional;
 
 @SuppressWarnings("unchecked")
 @Stateless
@@ -389,38 +393,48 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
         return paramTrasf != null;
     }
 
-    public String saveReport(String idOggetto, String report) throws ObjectStorageException {
+    public void saveReport(PigSessioneIngest pigSessioneIngest, String idOggetto, String report)
+            throws ObjectStorageException, ParerInternalError {
         String timestamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
         String nomeOggetto = idOggetto + "/reports/" + timestamp + "/" + UUID.randomUUID();
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("XF",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_REPORT_XFORMER));
 
-        if (salvataggioBackendHelper.isActive()) {
-            salvataggioBackendHelper.putS3Object(config, nomeOggetto, report);
+        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper.getBackendForReportTrasformazioni();
+        ObjectStorageBackend config = salvataggioBackendHelper
+                .getObjectStorageConfigurationForReportTrasformazioni(backendForReportTrasformazioni.getBackendName());
+
+        XfoReportObjectStorage xros = new XfoReportObjectStorage();
+        xros.setIdDecBackend(backendForReportTrasformazioni.getBackendId());
+        xros.setNmTenant(configurationHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE));
+        xros.setNmBucket(config.getBucket());
+        xros.setCdKeyFile(nomeOggetto);
+        xros.setPigSessioneIngest(pigSessioneIngest);
+
+        pigSessioneIngest.setXfoReportObjectStorage(xros);
+
+        if (backendForReportTrasformazioni.isObjectStorage()) {
+            salvataggioBackendHelper.putS3Object(config, nomeOggetto, report, Optional.empty());
+        } else {
+            throw new ParerInternalError("Il backend per i report trasformazione deve avere tipo OS.");
         }
-
-        return nomeOggetto;
     }
 
-    public String loadReport(String idReport) throws IOException, ObjectStorageException {
-        String report = "";
+    public String loadReport(PigSessioneIngest pigSessioneIngest) throws IOException, ObjectStorageException {
+        XfoReportObjectStorage xros = pigSessioneIngest.getXfoReportObjectStorage();
+        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper.getBackend(xros.getIdDecBackend());
+        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForReportTrasformazioni(
+                backendForReportTrasformazioni.getBackendName(), xros.getNmBucket());
 
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("XF",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_REPORT_XFORMER));
+        ResponseInputStream<GetObjectResponse> is = salvataggioBackendHelper.getObject(config, xros.getCdKeyFile());
 
-        ResponseInputStream<GetObjectResponse> is = salvataggioBackendHelper.getObject(config, idReport);
-
-        report = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
-
-        return report;
+        return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
     }
 
-    public void saveReportIntoPigSession(PigObject po, String report) throws ObjectStorageException {
-        String reportIdOS = this.saveReport(String.valueOf(po.getIdObject()), report);
-
+    public void saveReportIntoPigSession(PigObject po, String report)
+            throws ObjectStorageException, ParerInternalError {
         for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
             if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
-                psi.setNmReportTrasfOS(reportIdOS);
+                this.saveReport(psi, String.valueOf(po.getIdObject()), report);
                 entityManager.persist(psi);
             }
         }
@@ -430,8 +444,8 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
             throws IOException, TransformerException, ObjectStorageException {
         PigSessioneIngest psi = this.findById(PigSessioneIngest.class, sessionId);
         String report = "";
-        if (psi.getNmReportTrasfOS() != null) {
-            report = loadReport(psi.getNmReportTrasfOS());
+        if (psi.getXfoReportObjectStorage() != null) {
+            report = loadReport(psi);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");

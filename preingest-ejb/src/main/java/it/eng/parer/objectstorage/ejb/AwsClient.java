@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.parer.objectstorage.ejb;
 
 import java.net.URI;
@@ -34,6 +33,8 @@ import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation;
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -77,6 +78,8 @@ public class AwsClient {
 
         return S3Client.builder().endpointOverride(storageAddress).region(Region.US_EAST_1)
                 .credentialsProvider(credProvider).forcePathStyle(true)
+                .responseChecksumValidation(ResponseChecksumValidation.WHEN_REQUIRED)
+                .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
                 .httpClientBuilder(ApacheHttpClient.builder().maxConnections(maxConnections())
                         .connectionTimeout(connectionTimeoutOfMinutes()).socketTimeout(socketTimeoutOfMinutes()))
                 .build();

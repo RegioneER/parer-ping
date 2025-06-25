@@ -16,11 +16,13 @@
  */
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this template, choose Tools | Templates
+* and open the template in the editor.
+*/
 package it.eng.sacerasi.ws.notificaTrasferimento.helper;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -44,10 +47,6 @@ import it.eng.sacerasi.messages.MessaggiWSBundle;
 import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 import it.eng.sacerasi.ws.dto.RispostaControlli;
 import it.eng.sacerasi.ws.ejb.ControlliWS;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoRespType;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.NotificaTrasferimentoExt;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.RispostaNotificaWS;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.ControlliNotificaTrasferimento;
 
 @Stateless(mappedName = "NotificaTrasferimentoCheckHelper")
@@ -292,13 +291,16 @@ public class NotificaTrasferimentoCheckHelper {
             rispostaControlli.reset();
             for (FileDepositatoType fileDep : notificaTrasferimentoExt.getNotificaTrasf().getFileDepositati()
                     .getFileDepositato()) {
-                // MEV21995 se il file non è su Objec Storage controllo su ftp
-                if (fileDep.getNmOsBucket() == null || fileDep.getNmOsBucket().isEmpty()
-                        || fileDep.getNmNomeFileOs() == null || fileDep.getNmNomeFileOs().isEmpty()) {
+                // MEV21995 e MEV 34843 se il file non è su Object Storage controllo su ftp
+                BackendStorage backend = salvataggioBackendHelper.getBackend(fileDep.getIdBackend());
+
+                if (backend.isObjectStorage()) {
+                    ObjectStorageBackend config = salvataggioBackendHelper
+                            .getObjectStorageConfigurationForVersamento(backend.getBackendName());
+                    rispostaControlli = controlliNotif.verificaNomeFileObjectStorage(config, fileDep.getNmNomeFileOs());
+
+                } else if (backend.isFile()) {
                     rispostaControlli = controlliNotif.verificaNomeFileFtp(ftpPath, fileDep.getNmNomeFile());
-                } else {
-                    rispostaControlli = controlliNotif.verificaNomeFileObjectStorage(fileDep.getNmOsBucket(),
-                            fileDep.getNmNomeFileOs());
                 }
 
                 if (!rispostaControlli.isrBoolean()) {
@@ -333,7 +335,9 @@ public class NotificaTrasferimentoCheckHelper {
                 fileDepResp.setCdEncoding(fileDep.getCdEncoding());
                 fileDepResp.setTiAlgoritmoHash(fileDep.getTiAlgoritmoHash());
                 fileDepResp.setDsHashFile(fileDep.getDsHashFile());
-                // MEV21995 aggiungo le informazioni eventuali sul salvataggio su object storage
+                // MEV21995 e MEV34843 aggiungo le informazioni eventuali sul salvataggio su object storage
+                fileDepResp.setIdBackend(fileDep.getIdBackend());
+                fileDepResp.setNmOsTenant(fileDep.getNmOsTenant());
                 fileDepResp.setNmOsBucket(fileDep.getNmOsBucket());
                 fileDepResp.setNmNomeFileOs(fileDep.getNmNomeFileOs());
 
@@ -341,6 +345,13 @@ public class NotificaTrasferimentoCheckHelper {
             }
         }
 
+    }
+
+    // MEV 34843
+    public void addBackendInfos(String nmAmbiente, String nmVersatore, String cdKeyObject,
+            ListaFileDepositatoType listaFileDepositati) throws ObjectStorageException {
+        salvataggioBackendHelper.addBackendInfosToFilesDepositati(nmAmbiente, nmVersatore, cdKeyObject,
+                listaFileDepositati);
     }
 
     private void setRispostaWsError(RispostaNotificaWS rispostaWs, RispostaControlli rispostaControlli) {

@@ -14,16 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 
-import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
-import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.spagoCore.error.EMFError;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,6 +34,9 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
+import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
+import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiHelper;
 
 /**
  *
@@ -48,12 +47,10 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
 
     private static final long serialVersionUID = -2790402629889569112L;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/StrumentiUrbanisticiEjb")
-    private StrumentiUrbanisticiEjb strumentiUrbanisticiEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
-    private ConfigurationHelper configurationHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB
+    private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -72,21 +69,32 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
         }
 
         try {
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
-                    configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
-            String nmFileOs = strumentiUrbanisticiEjb.getFileOsNameBySU(idStrumento, chiave);
-            ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config, nmFileOs);
+            PigStrumUrbDocumenti pigStrumUrbDocumenti = strumentiUrbanisticiHelper.getPigStrumUrbDocumentiByName(chiave,
+                    idStrumento);
+            if (pigStrumUrbDocumenti != null) {
+                // MEV 34843
+                PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
+                        .getPigStrumUrbDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                pigStrumUrbDocumentiStorage.getNmBucket());
 
-            byte[] buf = new byte[1024];
-            int count = 0;
-            // This should send the file to browser
-            OutputStream out = response.getOutputStream();
-            while ((count = ogg.read(buf)) != -1) {
-                out.write(buf, 0, count);
+                ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config,
+                        pigStrumUrbDocumentiStorage.getCdKeyFile());
+
+                byte[] buf = new byte[1024];
+                int count = 0;
+                // This should send the file to browser
+                OutputStream out = response.getOutputStream();
+                while ((count = ogg.read(buf)) != -1) {
+                    out.write(buf, 0, count);
+                }
+                out.flush();
+                ogg.close();
             }
-            out.flush();
-            ogg.close();
         } catch (ObjectStorageException e) {
 
         }

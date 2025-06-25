@@ -488,7 +488,7 @@
         <Input Type="INTEGER" Description="Num. UD versate OK" Name="ni_unita_doc_vers_OK" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Num. UD versate KO" Name="ni_unita_doc_vers_err" GroupingDecimal="true" />
         <Input Type="INTEGER" Description="Num. UD versate con timeout" Name="ni_unita_doc_vers_timeout" GroupingDecimal="true" />
-        <Input Type="STRING" Description="Tipo storage" Name="ti_conservato_su_os" />
+        <Input Type="STRING" Description="Storage utilizzato" Name="ti_conservato_su_os" />
 <!--        <Link Tooltip="Dettaglio oggetto generato da trasformazione" Target="loadDettaglioOggettoTrasf" 
               isTargetList="false" Name="pg_oggetto_trasf" Description="Progr. oggetto generato da trasformazione" Type="INTEGER"/>-->
         <Input Type="INTEGER" Description="Progr. oggetto generato da trasformazione" Name="pg_oggetto_trasf" />

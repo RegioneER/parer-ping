@@ -49,24 +49,6 @@ public class ConfigurationHelper {
     private static final String FLAPLPARAMAPPLICAPPART = "flPigParamApplicAppart";
     private static final String IDAPLVGETVALPARAMBY = "idPigVGetvalParamBy";
 
-    // Parti comuni
-    public static final String OBJECT_STORAGE_ADDR = "OBJECT_STORAGE_ADDR";
-    public static final String TENANT_OBJECT_STORAGE = "TENANT_OBJECT_STORAGE";
-    // Strumenti Urbanistici
-    public static final String BUCKET_VERIFICA_STRUMENTI_URBANISTICI = "BUCKET_VERIFICA_STRUMENTI_URBANISTICI";
-    public static final String BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI = "BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI";
-    public static final String SU_S3_ACCESS_KEY_ID = "SU_S3_ACCESS_KEY_ID";
-    public static final String SU_S3_SECRET_KEY = "SU_S3_SECRET_KEY";
-    // Versamento Oggetto
-    public static final String VO_S3_ACCESS_KEY_ID = "VO_S3_ACCESS_KEY_ID";
-    public static final String VO_S3_SECRET_KEY = "VO_S3_SECRET_KEY";
-    public static final String BUCKET_VERSAMENTO_OGGETTO = "BUCKET_VERSAMENTO_OGGETTO";
-    // Sisma
-    public static final String BUCKET_VERIFICA_SISMA = "BUCKET_VERIFICA_SISMA";
-    public static final String BUCKET_SISMA_TRASFORMATI = "BUCKET_SISMA_TRASFORMATI";
-    public static final String SISMA_S3_ACCESS_KEY_ID = "SISMA_S3_ACCESS_KEY_ID";
-    public static final String SISMA_S3_SECRET_KEY = "SISMA_S3_SECRET_KEY";
-
     public static final String URL_ASSOCIAZIONE_UTENTE_CF = "URL_ASSOCIAZIONE_UTENTE_CF";
     public static final String URL_BACK_ASSOCIAZIONE_UTENTE_CF = "URL_BACK_ASSOCIAZIONE_UTENTE_CF";
 
@@ -355,63 +337,6 @@ public class ConfigurationHelper {
         } else {
             return resultFiltered.get(0).getDsValoreParamApplic();// expected one
         }
-    }
-
-    /**
-     * Ottieni la system property contentente la <em>access_key_id</em> S3 per accedere ai bucket degli Strumenti
-     * urbanistici.
-     *
-     * @return access key id per s3 (SU)
-     */
-    public String getSUAccessKeyIdystemProp() {
-        return getValoreParamApplic(SU_S3_ACCESS_KEY_ID, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    /**
-     * Ottieni la system property contentente la <em>secret_key</em> S3 per accedere ai bucket degli Strumenti
-     * urbanistici.
-     *
-     * @return secret key per s3 (SU)
-     */
-    public String getSUSecretKeyIdSystemProp() {
-        return getValoreParamApplic(SU_S3_SECRET_KEY, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    /**
-     * Ottieni la system property contentente la <em>access_key_id</em> S3 per accedere ai bucket degli Strumenti
-     * urbanistici.
-     *
-     * @return access key id per s3 (SU)
-     */
-    public String getVersamentoOggettoAccessKeyIdystemProp() {
-        return getValoreParamApplic(VO_S3_ACCESS_KEY_ID, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    /**
-     * Ottieni la system property contentente la <em>secret_key</em> S3 per accedere ai bucket degli Strumenti
-     * urbanistici.
-     *
-     * @return secret key per s3 (SU)
-     */
-    public String getVersamentoOggettoSecretKeyIdSystemProp() {
-        return getValoreParamApplic(VO_S3_SECRET_KEY, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    /**
-     * MEV24582 Nome della system property che regola la presenza o meno delle funzionalità basate su object storage
-     *
-     * @return valore bucket versamento oggetto
-     */
-    public String getValoreBucketVersamentoOggetto() {
-        return getValoreParamApplic(BUCKET_VERSAMENTO_OGGETTO, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    public String getSismaAccessKeyIdystemProp() {
-        return getValoreParamApplic(SISMA_S3_ACCESS_KEY_ID, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
-    }
-
-    public String getSismaSecretKeyIdSystemProp() {
-        return getValoreParamApplic(SISMA_S3_SECRET_KEY, null, null, null, Constants.TipoPigVGetValAppart.APPLIC);
     }
 
     public String getUrlAssociazioneUtenteCf() {

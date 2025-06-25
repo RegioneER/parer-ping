@@ -928,6 +928,17 @@ public class SismaHelper extends GenericHelper {
         getEntityManager().persist(pigSismaStoricoStati);
     }
 
+    // MEV 34843
+    public PigSismaDocumenti getPigSismaDocumentiByName(String nomefile, BigDecimal idSisma) {
+        Query query = getEntityManager()
+                .createQuery("SELECT psud FROM PigSismaDocumenti psud WHERE psud.pigSisma.idSisma = :idSisma AND"
+                        + " psud.nmFileOrig = :nomefile");
+        query.setParameter("idSisma", HibernateUtils.longFrom(idSisma));
+        query.setParameter("nomefile", nomefile);
+
+        return (PigSismaDocumenti) query.getSingleResult();
+    }
+
     public static class DatiRecuperoDto {
 
         private String nomeAmbiente;

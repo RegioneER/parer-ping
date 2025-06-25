@@ -16,6 +16,7 @@
  */
 package it.eng.sacerasi.sisma.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,6 +52,7 @@ import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSismaDocEntry;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
+import it.eng.sacerasi.entity.PigSismaDocumentiStorage;
 import it.eng.sacerasi.helper.GenericHelper;
 import it.eng.sacerasi.job.ejb.JobLogger;
 import it.eng.sacerasi.job.util.NfsUtils;
@@ -144,65 +146,71 @@ public class VerificaDocumentiSismaEjb {
 
         PigSismaDocumenti sismaDocumenti = verificaDocumentiSismaHelper.findById(PigSismaDocumenti.class,
                 idSismaDocumenti.longValue());
+
+        // MEV 34843
+        PigSismaDocumentiStorage pigSismaDocumentiStorage = sismaDocumenti.getPigSismaDocumentiStorage();
+        BackendStorage backend = salvataggioBackendHelper.getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForSisma(
+                backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
+
         // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione stile ack)
         // Accedo al bucket e recupero il file documento, se esiste
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("SISMA",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
-
-        if (salvataggioBackendHelper.isActive()) {
-            boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, sismaDocumenti.getNmFileOs());
-            if (doesObjectExist) {
-                File tempFile = null;
+        boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+                pigSismaDocumentiStorage.getCdKeyFile());
+        if (doesObjectExist) {
+            File tempFile = null;
+            try {
                 // Recupero l'oggetto
-                try (ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper.getObject(config,
-                        sismaDocumenti.getNmFileOs())) {
-                    // Creo il file (che mi aspetto zip) in una cartella temporanea
-                    String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
-                    String dsPathInputFtp = sismaDocumenti.getPigSisma().getPigVer().getDsPathInputFtp();
-                    String cdKey = sismaDocumenti.getPigSisma().getCdKey();
-                    String dirCompletaFtp = rootFtp + dsPathInputFtp + cdKey;
-                    // Creo la directory
-                    NfsUtils.createEmptyDir(dirCompletaFtp);
-                    // Ci piazzo il file zip temporaneo sul quale farò i controlli
-                    tempFile = File.createTempFile("SISMA_", null, new File(dirCompletaFtp));
-                    // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
-                    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                        IOUtils.copy(object, fos);
-                    }
+                ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper.getObject(config,
+                        pigSismaDocumentiStorage.getCdKeyFile());
+                // Creo il file (che mi aspetto zip) in una cartella temporanea
+                String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
+                String dsPathInputFtp = sismaDocumenti.getPigSisma().getPigVer().getDsPathInputFtp();
+                String cdKey = sismaDocumenti.getPigSisma().getCdKey();
+                String dirCompletaFtp = rootFtp + dsPathInputFtp + cdKey;
+                // Creo la directory
+                NfsUtils.createEmptyDir(dirCompletaFtp);
+                // Ci piazzo il file zip temporaneo sul quale farò i controlli
+                tempFile = File.createTempFile("SISMA_", null, new File(dirCompletaFtp));
+                // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
 
-                    // Controllo che sia effettivamente un file zip
-                    if (!FilenameUtils.getExtension(sismaDocumenti.getNmFileOrig()).equals("zip")) {
-                        errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA11");
-                    }
-
-                    Charset detectedCharset = null;
-
-                    if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
-                        detectedCharset = StandardCharsets.UTF_8;
-                    } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
-                        detectedCharset = StandardCharsets.ISO_8859_1;
-                    } else {
-                        errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA05");
-                        errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
-                    }
-
-                    if (errore == null) {
-                        // Inizio i successivi controlli senza dover scompattare il file zip
-                        VerificaZipFileResponse response = checkTempZipFile(sismaDocumenti.getNmFileOrig(), tempFile,
-                                sismaDocumenti, detectedCharset);
-                        errore = response.getErrore();
-                        numFiles = response.getFilesCount();
-                        report = response.getReport();
-                    }
-                } finally {
-                    if (tempFile != null) {
-                        FileUtils.deleteQuietly(tempFile);
-                    }
+                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                    IOUtils.copy(object, fos);
                 }
-            } else {
-                errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA04");
-                errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", sismaDocumenti.getNmFileOs()));
+
+                // Controllo che sia effettivamente un file zip
+                if (!FilenameUtils.getExtension(sismaDocumenti.getNmFileOrig()).equals("zip")) {
+                    errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA11");
+                }
+
+                Charset detectedCharset = null;
+
+                if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
+                    detectedCharset = StandardCharsets.UTF_8;
+                } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
+                    detectedCharset = StandardCharsets.ISO_8859_1;
+                } else {
+                    errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA05");
+                    errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
+                }
+
+                if (errore == null) {
+                    // Inizio i successivi controlli senza dover scompattare il file zip
+                    VerificaZipFileResponse response = checkTempZipFile(sismaDocumenti.getNmFileOrig(), tempFile,
+                            sismaDocumenti, detectedCharset);
+                    errore = response.getErrore();
+                    numFiles = response.getFilesCount();
+                    report = response.getReport();
+                }
+            } finally {
+                if (tempFile != null) {
+                    FileUtils.deleteQuietly(tempFile);
+                }
             }
+        } else {
+            errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA04");
+            errore.setDsErrore(
+                    StringUtils.replace(errore.getDsErrore(), "{0}", pigSismaDocumentiStorage.getCdKeyFile()));
         }
 
         if (errore == null) {
@@ -267,8 +275,8 @@ public class VerificaDocumentiSismaEjb {
                     // Controlli sul fileTemp
                     if (entry.getSize() == 0) {
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA06");
-                        errore.setDsErrore(
-                                StringUtils.replace(errore.getDsErrore(), "{0}", sismaDocumenti.getNmFileOs()));
+                        errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}",
+                                sismaDocumenti.getPigSismaDocumentiStorage().getCdKeyFile()));
                         response.setErrore(errore);
 
                         report.append("FILE VUOTO: ").append(entry.getName());
@@ -291,7 +299,8 @@ public class VerificaDocumentiSismaEjb {
 
         } else {
             PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSISMA03");
-            errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", sismaDocumenti.getNmFileOs()));
+            errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}",
+                    sismaDocumenti.getPigSismaDocumentiStorage().getCdKeyFile()));
             response.setErrore(errore);
         }
 

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.util;
 
 import java.math.BigDecimal;
+import java.text.Normalizer;
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -30,6 +30,7 @@ import org.apache.commons.text.WordUtils;
  * @author Bonora_L
  */
 public class Utils {
+
     private Utils() {
 
     }
@@ -103,4 +104,7 @@ public class Utils {
         return nomeFile.replaceAll(CARATTERI_PUNTEGGIATURA_IN_NOME_FILE, CARATTERI_SOSTITUTIVO_PER_NOME_FILE);
     }
 
+    public static String convertiLettereAccentate(String nomeFile) {
+        return Normalizer.normalize(nomeFile, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+    }
 }

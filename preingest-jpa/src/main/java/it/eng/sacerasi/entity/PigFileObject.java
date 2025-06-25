@@ -19,6 +19,7 @@ package it.eng.sacerasi.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -48,10 +50,9 @@ public class PigFileObject implements Serializable {
     private BigDecimal niSizeFileVers;
     private String nmFileObject;
     private String tiAlgoHashFileVers;
-    private String nmBucket;
-    private String cdKeyFile;
     private PigObject pigObject;
     private PigTipoFileObject pigTipoFileObject;
+    private PigFileObjectStorage pigFileObjectStorage;
     private Long idVers;
 
     public PigFileObject() {
@@ -117,24 +118,6 @@ public class PigFileObject implements Serializable {
         this.tiAlgoHashFileVers = tiAlgoHashFileVers;
     }
 
-    @Column(name = "NM_BUCKET")
-    public String getNmBucket() {
-        return nmBucket;
-    }
-
-    public void setNmBucket(String nmBucket) {
-        this.nmBucket = nmBucket;
-    }
-
-    @Column(name = "CD_KEY_FILE")
-    public String getCdKeyFile() {
-        return cdKeyFile;
-    }
-
-    public void setCdKeyFile(String cdKeyFile) {
-        this.cdKeyFile = cdKeyFile;
-    }
-
     // bi-directional many-to-one association to PigObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_OBJECT")
@@ -165,6 +148,15 @@ public class PigFileObject implements Serializable {
 
     public void setIdVers(Long idVers) {
         this.idVers = idVers;
+    }
+
+    @OneToOne(mappedBy = "pigFileObject", cascade = { CascadeType.PERSIST })
+    public PigFileObjectStorage getPigFileObjectStorage() {
+        return pigFileObjectStorage;
+    }
+
+    public void setPigFileObjectStorage(PigFileObjectStorage pigFileObjectStorage) {
+        this.pigFileObjectStorage = pigFileObjectStorage;
     }
 
 }

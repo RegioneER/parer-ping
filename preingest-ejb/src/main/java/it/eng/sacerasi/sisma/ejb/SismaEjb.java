@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.sisma.ejb;
 
 import java.math.BigDecimal;
@@ -32,6 +31,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import it.eng.paginator.helper.LazyListHelper;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
@@ -42,6 +42,7 @@ import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSismaDocEntry;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
+import it.eng.sacerasi.entity.PigSismaDocumentiStorage;
 import it.eng.sacerasi.entity.PigSismaFaseProgetto;
 import it.eng.sacerasi.entity.PigSismaFinanziamento;
 import it.eng.sacerasi.entity.PigSismaPianoDocReq;
@@ -61,7 +62,6 @@ import it.eng.sacerasi.sisma.dto.RicercaSismaDTO;
 import it.eng.sacerasi.sisma.dto.SismaDto;
 import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 import it.eng.sacerasi.util.DateUtil;
-import it.eng.sacerasi.util.GenericDto;
 import it.eng.sacerasi.viewEntity.PigVSismaChecks;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.util.ComboGetter;
@@ -603,13 +603,18 @@ public class SismaEjb {
                     || pigSisma.getPigSismaFaseProgetto().getIdSismaFaseProgetto() != dto.getIdSismaFaseProgetto()
                             .longValueExact()) {
 
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("SISMA",
-                        configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
                 // Inizia a rimuovere i doc da SO flaggandoli come cancellati e togliendoli anche da S3
                 List<PigSismaDocumenti> l = pigSisma.getPigSismaDocumentis();
                 for (PigSismaDocumenti pigSismaDocumenti : l) {
-                    if (salvataggioBackendHelper.isActive()) {
-                        salvataggioBackendHelper.deleteObject(config, pigSismaDocumenti.getNmFileOs());
+                    if (pigSismaDocumenti.getPigSismaDocumentiStorage() != null) {
+                        // MEV 34843
+                        PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
+                                .getPigSismaDocumentiStorage();
+                        BackendStorage backend = salvataggioBackendHelper
+                                .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+                        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForSisma(
+                                backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
+                        salvataggioBackendHelper.deleteObject(config, pigSismaDocumentiStorage.getCdKeyFile());
                         PigSismaDocumenti pigSismaDocumentiLock = sismaHelper.findByIdWithLock(PigSismaDocumenti.class,
                                 pigSismaDocumenti.getIdSismaDocumenti());
                         pigSismaDocumentiLock.setFlDeleted(Constants.DB_TRUE);
@@ -686,14 +691,23 @@ public class SismaEjb {
 
     public void cancellaSisma(BigDecimal idSisma) throws ObjectStorageException {
         //
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("SISMA",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
         PigSisma su = sismaHelper.findById(PigSisma.class, idSisma);
         // Rimuove i doc da SO
         List<PigSismaDocumenti> l = su.getPigSismaDocumentis();
         for (PigSismaDocumenti pigSismaDocumenti : l) {
-            if (salvataggioBackendHelper.isActive()) {
-                salvataggioBackendHelper.deleteObject(config, pigSismaDocumenti.getNmFileOs());
+            if (pigSismaDocumenti.getPigSismaDocumentiStorage() != null) {
+                // MEV 34843
+                PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti.getPigSismaDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForSisma(
+                        backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
+
+                if (salvataggioBackendHelper.doesObjectExist(config, pigSismaDocumentiStorage.getCdKeyFile())) {
+                    salvataggioBackendHelper.deleteObject(config, pigSismaDocumentiStorage.getCdKeyFile());
+                }
+
+                sismaHelper.removeEntity(pigSismaDocumentiStorage, true);
             }
         }
         sismaHelper.removeEntity(su, true);
@@ -760,11 +774,14 @@ public class SismaEjb {
                     pigSismaDocumenti.getIdSismaDocumenti());
             pigSismaDocumenti.setFlDeleted(Constants.DB_TRUE);
             //
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("SISMA",
-                    configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
-            //
-            if (salvataggioBackendHelper.isActive()) {
-                salvataggioBackendHelper.deleteObject(config, pigSismaDocumenti.getNmFileOs());
+            if (pigSismaDocumenti.getPigSismaDocumentiStorage() != null) {
+                // MEV 34843
+                PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti.getPigSismaDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForSisma(
+                        backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
+                salvataggioBackendHelper.deleteObject(config, pigSismaDocumentiStorage.getCdKeyFile());
             }
         } else {
             str = "Non è possibile eliminare un file di uno sisma già inviato";
@@ -813,12 +830,6 @@ public class SismaEjb {
         return findPigVSismaLisDocsPianoByTipoSismaFase(pigSisma);
     }
 
-    /* Determina il nome del file secondo Object Storage */
-    public String getFileOsNameBySisma(BigDecimal idSisma, String nomeFileOriginale) {
-        PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSisma);
-        return pigSisma.getCdKeyOs() + "_" + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFileOriginale);
-    }
-
     public NavigazioneSismaDto getDatiNavigazionePerSisma(BigDecimal idSu) {
         NavigazioneSismaDto dto = new NavigazioneSismaDto();
         PigVSismaChecks pigVSismaChecks = sismaHelper.getDatiNavigazionePerSisma(idSu);
@@ -855,7 +866,7 @@ public class SismaEjb {
     }
 
     /* DTOs */
-    public DocSismaDto salvaTipoDocumento(DocSismaDto dto) {
+    public DocSismaDto salvaTipoDocumento(DocSismaDto dto) throws ObjectStorageException {
         PigSismaDocumenti pigSismaDocumenti = new PigSismaDocumenti();
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, dto.getIdSisma());
         if (pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE)) {
@@ -865,7 +876,6 @@ public class SismaEjb {
         pigSismaDocumenti.setPigSisma(pigSisma);
         pigSismaDocumenti.setPigSismaValDoc(pigSismaValDoc);
         pigSismaDocumenti.setNmFileOrig(dto.getNmFileOrig());
-        pigSismaDocumenti.setNmFileOs(dto.getNmFileOs());
         pigSismaDocumenti.setDimensione(dto.getDimensione());
         pigSismaDocumenti.setDtCaricamento(new Date());
         pigSismaDocumenti.setFlDeleted(Constants.DB_FALSE);
@@ -876,6 +886,22 @@ public class SismaEjb {
         } else {
             pigSismaDocumenti.setFlDocRicaricato(Constants.DB_FALSE);
         }
+
+        // MEV 34843
+        BackendStorage backendForStrumentiUrbanistici = salvataggioBackendHelper.getBackendForSisma();
+        ObjectStorageBackend config = salvataggioBackendHelper
+                .getObjectStorageConfigurationForSisma(backendForStrumentiUrbanistici.getBackendName());
+
+        PigSismaDocumentiStorage psds = new PigSismaDocumentiStorage();
+        psds.setIdDecBackend(backendForStrumentiUrbanistici.getBackendId());
+        psds.setNmTenant(configurationHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE));
+        psds.setNmBucket(config.getBucket());
+        psds.setCdKeyFile(dto.getNmFileOs());
+        psds.setPigSismaDocumenti(pigSismaDocumenti);
+
+        pigSismaDocumenti.setPigSismaDocumentiStorage(psds);
+
         sismaHelper.insertEntity(pigSismaDocumenti, true);
         dto.setIdSismaDocumenti(new BigDecimal(pigSismaDocumenti.getIdSismaDocumenti()));
         return dto;

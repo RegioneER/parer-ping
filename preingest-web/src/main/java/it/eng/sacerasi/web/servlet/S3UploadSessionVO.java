@@ -16,10 +16,10 @@
  */
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package it.eng.sacerasi.web.servlet;
 
 import java.io.IOException;
@@ -36,6 +36,17 @@ import org.slf4j.LoggerFactory;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation;
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
@@ -54,7 +65,6 @@ public class S3UploadSessionVO implements Serializable {
     private static final long serialVersionUID = 5839957767781074755L;
 
     private static final Logger log = LoggerFactory.getLogger(S3UploadSessionVO.class);
-    private BigDecimal idStrumentiUrbanistici;
     private String bucketName = null;
     private String keyName = null;
     private Date dataInizio = null;
@@ -85,18 +95,7 @@ public class S3UploadSessionVO implements Serializable {
         this.config = config;
     }
 
-    public S3UploadSessionVO(SalvataggioBackendHelper salvataggioBackendHelper, BigDecimal idStrumentiUrbanistici,
-            String bucketName, String keyName) throws ObjectStorageException {
-        this.idStrumentiUrbanistici = idStrumentiUrbanistici;
-        this.bucketName = bucketName;
-        this.keyName = keyName;
-        this.salvataggioBackendHelper = salvataggioBackendHelper;
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                bucketName);
-        this.config = config;
-    }
-
-    private void start() {
+    private void start() throws URISyntaxException {
         dataInizio = new Date();
         log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
         // Create a list of ETag objects. You retrieve ETags for each object part uploaded,
@@ -105,6 +104,7 @@ public class S3UploadSessionVO implements Serializable {
         partETags = new ArrayList<CompletedPart>();
         // Initiate the multipart upload.
         initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName).build();
+
         initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
         log.info("Multipart Upload a S3 Inizializzato.");
     }
@@ -126,7 +126,11 @@ public class S3UploadSessionVO implements Serializable {
     public boolean uploadChunk(InputStream input, int chunk, int chunks) {
         boolean isLastPart = (chunk == (chunks - 1)) ? true : false;
         if (chunk == 0) {
-            start();
+            try {
+                start();
+            } catch (URISyntaxException ex) {
+                java.util.logging.Logger.getLogger(S3UploadSessionVO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         byte[] bytes = null;
         try {
@@ -146,9 +150,5 @@ public class S3UploadSessionVO implements Serializable {
             stop();
         }
         return isLastPart;
-    }
-
-    public boolean isOSActive() {
-        return salvataggioBackendHelper.isActive();
     }
 }

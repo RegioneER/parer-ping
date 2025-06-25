@@ -20,10 +20,10 @@
             <ejb-name>ConsumerCoda3</ejb-name>
             <p:bean-instance-pool-ref>coda3-pool</p:bean-instance-pool-ref>
         </p:pool>
-	<p:pool>
-	    <ejb-name>ConsumerCodaVH</ejb-name>
-	    <p:bean-instance-pool-ref>coda-verifica-hash-pool</p:bean-instance-pool-ref>
-	</p:pool>
+        <p:pool>
+            <ejb-name>ConsumerCodaVH</ejb-name>
+            <p:bean-instance-pool-ref>coda-verifica-hash-pool</p:bean-instance-pool-ref>
+        </p:pool>
     </assembly-descriptor>
     <enterprise-beans>
         <session>
@@ -150,9 +150,19 @@
             </resource-env-ref>
         </session>
 
-		<session>
+        <session>
             <ejb-name>PayloadManagerEjb</ejb-name>
             <ejb-class>it.eng.sacerasi.job.coda.ejb.PayloadManagerEjb</ejb-class>
+            <resource-env-ref>
+                <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
+                <jndi-name>java:/jca/xadiskLocal</jndi-name>
+            </resource-env-ref>
+        </session>
+        
+        <!-- MEV34843 -->
+        <session>
+            <ejb-name>SalvataggioDati</ejb-name>
+            <ejb-class>it.eng.sacerasi.ws.ejb.SalvataggioDati</ejb-class>
             <resource-env-ref>
                 <resource-env-ref-name>jca/xadiskLocal</resource-env-ref-name>
                 <jndi-name>java:/jca/xadiskLocal</jndi-name>

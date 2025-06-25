@@ -25,7 +25,6 @@ public class NotificaTrasferimentoInput {
 
     private String nmAmbiente;
     private String nmVersatore;
-    // private String cdPassword;
     private String cdKeyObject;
     private ListaFileDepositatoType fileDepositati;
 
@@ -41,13 +40,10 @@ public class NotificaTrasferimentoInput {
      * @param fileDepositati
      *            la lista di file depositati
      */
-    // public NotificaTrasferimentoInput(String nmAmbiente, String nmVersatore, String cdPassword, String cdKeyObject,
-    // ListaFileDepositatoType fileDepositati) {
     public NotificaTrasferimentoInput(String nmAmbiente, String nmVersatore, String cdKeyObject,
             ListaFileDepositatoType fileDepositati) {
         this.nmAmbiente = nmAmbiente;
         this.nmVersatore = nmVersatore;
-        // this.cdPassword = cdPassword;
         this.cdKeyObject = cdKeyObject;
         this.fileDepositati = fileDepositati;
     }
@@ -81,20 +77,6 @@ public class NotificaTrasferimentoInput {
     public void setNmVersatore(String nmVersatore) {
         this.nmVersatore = nmVersatore;
     }
-
-    // /**
-    // * @return the cdPassword
-    // */
-    // public String getCdPassword() {
-    // return cdPassword;
-    // }
-    //
-    // /**
-    // * @param cdPassword the cdPassword to set
-    // */
-    // public void setCdPassword(String cdPassword) {
-    // this.cdPassword = cdPassword;
-    // }
 
     /**
      * @return the cdKeyObject

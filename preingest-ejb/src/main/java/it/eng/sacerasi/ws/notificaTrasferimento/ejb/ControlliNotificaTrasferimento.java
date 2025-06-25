@@ -448,8 +448,8 @@ public class ControlliNotificaTrasferimento {
      *
      * Verifica la presenza del file fornito come parametro all'interno dell'Object Storage
      *
-     * @param bucket
-     *            nome del bucket
+     * @param config
+     *            configurazione del backend os
      * @param nomeFileOs
      *            chiave dell'oggetto su OS
      *
@@ -458,20 +458,16 @@ public class ControlliNotificaTrasferimento {
      *
      * @return RispostaControlli.isrBoolean() == true in caso la verifica dia esito positivo
      */
-    public RispostaControlli verificaNomeFileObjectStorage(String bucket, String nomeFileOs)
+    public RispostaControlli verificaNomeFileObjectStorage(ObjectStorageBackend config, String nomeFileOs)
             throws ObjectStorageException {
         RispostaControlli rispostaControlli = new RispostaControlli();
         rispostaControlli.setrBoolean(false);
 
-        if (salvataggioBackendHelper.isActive()) {
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                    bucket);
-            if (salvataggioBackendHelper.doesObjectExist(config, nomeFileOs)) {
-                rispostaControlli.setrBoolean(true);
-            } else {
-                rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOT_014);
-                rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOT_014, nomeFileOs));
-            }
+        if (salvataggioBackendHelper.doesObjectExist(config, nomeFileOs)) {
+            rispostaControlli.setrBoolean(true);
+        } else {
+            rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOT_014);
+            rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOT_014, nomeFileOs));
         }
 
         return rispostaControlli;

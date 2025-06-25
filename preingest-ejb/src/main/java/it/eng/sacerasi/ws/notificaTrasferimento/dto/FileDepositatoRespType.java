@@ -27,6 +27,8 @@ public class FileDepositatoRespType {
     private String cdEncoding;
     private String tiAlgoritmoHash;
     private String dsHashFile;
+    private Long idBackend;
+    private String nmOsTenant;
     private String nmOsBucket;
     private String nmNomeFileOs;
 
@@ -103,6 +105,23 @@ public class FileDepositatoRespType {
      */
     public void setDsHashFile(String dsHashFile) {
         this.dsHashFile = dsHashFile;
+    }
+
+    // MEV 34843
+    public Long getIdBackend() {
+        return idBackend;
+    }
+
+    public void setIdBackend(Long idBackend) {
+        this.idBackend = idBackend;
+    }
+
+    public String getNmOsTenant() {
+        return nmOsTenant;
+    }
+
+    public void setNmOsTenant(String nmOsTenant) {
+        this.nmOsTenant = nmOsTenant;
     }
 
     public String getNmOsBucket() {

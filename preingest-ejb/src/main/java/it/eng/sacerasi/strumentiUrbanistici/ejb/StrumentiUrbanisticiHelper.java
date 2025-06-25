@@ -540,4 +540,15 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         pigStrumUrbStoricoStati.setDescrizione(descrizione);
         getEntityManager().persist(pigStrumUrbStoricoStati);
     }
+
+    // MEV 34843
+    public PigStrumUrbDocumenti getPigStrumUrbDocumentiByName(String nomefile, BigDecimal idStrumento) {
+        Query query = getEntityManager().createQuery(
+                "SELECT psud FROM PigStrumUrbDocumenti psud WHERE psud.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumento AND"
+                        + " psud.nmFileOrig = :nomefile");
+        query.setParameter("idStrumento", HibernateUtils.longFrom(idStrumento));
+        query.setParameter("nomefile", nomefile);
+
+        return (PigStrumUrbDocumenti) query.getSingleResult();
+    }
 }

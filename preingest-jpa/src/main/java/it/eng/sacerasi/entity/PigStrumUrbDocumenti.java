@@ -20,6 +20,7 @@ package it.eng.sacerasi.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.CascadeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,7 +50,6 @@ public class PigStrumUrbDocumenti implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long idStrumUrbDocumenti;
-    private String nmFileOs;
     private String cdErr;
     private String dsErr;
     private String flDeleted;
@@ -60,6 +61,7 @@ public class PigStrumUrbDocumenti implements Serializable {
     private BigDecimal dimensione;
     private Date dtCaricamento;
     private String blReport;
+    private PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage;
 
     public PigStrumUrbDocumenti() {
         // for Hibernate
@@ -77,15 +79,6 @@ public class PigStrumUrbDocumenti implements Serializable {
 
     public void setIdStrumUrbDocumenti(Long idStrumUrbDocumenti) {
         this.idStrumUrbDocumenti = idStrumUrbDocumenti;
-    }
-
-    @Column(name = "NM_FILE_OS")
-    public String getNmFileOs() {
-        return this.nmFileOs;
-    }
-
-    public void setNmFileOs(String nmFileOs) {
-        this.nmFileOs = nmFileOs;
     }
 
     @Column(name = "CD_ERR")
@@ -191,5 +184,15 @@ public class PigStrumUrbDocumenti implements Serializable {
 
     public void setBlReport(String blReport) {
         this.blReport = blReport;
+    }
+
+    // MEV 34843
+    @OneToOne(mappedBy = "pigStrumUrbDocumenti", cascade = CascadeType.ALL)
+    public PigStrumUrbDocumentiStorage getPigStrumUrbDocumentiStorage() {
+        return pigStrumUrbDocumentiStorage;
+    }
+
+    public void setPigStrumUrbDocumentiStorage(PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage) {
+        this.pigStrumUrbDocumentiStorage = pigStrumUrbDocumentiStorage;
     }
 }

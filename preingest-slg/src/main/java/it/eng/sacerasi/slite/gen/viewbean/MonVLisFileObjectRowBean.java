@@ -119,6 +119,14 @@ public class MonVLisFileObjectRowBean extends BaseRow implements JEEBaseRowInter
         setObject("ni_size_file_vers", niSizeFileVers);
     }
 
+    public BigDecimal getIdBackend() {
+        return getBigDecimal("id_backend");
+    }
+
+    public void setIdBackend(BigDecimal idBackend) {
+        setObject("id_backend", idBackend);
+    }
+
     public String getNmBucket() {
         return getString("nm_bucket");
     }
@@ -147,6 +155,8 @@ public class MonVLisFileObjectRowBean extends BaseRow implements JEEBaseRowInter
         this.setTiAlgoHashFileVers(entity.getTiAlgoHashFileVers());
         this.setCdEncodingHashFileVers(entity.getCdEncodingHashFileVers());
         this.setNiSizeFileVers(entity.getNiSizeFileVers());
+        // MEV34843
+        this.setIdBackend(entity.getIdBackend());
         // MEV21995
         this.setNmBucket(entity.getNmBucket());
         this.setCdKeyFile(entity.getCdKeyFile());
@@ -164,6 +174,8 @@ public class MonVLisFileObjectRowBean extends BaseRow implements JEEBaseRowInter
         entity.setTiAlgoHashFileVers(this.getTiAlgoHashFileVers());
         entity.setCdEncodingHashFileVers(this.getCdEncodingHashFileVers());
         entity.setNiSizeFileVers(this.getNiSizeFileVers());
+        // MEV34843
+        entity.setIdBackend(this.getIdBackend());
         // MEV21995
         entity.setNmBucket(this.getNmBucket());
         entity.setCdKeyFile(this.getCdKeyFile());

@@ -2,7 +2,7 @@
 # metadata file that makes public software easily discoverable.
 # More info at https://github.com/italia/publiccode.yml
 
-publiccodeYmlVersion: '0.3'
+publiccodeYmlVersion: '0.4'
 categories:
   - data-collection
   - data-visualization
@@ -19,8 +19,7 @@ description:
       - gestione della fase di preacquisizione del processo di conservazione
       - versamento oggetti da trasformare in SIP
       - gestione della trasformazione ETL degli oggetti in SIP
-      - versamento a Sacer dei SIP generati dalla trasformazione 
-    genericName: Sacer
+      - versamento a Sacer dei SIP generati dalla trasformazione
     longDescription: |
       PING (PreINGest) è il modulo del Sistema di conservazione Sacer che gestisce la fase di preacquisizione del processo di conservazione basato sullo standard OAIS. Riceve in input degli Oggetti contenenti 
       dati e documenti con struttura e formati concordati e, attraverso un processo ETL di trasformazione, genera come output degli Oggetti contenenti SIP che poi vengono versati in SACER. 
@@ -62,7 +61,7 @@ maintenance:
       name: Cristiano Casagni
   contractors:
     - name: ' Engineering Ingegneria Informatica S.p.A.'
-      until: '2026-23-12'
+      until: '2026-12-23'
   type: contract
 name: Parer - Ping
 platforms:

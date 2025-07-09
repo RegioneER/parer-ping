@@ -43,6 +43,7 @@ public class MonVLisFileObject implements Serializable {
     private String nmTipoFileObject;
     private String tiAlgoHashFileVers;
     private BigDecimal niSizeFileVers;
+    private BigDecimal idBackend;
     private String nmBucket;
     private String cdKeyFile;
 
@@ -129,6 +130,15 @@ public class MonVLisFileObject implements Serializable {
 
     public void setNiSizeFileVers(BigDecimal niSizeFileVers) {
         this.niSizeFileVers = niSizeFileVers;
+    }
+
+    @Column(name = "ID_DEC_BACKEND")
+    public BigDecimal getIdBackend() {
+        return idBackend;
+    }
+
+    public void setIdBackend(BigDecimal idBackend) {
+        this.idBackend = idBackend;
     }
 
     @Column(name = "NM_BUCKET")

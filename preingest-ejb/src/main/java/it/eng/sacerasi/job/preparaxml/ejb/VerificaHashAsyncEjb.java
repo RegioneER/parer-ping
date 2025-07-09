@@ -16,11 +16,12 @@
  */
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this template, choose Tools | Templates
+* and open the template in the editor.
+*/
 package it.eng.sacerasi.job.preparaxml.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,7 @@ import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants.TipiEncBinari;
 import it.eng.sacerasi.common.Constants.TipiHash;
 import it.eng.sacerasi.entity.PigFileObject;
+import it.eng.sacerasi.entity.PigFileObjectStorage;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.exception.ParerInternalError;
@@ -99,8 +101,14 @@ public class VerificaHashAsyncEjb {
                         ? tmpFileObject.getCdEncodingHashFileVers() : TipiEncBinari.HEX_BINARY.descrivi());
 
                 // MEV 24717 - memorizzo gli eventuali parametri per recuperare l'oggetto da Object Storage
-                tmpFileObjectExt.setNmBucket(tmpFileObject.getNmBucket());
-                tmpFileObjectExt.setCdKeyFile(tmpFileObject.getCdKeyFile());
+                // MEV 34843 se PigFileObjectStorage esiste allora il file è salvato su OS.
+                if (tmpFileObject.getPigFileObjectStorage() != null) {
+                    PigFileObjectStorage pigFileObjectStorage = tmpFileObject.getPigFileObjectStorage();
+                    tmpFileObjectExt.setIdBackend(pigFileObjectStorage.getIdDecBackend());
+                    tmpFileObjectExt.setNmOsTenant(pigFileObjectStorage.getNmTenant());
+                    tmpFileObjectExt.setNmBucket(pigFileObjectStorage.getNmBucket());
+                    tmpFileObjectExt.setCdKeyFile(pigFileObjectStorage.getCdKeyFile());
+                }
 
                 oggettoInCoda.getListaFileObjectExt().add(tmpFileObjectExt);
             }
@@ -139,7 +147,7 @@ public class VerificaHashAsyncEjb {
                 // MEV 24717 - se il servizio di object storage è attivo e il file
                 // è conservato su OS, non prendere lo stream da disco
                 if (file.getNmBucket() != null && file.getCdKeyFile() != null) {
-                    tmpHash = this.calculateHashFromOS(file.getNmBucket(), file.getCdKeyFile(), file.getTipoHashFile());
+                    tmpHash = this.calculateHashFromOS(file, file.getTipoHashFile());
                 } else {
                     tmpHash = this.calculateHash(file.getUrnFile(), file.getTipoHashFile());
                 }
@@ -198,14 +206,17 @@ public class VerificaHashAsyncEjb {
     /*
      * calcolo l'hash in streaming, lento ma mi tutela da eventuali out of memory
      */
-    private String calculateHashFromOS(String nmBucket, String cdKeyFile, String tipoHash)
+    private String calculateHashFromOS(FileObjectExt file, String tipoHash)
             throws NoSuchAlgorithmException, IOException, ObjectStorageException {
         MessageDigest md = MessageDigest.getInstance(tipoHash);
         int ch;
         final int BUFFER_SIZE = 100 * 1024 * 1024; // 100 MB
 
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO", nmBucket);
-        ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config, cdKeyFile);
+        BackendStorage backend = salvataggioBackendHelper.getBackend(file.getIdBackend());
+        ObjectStorageBackend config = salvataggioBackendHelper
+                .getObjectStorageConfigurationForVersamento(backend.getBackendName(), file.getNmBucket());
+
+        ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config, file.getCdKeyFile());
 
         DigestInputStream dis = new DigestInputStream(ogg, md);
         log.debug("Provider {}", md.getProvider());

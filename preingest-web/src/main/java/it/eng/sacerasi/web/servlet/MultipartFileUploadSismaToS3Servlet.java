@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.servlet;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -38,11 +38,11 @@ import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.sisma.dto.DocSismaDto;
+import it.eng.sacerasi.sisma.dto.SismaDto;
 import it.eng.sacerasi.sisma.ejb.SismaEjb;
 import it.eng.sacerasi.slite.gen.form.SismaForm;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
 
 @WebServlet("/MultipartFileUploadSismaToS3Servlet")
 public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
@@ -60,10 +60,10 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/SismaEjb")
     private SismaEjb sismaEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
-    private ConfigurationHelper configurationHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
+    private VersamentoOggettoEjb versamentoOggettoEjb;
 
     /**
      * Handles an HTTP POST request from Plupload.
@@ -133,15 +133,21 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
                              */
                             SismaForm form = (SismaForm) req.getSession().getAttribute("###_FORM_CONTAINER");
                             BigDecimal idSisma = form.getDatiGeneraliOutput().getId_sisma_out().parse();
-                            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
-                                    "SISMA",
-                                    configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
-                            String nmFieOs = sismaEjb.getFileOsNameBySisma(idSisma, nomeFile);
-                            s3UploadSessionSisma = new S3UploadSessionSisma(salvataggioBackendHelper, idSisma, nmFieOs,
+
+                            // MEV 34843
+                            BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForSisma();
+                            ObjectStorageBackend config = salvataggioBackendHelper
+                                    .getObjectStorageConfigurationForSisma(backendVersamento.getBackendName());
+
+                            SismaDto sisma = sismaEjb.getSismaById(idSisma);
+
+                            String nmFileOs = versamentoOggettoEjb.computeOsFileKey(sisma.getIdVers(), nomeFile,
+                                    VersamentoOggettoEjb.OS_KEY_POSTFIX.SISMA.name());
+                            s3UploadSessionSisma = new S3UploadSessionSisma(salvataggioBackendHelper, idSisma, nmFileOs,
                                     config);
                             if (s3UploadSessionSisma.existsOnOS()) {
                                 responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
-                                log.info("Il file {} già esiste sull'object storage!", nmFieOs);
+                                log.info("Il file {} già esiste sull'object storage!", nmFileOs);
                                 inErrore = true;
                             } else {
                                 req.getSession().setAttribute(PREFISSO_SESSIONE + idSessione, s3UploadSessionSisma);

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.xformer.job.ejb;
 
 import java.io.ByteArrayInputStream;
@@ -71,6 +70,9 @@ import org.slf4j.LoggerFactory;
 
 import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigFileObject;
@@ -99,7 +101,7 @@ import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.kettle.ejb.RepositoryManagerEjb;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.bind.DatatypeConverter;
 
@@ -287,29 +289,38 @@ public class EseguiTrasformazione {
             throw new ParerInternalError(messaggio);
         }
 
+        BackendStorage backend = null;
         // MEV22000 - controllo se il pacchetto è memorizzato su object storage e se object storage è attivo
-        // MEV22000 - FIXME? diamo per scontato che un oggetto da trasformare abbia uno ed un solo file allegato,
+        // MEV22000 - diamo per scontato che un oggetto da trasformare abbia uno ed un solo file allegato,
         // corretto?
         PigFileObject pfo = po.getPigFileObjects().get(0);
-        String inputFilenameOS = pfo.getCdKeyFile();
-        String inputFileOSBucket = pfo.getNmBucket();
-        if (inputFileOSBucket != null && inputFilenameOS != null && !salvataggioBackendHelper.isActive()) {
+
+        if (pfo.getPigFileObjectStorage() != null) {
             String messaggio = "File memorizzato su Object Storage ma Object Storage inattivo.";
-            jobHelper.changePigObjectAndSessionStateAtomic(po.getIdObject(),
-                    Constants.Stato.ERRORE_TRASFORMAZIONE.name(), Constants.XF_ERROR_CODE, messaggio);
-            logger.error(messaggio);
-            // MEV 22064 - trova e modifica lo stato del SU
-            aggiornaStatoEventualeStrumentoUrbanistico(po.getCdKeyObject(),
-                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE, PigStrumentiUrbanistici.TiStato.ERRORE,
-                    "PING-ERRSU27");
 
-            // MEV 30935 - trova e modifica lo stato del Sisma
-            aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE,
-                    PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
-            aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE_SA,
-                    PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
+            try {
+                backend = salvataggioBackendHelper.getBackend(pfo.getPigFileObjectStorage().getIdDecBackend());
+            } catch (ObjectStorageException ex) {
+                messaggio = "Backend on configurato";
+            }
 
-            throw new ParerInternalError(messaggio);
+            if (backend == null || !backend.isObjectStorage()) {
+                jobHelper.changePigObjectAndSessionStateAtomic(po.getIdObject(),
+                        Constants.Stato.ERRORE_TRASFORMAZIONE.name(), Constants.XF_ERROR_CODE, messaggio);
+                logger.error(messaggio);
+                // MEV 22064 - trova e modifica lo stato del SU
+                aggiornaStatoEventualeStrumentoUrbanistico(po.getCdKeyObject(),
+                        PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE, PigStrumentiUrbanistici.TiStato.ERRORE,
+                        "PING-ERRSU27");
+
+                // MEV 30935 - trova e modifica lo stato del Sisma
+                aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE,
+                        PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
+                aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE_SA,
+                        PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
+
+                throw new ParerInternalError(messaggio);
+            }
         }
 
         // quindi i path da dove prendere il pacchetto e il path dove mettere i pacchetti generati.
@@ -574,10 +585,27 @@ public class EseguiTrasformazione {
                         + File.separator + transformationName + File.separator);
 
                 // MEV22000 - riempi gli eventuali valori per recuperare il file da object storage
-                inputFileOSBucket = inputFileOSBucket == null ? "" : inputFileOSBucket;
-                inputFilenameOS = inputFilenameOS == null ? "" : inputFilenameOS;
-                filledParameters.put(Constants.XF_OBJECT_STORAGE_BUCKET, inputFileOSBucket);
-                filledParameters.put(Constants.XF_OBJECT_STORAGE_KEY, inputFilenameOS);
+                if (pfo.getPigFileObjectStorage() != null) {
+                    // MEV34843 - aggiunti nuovi parametri.
+                    ObjectStorageBackend config = null;
+                    try {
+                        config = salvataggioBackendHelper.getObjectStorageConfigurationForVersamento(
+                                backend.getBackendName(), pfo.getPigFileObjectStorage().getNmBucket());
+                    } catch (ObjectStorageException ex) {
+                        throw new ParerInternalError("EseguiTraformazione: errore nel recupero delle conf OS.", ex);
+                    }
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_URL, config.getAddress().toString());
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_USER, config.getAccessKeyId());
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_PASSWORD, config.getSecretKey());
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_BUCKET, config.getBucket());
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_KEY, pfo.getPigFileObjectStorage().getCdKeyFile());
+                } else {
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_URL, "");
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_USER, "");
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_PASSWORD, "");
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_BUCKET, "");
+                    filledParameters.put(Constants.XF_OBJECT_STORAGE_KEY, "");
+                }
 
                 // MEV31648 - riempi i parametri del db di appoggio
                 filledParameters.put(Constants.XF_KETTLE_DB_HOST, kettleDBHost);

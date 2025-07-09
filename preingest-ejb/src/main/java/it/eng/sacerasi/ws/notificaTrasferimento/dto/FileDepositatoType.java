@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.ws.notificaTrasferimento.dto;
 
 /**
@@ -28,6 +27,8 @@ public class FileDepositatoType {
     private String cdEncoding;
     private String tiAlgoritmoHash;
     private String dsHashFile;
+    private Long idBackend;
+    private String nmOsTenant;
     private String nmOsBucket;
     private String nmNomeFileOs;
 
@@ -104,6 +105,23 @@ public class FileDepositatoType {
      */
     public void setDsHashFile(String dsHashFile) {
         this.dsHashFile = dsHashFile;
+    }
+
+    // MEV 34843
+    public Long getIdBackend() {
+        return idBackend;
+    }
+
+    public void setIdBackend(Long idBackend) {
+        this.idBackend = idBackend;
+    }
+
+    public String getNmOsTenant() {
+        return nmOsTenant;
+    }
+
+    public void setNmOsTenant(String nmOsTenant) {
+        this.nmOsTenant = nmOsTenant;
     }
 
     public String getNmOsBucket() {

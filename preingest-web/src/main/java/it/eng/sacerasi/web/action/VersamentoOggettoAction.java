@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.action;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -101,6 +101,8 @@ import it.eng.spagoLite.security.exception.AuthWSException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.sacerasi.web.helper.S3ServletHelper;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -131,6 +133,10 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
     private WsHelper wsHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
     private VersamentoOggettoEjb versamentoOggettoEjb;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
+    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/S3ServletHelper")
+    private S3ServletHelper servletHelper;
 
     @Override
     public void initOnClick() throws EMFError {
@@ -498,6 +504,11 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 wsHelper.checkAuthorizations(ambiente, versatore, getUser().getUsername(),
                         annotationNotif.serviceName());
 
+                // MEV 34843
+                BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
+                BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForVersamento(idAmbiente, idVers,
+                        idTipoObject);
+
                 PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
                 PigTipoFileObjectTableBean pigTipoFileObjectTableBean = amministrazioneEjb
                         .getPigTipoFileObjectTableBean(idTipoObject);
@@ -763,7 +774,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 if (!getMessageBox().hasError()) {
                     // Eseguo la NotificaTrasferimentoFile
                     notificaRisposta = executeNotificaTrasferimento(ambiente, versatore, nmTipoFile, cdKeyObject,
-                            dsHashFileVers, estensioneDedotta, tiHashFileVers);
+                            dsHashFileVers, estensioneDedotta, tiHashFileVers, backendVersamento.getBackendId());
 
                     // Messaggio per l'utente
                     if (notificaRisposta.getCdEsito().equals(Constants.EsitoServizio.OK.name())) {
@@ -875,13 +886,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
     private NotificaTrasferimentoRisposta executeNotificaTrasferimento(String nmAmbiente, String nmVersatore,
             String nmTipoFile, String cdKeyObject, String dsHashFileVers, String estensioneFileCaricato,
-            String tiHashFileVers) throws ObjectStorageException {
+            String tiHashFileVers, Long backendId) throws ObjectStorageException {
         ListaFileDepositatoType listaFile = new ListaFileDepositatoType();
         listaFile.setFileDepositato(new ArrayList<>());
 
         FileDepositatoType file = new FileDepositatoType();
         file.setNmNomeFile(cdKeyObject + estensioneFileCaricato);
         file.setNmTipoFile(nmTipoFile);
+
+        // MEV34843 - qui può essere solo backend su file, quindi non setto il nome del file per OS.
+
         if (StringUtils.isNotBlank(dsHashFileVers)) {
             file.setCdEncoding(TipiEncBinari.HEX_BINARY.descrivi());
             file.setTiAlgoritmoHash(tiHashFileVers);
@@ -966,33 +980,45 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
         // MAC26744
         if (idTipoObject != null) {
-            PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
-            Boolean useObjectStorage = isUsingObjectStorage(pigTipoObjectRowBean);
+            try {
+                PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
 
-            Input<String> fileToUpload = (Input<String>) formFields
-                    .getComponent(getForm().getVersamentoOggettoDetail().getFile_to_upload().getName());
-            ComboBox<String> flTrasmFtp = (ComboBox<String>) formFields
-                    .getComponent(getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().getName());
+                // MEV34843
+                BigDecimal idVers = pigTipoObjectRowBean.getIdVers();
+                PigAmbienteVersRowBean pigAmbienteVersRowBean = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
+                BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
 
-            if (fileToUpload != null) {
-                // MAC34454 nascosto anche se si trasmette via ftp.
-                fileToUpload.setHidden(useObjectStorage || WebConstants.DB_TRUE.equals(flTrasmFtp.getValue()));
-            }
+                BackendStorage backendStorage = salvataggioBackendHelper.getBackendForVersamento(idAmbienteVers, idVers,
+                        pigTipoObjectRowBean.getIdTipoObject());
 
-            if (flTrasmFtp != null) {
-                flTrasmFtp.setHidden(useObjectStorage);
-            }
+                Input<String> fileToUpload = (Input<String>) formFields
+                        .getComponent(getForm().getVersamentoOggettoDetail().getFile_to_upload().getName());
+                ComboBox<String> flTrasmFtp = (ComboBox<String>) formFields
+                        .getComponent(getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().getName());
 
-            Input<String> dsPathFtp = (Input<String>) formFields
-                    .getComponent(getForm().getVersamentoOggettoDetail().getDs_path_ftp().getName());
-            if (dsPathFtp != null) {
-                dsPathFtp.setHidden(useObjectStorage);
-            }
+                if (fileToUpload != null) {
+                    // MAC34454 nascosto anche se si trasmette via ftp.
+                    fileToUpload.setHidden(
+                            backendStorage.isObjectStorage() || WebConstants.DB_TRUE.equals(flTrasmFtp.getValue()));
+                }
 
-            Button<String> versaOggettoButton = (Button<String>) formFields
-                    .getComponent(getForm().getVersamentoOggettoDetail().getVersaOggetto().getName());
-            if (versaOggettoButton != null) {
-                versaOggettoButton.setHidden(useObjectStorage);
+                if (flTrasmFtp != null) {
+                    flTrasmFtp.setHidden(backendStorage.isObjectStorage());
+                }
+
+                Input<String> dsPathFtp = (Input<String>) formFields
+                        .getComponent(getForm().getVersamentoOggettoDetail().getDs_path_ftp().getName());
+                if (dsPathFtp != null) {
+                    dsPathFtp.setHidden(backendStorage.isObjectStorage());
+                }
+
+                Button<String> versaOggettoButton = (Button<String>) formFields
+                        .getComponent(getForm().getVersamentoOggettoDetail().getVersaOggetto().getName());
+                if (versaOggettoButton != null) {
+                    versaOggettoButton.setHidden(backendStorage.isObjectStorage());
+                }
+            } catch (ObjectStorageException ex) {
+                throw new EMFError(EMFError.BLOCKING, ex.getMessage());
             }
         }
 
@@ -1400,66 +1426,76 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
             getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
 
             if (idTipoObject != null) {
-                getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
+                try {
+                    getForm().getVersamentoOggettoDetail().getTi_priorita_versamento().setHidden(true);
 
-                PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
-                setReadonlyVersamentoOggettoDaTrasformare(
-                        pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name()));
-                setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean,
-                        Constants.TipoGestioneOggettiFigli.AUTOMATICA.name());
+                    PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb
+                            .getPigTipoObjectRowBean(idTipoObject);
+                    setReadonlyVersamentoOggettoDaTrasformare(pigTipoObjectRowBean.getTiVersFile()
+                            .equals(Constants.TipoVersamento.DA_TRASFORMARE.name()));
+                    setTiGestOggettiFigliDecodeMap(pigTipoObjectRowBean,
+                            Constants.TipoGestioneOggettiFigli.AUTOMATICA.name());
 
-                // MEV25601
-                Boolean useObjectStorage = isUsingObjectStorage(pigTipoObjectRowBean);
+                    // MEV34843
+                    BigDecimal idVers = pigTipoObjectRowBean.getIdVers();
+                    PigAmbienteVersRowBean pigAmbienteVersRowBean = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
+                    BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
 
-                // MEV27034
-                DecodeMap cdVersioneXmlDecodeMap = DecodeMap.Factory.newInstance(
-                        amministrazioneEjb.getPigXsdDatiSpecTableBean(idTipoObject, null), "cd_versione_xsd",
-                        "cd_versione_xsd");
-                getForm().getVersamentoOggettoDetail().getCd_versione_xml().setDecodeMap(cdVersioneXmlDecodeMap);
+                    BackendStorage backendStorage = salvataggioBackendHelper.getBackendForVersamento(idAmbienteVers,
+                            idVers, pigTipoObjectRowBean.getIdTipoObject());
 
-                if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
+                    // MEV27034
+                    DecodeMap cdVersioneXmlDecodeMap = DecodeMap.Factory.newInstance(
+                            amministrazioneEjb.getPigXsdDatiSpecTableBean(idTipoObject, null), "cd_versione_xsd",
+                            "cd_versione_xsd");
+                    getForm().getVersamentoOggettoDetail().getCd_versione_xml().setDecodeMap(cdVersioneXmlDecodeMap);
 
-                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonDaTrasformare(pigTipoObjectRowBean,
-                            useObjectStorage);
+                    if (pigTipoObjectRowBean.getTiVersFile().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
 
-                    JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
-                    try {
-                        // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
-                        jsonForm.put("useObjectStorage", useObjectStorage);
-                        // MEV#25602
-                        jsonForm.put("isDaTrasformare", true);
+                        triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonDaTrasformare(pigTipoObjectRowBean,
+                                backendStorage.isObjectStorage());
 
-                    } catch (Exception ex) {
-                        log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
-                                + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                        JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
+                        try {
+                            // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
+                            jsonForm.put("useObjectStorage", backendStorage.isObjectStorage());
+                            // MEV#25602
+                            jsonForm.put("isDaTrasformare", true);
+
+                        } catch (Exception ex) {
+                            log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
+                                    + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                        }
+
+                        redirectToAjax(jsonForm);
+
+                        return;
+
+                    } else {
+
+                        triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(
+                                pigTipoObjectRowBean, backendStorage.isObjectStorage());
+
+                        JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
+                        try {
+
+                            // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
+                            jsonForm.put("useObjectStorage", backendStorage.isObjectStorage());
+
+                            // MEV#25602
+                            jsonForm.put("isDaTrasformare", false);
+
+                        } catch (Exception ex) {
+                            log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
+                                    + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
+                        }
+
+                        redirectToAjax(jsonForm);
+
+                        return;
                     }
-
-                    redirectToAjax(jsonForm);
-
-                    return;
-
-                } else {
-
-                    triggerVersamentoOggettoDetailNm_tipo_objectOnTriggerCommonNonDaTrasformare(pigTipoObjectRowBean,
-                            useObjectStorage);
-
-                    JSONObject jsonForm = getForm().getVersamentoOggettoDetail().asJSON();
-                    try {
-
-                        // MEV#21995 aggiungi l'informazione su Object Storage alla risposta.
-                        jsonForm.put("useObjectStorage", useObjectStorage);
-
-                        // MEV#25602
-                        jsonForm.put("isDaTrasformare", false);
-
-                    } catch (Exception ex) {
-                        log.warn("VERSAMENTO_SU_OBJECT_STORAGE configurato."
-                                + getForm().getVersamentoOggettoDetail().getNm_tipo_object());
-                    }
-
-                    redirectToAjax(jsonForm);
-
-                    return;
+                } catch (ObjectStorageException ex) {
+                    throw new EMFError(EMFError.BLOCKING, ex.getMessage());
                 }
 
             } else {
@@ -1614,19 +1650,19 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         return trovato;
     }
 
-    private boolean isUsingObjectStorage(PigTipoObjectRowBean pigTipoObjectRowBean) throws EMFError {
-        // MEV#21995/#25602 - se il tipo oggetto/versatore/ambiente sono configurati per OS allora attiviamo la
-        // modalità corretta
-        BigDecimal idVers = pigTipoObjectRowBean.getIdVers();
-        PigAmbienteVersRowBean pigAmbienteVersRowBean = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
-        BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
-
-        // MEV25601
-        Boolean useObjectStorage = configurationHelper
-                .getValoreParamApplicByTipoObj(Constants.VERSAMENTO_SU_OBJECT_STORAGE, idAmbienteVers, idVers,
-                        pigTipoObjectRowBean.getIdTipoObject())
-                .equals(Constants.PARAMETRO_OBJECT_STORAGE_ATTIVO);
-
-        return useObjectStorage;
-    }
+    // private boolean isUsingObjectStorage(PigTipoObjectRowBean pigTipoObjectRowBean) throws EMFError {
+    // // MEV#21995/#25602 - se il tipo oggetto/versatore/ambiente sono configurati per OS allora attiviamo la
+    // // modalità corretta
+    // BigDecimal idVers = pigTipoObjectRowBean.getIdVers();
+    // PprivateigAmbienteVersRowBean pigAmbienteVersRowBean = amministrazioneEjb.getPigAmbienteVersByVers(idVers);
+    // BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
+    //
+    // // MEV25601
+    // Boolean useObjectStorage = configurationHelper
+    // .getValoreParamApplicByTipoObj(Constants.VERSAMENTO_SU_OBJECT_STORAGE, idAmbienteVers, idVers,
+    // pigTipoObjectRowBean.getIdTipoObject())
+    // .equals(Constants.PARAMETRO_OBJECT_STORAGE_ATTIVO);
+    //
+    // return useObjectStorage;
+    // }
 }

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.ws.ejb;
 
 import it.eng.paginator.util.HibernateUtils;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import org.apache.commons.codec.binary.Base64;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.StatoOggetto;
@@ -41,10 +41,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -60,7 +57,20 @@ import org.slf4j.LoggerFactory;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.common.ejb.CommonDb;
+import it.eng.sacerasi.ws.util.Util;
+import java.util.logging.Level;
+import javax.annotation.Resource;
+import javax.resource.ResourceException;
 import org.apache.commons.lang3.StringUtils;
+import org.xadisk.connector.outbound.XADiskConnection;
+import org.xadisk.connector.outbound.XADiskConnectionFactory;
+import org.xadisk.filesystem.exceptions.DirectoryNotEmptyException;
+import org.xadisk.filesystem.exceptions.FileNotExistsException;
+import org.xadisk.filesystem.exceptions.FileUnderUseException;
+import org.xadisk.filesystem.exceptions.InsufficientPermissionOnFileException;
+import org.xadisk.filesystem.exceptions.LockingFailedException;
+import org.xadisk.filesystem.exceptions.NoTransactionAssociatedException;
 
 /**
  *
@@ -75,15 +85,50 @@ public class SalvataggioDati {
     private static final String ERRORE_UPDATE_SESSIONE = "Eccezione nell'update della sessione :";
     private static final String ERRORE_UPDATE_OGGETTO = "Eccezione nell'update dell'oggetto :";
     private static final String ERRORE_PERSISTENZA_OGGETTO = "Eccezione nella persistenza dell'oggetto :";
+
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
 
     @EJB
+    private CommonDb commonDb;
+    @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
-    public void deleteFileObject(NotificaTrasferimentoExt nte) {
+    @Resource(mappedName = "jca/xadiskLocal")
+    private XADiskConnectionFactory xadCf;
+
+    public void deleteFileObject(NotificaTrasferimentoExt nte) throws ObjectStorageException, ParerInternalError {
         // elimino tutti i file dalla tabella PIG_FILE_OBJECT per l’oggetto corrente
         PigObject obj = entityManager.find(PigObject.class, nte.getIdObject());
+        PigVers vers = obj.getPigVer();
+
+        BackendStorage backendForVersamento = salvataggioBackendHelper.getBackendForVersamento(
+                BigDecimal.valueOf(vers.getPigAmbienteVer().getIdAmbienteVers()), BigDecimal.valueOf(vers.getIdVers()),
+                BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
+
+        // MEV 34843 cancella anche il vecchio file da object storage
+        for (PigFileObject pfo : obj.getPigFileObjects()) {
+            if (pfo.getPigFileObjectStorage() != null) {
+                PigFileObjectStorage pfos = pfo.getPigFileObjectStorage();
+
+                // Questo controllo è per evitare che venga cancellato il file con lo stesso nome appena riversato.
+                if (!Objects.equals(backendForVersamento.getBackendId(), pfos.getIdDecBackend())) {
+                    BackendStorage backend = salvataggioBackendHelper.getBackend(pfos.getIdDecBackend());
+                    ObjectStorageBackend config = salvataggioBackendHelper
+                            .getObjectStorageConfigurationForVersamento(backend.getBackendName(), pfos.getNmBucket());
+
+                    if (salvataggioBackendHelper.doesObjectExist(config, pfos.getCdKeyFile())) {
+                        salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
+                    }
+                }
+
+                javax.persistence.Query q = entityManager.createQuery(
+                        "DELETE FROM PigFileObjectStorage fileObjS WHERE fileObjS.pigFileObject.idFileObject = :objId");
+                q.setParameter("objId", pfo.getIdFileObject());
+                q.executeUpdate();
+            }
+        }
+
         javax.persistence.Query q = entityManager
                 .createQuery("DELETE FROM PigFileObject fileObj WHERE fileObj.pigObject.idObject = :objId");
         q.setParameter("objId", nte.getIdObject());
@@ -101,20 +146,20 @@ public class SalvataggioDati {
 
             long size = 0L;
 
-            // MEV21995 recupera la dimensione del file su object storage
-            if (salvataggioBackendHelper.isActive() && fileDepRest.getNmOsBucket() != null
-                    && fileDepRest.getNmNomeFileOs() != null) {
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                        fileDepRest.getNmOsBucket());
+            // MEV21995 e MEV34843 recupera la dimensione del file su object storage
+            BackendStorage backend = salvataggioBackendHelper.getBackend(fileDepRest.getIdBackend());
+            if (backend.isObjectStorage()) {
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForVersamento(backend.getBackendName());
                 size = salvataggioBackendHelper.getObjectSize(config, fileDepRest.getNmNomeFileOs());
-            } else {
+            } else if (backend.isFile()) {
                 File file = new File(nte.getFtpPath() + File.separator + fileDepRest.getNmNomeFile());
                 if (file.exists() && file.isFile()) {
                     size = FileUtils.sizeOf(file);
                 }
             }
 
-            rispostaControlli = salvaFileObject(nte, fileDepRest, size);
+            rispostaControlli = salvaFileObject(nte, fileDepRest, size, backend);
             if (!rispostaControlli.isrBoolean()) {
                 break;
             }
@@ -125,7 +170,7 @@ public class SalvataggioDati {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private RispostaControlli salvaFileObject(NotificaTrasferimentoExt nte, FileDepositatoRespType fileDepRest,
-            long size) {
+            long size, BackendStorage backend) {
         RispostaControlli risp = new RispostaControlli();
         risp.setrBoolean(true);
 
@@ -150,16 +195,28 @@ public class SalvataggioDati {
                 entityManager.find(PigTipoFileObject.class, nte.getTipoFileObjects().get(fileDepRest.getNmNomeFile())));
         fiObj.setNiSizeFileVers(new BigDecimal(size));
 
-        // MEV21995 Aggiungo anche le eventuali info di object storage
-        fiObj.setNmBucket(fileDepRest.getNmOsBucket());
-        fiObj.setCdKeyFile(fileDepRest.getNmNomeFileOs());
         fiObj.setIdVers(obj.getPigVer().getIdVers());
+
+        // MEV21995 e MEV34843 Aggiungo anche le eventuali info di object storage
+        if (backend.isObjectStorage()) {
+            if (fiObj.getPigFileObjectStorage() == null) {
+                fiObj.setPigFileObjectStorage(new PigFileObjectStorage());
+            }
+            PigFileObjectStorage pfos = fiObj.getPigFileObjectStorage();
+            pfos.setIdDecBackend(fileDepRest.getIdBackend());
+            pfos.setNmTenant(fileDepRest.getNmOsTenant());
+            pfos.setNmBucket(fileDepRest.getNmOsBucket());
+            pfos.setCdKeyFile(fileDepRest.getNmNomeFileOs());
+
+            pfos.setPigFileObject(fiObj);
+        }
 
         try {
             if (persist) {
                 entityManager.persist(fiObj);
             }
             entityManager.flush();
+
         } catch (RuntimeException re) {
             /// logga l'errore e blocca tutto
             log.error("Eccezione nella persistenza del file object ", re);
@@ -1015,6 +1072,7 @@ public class SalvataggioDati {
         return risp;
     }
 
+    // FIXME: unused
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public RispostaControlli cleanOggettoPadre(Long idObject) {
         RispostaControlli risp = new RispostaControlli();
@@ -1061,5 +1119,31 @@ public class SalvataggioDati {
                     String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
         }
         return risp;
+    }
+
+    private void deleteDir(String rootDir, String ftpPath, String ftpDir)
+            throws InterruptedException, FileUnderUseException, LockingFailedException, DirectoryNotEmptyException,
+            InsufficientPermissionOnFileException, NoTransactionAssociatedException, ResourceException {
+        XADiskConnection xadConn = null;
+        try {
+            log.debug("[SalvataggioDati] cancello la cartella {}{}{}", rootDir, ftpPath, ftpDir);
+
+            String directoryToRemove = rootDir + ftpPath + ftpDir;
+            // elimina file
+            File tmpDirectory = new File(directoryToRemove);
+            xadConn = xadCf.getConnection();
+            // FF - chiamato il metodo di cancellazione ricorsiva
+            // per eliminare la dir temporanea estratta dallo zip
+            Util.rimuoviDirRicorsivamente(tmpDirectory, xadConn);
+        } catch (FileNotExistsException ex) {
+            // la mancata cancellazione della cartella non è un errore.
+            log.warn(" [SalvataggioDati] errore nella cancellazione della cartella {}{}{}: la risorsa non esiste",
+                    rootDir, ftpPath, ftpDir);
+        } finally {
+            if (xadConn != null) {
+                xadConn.close();
+                log.debug("Effettuata chiusura della connessione XADisk");
+            }
+        }
     }
 }

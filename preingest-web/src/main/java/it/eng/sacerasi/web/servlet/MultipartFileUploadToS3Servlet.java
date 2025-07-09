@@ -16,12 +16,13 @@
  */
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package it.eng.sacerasi.web.servlet;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -43,10 +44,10 @@ import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb.SUDto;
+import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
 
 @WebServlet("/MultipartFileUploadToS3Servlet")
 public class MultipartFileUploadToS3Servlet extends HttpServlet {
@@ -62,10 +63,10 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/StrumentiUrbanisticiEjb")
     private StrumentiUrbanisticiEjb strumentiUrbanisticiEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
-    private ConfigurationHelper configurationHelper;
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
+    private VersamentoOggettoEjb versamentoOggettoEjb;
 
     /**
      * Handles an HTTP POST request from Plupload.
@@ -124,16 +125,22 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
                                     .getAttribute("###_FORM_CONTAINER");
                             BigDecimal idStrumento = form.getDatiGeneraliOutput().getId_strumenti_urbanistici_out()
                                     .parse();
-                            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
-                                    "STR_URBANISTICI", configurationHelper.getValoreParamApplicByApplic(
-                                            Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
-                            String nmFieOs = strumentiUrbanisticiEjb.getFileOsNameBySU(idStrumento, nomeFile);
+                            // MEV 34843
+                            BackendStorage backendVersamento = salvataggioBackendHelper
+                                    .getBackendForStrumentiUrbanistici();
+                            ObjectStorageBackend config = salvataggioBackendHelper
+                                    .getObjectStorageConfigurationForStrumentiUrbanistici(
+                                            backendVersamento.getBackendName());
+
+                            SUDto su = strumentiUrbanisticiEjb.getSUById(idStrumento);
+                            String nmFileOs = versamentoOggettoEjb.computeOsFileKey(su.getIdVers(), nomeFile,
+                                    VersamentoOggettoEjb.OS_KEY_POSTFIX.SU.name());
                             s3UploadSession = new S3UploadSessionSU(salvataggioBackendHelper, idStrumento,
-                                    config.getBucket(), nmFieOs);
+                                    config.getBucket(), nmFileOs);
                             if (s3UploadSession.existsFileOnOS()) {
                                 responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
-                                log.info(String.format("Il file [%s] già esiste sull'object storage!", nmFieOs));
+                                log.info(String.format("Il file [%s] già esiste sull'object storage!", nmFileOs));
                                 inErrore = true;
                             } else {
                                 req.getSession().setAttribute(idSessione, s3UploadSession);

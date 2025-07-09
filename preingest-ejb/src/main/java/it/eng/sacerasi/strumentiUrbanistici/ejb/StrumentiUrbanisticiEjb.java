@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.strumentiUrbanistici.ejb;
 
 import it.eng.paginator.helper.LazyListHelper;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
@@ -65,13 +65,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
 import it.eng.sacerasi.entity.PigStrumUrbStoricoStati;
 import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.sisma.dto.DocUploadDto;
 import it.eng.sacerasi.slite.gen.tablebean.PigStrumUrbStoricoStatiTableBean;
 import it.eng.sacerasi.web.util.Transform;
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDateTime;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +85,6 @@ import org.slf4j.LoggerFactory;
 @LocalBean
 public class StrumentiUrbanisticiEjb {
 
-    private static final String BACKED_STRUMENTI_URBANISTICI = "STR_URBANISTICI";
     Logger log = LoggerFactory.getLogger(StrumentiUrbanisticiEjb.class);
 
     public static final String TIPO_UNIONE = "UNIONE";
@@ -338,6 +337,9 @@ public class StrumentiUrbanisticiEjb {
                 strumentiUrbanisticiHelper.estraiAttoDaIdentificativo(su.getCdKey()));
         dto.setTiAtto(pigStrumUrbAtto);
 
+        // MEV37524
+        dto.setIdVers(BigDecimal.valueOf(su.getPigVer().getIdVers()));
+
         dto.setCdErr(su.getCdErr());
         dto.setDsErr(su.getDsErr());
         List<PigStrumUrbCollegamenti> lista = su.getPigStrumUrbCollegamentis();
@@ -440,15 +442,21 @@ public class StrumentiUrbanisticiEjb {
                     .equals(dto.getNmTipoStrumentoUrbanistico())
                     || !pigStrumentiUrbanistici.getPigStrumUrbPianoStato().getTiFaseStrumento()
                             .equals(dto.getTiFaseStrumento())) {
-                ObjectStorageBackend config = salvataggioBackendHelper
-                        .getObjectStorageConfiguration(BACKED_STRUMENTI_URBANISTICI, configurationHelper
-                                .getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
                 // Inizia a rimuovere i doc da SO fleggandoli come cancellati
                 List<PigStrumUrbDocumenti> l = pigStrumentiUrbanistici.getPigStrumUrbDocumentis();
                 for (PigStrumUrbDocumenti pigStrumUrbDocumenti : l) {
-                    if (this.salvataggioBackendHelper.isActive()) {
-                        this.salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumenti.getNmFileOs());
+                    if (pigStrumUrbDocumenti.getPigStrumUrbDocumentiStorage() != null) {
+                        // MEV 34843
+                        PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
+                                .getPigStrumUrbDocumentiStorage();
+                        BackendStorage backend = salvataggioBackendHelper
+                                .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                        ObjectStorageBackend config = salvataggioBackendHelper
+                                .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                        pigStrumUrbDocumentiStorage.getNmBucket());
+
+                        this.salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
                         PigStrumUrbDocumenti pigStrumUrbDocumentiLock = strumentiUrbanisticiHelper.findByIdWithLock(
                                 PigStrumUrbDocumenti.class, pigStrumUrbDocumenti.getIdStrumUrbDocumenti());
                         pigStrumUrbDocumentiLock.setFlDeleted(Constants.DB_TRUE);
@@ -526,20 +534,28 @@ public class StrumentiUrbanisticiEjb {
     }
 
     public void cancellaSU(BigDecimal idStrumentoUrbanistico) throws ObjectStorageException {
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
-                BACKED_STRUMENTI_URBANISTICI,
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
-
         PigStrumentiUrbanistici su = strumentiUrbanisticiHelper.findById(PigStrumentiUrbanistici.class,
                 idStrumentoUrbanistico);
         // Rimuove i doc da SO
         List<PigStrumUrbDocumenti> l = su.getPigStrumUrbDocumentis();
-        if (this.salvataggioBackendHelper.isActive()) {
-            for (PigStrumUrbDocumenti pigStrumUrbDocumenti : l) {
-                this.salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumenti.getNmFileOs());
+        for (PigStrumUrbDocumenti pigStrumUrbDocumenti : l) {
+            if (pigStrumUrbDocumenti.getPigStrumUrbDocumentiStorage() != null) {
+                PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
+                        .getPigStrumUrbDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                pigStrumUrbDocumentiStorage.getNmBucket());
+
+                if (salvataggioBackendHelper.doesObjectExist(config, pigStrumUrbDocumentiStorage.getCdKeyFile())) {
+                    this.salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
+                }
+
+                strumentiUrbanisticiHelper.removeEntity(pigStrumUrbDocumentiStorage, true);
             }
-            strumentiUrbanisticiHelper.removeEntity(su, true);
         }
+        strumentiUrbanisticiHelper.removeEntity(su, true);
     }
 
     public boolean versaStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico, long idUserIamCorrente) {
@@ -610,9 +626,6 @@ public class StrumentiUrbanisticiEjb {
                 .findById(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
         if (pigStrumentiUrbanistici.getTiStato().equals(PigStrumentiUrbanistici.TiStato.BOZZA)
                 || pigStrumentiUrbanistici.getTiStato().equals(PigStrumentiUrbanistici.TiStato.ERRORE)) {
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
-                    BACKED_STRUMENTI_URBANISTICI,
-                    configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
             pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.BOZZA); // RIMETTE IN BOZZA
             PigStrumUrbDocumenti pigStrumUrbDocumenti = strumentiUrbanisticiHelper
@@ -620,8 +633,16 @@ public class StrumentiUrbanisticiEjb {
             pigStrumUrbDocumenti = strumentiUrbanisticiHelper.findByIdWithLock(PigStrumUrbDocumenti.class,
                     pigStrumUrbDocumenti.getIdStrumUrbDocumenti());
             pigStrumUrbDocumenti.setFlDeleted(Constants.DB_TRUE);
-            if (this.salvataggioBackendHelper.isActive()) {
-                salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumenti.getNmFileOs());
+            if (pigStrumUrbDocumenti.getPigStrumUrbDocumentiStorage() != null) {
+                // MEV 34843
+                PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
+                        .getPigStrumUrbDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                pigStrumUrbDocumentiStorage.getNmBucket());
+                salvataggioBackendHelper.deleteObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
             }
         } else {
             str = "Non è possibile eliminare un file di uno strumento urbanistico già inviato";
@@ -710,7 +731,7 @@ public class StrumentiUrbanisticiEjb {
     }
 
     /* DTOs */
-    public DocStrumDto salvaTipoDocumento(DocStrumDto dto) {
+    public DocStrumDto salvaTipoDocumento(DocStrumDto dto) throws ObjectStorageException {
         PigStrumUrbDocumenti pigStrumUrbDocumenti = new PigStrumUrbDocumenti();
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, dto.getIdStrumentiUrbanistici());
@@ -722,11 +743,26 @@ public class StrumentiUrbanisticiEjb {
         pigStrumUrbDocumenti.setPigStrumentiUrbanistici(pigStrumentiUrbanistici);
         pigStrumUrbDocumenti.setPigStrumUrbValDoc(pigStrumUrbValDoc);
         pigStrumUrbDocumenti.setNmFileOrig(dto.getNmFileOrig());
-        pigStrumUrbDocumenti.setNmFileOs(dto.getNmFileOs());
         pigStrumUrbDocumenti.setDimensione(dto.getDimensione());
         pigStrumUrbDocumenti.setDtCaricamento(new Date());
         pigStrumUrbDocumenti.setFlDeleted(Constants.DB_FALSE);
         pigStrumUrbDocumenti.setFlEsitoVerifica(Constants.DB_FALSE);
+
+        // MEV 34843
+        BackendStorage backendForStrumentiUrbanistici = salvataggioBackendHelper.getBackendForStrumentiUrbanistici();
+        ObjectStorageBackend config = salvataggioBackendHelper
+                .getObjectStorageConfigurationForStrumentiUrbanistici(backendForStrumentiUrbanistici.getBackendName());
+
+        PigStrumUrbDocumentiStorage psuds = new PigStrumUrbDocumentiStorage();
+        psuds.setIdDecBackend(backendForStrumentiUrbanistici.getBackendId());
+        psuds.setNmTenant(configurationHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE));
+        psuds.setNmBucket(config.getBucket());
+        psuds.setCdKeyFile(dto.getNmFileOs());
+        psuds.setPigStrumUrbDocumenti(pigStrumUrbDocumenti);
+
+        pigStrumUrbDocumenti.setPigStrumUrbDocumentiStorage(psuds);
+
         strumentiUrbanisticiHelper.insertEntity(pigStrumUrbDocumenti, true);
         dto.setIdStrumUrbDocumenti(new BigDecimal(pigStrumUrbDocumenti.getIdStrumUrbDocumenti()));
         return dto;

@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.job.invioSU.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -56,6 +56,7 @@ import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigStrumUrbCollegamenti;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
+import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici.TiStato;
 import it.eng.sacerasi.entity.PigTipoObject;
@@ -76,9 +77,11 @@ import it.eng.sacerasi.su.xml.invioSU.StrumentiUrbanistici.TipiDocumento.TipoDoc
 import it.eng.sacerasi.su.xml.invioSU.StrumentiUrbanistici.TipoDocumentoPrincipale;
 import it.eng.sacerasi.su.xml.invioSU.TipoDocumentoEnumeration;
 import it.eng.sacerasi.su.xml.invioSU.TipoDocumentoPrincipaleEnumeration;
+import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
 import it.eng.sacerasi.viewEntity.PigVSuCheck;
 import it.eng.sacerasi.web.helper.AmministrazioneHelper;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import it.eng.sacerasi.web.util.Utils;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
 import it.eng.sacerasi.ws.invioOggettoAsincrono.ejb.InvioOggettoAsincronoEjb;
 import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
@@ -86,6 +89,7 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
+import java.util.Optional;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -125,6 +129,8 @@ public class InvioSUEjb {
     private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB
+    private VersamentoOggettoEjb versamentoOggettoEjb;
 
     public void invioSU() throws IOException {
         log.info("{} --- Chiamata JOB per invio strumenti urbanistici", InvioSUEjb.class.getSimpleName());
@@ -181,6 +187,9 @@ public class InvioSUEjb {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciInvioStrumentoUrbanistico(long idStrumentoUrbanisticoDaInviare)
             throws InvioSUException, ObjectStorageException, IOException {
+
+        String nmTipoObject = "StrumentoUrbanistico";
+
         // Locko lo strumento urbanistico
         PigStrumentiUrbanistici strumentoUrbanisticoDaInviare = genericHelper
                 .findByIdWithLock(PigStrumentiUrbanistici.class, idStrumentoUrbanisticoDaInviare);
@@ -261,43 +270,47 @@ public class InvioSUEjb {
                         List<PigStrumUrbDocumenti> documentiDaInviare = invioSUHelper
                                 .getDocumentiDaInviare(strumentoUrbanisticoDaInviare.getIdStrumentiUrbanistici());
                         //
-                        ObjectStorageBackend config = salvataggioBackendHelper
-                                .getObjectStorageConfiguration("STR_URBANISTICI", configurationHelper
-                                        .getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
 
-                        if (salvataggioBackendHelper.isActive()) {
-                            for (PigStrumUrbDocumenti strumUrbDocumenti : documentiDaInviare) {
-                                String nmFileOs = strumUrbDocumenti.getNmFileOs();
-                                String nmFileOrig = strumUrbDocumenti.getNmFileOrig();
-                                // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola
-                                // informazione
-                                // stile ack)
-                                boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, nmFileOs);
-                                if (doesObjectExist) {
-                                    File tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
-                                    try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
-                                        ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                                                .getObject(config, nmFileOs);
-                                        // Partendo dall'input stream S3 Amazon, recupero il file
-                                        IOUtils.copy(objectContent, fosTemp);
-                                        String nomeFileLowerCase = strumUrbDocumenti.getPigStrumUrbValDoc()
-                                                .getNmTipoDocumento().replace(" ", "_").toLowerCase() + ".zip";
-                                        // Aggiungo il file scaricato dall'OS al file zip
-                                        addToZipFile(tempFile, zos, nomeFileLowerCase);
-                                    } finally {
-                                        if (tempFile != null) {
-                                            FileUtils.deleteQuietly(tempFile);
-                                        }
+                        for (PigStrumUrbDocumenti strumUrbDocumenti : documentiDaInviare) {
+                            // MEV 34843
+                            PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti
+                                    .getPigStrumUrbDocumentiStorage();
+                            BackendStorage backend = salvataggioBackendHelper
+                                    .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                            ObjectStorageBackend config = salvataggioBackendHelper
+                                    .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                            pigStrumUrbDocumentiStorage.getNmBucket());
+
+                            String nmFileOs = pigStrumUrbDocumentiStorage.getCdKeyFile();
+                            String nmFileOrig = strumUrbDocumenti.getNmFileOrig();
+                            // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola
+                            // informazione
+                            // stile ack)
+                            boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, nmFileOs);
+                            if (doesObjectExist) {
+                                File tempFile = File.createTempFile(nmFileOrig, "", new File(dirCompletaFtp));
+                                try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
+                                    ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
+                                            .getObject(config, nmFileOs);
+                                    // Partendo dall'input stream S3 Amazon, recupero il file
+                                    IOUtils.copy(objectContent, fosTemp);
+                                    String nomeFileLowerCase = strumUrbDocumenti.getPigStrumUrbValDoc()
+                                            .getNmTipoDocumento().replace(" ", "_").toLowerCase() + ".zip";
+                                    // Aggiungo il file scaricato dall'OS al file zip
+                                    addToZipFile(tempFile, zos, nomeFileLowerCase);
+                                } finally {
+                                    if (tempFile != null) {
+                                        FileUtils.deleteQuietly(tempFile);
                                     }
-                                } else {
-                                    log.error("{} --- ERRORE creazione ZIP invio strumenti urbanistici",
-                                            InvioSUEjb.class.getSimpleName());
-                                    PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
-                                    String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
-                                            strumUrbDocumenti.getNmFileOs());
-                                    throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
-                                            dsErrore);
                                 }
+                            } else {
+                                log.error("{} --- ERRORE creazione ZIP invio strumenti urbanistici",
+                                        InvioSUEjb.class.getSimpleName());
+                                PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
+                                String dsErrore = StringUtils.replace(errore.getDsErrore(), "{0}",
+                                        strumUrbDocumenti.getPigStrumUrbDocumentiStorage().getCdKeyFile());
+                                throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
+                                        dsErrore);
                             }
                         }
                     } catch (Exception ex) {
@@ -318,7 +331,6 @@ public class InvioSUEjb {
                             invioSUHelper.existsPigObjectPerVersatoreStrumUrbAnnullato(vers.getIdVers(),
                                     strumentoUrbanisticoDaInviare.getCdKey())) {
                         // Chiama il servizio NotificaInvioOggetto (metodo invioOggettoAsincrono)
-                        String nmTipoObject = "StrumentoUrbanistico";
                         PigTipoObject pigTipoObject = amministrazioneHelper.getPigTipoObjectByName(nmTipoObject,
                                 new BigDecimal(vers.getIdVers()));
                         boolean flFileCifrato = false;
@@ -358,14 +370,35 @@ public class InvioSUEjb {
                                 errore.getDsErrore());
                     }
 
-                    String zipStrumentiUrbanistici = strumentoUrbanisticoDaInviare.getCdKey();
+                    // MEV 34843
+                    PigTipoObject pigTipoObject = amministrazioneHelper.getPigTipoObjectByName(nmTipoObject,
+                            new BigDecimal(vers.getIdVers()));
+                    BigDecimal idAmbiente = BigDecimal.valueOf(vers.getPigAmbienteVer().getIdAmbienteVers());
+                    BigDecimal idVers = BigDecimal.valueOf(vers.getIdVers());
+                    BigDecimal idTipoObject = BigDecimal.valueOf(pigTipoObject.getIdTipoObject());
+                    BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForVersamento(idAmbiente,
+                            idVers, idTipoObject);
+                    String nmFileOs = null;
+
                     try {
-                        // Effettua lo scarico del nuovo file da trasformare nella cartella ftp di SacerPing dell'utente
-                        // relativo nella cartella INPUT_FOLDER
-                        NfsUtils.createEmptyDir(dirCompletaFtp + zipStrumentiUrbanistici);
-                        Files.move(Paths.get(dirCompletaFtp + nomeFilePacchetto + ".TEMP"), Paths.get(
-                                dirCompletaFtp + zipStrumentiUrbanistici + "/" + zipStrumentiUrbanistici + ".zip"));
-                    } catch (IOException ex) {
+                        if (backendVersamento.isFile()) {
+                            // Effettua lo scarico del nuovo file da trasformare nella cartella ftp di SacerPing
+                            // dell'utente
+                            // relativo nella cartella INPUT_FOLDER
+                            NfsUtils.createEmptyDir(dirCompletaFtp + cdKeyObject);
+                            Files.move(Paths.get(dirCompletaFtp + nomeFilePacchetto + ".TEMP"),
+                                    Paths.get(dirCompletaFtp + cdKeyObject + "/" + cdKeyObject
+                                            + it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION));
+                        } else if (backendVersamento.isObjectStorage()) {
+                            // MEV 34843
+                            ObjectStorageBackend config = salvataggioBackendHelper
+                                    .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
+                            nmFileOs = versamentoOggettoEjb.computeOsFileKey(idVers, cdKeyObject,
+                                    VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
+                            salvataggioBackendHelper.putS3Object(config, nmFileOs, fileTemporaneoGenerale,
+                                    Optional.empty());
+                        }
+                    } catch (IOException | ObjectStorageException ex) {
                         log.error(InvioSUEjb.class.getSimpleName() + " --- ERRORE invio strumenti urbanistici", ex);
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU15");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),
@@ -397,6 +430,20 @@ public class InvioSUEjb {
                             FileDepositatoType fileDepositatoType = new FileDepositatoType();
                             fileDepositatoType.setNmTipoFile("StrumentoUrbanistico");
                             fileDepositatoType.setNmNomeFile(nomeFilePacchetto);
+
+                            // MEV 34843
+                            fileDepositatoType.setIdBackend(backendVersamento.getBackendId());
+
+                            if (backendVersamento.isObjectStorage()) {
+                                ObjectStorageBackend config = salvataggioBackendHelper
+                                        .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
+                                String tenantOs = configurationHelper.getValoreParamApplicByApplic(
+                                        it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE);
+
+                                fileDepositatoType.setNmOsBucket(config.getBucket());
+                                fileDepositatoType.setNmOsTenant(tenantOs);
+                                fileDepositatoType.setNmNomeFileOs(nmFileOs);
+                            }
                             listaFileDepositatoType.getFileDepositato().add(fileDepositatoType);
                             risposta = notificaTrasferimentoEjb.notificaAvvenutoTrasferimentoFileInNewTx(nmAmbienteVers,
                                     nmVers, cdKeyObject, listaFileDepositatoType);
@@ -416,18 +463,29 @@ public class InvioSUEjb {
                     // Il sistema effettua il caricamento del file ZipStrumentiUrbanistici nel Bucket
                     // BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI
                     try {
-                        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration(
-                                "STR_URBANISTICI", configurationHelper.getValoreParamApplicByApplic(
-                                        Constants.BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI));
+                        BackendStorage backend = salvataggioBackendHelper.getBackendForStrumentiUrbanistici();
 
-                        if (salvataggioBackendHelper.isActive()) {
-                            salvataggioBackendHelper.putS3Object(config,
-                                    strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip",
-                                    new File(rootFtp + File.separator + dsPathInputFtp + File.separator
-                                            + zipStrumentiUrbanistici + File.separator + zipStrumentiUrbanistici
-                                            + ".zip"));
+                        if (backend.isObjectStorage()) {
+                            ObjectStorageBackend config = salvataggioBackendHelper
+                                    .getObjectStorageConfigurationForStrumentiUrbanisticiTrasformati(
+                                            backend.getBackendName());
+
+                            if (fileTemporaneoGenerale.exists()) { // il backend è su object storage e
+                                                                   // fileTemporaneoGenerale esiste ancora.
+                                salvataggioBackendHelper.putS3Object(config,
+                                        strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip", fileTemporaneoGenerale,
+                                        Optional.empty());
+                            } else { // il backend è su disco e fileTemporaneoGenerale è stato spostato nella sua
+                                     // posizione definitiva.
+                                salvataggioBackendHelper.putS3Object(config,
+                                        strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip",
+                                        Paths.get(dirCompletaFtp + cdKeyObject + "/" + cdKeyObject
+                                                + it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION).toFile(),
+                                        Optional.empty());
+                            }
                         }
-                    } catch (SdkClientException e) {
+
+                    } catch (Exception e) {
                         log.error("{} --- ERRORE invio strumenti urbanistici: ", InvioSUEjb.class.getSimpleName(), e);
                         PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU19");
                         throw new InvioSUException(idStrumentoUrbanisticoDaInviare, errore.getCdErrore(),

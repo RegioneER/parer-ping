@@ -93,24 +93,6 @@ public class Constants {
     public static final String TENANT_OBJECT_STORAGE = "TENANT_OBJECT_STORAGE";
     public static final String URL_ASSOCIAZIONE_UTENTE_CF = "URL_ASSOCIAZIONE_UTENTE_CF";
     public static final String URL_BACK_ASSOCIAZIONE_UTENTE_CF = "URL_BACK_ASSOCIAZIONE_UTENTE_CF";
-    // Strumenti Urbanistici
-    public static final String BUCKET_VERIFICA_STRUMENTI_URBANISTICI = "BUCKET_VERIFICA_STRUMENTI_URBANISTICI";
-    public static final String BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI = "BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI";
-    public static final String SU_S3_ACCESS_KEY_ID = "SU_S3_ACCESS_KEY_ID";
-    public static final String SU_S3_SECRET_KEY = "SU_S3_SECRET_KEY";
-    // Versamento Oggetto
-    public static final String VO_S3_ACCESS_KEY_ID = "VO_S3_ACCESS_KEY_ID";
-    public static final String VO_S3_SECRET_KEY = "VO_S3_SECRET_KEY";
-    public static final String BUCKET_VERSAMENTO_OGGETTO = "BUCKET_VERSAMENTO_OGGETTO";
-    // Sisma
-    public static final String BUCKET_VERIFICA_SISMA = "BUCKET_VERIFICA_SISMA";
-    public static final String BUCKET_SISMA_TRASFORMATI = "BUCKET_SISMA_TRASFORMATI";
-    public static final String SISMA_S3_ACCESS_KEY_ID = "SISMA_S3_ACCESS_KEY_ID";
-    public static final String SISMA_S3_SECRET_KEY = "SISMA_S3_SECRET_KEY";
-    // XF
-    public static final String XF_S3_ACCESS_KEY_ID = "XF_S3_ACCESS_KEY_ID";
-    public static final String XF_S3_SECRET_KEY = "XF_S3_SECRET_KEY";
-    public static final String BUCKET_REPORT_XFORMER = "BUCKET_REPORT_XFORMER";
 
     public static final String S3_CLIENT_CONNECTION_TIMEOUT = "S3_CLIENT_CONNECTION_TIMEOUT";
 
@@ -544,8 +526,11 @@ public class Constants {
         VERSIONE_XML_RECUP_UD, USERID_RECUP_UD, PSW_RECUP_UD, TIMEOUT_RECUP_UD, URL_RECUP_RAPP_VERS
     }
 
-    // MEV #21995
-    public static final String VERSAMENTO_SU_OBJECT_STORAGE = "VERSAMENTO_SU_OBJECT_STORAGE";
+    // MEV34843 - lista dei parametri per determinare i backend a seconda dell'ambito applicativo.
+    public static final String BACKEND_VERSAMENTI = "BACKEND_VERSAMENTI";
+    public static final String BACKEND_SISMA = "BACKEND_SISMA";
+    public static final String BACKEND_STRUMENTI_URBANISTICI = "BACKEND_STRUMENTI_URBANISTICI";
+    public static final String BACKEND_REPORT_TRASFORMAZIONI = "BACKEND_REPORT_TRASFORMAZIONI";
 
     // MEV #24582 e MEV #21995
     // Proprietà application server

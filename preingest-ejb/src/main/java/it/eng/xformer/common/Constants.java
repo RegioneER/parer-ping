@@ -89,6 +89,9 @@ public class Constants {
     public static final String XF_FORZA_COLLEGAMENTO = "XF_FORZA_COLLEGAMENTO";
     public static final String XF_FORZA_CONSERVAZIONE = "XF_FORZA_CONSERVAZIONE";
     public static final String XF_AUXILIARY_FILES_DIR = "XF_AUXILIARY_FILES_DIR";
+    public static final String XF_OBJECT_STORAGE_URL = "XF_OBJECT_STORAGE_URL";
+    public static final String XF_OBJECT_STORAGE_USER = "XF_OBJECT_STORAGE_USER";
+    public static final String XF_OBJECT_STORAGE_PASSWORD = "XF_OBJECT_STORAGE_PASSWORD";
     public static final String XF_OBJECT_STORAGE_KEY = "XF_OBJECT_STORAGE_KEY";
     public static final String XF_OBJECT_STORAGE_BUCKET = "XF_OBJECT_STORAGE_BUCKET";
     public static final String XF_TMP_DIR = "XF_TMP_DIR";

@@ -14,13 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.sacerasi.sisma.ejb.SismaEjb;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.sacerasi.slite.gen.form.SismaForm;
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.spagoCore.error.EMFError;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +33,9 @@ import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.entity.PigSismaDocumenti;
+import it.eng.sacerasi.entity.PigSismaDocumentiStorage;
+import it.eng.sacerasi.sisma.ejb.SismaHelper;
 
 /**
  *
@@ -46,12 +46,10 @@ public class DownloadSismaServlet extends HttpServlet {
 
     private static final long serialVersionUID = -2851040320489951165L;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SismaEjb")
-    private SismaEjb sismaEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
-    private ConfigurationHelper configurationHelper;
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB
+    private SismaHelper sismaHelper;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -69,20 +67,30 @@ public class DownloadSismaServlet extends HttpServlet {
         }
 
         try {
-            ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("SISMA",
-                    configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_SISMA));
-            String nmFileOs = sismaEjb.getFileOsNameBySisma(idSisma, chiave);
-            ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper.getObject(config, nmFileOs);
 
-            byte[] buf = new byte[1024];
-            int count = 0;
-            // This should send the file to browser
-            OutputStream out = response.getOutputStream();
-            while ((count = inStream.read(buf)) != -1) {
-                out.write(buf, 0, count);
+            PigSismaDocumenti pigSismaDocumenti = sismaHelper.getPigSismaDocumentiByName(chiave, idSisma);
+            if (pigSismaDocumenti != null) {
+                // MEV 34843
+                PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti.getPigSismaDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                pigSismaDocumentiStorage.getNmBucket());
+
+                ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper.getObject(config,
+                        pigSismaDocumentiStorage.getCdKeyFile());
+
+                byte[] buf = new byte[1024];
+                int count = 0;
+                // This should send the file to browser
+                OutputStream out = response.getOutputStream();
+                while ((count = inStream.read(buf)) != -1) {
+                    out.write(buf, 0, count);
+                }
+                out.flush();
+                inStream.close();
             }
-            out.flush();
-            inStream.close();
         } catch (ObjectStorageException e) {
 
         }

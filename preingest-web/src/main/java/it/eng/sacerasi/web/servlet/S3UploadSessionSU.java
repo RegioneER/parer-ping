@@ -16,12 +16,13 @@
  */
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package it.eng.sacerasi.web.servlet;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -92,9 +93,13 @@ public class S3UploadSessionSU {
         this.bucketName = bucketName;
         this.keyName = keyName;
         this.salvataggioBackendHelper = salvataggioBackendHelper;
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
-                bucketName);
-        this.config = config;
+
+        // MEV 34843
+        BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForStrumentiUrbanistici();
+        ObjectStorageBackend configSU = salvataggioBackendHelper
+                .getObjectStorageConfigurationForStrumentiUrbanistici(backendVersamento.getBackendName());
+
+        this.config = configSU;
     }
 
     public boolean existsFileOnOS() {

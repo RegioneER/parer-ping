@@ -44,6 +44,7 @@ import org.xadisk.filesystem.exceptions.LockingFailedException;
 import org.xadisk.filesystem.exceptions.NoTransactionAssociatedException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
@@ -53,6 +54,7 @@ import it.eng.sacerasi.common.Constants.StatoUnitaDocSessione;
 import it.eng.sacerasi.common.ejb.CommonDb;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigFileObject;
+import it.eng.sacerasi.entity.PigFileObjectStorage;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigObjectTrasf;
 import it.eng.sacerasi.entity.PigSessioneIngest;
@@ -365,13 +367,17 @@ public class PayloadManagerEjb {
                             String ftpDir = object.getCdKeyObject();
                             deleteDir(infoLog, rootDir, ftpPath, ftpDir);
 
-                            // MEV25602 - mi assicuro di cancellare anche il file su OS se presente.
+                            // MEV25602 e MEV34843 - mi assicuro di cancellare anche il file su OS se presente.
                             for (PigFileObject fileObject : object.getPigFileObjects()) {
-                                if (fileObject.getNmBucket() != null && fileObject.getCdKeyFile() != null
-                                        && salvataggioBackendHelper.isActive()) {
+                                if (fileObject.getPigFileObjectStorage() != null) {
+                                    PigFileObjectStorage pfos = fileObject.getPigFileObjectStorage();
+                                    BackendStorage backend = salvataggioBackendHelper
+                                            .getBackend(pfos.getIdDecBackend());
                                     ObjectStorageBackend config = salvataggioBackendHelper
-                                            .getObjectStorageConfiguration("VERS_OGGETTO", fileObject.getNmBucket());
-                                    salvataggioBackendHelper.deleteObject(config, fileObject.getCdKeyFile());
+                                            .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
+                                                    pfos.getNmBucket());
+
+                                    salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
                                 }
                             }
                         }

@@ -17,6 +17,10 @@
 
 package it.eng.sacerasi.web.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.ejb.CommonDb;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
@@ -89,6 +93,8 @@ public class MonitoraggioEjb {
     private PayloadManagerEjb payloadManagerHelper;
     @EJB
     CorrispondenzeVersHelper corVersHelper;
+    @EJB
+    private SalvataggioBackendHelper salvataggioBackendHelper;
 
     private static final Logger log = LoggerFactory.getLogger(MonitoraggioEjb.class);
 
@@ -141,11 +147,15 @@ public class MonitoraggioEjb {
             String rootFtp = commonDb.getRootFtpParam();
             String pathInput = monitoraggioHelper.getDsPathInputFtp(idVers);
             deleteDir(rootFtp, pathInput, cdKeyObject);
-        } catch (FileNotExistsException | LockingFailedException | NoTransactionAssociatedException
-                | InterruptedException | InsufficientPermissionOnFileException | DirectoryNotEmptyException
-                | FileUnderUseException | ResourceException ex) {
-            log.error("Errore inatteso nella gestione del file ", ex);
+        } catch (FileNotExistsException ex) {
+            // la mancata cancellazione della cartella non è un errore.
+            log.warn("Errore nella cancellazione della cartella {}: la risorsa non esiste", cdKeyObject);
+        } catch (LockingFailedException | NoTransactionAssociatedException | InsufficientPermissionOnFileException
+                | DirectoryNotEmptyException | FileUnderUseException | ResourceException ex) {
             throw new ParerInternalError(ParerErrorSeverity.ERROR, "Errore inatteso nella gestione del file ", ex);
+        } catch (InterruptedException ie) {
+            log.error("Errore inatteso nella gestione del file ", ie);
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -218,8 +228,7 @@ public class MonitoraggioEjb {
                 || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
                 || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())) {
 
-            /* Cancello la cartella nell'area FTP */
-            deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()), pigSessioneIngest.getCdKeyObject());
+            deleteDirAndOS(pigObject, pigSessioneIngest);
         }
 
         PigObject oggPadre = pigObject.getPigObjectPadre();
@@ -306,9 +315,7 @@ public class MonitoraggioEjb {
                             pigSessioneIngest.getNmTipoObject());
                     if (isLastNonRisolubile) {
                         pigObject.setFlVersSacerDaRecup(null);
-                        /* Cancello la cartella nell'area FTP */
-                        deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()),
-                                pigSessioneIngest.getCdKeyObject());
+                        deleteDirAndOS(pigObject, pigSessioneIngest);
                     } else {
                         pigObject.setFlVersSacerDaRecup(Constants.DB_FALSE);
                     }
@@ -329,8 +336,7 @@ public class MonitoraggioEjb {
                         new BigDecimal(pigObject.getPigVer().getIdVers()), pigSessioneIngest.getCdKeyObject(),
                         pigSessioneIngest.getNmTipoObject());
                 if (isLastVerificata && isLastNonRisolubile) {
-                    /* Cancello la cartella nell'area FTP */
-                    deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()), pigSessioneIngest.getCdKeyObject());
+                    deleteDirAndOS(pigObject, pigSessioneIngest);
                 }
             }
 
@@ -382,6 +388,7 @@ public class MonitoraggioEjb {
     // return tiStatoObject != null && tiStatoObject.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
     // && allNonRisolubili && allVerificate;
     // }
+
     /**
      * Ritorna il tableBean contenente la lista di oggetti generati da trasformazione
      *
@@ -503,13 +510,6 @@ public class MonitoraggioEjb {
                     object.setCdVersGen(cdVersGen);
                 }
 
-                // MEV#14653
-                // object.getPigTipoObject().getXfoTrasf().setFlAttiva("0");
-                //
-                // for (PigObject figlio : object.getPigObjects()) {
-                // deleteDir(new BigDecimal(figlio.getPigVer().getIdVers()), figlio.getCdKeyObject());
-                // monitoraggioHelper.removeEntity(figlio, false);
-                // }
                 for (PigObjectTrasf figlio : object.getPigObjectTrasfs()) {
                     deleteDirTrasf(new BigDecimal(figlio.getPigVer().getIdVers()), figlio.getDsPath());
                     monitoraggioHelper.removeEntity(figlio, false);
@@ -517,12 +517,6 @@ public class MonitoraggioEjb {
                 for (PigObjectTrasf objectFiglio : object.getPigObjectTrasfs()) {
                     payloadManagerHelper.deleteDirTrasf(objectFiglio.getPigVer().getDsPathTrasf(),
                             objectFiglio.getDsPath());
-                    // BigDecimal idAmbienteVers = BigDecimal.valueOf(
-                    // objectFiglio.getPigTipoObject().getPigVer().getPigAmbienteVer().getIdAmbienteVers());
-                    // BigDecimal idVers = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getPigVer().getIdVers());
-                    // BigDecimal idTipoObject = BigDecimal.valueOf(objectFiglio.getPigTipoObject().getIdTipoObject());
-                    // util.deleteDirTrasf(configurationHelper.getValoreParamApplic("DS_PATH_TRASF", idAmbienteVers,
-                    // idVers, idTipoObject, Constants.TipoPigVGetValAppart.TIPOOBJECT), objectFiglio.getDsPath());
                 }
                 break;
             case TRASFORMATO:
@@ -680,7 +674,7 @@ public class MonitoraggioEjb {
      * tratta di una sessione con stato CHIUSO_ERR_VERS di un oggetto il cui tipo versamento non è NO_ZIP o
      * ZIP_CON_XML_SACER o ZIP_NO_XML_SACER. Nel caso siamo nel dettaglio oggetto derivante da versamenti falliti, il
      * controllo sullo stato non deve essere fatto
-     *
+     * <p>
      * In questi caso, la sessione non deve essere considerata
      *
      * @param idSessione
@@ -906,5 +900,24 @@ public class MonitoraggioEjb {
             }
         }
         return table;
+    }
+
+    public void deleteDirAndOS(PigObject pigObject, PigSessioneIngest pigSessioneIngest)
+            throws ParerInternalError, ObjectStorageException {
+        /* Cancello la cartella nell'area FTP */
+        deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()), pigSessioneIngest.getCdKeyObject());
+
+        // MEV25602 e MEV34843 - mi assicuro di cancellare anche il file su OS se presente.
+        for (PigFileObject fileObject : pigObject.getPigFileObjects()) {
+            if (fileObject.getPigFileObjectStorage() != null) {
+                PigFileObjectStorage pfos = fileObject.getPigFileObjectStorage();
+                BackendStorage backend = salvataggioBackendHelper.getBackend(pfos.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForVersamento(backend.getBackendName(), pfos.getNmBucket());
+
+                if (salvataggioBackendHelper.doesObjectExist(config, pfos.getCdKeyFile()))
+                    salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
+            }
+        }
     }
 }

@@ -74,6 +74,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import it.eng.parer.jboss.timer.service.JbossTimerEjb;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
@@ -181,13 +182,14 @@ import it.eng.spagoLite.message.MessageBox.ViewMode;
 import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.menu.impl.Menu;
 import it.eng.xformer.helper.TrasformazioniHelper;
+
 import java.util.logging.Level;
 import javax.xml.XMLConstants;
+
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
- *
  * @author Gilioli_P
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -686,8 +688,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.ANNULLATO.name())
                         && (existsCartellaOggetto(rootFtp, pathInput, objRB.getCdKeyObject())
-                                || (salvataggioBackendHelper.isActive()
-                                        && monitoraggioHelper.areFileObjectsStoredInObjectStorage(idObject)))) {
+                                || monitoraggioHelper.areFileObjectsStoredInObjectStorage(idObject))) {
                     getForm().getOggettoDetailButtonList().getSettaDaTrasformareDetail().setHidden(false);
                 }
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.TRASFORMAZIONE_IN_CORSO.name())) {
@@ -850,16 +851,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     }
                 }
             } else if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MAC 29616 -
-                                                                                                   // Estensione
-                                                                                                   // annullamento
-                                                                                                   // oggetti in chiuso
-                                                                                                   // ok con warning
+            // Estensione
+            // annullamento
+            // oggetti in chiuso
+            // ok con warning
                     objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name()) || // MEV #14561 -
-                                                                                                    // Estensione
-                                                                                                    // annullamento
-                                                                                                    // oggetti in errore
-                                                                                                    // (aggiunti 4 altri
-                                                                                                    // test in OR)
+                    // Estensione
+                    // annullamento
+                    // oggetti in errore
+                    // (aggiunti 4 altri
+                    // test in OR)
                     objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
                     || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
@@ -880,8 +881,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
             // MEV#14652 - Nuovo ramo IF per il pulsante di annullamento versamenti delle UD
             if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MAC 29616 - Estensione
-                                                                                            // annullamento oggetti in
-                                                                                            // chiuso ok con warning
+            // annullamento oggetti in
+            // chiuso ok con warning
                     objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name())
                     || ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                             || objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
@@ -984,17 +985,43 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             boolean areFileObjectsStoredInObjectStorage = monitoraggioHelper
                     .areFileObjectsStoredInObjectStorage(idObject);
 
-            // MEV 26012
-            getForm().getOggettoDetail().getTi_conservato_su_os().setValue("--");
             if (areFileObjectsStoredInObjectStorage) {
-                getForm().getOggettoDetail().getTi_conservato_su_os().setValue(Constants.TipoStorage.OS.name());
-            } else if (fileInput.exists()) {
-                getForm().getOggettoDetail().getTi_conservato_su_os().setValue(Constants.TipoStorage.FTP.name());
+                try {
+                    // MEV 34843 - recuperiamo il nome backend per il primo file
+                    MonVLisFileObjectRowBean fileObjectRow = fileObjectTableBean.getRow(0);
+                    BackendStorage backend = salvataggioBackendHelper
+                            .getBackend(fileObjectRow.getIdBackend().longValue());
+                    // MEV 26012
+                    getForm().getOggettoDetail().getTi_conservato_su_os().setValue(backend.getBackendName());
+                } catch (ObjectStorageException ose) {
+                    log.error("Errore nel controllo sull'esistenza backend in load dettaglio object.", ose);
+                    getForm().getOggettoDetail().getTi_conservato_su_os().setValue("--");
+                }
+            } else {
+                // MEV 26012
+                getForm().getOggettoDetail().getTi_conservato_su_os().setValue("FILE_SYSTEM");
             }
 
             // MEV 21995 - i file potrebbero essere tutti su object storage
-            if (salvataggioBackendHelper.isActive() && areFileObjectsStoredInObjectStorage) {
-                getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail().setHidden(false);
+            if (areFileObjectsStoredInObjectStorage) {
+                try {
+                    // MEV 34843 - testiamo se il primo file esiste su object storage (tutti gli altri dovrebbero
+                    // esistere di conseguenza).
+                    MonVLisFileObjectRowBean fileObjectRow = fileObjectTableBean.getRow(0);
+                    BackendStorage backend = salvataggioBackendHelper
+                            .getBackend(fileObjectRow.getIdBackend().longValue());
+
+                    ObjectStorageBackend objectStorageConfigurationForVersamento = salvataggioBackendHelper
+                            .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
+                                    fileObjectRow.getNmBucket());
+                    if (salvataggioBackendHelper.doesObjectExist(objectStorageConfigurationForVersamento,
+                            fileObjectRow.getCdKeyFile())) {
+                        getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail().setHidden(false);
+                    }
+                } catch (ObjectStorageException ose) {
+                    log.error("Errore nel controllo sull'esistenza file in load dettaglio object.", ose);
+                    getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail().setHidden(true);
+                }
             } // MEV 21995 - se la cartella ftp esiste o object storage è spento
             else {
                 getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail().setHidden(!fileInput.exists());
@@ -1003,8 +1030,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             // MEV 32542
             if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-                        && (fileInput.exists()
-                                || (salvataggioBackendHelper.isActive() && areFileObjectsStoredInObjectStorage))) {
+                        && (fileInput.exists() || areFileObjectsStoredInObjectStorage)) {
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setHidden(false);
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setEditMode();
                 } else {
@@ -3859,7 +3885,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Metodo attivato alla pressione del tasto relativo al download dei file xml nel dettaglio di una sessione errata
-     *
+     * <p>
      * * @throws EMFError errore generico
      */
     @Override
@@ -5122,13 +5148,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                             }
                         }
                     } // MEV 21995 - il file potrebbe essere su object storage
-                    else if (salvataggioBackendHelper.isActive()) {
+                    else {
+                        BigDecimal idBucket = row.getBigDecimal("id_backend");
                         String nmBucket = row.getString("nm_bucket");
                         String cdKeyFile = row.getString("cd_key_file");
 
-                        if (nmBucket != null && cdKeyFile != null) {
+                        if (idBucket != null && nmBucket != null && cdKeyFile != null) {
+                            BackendStorage backend = salvataggioBackendHelper.getBackend(idBucket.longValue());
+
                             ObjectStorageBackend config = salvataggioBackendHelper
-                                    .getObjectStorageConfiguration("VERS_OGGETTO", nmBucket);
+                                    .getObjectStorageConfigurationForVersamento(backend.getBackendName(), nmBucket);
                             ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config,
                                     cdKeyFile);
                             byte[] data = new byte[1024];
@@ -6563,9 +6592,9 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     }
 
     // <editor-fold defaultstate="collapsed" desc="Classe che mappa lo stato dei job">
+
     /**
      * Astrazione dei componenti della pagina Schedulazioni Job
-     *
      */
     public static final class StatoJob {
 

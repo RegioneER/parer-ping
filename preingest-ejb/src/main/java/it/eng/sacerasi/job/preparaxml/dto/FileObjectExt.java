@@ -34,6 +34,8 @@ public class FileObjectExt implements Serializable {
     String hashFile;
     //
     String urnFileRel;
+    private Long idBackend;
+    private String nmOsTenant;
     String nmBucket;
     String cdKeyFile;
 
@@ -83,6 +85,23 @@ public class FileObjectExt implements Serializable {
 
     public void setUrnFileRel(String urnFileRel) {
         this.urnFileRel = urnFileRel;
+    }
+
+    // MEV 34843
+    public Long getIdBackend() {
+        return idBackend;
+    }
+
+    public void setIdBackend(Long idBackend) {
+        this.idBackend = idBackend;
+    }
+
+    public String getNmOsTenant() {
+        return nmOsTenant;
+    }
+
+    public void setNmOsTenant(String nmOsTenant) {
+        this.nmOsTenant = nmOsTenant;
     }
 
     public String getNmBucket() {

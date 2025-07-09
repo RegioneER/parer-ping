@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>7.0.1-SNAPSHOT</version>
+    <version>8.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -26,8 +26,8 @@
         <!-- third party lib -->
         <xadisk.version>1.2.2.5</xadisk.version>
         <javacsv.version>2.0</javacsv.version>
-        <software.amazon.awssdk.version>2.26.3</software.amazon.awssdk.version>
-        <netty.version>4.1.108.Final</netty.version>
+        <software.amazon.awssdk.version>2.30.37</software.amazon.awssdk.version>
+        <netty.version>4.1.118.Final</netty.version>
         <xml-resolver.version>1.2</xml-resolver.version>
         <tika.version>2.9.2</tika.version>  
         <!-- WEBJARS -->        
@@ -267,44 +267,11 @@
             <!-- Netty AWS-->
             <dependency>
                 <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
+                <artifactId>netty-bom</artifactId>
                 <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-resolver</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport-native-unix-common</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport-classes-epoll</artifactId>
-                <version>${netty.version}</version>
-            </dependency>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>        
                         
             <dependency> 
                 <groupId>joda-time</groupId> 
@@ -357,7 +324,7 @@
                 <version>${plupload.version}</version>
             </dependency>                                                             			
 
-            <dependency>
+<!--            <dependency>
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml-core</artifactId>
                 <version>${opensaml.version}</version>
@@ -371,7 +338,8 @@
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml-saml-impl</artifactId>
                 <version>${opensaml.version}</version>
-            </dependency>                                   
+            </dependency>                                   -->
+
         </dependencies>
         
     </dependencyManagement>

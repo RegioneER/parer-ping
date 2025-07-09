@@ -16,10 +16,9 @@
  */
 package it.eng.sacerasi.job.verificaDocumentiSU.ejb;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import it.eng.parer.objectstorage.dto.BackendStorage;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,6 +49,7 @@ import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
+import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.helper.GenericHelper;
 import it.eng.sacerasi.job.ejb.JobLogger;
@@ -102,91 +102,90 @@ public class VerificaDocumentiSUEjb {
         PigErrore errore = null;
         String report = null;
 
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
-
         // Per ogni file dello Strumento Urbanistico corrente
-        if (salvataggioBackendHelper.isActive()) {
-            for (PigVSuLisDocDaVerif documentoDaVerificare : documentiDaVerificare) {
-                try {
-                    PigStrumUrbDocumenti strumUrbDocumenti = genericHelper.findById(PigStrumUrbDocumenti.class,
-                            documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti());
+        for (PigVSuLisDocDaVerif documentoDaVerificare : documentiDaVerificare) {
+            try {
+                PigStrumUrbDocumenti strumUrbDocumenti = genericHelper.findById(PigStrumUrbDocumenti.class,
+                        documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti());
 
-                    // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione stile
-                    // ack)
-                    // Accedo al bucket e recupero il file, se esiste
-                    boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
-                            strumUrbDocumenti.getNmFileOs());
+                // MEV 34843
+                PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti
+                        .getPigStrumUrbDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                                pigStrumUrbDocumentiStorage.getNmBucket());
 
-                    if (doesObjectExist) {
-                        File tempFile = null;
-                        try (ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                                .getObject(config, strumUrbDocumenti.getNmFileOs())) {
-                            // Partendo dall'input stream S3 Amazon, recupero il file
-                            // Creo il file (che mi aspetto zip) in una cartella temporanea
-                            tempFile = File.createTempFile(strumUrbDocumenti.getNmFileOs(), null,
-                                    new File(System.getProperty("java.io.tmpdir")));
-                            try (FileOutputStream out = new FileOutputStream(tempFile)) {
-                                IOUtils.copy(objectContent, out);
-                            }
+                // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione stile
+                // ack)
+                // Accedo al bucket e recupero il file, se esiste
+                boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+                        pigStrumUrbDocumentiStorage.getCdKeyFile());
 
-                            // 1° Controllo che sia effettivamente un file zip
-                            if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {
-                                errore = messaggiHelper.retrievePigErrore("PING-ERRSU11");
-                            }
+                if (doesObjectExist) {
+                    File tempFile = null;
+                    try {
+                        ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
+                                .getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
+                        // Partendo dall'input stream S3 Amazon, recupero il file
+                        // Creo il file (che mi aspetto zip) in una cartella temporanea
+                        tempFile = File.createTempFile(pigStrumUrbDocumentiStorage.getCdKeyFile(), null,
+                                new File(System.getProperty("java.io.tmpdir")));
+                        IOUtils.copy(objectContent, new FileOutputStream(tempFile));
 
-                            Charset detectedCharset = null;
-
-                            if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
-                                detectedCharset = StandardCharsets.UTF_8;
-                            } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
-                                detectedCharset = StandardCharsets.ISO_8859_1;
-                            } else {
-                                errore = messaggiHelper.retrievePigErrore("PING-ERRSU05");
-                                errore.setDsErrore(
-                                        StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
-                            }
-
-                            if (errore == null) {
-                                // Inizio i successivi controlli senza dover scompattare il file zip
-                                VerificaZipFileResponse response = checkTempZipFile(strumUrbDocumenti.getNmFileOrig(),
-                                        tempFile, strumUrbDocumenti, detectedCharset);
-                                errore = response.getErrore();
-                                numFiles = response.getFilesCount();
-                                report = response.getReport();
-                            }
-
-                        } finally {
-                            if (tempFile != null) {
-                                FileUtils.deleteQuietly(tempFile);
-                            }
+                        // 1° Controllo che sia effettivamente un file zip
+                        if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {
+                            errore = messaggiHelper.retrievePigErrore("PING-ERRSU11");
                         }
-                    } else {
-                        errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
-                        errore.setDsErrore(
-                                StringUtils.replace(errore.getDsErrore(), "{0}", strumUrbDocumenti.getNmFileOs()));
+
+                        Charset detectedCharset = null;
+
+                        if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
+                            detectedCharset = StandardCharsets.UTF_8;
+                        } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
+                            detectedCharset = StandardCharsets.ISO_8859_1;
+                        } else {
+                            errore = messaggiHelper.retrievePigErrore("PING-ERRSU05");
+                            errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
+                        }
+
+                        if (errore == null) {
+                            // Inizio i successivi controlli senza dover scompattare il file zip
+                            VerificaZipFileResponse response = checkTempZipFile(strumUrbDocumenti.getNmFileOrig(),
+                                    tempFile, strumUrbDocumenti, detectedCharset);
+                            errore = response.getErrore();
+                            numFiles = response.getFilesCount();
+                            report = response.getReport();
+                        }
+
+                    } finally {
+                        if (tempFile != null) {
+                            FileUtils.deleteQuietly(tempFile);
+                        }
                     }
-                    if (errore == null) {
-                        // Ho passato tutti i controlli, esito positivo
-                        registraEsitoDocumentiSU(
-                                documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(), "1",
-                                numFiles, null, null, null);
-                    } else {
-                        // MEV25704 - Ho trovato degli errori, registro anche il report
-                        registraEsitoDocumentiSU(
-                                documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(),
-                                Constants.DB_FALSE, null, errore.getCdErrore(), errore.getDsErrore(), report);
-                    }
-                } catch (Exception ex) {
-                    log.error(String.format("Errore tecnico su doc [%d] del SU [%d]",
-                            documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti().longValueExact(),
-                            documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumentiUrbanistici()
-                                    .longValueExact()),
-                            ex);
-                    errore = messaggiHelper.retrievePigErrore("PING-ERRSU22");
-                    registraEsitoDocumentiSU(documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(),
-                            "0", null, errore.getCdErrore(), errore.getDsErrore(), null);
+                } else {
+                    errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
+                    errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}",
+                            pigStrumUrbDocumentiStorage.getCdKeyFile()));
                 }
+                if (errore == null) {
+                    // Ho passato tutti i controlli, esito positivo
+                    registraEsitoDocumentiSU(documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(),
+                            "1", numFiles, null, null, null);
+                } else {
+                    // MEV25704 - Ho trovato degli errori, registro anche il report
+                    registraEsitoDocumentiSU(documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(),
+                            Constants.DB_FALSE, null, errore.getCdErrore(), errore.getDsErrore(), report);
+                }
+            } catch (Exception ex) {
+                log.error(String.format("Errore tecnico su doc [%d] del SU [%d]",
+                        documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti().longValueExact(),
+                        documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumentiUrbanistici().longValueExact()),
+                        ex);
+                errore = messaggiHelper.retrievePigErrore("PING-ERRSU22");
+                registraEsitoDocumentiSU(documentoDaVerificare.getPigVSuLisDocDaVerifId().getIdStrumUrbDocumenti(), "0",
+                        null, errore.getCdErrore(), errore.getDsErrore(), null);
             }
         }
 
@@ -258,69 +257,72 @@ public class VerificaDocumentiSUEjb {
         PigStrumUrbDocumenti strumUrbDocumenti = verificaDocumentiSUHelper.findById(PigStrumUrbDocumenti.class,
                 idStrumUrbDocumenti.longValue());
 
+        // MEV 34843
+        PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti.getPigStrumUrbDocumentiStorage();
+        BackendStorage backend = salvataggioBackendHelper.getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForStrumentiUrbanistici(
+                backend.getBackendName(), pigStrumUrbDocumentiStorage.getNmBucket());
+
         // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione stile ack)
         // Accedo al bucket e recupero il file documento, se esiste
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("STR_URBANISTICI",
-                configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERIFICA_STRUMENTI_URBANISTICI));
+        boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+                pigStrumUrbDocumentiStorage.getCdKeyFile());
 
-        if (salvataggioBackendHelper.isActive()) {
-            boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config, strumUrbDocumenti.getNmFileOs());
-
-            if (doesObjectExist) {
-                File tempFile = null;
+        if (doesObjectExist) {
+            File tempFile = null;
+            try {
                 // Recupero l'oggetto
-                try (ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper.getObject(config,
-                        strumUrbDocumenti.getNmFileOs())) {
-                    // Partendo dall'input stream S3 Amazon, recupero il file
-                    // Creo il file (che mi aspetto zip) in una cartella temporanea
-                    String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
-                    String dsPathInputFtp = strumUrbDocumenti.getPigStrumentiUrbanistici().getPigVer()
-                            .getDsPathInputFtp();
-                    String cdKey = strumUrbDocumenti.getPigStrumentiUrbanistici().getCdKey();
-                    String dirCompletaFtp = rootFtp + dsPathInputFtp + cdKey;
-                    // Creo la directory
-                    NfsUtils.createEmptyDir(dirCompletaFtp);
-                    // Ci piazzo il file zip temporaneo sul quale farò i controlli
-                    tempFile = File.createTempFile("SU_", null, new File(dirCompletaFtp));
-                    // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
-                    try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                        IOUtils.copy(objectContent, fos);
-                    }
-
-                    // Controllo che sia effettivamente un file zip
-                    if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {
-                        errore = messaggiHelper.retrievePigErrore("PING-ERRSU11");
-                    }
-
-                    Charset detectedCharset = null;
-
-                    if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
-                        detectedCharset = StandardCharsets.UTF_8;
-                    } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
-                        detectedCharset = StandardCharsets.ISO_8859_1;
-                    } else {
-                        errore = messaggiHelper.retrievePigErrore("PING-ERRSU05");
-                        errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
-                    }
-
-                    if (errore == null) {
-                        // Inizio i successivi controlli senza dover scompattare il file zip
-                        VerificaZipFileResponse response = checkTempZipFile(strumUrbDocumenti.getNmFileOrig(), tempFile,
-                                strumUrbDocumenti, detectedCharset);
-                        errore = response.getErrore();
-                        numFiles = response.getFilesCount();
-                        report = response.getReport();
-                    }
-
-                } finally {
-                    if (tempFile != null) {
-                        FileUtils.deleteQuietly(tempFile);
-                    }
+                ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper.getObject(config,
+                        pigStrumUrbDocumentiStorage.getCdKeyFile());
+                // Partendo dall'input stream S3 Amazon, recupero il file
+                // Creo il file (che mi aspetto zip) in una cartella temporanea
+                String rootFtp = configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
+                String dsPathInputFtp = strumUrbDocumenti.getPigStrumentiUrbanistici().getPigVer().getDsPathInputFtp();
+                String cdKey = strumUrbDocumenti.getPigStrumentiUrbanistici().getCdKey();
+                String dirCompletaFtp = rootFtp + dsPathInputFtp + cdKey;
+                // Creo la directory
+                NfsUtils.createEmptyDir(dirCompletaFtp);
+                // Ci piazzo il file zip temporaneo sul quale farò i controlli
+                tempFile = File.createTempFile("SU_", null, new File(dirCompletaFtp));
+                // Il file temporaneo deve essere messo in input_folder o in una analoga in fileserver
+                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                    IOUtils.copy(objectContent, fos);
                 }
-            } else {
-                errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
-                errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", strumUrbDocumenti.getNmFileOs()));
+
+                // Controllo che sia effettivamente un file zip
+                if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig()).equals("zip")) {
+                    errore = messaggiHelper.retrievePigErrore("PING-ERRSU11");
+                }
+
+                Charset detectedCharset = null;
+
+                if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.UTF_8)) {
+                    detectedCharset = StandardCharsets.UTF_8;
+                } else if (VerificheDocumentiSUSismaEtc.isValidZip(tempFile, StandardCharsets.ISO_8859_1)) {
+                    detectedCharset = StandardCharsets.ISO_8859_1;
+                } else {
+                    errore = messaggiHelper.retrievePigErrore("PING-ERRSU05");
+                    errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", tempFile.getName()));
+                }
+
+                if (errore == null) {
+                    // Inizio i successivi controlli senza dover scompattare il file zip
+                    VerificaZipFileResponse response = checkTempZipFile(strumUrbDocumenti.getNmFileOrig(), tempFile,
+                            strumUrbDocumenti, detectedCharset);
+                    errore = response.getErrore();
+                    numFiles = response.getFilesCount();
+                    report = response.getReport();
+                }
+
+            } finally {
+                if (tempFile != null) {
+                    FileUtils.deleteQuietly(tempFile);
+                }
             }
+        } else {
+            errore = messaggiHelper.retrievePigErrore("PING-ERRSU04");
+            errore.setDsErrore(
+                    StringUtils.replace(errore.getDsErrore(), "{0}", pigStrumUrbDocumentiStorage.getCdKeyFile()));
         }
 
         if (errore == null) {
@@ -379,8 +381,8 @@ public class VerificaDocumentiSUEjb {
                     // Controlli sul fileTemp
                     if (entry.getSize() == 0) {
                         PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU06");
-                        errore.setDsErrore(
-                                StringUtils.replace(errore.getDsErrore(), "{0}", strumUrbDocumenti.getNmFileOs()));
+                        errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}",
+                                strumUrbDocumenti.getPigStrumUrbDocumentiStorage().getCdKeyFile()));
                         response.setErrore(errore);
 
                         report.append("FILE VUOTO: ").append(entry.getName());
@@ -402,7 +404,8 @@ public class VerificaDocumentiSUEjb {
             }
         } else {
             PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU03");
-            errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}", strumUrbDocumenti.getNmFileOs()));
+            errore.setDsErrore(StringUtils.replace(errore.getDsErrore(), "{0}",
+                    strumUrbDocumenti.getPigStrumUrbDocumentiStorage().getCdKeyFile()));
             response.setErrore(errore);
         }
 

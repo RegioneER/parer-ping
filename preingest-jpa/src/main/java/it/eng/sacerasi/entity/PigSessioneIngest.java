@@ -86,7 +86,7 @@ public class PigSessioneIngest implements Serializable {
     private List<PigUnitaDocSessione> pigUnitaDocSessiones = new ArrayList<>();
     private List<PigXmlSessioneIngest> pigXmlSessioneIngests = new ArrayList<>();
     private List<PigXmlAnnulSessioneIngest> pigXmlAnnulSessioneIngests = new ArrayList<>();
-    private String nmReportTrasfOS;
+    private XfoReportObjectStorage xfoReportObjectStorage;
 
     public PigSessioneIngest() {
         // for Hibernate
@@ -454,15 +454,6 @@ public class PigSessioneIngest implements Serializable {
         this.pigVer = pigVer;
     }
 
-    @Column(name = "NM_REPORT_TRASF_OS")
-    public String getNmReportTrasfOS() {
-        return nmReportTrasfOS;
-    }
-
-    public void setNmReportTrasfOS(String NmReportTrasfOS) {
-        this.nmReportTrasfOS = NmReportTrasfOS;
-    }
-
     // bi-directional many-to-one association to PigStatoSessioneIngest
     @OneToMany(mappedBy = "pigSessioneIngest", cascade = { CascadeType.PERSIST })
     public List<PigStatoSessioneIngest> getPigStatoSessioneIngests() {
@@ -558,5 +549,15 @@ public class PigSessioneIngest implements Serializable {
         pigXmlAnnulSessioneIngest.setPigSessioneIngest(null);
 
         return pigXmlAnnulSessioneIngest;
+    }
+
+    // MEV 34843
+    @OneToOne(mappedBy = "pigSessioneIngest", cascade = CascadeType.PERSIST)
+    public XfoReportObjectStorage getXfoReportObjectStorage() {
+        return xfoReportObjectStorage;
+    }
+
+    public void setXfoReportObjectStorage(XfoReportObjectStorage xfoReportObjectStorage) {
+        this.xfoReportObjectStorage = xfoReportObjectStorage;
     }
 }

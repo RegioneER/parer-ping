@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.versamento.ejb;
 
 import it.eng.sacerasi.common.Constants;
@@ -27,13 +26,18 @@ import it.eng.sacerasi.slite.gen.viewbean.MonVLisStatoVersTableBean;
 import it.eng.sacerasi.versamento.helper.VersamentoOggettoHelper;
 import it.eng.sacerasi.viewEntity.MonVLisStatoVers;
 import it.eng.sacerasi.web.util.Transform;
+import it.eng.sacerasi.web.util.Utils;
 import it.eng.spagoLite.db.base.BaseTableInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -57,6 +61,10 @@ import org.slf4j.LoggerFactory;
 public class VersamentoOggettoEjb {
 
     private static final Logger logger = LoggerFactory.getLogger(VersamentoOggettoEjb.class);
+
+    public enum OS_KEY_POSTFIX {
+        PIGOBJECT, SISMA, SU
+    }
 
     @Resource
     private SessionContext ctx;
@@ -179,7 +187,38 @@ public class VersamentoOggettoEjb {
     // MEV#21995 computa il path dove stoccare su object storage per questo versatore
     public String getFileOsPathByVers(BigDecimal idVers) {
         PigVers vers = helper.findById(PigVers.class, idVers);
-        return String.format("%s/%s/INPUT_FOLDER/", vers.getPigAmbienteVer().getNmAmbienteVers(), vers.getNmVers());
+        return String.format("%s/%s/", vers.getPigAmbienteVer().getNmAmbienteVers(), vers.getNmVers());
+    }
+
+    // MEV 34843
+    public String computeOsFileKey(BigDecimal idVers, String nomeFile, String postFix) {
+        StringBuilder sb = new StringBuilder();
+
+        LocalDateTime date = LocalDateTime.now();
+        sb.append(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        sb.append(File.separator);
+
+        sb.append(date.format(DateTimeFormatter.ofPattern("HH")));
+        sb.append(File.separator);
+
+        sb.append(date.format(DateTimeFormatter.ofPattern("mm")));
+        sb.append(File.separator);
+
+        sb.append(getFileOsPathByVers(idVers));
+
+        String normalizedFileName = Utils.convertiLettereAccentate(nomeFile);
+        normalizedFileName = Utils.eliminaPunteggiatureSpaziNomeFile(normalizedFileName);
+        normalizedFileName = Utils.normalizzaNomeFile(normalizedFileName);
+
+        sb.append(normalizedFileName);
+        sb.append("_");
+        sb.append(postFix);
+        sb.append(File.separator);
+
+        sb.append(UUID.randomUUID());
+        sb.append(it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION);
+
+        return sb.toString();
     }
 
     // MEV27034

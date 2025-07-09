@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.xformer.job.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.xformer.common.Constants;
 import it.eng.sacerasi.entity.PigObject;
@@ -54,8 +55,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.sisma.ejb.SismaHelper;
+import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
+import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -84,9 +88,12 @@ public class InviaOggettiGeneratiAPing {
     private NotificaTrasferimentoEjb notificaTrasferimentoEjb;
     @EJB
     private InvioOggettoAsincronoEjb invioOggettoAsincronoEjb;
-
+    @EJB
+    private SalvataggioBackendHelper salvataggioBackendHelper;
     @EJB
     private MessaggiHelper messaggiHelper;
+    @EJB
+    private VersamentoOggettoEjb versamentoOggettoEjb;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void run() throws ParerInternalError {
@@ -126,6 +133,7 @@ public class InviaOggettiGeneratiAPing {
                     PigObject oldPigObject = trasformazioniHelper.searchPigObjectTrasfInPigObjects(pot);
                     if (oldPigObject != null
                             && oldPigObject.getTiStatoObject().equals(Constants.Stato.IN_ATTESA_FILE.name())) {
+
                         String dsPathTrasf = pot.getPigVer().getDsPathTrasf();
                         String dsPathInputFtp = pot.getPigVer().getDsPathInputFtp();
                         // quindi i path da dove prendere il paccchetto e il path dove mettere i pacchetti generati.
@@ -138,60 +146,6 @@ public class InviaOggettiGeneratiAPing {
 
                         Path inputFile = Paths.get(inputFilename);
                         Path outputFile = Paths.get(outputFilename);
-
-                        if (!inputFile.toFile().exists() || !inputFile.toFile().isFile()
-                                || !inputFile.toFile().canRead()) {
-                            setError(pot, "TRASFORMAZIONE_FILE_NOT_FOUND", "File " + inputFilename + " non trovato.");
-                            // segno in errore anche l'oggetto padre
-                            jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
-                                    Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
-
-                            // MEV 22064 - trova e modifica lo stato del SU
-                            aggiornaStatoEventualeStrumentoUrbanistico(pot.getPigObject().getCdKeyObject(),
-                                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                    PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                            // MEV 30935 - trova e modifica lo stato del Sisma
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE, "PING-ERRSU27");
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                    Constants.PING_ERRSSISMA27);
-
-                            // passa all'oggetto successivo
-                            continue;
-                        } else {
-                            try {
-                                // MEV 30039 - cancello la cartella se esiste già per fare pulizia.
-                                if (Files.exists(outputFile.getParent())) {
-                                    FileUtils.deleteDirectory(outputFile.getParent().toFile());
-                                }
-                                Files.createDirectories(outputFile.getParent());
-                                Files.copy(inputFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
-                            } catch (IOException ex) {
-                                setError(pot, "TRASFORMAZIONE_IO_EXCEPTION",
-                                        "Errore nella copia del file " + inputFilename + ".");
-
-                                // segno in errore anche l'oggetto padre
-                                jobHelper.changePigObjectAndSessionStateAtomic(pot.getPigObject().getIdObject(),
-                                        Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
-
-                                // MEV 22064 - trova e modifica lo stato del SU
-                                aggiornaStatoEventualeStrumentoUrbanistico(pot.getPigObject().getCdKeyObject(),
-                                        PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                        PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                                // MEV 30935 - trova e modifica lo stato del Sisma
-                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                        PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE, "PING-ERRSU27");
-                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                        PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                        Constants.PING_ERRSSISMA27);
-
-                                // passa all'oggetto successivo
-                                continue;
-                            }
-                        }
 
                         // controlla che le configurazioni necessarie siano corrette.
                         if (pot.getPigTipoObject().getPigTipoFileObjects() == null
@@ -219,8 +173,83 @@ public class InviaOggettiGeneratiAPing {
                             continue;
                         }
 
+                        // MEV 34843
+                        BigDecimal idAmbiente = BigDecimal
+                                .valueOf(pot.getPigVer().getPigAmbienteVer().getIdAmbienteVers());
+                        BigDecimal idVers = BigDecimal.valueOf(pot.getPigVer().getIdVers());
+                        BigDecimal idTipoObject = BigDecimal.valueOf(pot.getPigTipoObject().getIdTipoObject());
+                        BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForVersamento(idAmbiente,
+                                idVers, idTipoObject);
+                        String nmFileOs = null;
+
+                        if (!inputFile.toFile().exists() || !inputFile.toFile().isFile()
+                                || !inputFile.toFile().canRead()) {
+                            setError(pot, "TRASFORMAZIONE_FILE_NOT_FOUND", "File " + inputFilename + " non trovato.");
+                            // segno in errore anche l'oggetto padre
+                            jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
+                                    Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
+
+                            // MEV 22064 - trova e modifica lo stato del SU
+                            aggiornaStatoEventualeStrumentoUrbanistico(pot.getPigObject().getCdKeyObject(),
+                                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
+                                    PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
+
+                            // MEV 30935 - trova e modifica lo stato del Sisma
+                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
+                                    PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE, "PING-ERRSU27");
+                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
+                                    PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
+                                    Constants.PING_ERRSSISMA27);
+
+                            // passa all'oggetto successivo
+                            continue;
+                        } else {
+                            try {
+                                if (backendVersamento.isFile()) {
+                                    // MEV 30039 - cancello la cartella se esiste già per fare pulizia.
+                                    if (Files.exists(outputFile.getParent())) {
+                                        FileUtils.deleteDirectory(outputFile.getParent().toFile());
+                                    }
+
+                                    Files.createDirectories(outputFile.getParent());
+                                    Files.copy(inputFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
+                                } else if (backendVersamento.isObjectStorage()) {
+                                    // MEV 34843
+                                    ObjectStorageBackend config = salvataggioBackendHelper
+                                            .getObjectStorageConfigurationForVersamento(
+                                                    backendVersamento.getBackendName());
+                                    nmFileOs = versamentoOggettoEjb.computeOsFileKey(idVers, pot.getCdKeyObjectTrasf(),
+                                            VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
+                                    salvataggioBackendHelper.putS3Object(config, nmFileOs, inputFile.toFile(),
+                                            Optional.empty());
+                                }
+                            } catch (IOException | ObjectStorageException ex) {
+                                setError(pot, "TRASFORMAZIONE_IO_EXCEPTION",
+                                        "Errore nella copia del file " + inputFilename + ".");
+
+                                // segno in errore anche l'oggetto padre
+                                jobHelper.changePigObjectAndSessionStateAtomic(pot.getPigObject().getIdObject(),
+                                        Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
+
+                                // MEV 22064 - trova e modifica lo stato del SU
+                                aggiornaStatoEventualeStrumentoUrbanistico(pot.getPigObject().getCdKeyObject(),
+                                        PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
+                                        PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
+
+                                // MEV 30935 - trova e modifica lo stato del Sisma
+                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
+                                        PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE, "PING-ERRSU27");
+                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
+                                        PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
+                                        Constants.PING_ERRSSISMA27);
+
+                                // passa all'oggetto successivo
+                                continue;
+                            }
+                        }
+
                         // il file è trasferito e va notificato a PING
-                        notifyFileTransfer(pot);
+                        notifyFileTransfer(pot, backendVersamento, nmFileOs);
                     }
                 }
 
@@ -274,7 +303,8 @@ public class InviaOggettiGeneratiAPing {
         }
     }
 
-    private void notifyFileTransfer(PigObjectTrasf pot) throws ObjectStorageException {
+    private void notifyFileTransfer(PigObjectTrasf pot, BackendStorage backendVersamento, String nmFileOs)
+            throws ObjectStorageException {
         try {
             logger.debug("[notifyFileTransfer] inizio su oggetto figlio id: " + pot.getIdObjectTrasf() + " nome: "
                     + pot.getCdKeyObjectTrasf());
@@ -310,6 +340,20 @@ public class InviaOggettiGeneratiAPing {
             fileDepositato.setDsHashFile(pot.getDsHashFileVers());
             fileDepositato.setCdEncoding(pot.getCdEncodingHashFileVers());
             fileDepositato.setTiAlgoritmoHash(pot.getTiAlgoHashFileVers());
+
+            // MEV 34843
+            fileDepositato.setIdBackend(backendVersamento.getBackendId());
+
+            if (backendVersamento.isObjectStorage()) {
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
+                String tenantOs = configurationHelper
+                        .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE);
+
+                fileDepositato.setNmOsBucket(config.getBucket());
+                fileDepositato.setNmOsTenant(tenantOs);
+                fileDepositato.setNmNomeFileOs(nmFileOs);
+            }
 
             ListaFileDepositatoType listaFileDepositati = new ListaFileDepositatoType();
             List<FileDepositatoType> fileDepositati = listaFileDepositati.getFileDepositato();

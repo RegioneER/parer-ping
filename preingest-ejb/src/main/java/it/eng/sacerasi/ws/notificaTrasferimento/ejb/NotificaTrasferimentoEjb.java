@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.ws.notificaTrasferimento.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -104,9 +104,13 @@ public class NotificaTrasferimentoEjb {
         RispostaNotificaWS risp = new RispostaNotificaWS();
         risp.setNotificaResponse(new NotificaTrasferimentoRisposta());
         risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.OK.name());
+
+        // MEV 34843
+        // Aggiungo i dati del backend, il nome file os è impostato dal chiamante, che siano il versamento oggetto o un
+        // software che usa i ws.
+        notificaTrasferimentoCheckHelper.addBackendInfos(nmAmbiente, nmVersatore, cdKeyObject, listaFileDepositati);
+
         // Istanzio l'oggetto che contiene i parametri ricevuti
-        // NotificaTrasferimentoInput nti = new NotificaTrasferimentoInput(nmAmbiente, nmVersatore, cdPassword,
-        // cdKeyObject, listaFileDepositati);
         NotificaTrasferimentoInput nti = new NotificaTrasferimentoInput(nmAmbiente, nmVersatore, cdKeyObject,
                 listaFileDepositati);
         // Istanzio la Ext con l'oggetto creato
@@ -289,26 +293,28 @@ public class NotificaTrasferimentoEjb {
             }
         }
 
-        // MEV 21995 elimina i file se presenti su object storage
-        if (salvataggioBackendHelper.isActive() && nte.isFlCancellaFile()) {
+        // MEV 21995 e MEV34843 elimina i file se presenti su object storage
+        if (nte.isFlCancellaFile()) {
             for (FileDepositatoRespType fileDep : risp.getNotificaResponse().getListaFileDepositati()
                     .getFileDepositato()) {
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                        fileDep.getNmOsBucket());
-                if (salvataggioBackendHelper.doesObjectExist(config, fileDep.getNmNomeFileOs())
-                        && salvataggioBackendHelper.isActive()) {
-                    salvataggioBackendHelper.deleteObject(config, fileDep.getNmNomeFileOs());
-                }
-            }
-        }
 
-        // Elimina file se presenti nella directory ftp
-        if (nte.isFlCancellaFile() && nte.getFtpPath() != null) {
-            // Utilizzo XADisk per creare una transazione in modo da eliminare i file in maniera atomica.
-            tmpRispCon.reset();
-            tmpRispCon = Util.rimuoviDir(xadCf, nte.getFtpPath());
-            if (tmpRispCon.getCodErr() != null) {
-                setRispostaWsError(risp, tmpRispCon);
+                BackendStorage backend = salvataggioBackendHelper.getBackend(fileDep.getIdBackend());
+                if (backend.isObjectStorage()) {
+                    ObjectStorageBackend config = salvataggioBackendHelper
+                            .getObjectStorageConfigurationForVersamento(backend.getBackendName());
+
+                    if (salvataggioBackendHelper.doesObjectExist(config, fileDep.getNmNomeFileOs())) {
+                        salvataggioBackendHelper.deleteObject(config, fileDep.getNmNomeFileOs());
+                    }
+                } else if (backend.isFile() && nte.getFtpPath() != null) {
+                    // Elimina file se presenti nella directory ftp
+                    // Utilizzo XADisk per creare una transazione in modo da eliminare i file in maniera atomica.
+                    tmpRispCon.reset();
+                    tmpRispCon = Util.rimuoviDir(xadCf, nte.getFtpPath());
+                    if (tmpRispCon.getCodErr() != null) {
+                        setRispostaWsError(risp, tmpRispCon);
+                    }
+                }
             }
         }
     }

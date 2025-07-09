@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.servlet;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
@@ -35,7 +35,7 @@ import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
 import it.eng.sacerasi.web.ejb.AmministrazioneEjb;
 import it.eng.sacerasi.web.helper.ComboHelper;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import it.eng.sacerasi.web.util.Utils;
+import it.eng.sacerasi.web.helper.S3ServletHelper;
 import it.eng.sacerasi.web.util.WebConstants;
 import it.eng.sacerasi.ws.InvioOggettoAsincrono;
 import it.eng.sacerasi.ws.NotificaTrasferimento;
@@ -49,6 +49,7 @@ import it.eng.sacerasi.ws.util.WsHelper;
 import it.eng.spagoLite.SessionManager;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 import it.eng.spagoLite.security.User;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -79,10 +80,8 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
     private static final long serialVersionUID = 3447685998419256747L;
     private static final String RESP_SUCCESS = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 200, \"message\": \"Errore nell'apertura dello stream.\"}, \"id\" : \"id\"}";
     private static final String RESP_ERROR_MULTIPART = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 501, \"message\": \"Errore nell'apertura dello stream.\"}, \"id\" : \"id\"}";
-    // private static final String RESP_ERROR_FILE_ALREADY_EXISTS = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\":
-    // 502, \"message\": \"Il file esiste già sull'object storage.\"}, \"id\" : \"id\"}";
     private static final String RESP_ERROR_GENERIC = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 503, \"message\": \"Errore inatteso.\"}, \"id\" : \"id\"}";
-    private static final String RESP_ERROR_OS_DISABLED = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 504, \"message\": \"Server Object Storage non presente.\"}, \"id\" : \"id\"}";
+    private static final String RESP_ERROR_OS_DISABLED = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 504, \"message\": \"Server Object Storage non abilitato per questo oggetto.\"}, \"id\" : \"id\"}";
 
     public static final String JSON = "application/json";
     public static final int BUF_SIZE = 2 * 1024;
@@ -103,6 +102,8 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
     private NotificaTrasferimentoEjb notificaTrasferimentoEjb;
     @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/S3ServletHelper")
+    private S3ServletHelper servletHelper;
 
     /**
      * Handles an HTTP POST request from Plupload.
@@ -144,168 +145,172 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
 
         User user = (User) SessionManager.getUser(req.getSession());
 
-        // MEV24582
-        if (!salvataggioBackendHelper.isActive()) {
-            responseString = RESP_ERROR_OS_DISABLED;
-            resp.setContentType(JSON);
-            byte[] responseBytes = responseString.getBytes();
-            resp.setContentLength(responseBytes.length);
-            ServletOutputStream output = resp.getOutputStream();
-            output.write(responseBytes);
-            output.flush();
-
-            return;
-        }
-
         if (isMultipart) {
             ServletFileUpload upload = new ServletFileUpload();
 
+            InputStream input = null;
+
             try {
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                        configurationHelper.getValoreParamApplicByApplic(Constants.BUCKET_VERSAMENTO_OGGETTO));
+                FileItemIterator iter = upload.getItemIterator(req);
+                while (iter.hasNext()) {
+                    FileItemStream item = iter.next();
+                    input = item.openStream();
+                    // Gestisce un form field.
+                    if (item.isFormField()) {
+                        nomeCampo = item.getFieldName();
+                        String value = Streams.asString(input);
+                        if (null != nomeCampo) {
+                            switch (nomeCampo) {
+                            case "name":
+                                nomeFile = value;
+                                break;
+                            case "chunks":
+                                chunks = Integer.parseInt(value);
+                                break;
+                            case "chunk":
+                                chunk = Integer.parseInt(value);
+                                break;
+                            case "nm_ambiente_vers":
+                                nm_ambiente_vers = value;
+                                break;
+                            case "nm_vers":
+                                nm_vers = value;
+                                break;
+                            case "nm_tipo_object":
+                                nm_tipo_object = value;
+                                break;
+                            case "ds_object":
+                                ds_object = value;
+                                break;
+                            case "ds_hash_file_vers":
+                                ds_hash_file_vers = value;
+                                break;
+                            case "idSessione":
+                                idSessione = value;
+                                break;
+                            case "cd_vers_gen":
+                                cd_vers_gen = value;
+                                break;
+                            case "ti_gest_oggetti_figli":
+                                ti_gest_oggetti_figli = value;
+                                break;
+                            case "dimensione":
+                                dimensione = new BigDecimal(value);
+                                break;
+                            case "cd_versione_xml":
+                                cd_versione_xml = value;
+                                break;
+                            case "xml_to_upload_string":
+                                xml_to_upload_string = value;
+                                break;
 
-                InputStream input = null;
+                            // MEV 25602
+                            case "nm_ambiente_vers_padre":
+                                nm_ambiente_vers_padre = value;
+                                break;
+                            case "nm_vers_padre":
+                                nm_vers_padre = value;
+                                break;
+                            case "nm_tipo_object_padre":
+                                nm_tipo_object_padre = value;
+                                break;
+                            case "cd_key_object_padre":
+                                cd_key_object_padre = value;
+                                break;
+                            case "ds_object_padre":
+                                ds_object_padre = value;
+                                break;
+                            case "ni_tot_object_trasf":
+                                ni_tot_object_trasf = value;
+                                break;
+                            case "pg_oggetto_trasf":
+                                pg_oggetto_trasf = value;
+                                break;
+                            case "ti_priorita_versamento":
+                                ti_priorita_versamento = value;
+                                break;
 
-                try {
-                    FileItemIterator iter = upload.getItemIterator(req);
-                    while (iter.hasNext()) {
-                        FileItemStream item = iter.next();
-                        input = item.openStream();
-                        // Gestisce un form field.
-                        if (item.isFormField()) {
-                            nomeCampo = item.getFieldName();
-                            String value = Streams.asString(input);
-                            if (null != nomeCampo) {
-                                switch (nomeCampo) {
-                                case "name":
-                                    nomeFile = value;
-                                    break;
-                                case "chunks":
-                                    chunks = Integer.parseInt(value);
-                                    break;
-                                case "chunk":
-                                    chunk = Integer.parseInt(value);
-                                    break;
-                                case "nm_ambiente_vers":
-                                    nm_ambiente_vers = value;
-                                    break;
-                                case "nm_vers":
-                                    nm_vers = value;
-                                    break;
-                                case "nm_tipo_object":
-                                    nm_tipo_object = value;
-                                    break;
-                                case "ds_object":
-                                    ds_object = value;
-                                    break;
-                                case "ds_hash_file_vers":
-                                    ds_hash_file_vers = value;
-                                    break;
-                                case "idSessione":
-                                    idSessione = value;
-                                    break;
-                                case "cd_vers_gen":
-                                    cd_vers_gen = value;
-                                    break;
-                                case "ti_gest_oggetti_figli":
-                                    ti_gest_oggetti_figli = value;
-                                    break;
-                                case "dimensione":
-                                    dimensione = new BigDecimal(value);
-                                    break;
-                                case "cd_versione_xml":
-                                    cd_versione_xml = value;
-                                    break;
-                                case "xml_to_upload_string":
-                                    xml_to_upload_string = value;
-                                    break;
-
-                                // MEV 25602
-                                case "nm_ambiente_vers_padre":
-                                    nm_ambiente_vers_padre = value;
-                                    break;
-                                case "nm_vers_padre":
-                                    nm_vers_padre = value;
-                                    break;
-                                case "nm_tipo_object_padre":
-                                    nm_tipo_object_padre = value;
-                                    break;
-                                case "cd_key_object_padre":
-                                    cd_key_object_padre = value;
-                                    break;
-                                case "ds_object_padre":
-                                    ds_object_padre = value;
-                                    break;
-                                case "ni_tot_object_trasf":
-                                    ni_tot_object_trasf = value;
-                                    break;
-                                case "pg_oggetto_trasf":
-                                    pg_oggetto_trasf = value;
-                                    break;
-                                case "ti_priorita_versamento":
-                                    ti_priorita_versamento = value;
-                                    break;
-
-                                default:
-                                    break;
-                                }
-                            }
-                        } // Gestisce un multi-part MIME encoded file.
-                        else {
-                            if (chunk == 0) {
-                                checkFile(nomeFile, dimensione);
-
-                                inviaOggetto(user, nomeFile, nm_ambiente_vers, nm_vers, nm_tipo_object,
-                                        ds_hash_file_vers, ds_object, cd_vers_gen, ti_gest_oggetti_figli,
-                                        xml_to_upload_string, cd_versione_xml, nm_ambiente_vers_padre, nm_vers_padre,
-                                        nm_tipo_object_padre, cd_key_object_padre, ds_object_padre, ni_tot_object_trasf,
-                                        pg_oggetto_trasf, ti_priorita_versamento);
-
-                                String nmFileOs = versamentoOggettoEjb
-                                        .getFileOsPathByVers(user.getIdOrganizzazioneFoglia())
-                                        + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFile);
-
-                                s3UploadSession = new S3UploadSessionVO(salvataggioBackendHelper, config, nmFileOs);
-                                req.getSession().setAttribute(idSessione, s3UploadSession);
-                            } else {
-                                s3UploadSession = (S3UploadSessionVO) req.getSession().getAttribute(idSessione);
-                            }
-
-                            /* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
-                            // MAC 27228
-                            if (s3UploadSession != null && s3UploadSession.uploadChunk(input, chunk, chunks)) {
-                                versaOggetto(user, nomeFile, nm_ambiente_vers, nm_vers, nm_tipo_object,
-                                        ds_hash_file_vers, ds_object, cd_vers_gen, ti_gest_oggetti_figli,
-                                        config.getBucket());
+                            default:
+                                break;
                             }
                         }
-                    }
-                } catch (ParerUserError e) {
-                    responseString = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 505, \"message\": \""
-                            + e.getMessage() + "\"}, \"id\" : \"id\"}";
-                    log.error("MultipartFileUploadToS3ForVersamentoOggettoServlet", e);
+                    } // Gestisce un multi-part MIME encoded file.
+                    else {
+                        // MEV 34843
+                        BigDecimal idVers = user.getIdOrganizzazioneFoglia();
+                        BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
+                        BigDecimal idTipoObject = new BigDecimal(nm_tipo_object);
+                        BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForVersamento(idAmbiente,
+                                idVers, idTipoObject);
 
-                    if (input != null) {
-                        // se non leggo nulla dallo stream plupload.js pensa che ci sia un errore http,
-                        // nel nostro caso l'errore vogliamo gestirlo noi.
-                        IOUtils.toByteArray(input);
-                    }
-                } catch (Exception ex) {
-                    responseString = RESP_ERROR_GENERIC;
-                    log.error("MultipartFileUploadToS3ForVersamentoOggettoServlet", ex);
+                        if (!backendVersamento.isObjectStorage()) {
+                            responseString = RESP_ERROR_OS_DISABLED;
+                            resp.setContentType(JSON);
+                            byte[] responseBytes = responseString.getBytes();
+                            resp.setContentLength(responseBytes.length);
+                            ServletOutputStream output = resp.getOutputStream();
+                            output.write(responseBytes);
+                            output.flush();
 
-                    if (input != null) {
-                        // se non leggo nulla dallo stream plupload.js pensa che ci sia un errore http,
-                        // nel nostro caso l'errore vogliamo gestirlo noi.
-                        IOUtils.toByteArray(input);
-                    }
-                } finally {
-                    if (input != null) {
-                        input.close();
+                            return;
+                        }
+
+                        ObjectStorageBackend config = salvataggioBackendHelper
+                                .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
+
+                        String nmFileOs = null;
+
+                        if (chunk == 0) {
+                            checkFile(nomeFile, dimensione);
+
+                            inviaOggetto(user, nomeFile, nm_ambiente_vers, nm_vers, nm_tipo_object, ds_hash_file_vers,
+                                    ds_object, cd_vers_gen, ti_gest_oggetti_figli, xml_to_upload_string,
+                                    cd_versione_xml, nm_ambiente_vers_padre, nm_vers_padre, nm_tipo_object_padre,
+                                    cd_key_object_padre, ds_object_padre, ni_tot_object_trasf, pg_oggetto_trasf,
+                                    ti_priorita_versamento);
+
+                            nmFileOs = versamentoOggettoEjb.computeOsFileKey(user.getIdOrganizzazioneFoglia(), nomeFile,
+                                    VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
+
+                            s3UploadSession = new S3UploadSessionVO(salvataggioBackendHelper, config, nmFileOs);
+                            req.getSession().setAttribute(idSessione, s3UploadSession);
+                        } else {
+                            s3UploadSession = (S3UploadSessionVO) req.getSession().getAttribute(idSessione);
+                        }
+
+                        /* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
+                        // MAC 27228
+                        if (s3UploadSession != null && s3UploadSession.uploadChunk(input, chunk, chunks)) {
+                            versaOggetto(user, nomeFile, nm_ambiente_vers, nm_vers, nm_tipo_object, ds_hash_file_vers,
+                                    ds_object, cd_vers_gen, ti_gest_oggetti_figli, nmFileOs);
+                        }
                     }
                 }
             } catch (ObjectStorageException e) {
                 log.error("MultipartFileUploadToS3ForVersamentoOggettoServlet", e);
+            } catch (ParerUserError e) {
+                responseString = "{\"jsonrpc\" : \"2.0\", \"result\" : {\"code\": 505, \"message\": \"" + e.getMessage()
+                        + "\"}, \"id\" : \"id\"}";
+                log.error("MultipartFileUploadToS3ForVersamentoOggettoServlet", e);
+
+                if (input != null) {
+                    // se non leggo nulla dallo stream plupload.js pensa che ci sia un errore http,
+                    // nel nostro caso l'errore vogliamo gestirlo noi.
+                    IOUtils.toByteArray(input);
+                }
+            } catch (Exception ex) {
+                responseString = RESP_ERROR_GENERIC;
+                log.error("MultipartFileUploadToS3ForVersamentoOggettoServlet", ex);
+
+                if (input != null) {
+                    // se non leggo nulla dallo stream plupload.js pensa che ci sia un errore http,
+                    // nel nostro caso l'errore vogliamo gestirlo noi.
+                    IOUtils.toByteArray(input);
+                }
+            } finally {
+                if (input != null) {
+                    input.close();
+                }
             }
         } // Non una multi-part MIME request.
         else {
@@ -414,12 +419,6 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
             } else if (pigTipoObjectRowBean.getTiPrioritaVersamento() != null) {
                 tiPrioritaVersamento = pigTipoObjectRowBean.getTiPrioritaVersamento();
             }
-
-            // if (pigTipoObjectRowBean.getTiPrioritaVersamento() != null) {
-            // tiPrioritaVersamento = it.eng.sacerasi.web.util.Constants.ComboFlagPrioVersType
-            // .getEnumByString(pigTipoObjectRowBean.getTiPrioritaVersamento());
-            // tiPrioritaVersamento = pigTipoObjectRowBean.getTiPrioritaVersamento();
-            // }
 
             /*
              * MEV#13040 - Se non è definita la regular Expression
@@ -546,7 +545,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
 
     private void versaOggetto(User user, String nomeFile, String nm_ambiente_vers, String nm_vers,
             String nm_tipo_object, String ds_hash_file_vers, String ds_object, String cd_vers_gen,
-            String ti_gest_oggetti_figli, String nm_os_bucket) throws ParerUserError {
+            String ti_gest_oggetti_figli, String nmFileOs) throws ParerUserError {
 
         VersamentoOggettoForm form = new VersamentoOggettoForm();
         form.getVersamentoOggettoDetail().getNm_ambiente_vers().setValue(nm_ambiente_vers);
@@ -571,6 +570,14 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
             WebService annotationNotif = NotificaTrasferimento.class.getAnnotation(WebService.class);
             wsHelper.checkAuthorizations(ambiente, versatore, user.getUsername(), annotationInvio.serviceName());
             wsHelper.checkAuthorizations(ambiente, versatore, user.getUsername(), annotationNotif.serviceName());
+
+            // MEV 34843
+            BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
+            BackendStorage backendVersamento = salvataggioBackendHelper.getBackendForVersamento(idAmbiente, idVers,
+                    idTipoObject);
+            ObjectStorageBackend config = salvataggioBackendHelper
+                    .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
+            String tenantOs = configurationHelper.getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE);
 
             PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb.getPigTipoObjectRowBean(idTipoObject);
 
@@ -642,9 +649,6 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                 tiHashFileVers = Constants.TipiHash.SHA_256.descrivi();// default
             }
 
-            String nmFileOs = versamentoOggettoEjb.getFileOsPathByVers(user.getIdOrganizzazioneFoglia())
-                    + Utils.eliminaPunteggiatureSpaziNomeFile(nomeFile);
-
             // Eseguo la NotificaTrasferimentoFile
             ListaFileDepositatoType listaFile = new ListaFileDepositatoType();
             listaFile.setFileDepositato(new ArrayList<FileDepositatoType>());
@@ -662,8 +666,11 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                 file.setDsHashFile(null);
             }
 
+            // MEV 34843
+            file.setIdBackend(backendVersamento.getBackendId());
+            file.setNmOsTenant(tenantOs);
             file.setNmNomeFileOs(nmFileOs);
-            file.setNmOsBucket(nm_os_bucket);
+            file.setNmOsBucket(config.getBucket());
 
             listaFile.getFileDepositato().add(file);
 
@@ -758,5 +765,4 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                             + dim + " Byte.");
         }
     }
-
 }

@@ -17,6 +17,7 @@
 
 package it.eng.sacerasi.job.preparaxml.ejb;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -71,6 +72,7 @@ import it.eng.sacerasi.common.Constants.TipiEncBinari;
 import it.eng.sacerasi.common.Constants.TipiHash;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
 import it.eng.sacerasi.entity.PigFileObject;
+import it.eng.sacerasi.entity.PigFileObjectStorage;
 import it.eng.sacerasi.entity.PigInfoDicom;
 import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigTipoFileObject;
@@ -152,8 +154,14 @@ public class PreparazioneXmlEjb {
                         ? tmpFileObject.getCdEncodingHashFileVers() : TipiEncBinari.HEX_BINARY.descrivi());
 
                 // MEV25602 - mi serviranno per recuperare eventualmente l'oggetto da Object Storage
-                tmpFileObjectExt.setNmBucket(tmpFileObject.getNmBucket());
-                tmpFileObjectExt.setCdKeyFile(tmpFileObject.getCdKeyFile());
+                // MEV 34843 se PigFileObjectStorage esiste allora il file è salvato su OS.
+                if (tmpFileObject.getPigFileObjectStorage() != null) {
+                    PigFileObjectStorage pigFileObjectStorage = tmpFileObject.getPigFileObjectStorage();
+                    tmpFileObjectExt.setIdBackend(pigFileObjectStorage.getIdDecBackend());
+                    tmpFileObjectExt.setNmOsTenant(pigFileObjectStorage.getNmTenant());
+                    tmpFileObjectExt.setNmBucket(pigFileObjectStorage.getNmBucket());
+                    tmpFileObjectExt.setCdKeyFile(pigFileObjectStorage.getCdKeyFile());
+                }
 
                 oggettoInCoda.getListaFileObjectExt().add(tmpFileObjectExt);
             }
@@ -1026,8 +1034,11 @@ public class PreparazioneXmlEjb {
         if (oggettoInCoda.getListaFileObjectExt().size() == 1) {
             FileObjectExt fileObject = oggettoInCoda.getListaFileObjectExt().get(0);
             if (fileObject.getNmBucket() != null && fileObject.getCdKeyFile() != null) {
-                ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfiguration("VERS_OGGETTO",
-                        fileObject.getNmBucket());
+
+                BackendStorage backend = salvataggioBackendHelper.getBackend(fileObject.getIdBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForVersamento(backend.getBackendName(), fileObject.getNmBucket());
+
                 ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config,
                         fileObject.getCdKeyFile());
 

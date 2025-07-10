@@ -75,7 +75,7 @@ public class DownloadSismaServlet extends HttpServlet {
                 BackendStorage backend = salvataggioBackendHelper
                         .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
                 ObjectStorageBackend config = salvataggioBackendHelper
-                        .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
+                        .getObjectStorageConfigurationForSisma(backend.getBackendName(),
                                 pigSismaDocumentiStorage.getNmBucket());
 
                 ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper.getObject(config,

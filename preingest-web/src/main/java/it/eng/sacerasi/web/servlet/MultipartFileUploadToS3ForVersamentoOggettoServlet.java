@@ -282,7 +282,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                         // MAC 27228
                         if (s3UploadSession != null && s3UploadSession.uploadChunk(input, chunk, chunks)) {
                             versaOggetto(user, nomeFile, nm_ambiente_vers, nm_vers, nm_tipo_object, ds_hash_file_vers,
-                                    ds_object, cd_vers_gen, ti_gest_oggetti_figli, nmFileOs);
+                                    ds_object, cd_vers_gen, ti_gest_oggetti_figli, s3UploadSession.getKeyName());
                         }
                     }
                 }

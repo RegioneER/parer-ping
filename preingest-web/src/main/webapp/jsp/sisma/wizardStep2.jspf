@@ -21,7 +21,7 @@
                         // COLONNA NOME FILE
                         var rigaNuova = '<TD id="filename_' + numero + '">';
                         if (giaInserito) {
-                            rigaNuova+= '<a href="SismaDownloadServlet?chiave=' + nmFileOrig + '" download id="download" class="DownloadSisma"></a>' + nmFileOrig;
+                        rigaNuova+= '<a href="SismaDownloadServlet?chiave=' + encodeURIComponent(nmFileOrig) + '" download id="download" class="DownloadSisma"></a><span style="white-space: pre">' + nmFileOrig + '</span>';
                         } else {
                             rigaNuova+='File non presente';
                         }
@@ -216,7 +216,7 @@
                                                 });
                                                 $.ajaxSetup({async: true});
                                             });
-                                            $('#filename_' + numero).html('<a href="SismaDownloadServlet?chiave=' + file.name + '" download id="download" class="DownloadSisma"></a>' + file.name);
+                                            $('#filename_' + numero).html('<a href="SismaDownloadServlet?chiave=' + encodeURIComponent(file.name) + '" download id="download" class="DownloadSisma"></a><span style="white-space: pre">' + file.name + '</span>');
                                             $('#dimensione_' + numero).html(formatFileSize(file.size, 2));
                                             $('#dataDoc_' + numero).html((new Date()).toLocaleDateString());
                                             determinaNavigabilita();

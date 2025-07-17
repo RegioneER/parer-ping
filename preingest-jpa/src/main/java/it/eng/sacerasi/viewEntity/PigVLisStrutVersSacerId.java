@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -32,65 +28,65 @@ public class PigVLisStrutVersSacerId implements Serializable {
 
     @Column(name = "ID_DICH_VERS_SACER")
     public BigDecimal getIdDichVersSacer() {
-        return idDichVersSacer;
+	return idDichVersSacer;
     }
 
     public void setIdDichVersSacer(BigDecimal idDichVersSacer) {
-        this.idDichVersSacer = idDichVersSacer;
+	this.idDichVersSacer = idDichVersSacer;
     }
 
     private BigDecimal idOrganizIamStrut;
 
     @Column(name = "ID_ORGANIZ_IAM_STRUT")
     public BigDecimal getIdOrganizIamStrut() {
-        return idOrganizIamStrut;
+	return idOrganizIamStrut;
     }
 
     public void setIdOrganizIamStrut(BigDecimal idOrganizIamStrut) {
-        this.idOrganizIamStrut = idOrganizIamStrut;
+	this.idOrganizIamStrut = idOrganizIamStrut;
     }
 
     private String tiDichVersTiObj;
 
     @Column(name = "TI_DICH_VERS_TI_OBJ")
     public String getTiDichVersTiObj() {
-        return tiDichVersTiObj;
+	return tiDichVersTiObj;
     }
 
     public void setTiDichVersTiObj(String tiDichVersTiObj) {
-        this.tiDichVersTiObj = tiDichVersTiObj;
+	this.tiDichVersTiObj = tiDichVersTiObj;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + Objects.hashCode(this.idDichVersSacer);
-        hash = 23 * hash + Objects.hashCode(this.idOrganizIamStrut);
-        hash = 23 * hash + Objects.hashCode(this.tiDichVersTiObj);
-        return hash;
+	int hash = 5;
+	hash = 23 * hash + Objects.hashCode(this.idDichVersSacer);
+	hash = 23 * hash + Objects.hashCode(this.idOrganizIamStrut);
+	hash = 23 * hash + Objects.hashCode(this.tiDichVersTiObj);
+	return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final PigVLisStrutVersSacerId other = (PigVLisStrutVersSacerId) obj;
-        if (!Objects.equals(this.tiDichVersTiObj, other.tiDichVersTiObj)) {
-            return false;
-        }
-        if (!Objects.equals(this.idDichVersSacer, other.idDichVersSacer)) {
-            return false;
-        }
-        if (!Objects.equals(this.idOrganizIamStrut, other.idOrganizIamStrut)) {
-            return false;
-        }
-        return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final PigVLisStrutVersSacerId other = (PigVLisStrutVersSacerId) obj;
+	if (!Objects.equals(this.tiDichVersTiObj, other.tiDichVersTiObj)) {
+	    return false;
+	}
+	if (!Objects.equals(this.idDichVersSacer, other.idDichVersSacer)) {
+	    return false;
+	}
+	if (!Objects.equals(this.idOrganizIamStrut, other.idOrganizIamStrut)) {
+	    return false;
+	}
+	return true;
     }
 }

@@ -11,7 +11,14 @@
                 $('#DocumentiCaricatiList tbody tr').each(function (idx, elemento) {
                     var nomeOriginale = $($(elemento).find('td')[0]).html();
                     var nomeFile = $($(elemento).find('td')[1]).html();
-                    var link = '<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + nomeFile + '" download id="download" class="DownloadSU"></a>';
+
+                     var nomeFileRipulito=nomeFile.slice(1, nomeFile.indexOf('<')-1 );
+                    // Altrimenti mette spazi all'inizio e alla fine!
+
+                    //MEV 37654 rimuovi &nbsp
+                    nomeFileRipulito=nomeFileRipulito.trim().replace(/&nbsp;/g, ' ');;
+
+                    var link = '<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + nomeFileRipulito + '" download id="download" class="DownloadSU"></a>';
                     $($(elemento).find('td')[0]).html(link + '&nbsp;' + nomeOriginale);
                 });
                 var pulsante = $("input[name='operation__riportaInBozza']");
@@ -96,7 +103,7 @@
                 <sl:newLine />
                 <sl:newLine />
                 <slf:section name="<%=StrumentiUrbanisticiForm.DocumentiCaricatiSection.NAME%>" styleClass="importantContainer">  
-                    <slf:list  name="<%= StrumentiUrbanisticiForm.DocumentiCaricatiList.NAME%>"  />
+                    <slf:editableList name="<%=StrumentiUrbanisticiForm.DocumentiCaricatiList.NAME%>" multiRowEdit="true"/>
                 </slf:section>
                 <!-- Se non ci sono segnalazioni si fa sparire proprio la sezione -->
                 <c:if test="${fn:length(requestScope['alObbNonCaricati']) gt 0 || fn:length(requestScope['alDocInErrore']) gt 0}">

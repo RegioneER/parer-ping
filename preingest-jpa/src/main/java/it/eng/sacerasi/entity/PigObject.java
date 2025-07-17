@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -83,428 +79,430 @@ public class PigObject implements Serializable {
     private List<PigPrioritaObject> pigPrioritaObjects = new ArrayList<>();
 
     public PigObject() {
-        // for Hibernate
+	// for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_OBJECT_IDOBJECT_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_OBJECT"),
-            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_OBJECT"),
+	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_OBJECT_IDOBJECT_GENERATOR")
     @Column(name = "ID_OBJECT")
     public Long getIdObject() {
-        return this.idObject;
+	return this.idObject;
     }
 
     public void setIdObject(Long idObject) {
-        this.idObject = idObject;
+	this.idObject = idObject;
     }
 
     @Column(name = "CD_KEY_OBJECT")
     public String getCdKeyObject() {
-        return this.cdKeyObject;
+	return this.cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-        this.cdKeyObject = cdKeyObject;
+	this.cdKeyObject = cdKeyObject;
     }
 
     @Column(name = "CD_TRASF")
     public String getCdTrasf() {
-        return this.cdTrasf;
+	return this.cdTrasf;
     }
 
     public void setCdTrasf(String cdTrasf) {
-        this.cdTrasf = cdTrasf;
+	this.cdTrasf = cdTrasf;
     }
 
     @Column(name = "CD_VERS_GEN")
     public String getCdVersGen() {
-        return this.cdVersGen;
+	return this.cdVersGen;
     }
 
     public void setCdVersGen(String cdVersGen) {
-        this.cdVersGen = cdVersGen;
+	this.cdVersGen = cdVersGen;
     }
 
     @Column(name = "CD_VERSIONE_TRASF")
     public String getCdVersioneTrasf() {
-        return this.cdVersioneTrasf;
+	return this.cdVersioneTrasf;
     }
 
     public void setCdVersioneTrasf(String cdVersioneTrasf) {
-        this.cdVersioneTrasf = cdVersioneTrasf;
+	this.cdVersioneTrasf = cdVersioneTrasf;
     }
 
     @Column(name = "DS_OBJECT")
     public String getDsObject() {
-        return this.dsObject;
+	return this.dsObject;
     }
 
     public void setDsObject(String dsObject) {
-        this.dsObject = dsObject;
+	this.dsObject = dsObject;
     }
 
     @Column(name = "FL_RICH_ANNUL_TIMEOUT", columnDefinition = "char")
     public String getFlRichAnnulTimeout() {
-        return this.flRichAnnulTimeout;
+	return this.flRichAnnulTimeout;
     }
 
     public void setFlRichAnnulTimeout(String flRichAnnulTimeout) {
-        this.flRichAnnulTimeout = flRichAnnulTimeout;
+	this.flRichAnnulTimeout = flRichAnnulTimeout;
     }
 
     @Column(name = "FL_VERS_SACER_DA_RECUP", columnDefinition = "char")
     public String getFlVersSacerDaRecup() {
-        return this.flVersSacerDaRecup;
+	return this.flVersSacerDaRecup;
     }
 
     public void setFlVersSacerDaRecup(String flVersSacerDaRecup) {
-        this.flVersSacerDaRecup = flVersSacerDaRecup;
+	this.flVersSacerDaRecup = flVersSacerDaRecup;
     }
 
     @Column(name = "ID_LAST_SESSIONE_INGEST")
     public BigDecimal getIdLastSessioneIngest() {
-        return this.idLastSessioneIngest;
+	return this.idLastSessioneIngest;
     }
 
     public void setIdLastSessioneIngest(BigDecimal idLastSessioneIngest) {
-        this.idLastSessioneIngest = idLastSessioneIngest;
+	this.idLastSessioneIngest = idLastSessioneIngest;
     }
 
     @Column(name = "MM_FIRST_SES")
     public BigDecimal getMmFirstSes() {
-        return this.mmFirstSes;
+	return this.mmFirstSes;
     }
 
     public void setMmFirstSes(BigDecimal mmFirstSes) {
-        this.mmFirstSes = mmFirstSes;
+	this.mmFirstSes = mmFirstSes;
     }
 
     @Column(name = "NI_TOT_OBJECT_TRASF")
     public BigDecimal getNiTotObjectTrasf() {
-        return this.niTotObjectTrasf;
+	return this.niTotObjectTrasf;
     }
 
     public void setNiTotObjectTrasf(BigDecimal niTotObjectTrasf) {
-        this.niTotObjectTrasf = niTotObjectTrasf;
+	this.niTotObjectTrasf = niTotObjectTrasf;
     }
 
     @Column(name = "NI_UNITA_DOC_ATTESE")
     public BigDecimal getNiUnitaDocAttese() {
-        return this.niUnitaDocAttese;
+	return this.niUnitaDocAttese;
     }
 
     public void setNiUnitaDocAttese(BigDecimal niUnitaDocAttese) {
-        this.niUnitaDocAttese = niUnitaDocAttese;
+	this.niUnitaDocAttese = niUnitaDocAttese;
     }
 
     @Column(name = "PG_OGGETTO_TRASF")
     public BigDecimal getPgOggettoTrasf() {
-        return this.pgOggettoTrasf;
+	return this.pgOggettoTrasf;
     }
 
     public void setPgOggettoTrasf(BigDecimal pgOggettoTrasf) {
-        this.pgOggettoTrasf = pgOggettoTrasf;
+	this.pgOggettoTrasf = pgOggettoTrasf;
     }
 
     @Column(name = "TI_GEST_OGGETTI_FIGLI")
     public String getTiGestOggettiFigli() {
-        return tiGestOggettiFigli;
+	return tiGestOggettiFigli;
     }
 
     public void setTiGestOggettiFigli(String tiGestOggettiFigli) {
-        this.tiGestOggettiFigli = tiGestOggettiFigli;
+	this.tiGestOggettiFigli = tiGestOggettiFigli;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-        return this.tiStatoObject;
+	return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-        this.tiStatoObject = tiStatoObject;
+	this.tiStatoObject = tiStatoObject;
     }
 
     @Column(name = "NOTE")
     public String getNote() {
-        return this.note;
+	return this.note;
     }
 
     public void setNote(String note) {
-        this.note = note;
+	this.note = note;
     }
 
     // bi-directional many-to-one association to PigFileObject
     @OneToMany(mappedBy = "pigObject")
     public List<PigFileObject> getPigFileObjects() {
-        return this.pigFileObjects;
+	return this.pigFileObjects;
     }
 
     public void setPigFileObjects(List<PigFileObject> pigFileObjects) {
-        this.pigFileObjects = pigFileObjects;
+	this.pigFileObjects = pigFileObjects;
     }
 
     public PigFileObject addPigFileObject(PigFileObject pigFileObject) {
-        getPigFileObjects().add(pigFileObject);
-        pigFileObject.setPigObject(this);
+	getPigFileObjects().add(pigFileObject);
+	pigFileObject.setPigObject(this);
 
-        return pigFileObject;
+	return pigFileObject;
     }
 
     public PigFileObject removePigFileObject(PigFileObject pigFileObject) {
-        getPigFileObjects().remove(pigFileObject);
-        pigFileObject.setPigObject(null);
+	getPigFileObjects().remove(pigFileObject);
+	pigFileObject.setPigObject(null);
 
-        return pigFileObject;
+	return pigFileObject;
     }
 
     // bi-directional many-to-one association to PigInfoDicom
     @OneToMany(mappedBy = "pigObject")
     public List<PigInfoDicom> getPigInfoDicoms() {
-        return this.pigInfoDicoms;
+	return this.pigInfoDicoms;
     }
 
     public void setPigInfoDicoms(List<PigInfoDicom> pigInfoDicoms) {
-        this.pigInfoDicoms = pigInfoDicoms;
+	this.pigInfoDicoms = pigInfoDicoms;
     }
 
     // bi-directional many-to-one association to IamUser
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USER_IAM")
     public IamUser getIamUser() {
-        return this.iamUser;
+	return this.iamUser;
     }
 
     public void setIamUser(IamUser iamUser) {
-        this.iamUser = iamUser;
+	this.iamUser = iamUser;
     }
 
     public PigInfoDicom addPigInfoDicom(PigInfoDicom pigInfoDicom) {
-        getPigInfoDicoms().add(pigInfoDicom);
-        pigInfoDicom.setPigObject(this);
+	getPigInfoDicoms().add(pigInfoDicom);
+	pigInfoDicom.setPigObject(this);
 
-        return pigInfoDicom;
+	return pigInfoDicom;
     }
 
     public PigInfoDicom removePigInfoDicom(PigInfoDicom pigInfoDicom) {
-        getPigInfoDicoms().remove(pigInfoDicom);
-        pigInfoDicom.setPigObject(null);
+	getPigInfoDicoms().remove(pigInfoDicom);
+	pigInfoDicom.setPigObject(null);
 
-        return pigInfoDicom;
+	return pigInfoDicom;
     }
 
     // bi-directional many-to-one association to PigObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_OBJECT_PADRE")
     public PigObject getPigObjectPadre() {
-        return this.pigObjectPadre;
+	return this.pigObjectPadre;
     }
 
     public void setPigObjectPadre(PigObject pigObjectPadre) {
-        this.pigObjectPadre = pigObjectPadre;
+	this.pigObjectPadre = pigObjectPadre;
     }
 
     // bi-directional many-to-one association to PigObject
     @OneToMany(mappedBy = "pigObjectPadre")
     public List<PigObject> getPigObjects() {
-        return this.pigObjects;
+	return this.pigObjects;
     }
 
     public void setPigObjects(List<PigObject> pigObjects) {
-        this.pigObjects = pigObjects;
+	this.pigObjects = pigObjects;
     }
 
     public PigObject addPigObject(PigObject pigObject) {
-        getPigObjects().add(pigObject);
-        pigObject.setPigObjectPadre(this);
+	getPigObjects().add(pigObject);
+	pigObject.setPigObjectPadre(this);
 
-        return pigObject;
+	return pigObject;
     }
 
     public PigObject removePigObject(PigObject pigObject) {
-        getPigObjects().remove(pigObject);
-        pigObject.setPigObjectPadre(null);
+	getPigObjects().remove(pigObject);
+	pigObject.setPigObjectPadre(null);
 
-        return pigObject;
+	return pigObject;
     }
 
     // bi-directional many-to-one association to PigTipoObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_TIPO_OBJECT")
     public PigTipoObject getPigTipoObject() {
-        return this.pigTipoObject;
+	return this.pigTipoObject;
     }
 
     public void setPigTipoObject(PigTipoObject pigTipoObject) {
-        this.pigTipoObject = pigTipoObject;
+	this.pigTipoObject = pigTipoObject;
     }
 
     // bi-directional many-to-one association to PigVer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VERS")
     public PigVers getPigVer() {
-        return this.pigVer;
+	return this.pigVer;
     }
 
     public void setPigVer(PigVers pigVer) {
-        this.pigVer = pigVer;
+	this.pigVer = pigVer;
     }
 
     @Column(name = "TI_PRIORITA")
     public String getTiPriorita() {
-        return this.tiPriorita;
+	return this.tiPriorita;
     }
 
     public void setTiPriorita(String tiPriorita) {
-        this.tiPriorita = tiPriorita;
+	this.tiPriorita = tiPriorita;
     }
 
     @Column(name = "TI_PRIORITA_VERSAMENTO")
     public String getTiPrioritaVersamento() {
-        return this.tiPrioritaVersamento;
+	return this.tiPrioritaVersamento;
     }
 
     protected void setTiPrioritaVersamento(String tiPrioritaVersamento) {
-        this.tiPrioritaVersamento = tiPrioritaVersamento;
+	this.tiPrioritaVersamento = tiPrioritaVersamento;
     }
 
     public void impostaPrioritaVersamento(String tiPrioritaVersamento, String username) {
-        this.tiPrioritaVersamento = tiPrioritaVersamento;
-        if (tiPrioritaVersamento != null) {
-            PigPrioritaObject storico = new PigPrioritaObject();
-            storico.setDtModifica(LocalDateTime.now());
-            storico.setNmUser(username);
-            storico.setTiPrioritaVersamento(this.tiPrioritaVersamento);
-            this.addPigPrioritaObject(storico);
-        }
+	this.tiPrioritaVersamento = tiPrioritaVersamento;
+	if (tiPrioritaVersamento != null) {
+	    PigPrioritaObject storico = new PigPrioritaObject();
+	    storico.setDtModifica(LocalDateTime.now());
+	    storico.setNmUser(username);
+	    storico.setTiPrioritaVersamento(this.tiPrioritaVersamento);
+	    this.addPigPrioritaObject(storico);
+	}
     }
 
     // bi-directional many-to-one association to PigSessioneIngest
     @OneToMany(mappedBy = "pigObject")
     public List<PigSessioneIngest> getPigSessioneIngests() {
-        return this.pigSessioneIngests;
+	return this.pigSessioneIngests;
     }
 
     public void setPigSessioneIngests(List<PigSessioneIngest> pigSessioneIngests) {
-        this.pigSessioneIngests = pigSessioneIngests;
+	this.pigSessioneIngests = pigSessioneIngests;
     }
 
     public PigSessioneIngest addPigSessioneIngest(PigSessioneIngest pigSessioneIngest) {
-        getPigSessioneIngests().add(pigSessioneIngest);
-        pigSessioneIngest.setPigObject(this);
+	getPigSessioneIngests().add(pigSessioneIngest);
+	pigSessioneIngest.setPigObject(this);
 
-        return pigSessioneIngest;
+	return pigSessioneIngest;
     }
 
     public PigSessioneIngest removePigSessioneIngest(PigSessioneIngest pigSessioneIngest) {
-        getPigSessioneIngests().remove(pigSessioneIngest);
-        pigSessioneIngest.setPigObject(null);
+	getPigSessioneIngests().remove(pigSessioneIngest);
+	pigSessioneIngest.setPigObject(null);
 
-        return pigSessioneIngest;
+	return pigSessioneIngest;
     }
 
     // bi-directional many-to-one association to PigSessioneRecup
     @OneToMany(mappedBy = "pigObject")
     public List<PigSessioneRecup> getPigSessioneRecups() {
-        return this.pigSessioneRecups;
+	return this.pigSessioneRecups;
     }
 
     public void setPigSessioneRecups(List<PigSessioneRecup> pigSessioneRecups) {
-        this.pigSessioneRecups = pigSessioneRecups;
+	this.pigSessioneRecups = pigSessioneRecups;
     }
 
     public PigSessioneRecup addPigSessioneRecup(PigSessioneRecup pigSessioneRecup) {
-        getPigSessioneRecups().add(pigSessioneRecup);
-        pigSessioneRecup.setPigObject(this);
+	getPigSessioneRecups().add(pigSessioneRecup);
+	pigSessioneRecup.setPigObject(this);
 
-        return pigSessioneRecup;
+	return pigSessioneRecup;
     }
 
     public PigSessioneRecup removePigSessioneRecup(PigSessioneRecup pigSessioneRecup) {
-        getPigSessioneRecups().remove(pigSessioneRecup);
-        pigSessioneRecup.setPigObject(null);
+	getPigSessioneRecups().remove(pigSessioneRecup);
+	pigSessioneRecup.setPigObject(null);
 
-        return pigSessioneRecup;
+	return pigSessioneRecup;
     }
 
     // bi-directional many-to-one association to PigUnitaDocObject
-    @OneToMany(mappedBy = "pigObject", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    @OneToMany(mappedBy = "pigObject", cascade = {
+	    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     public List<PigUnitaDocObject> getPigUnitaDocObjects() {
-        return this.pigUnitaDocObjects;
+	return this.pigUnitaDocObjects;
     }
 
     public void setPigUnitaDocObjects(List<PigUnitaDocObject> pigUnitaDocObjects) {
-        this.pigUnitaDocObjects = pigUnitaDocObjects;
+	this.pigUnitaDocObjects = pigUnitaDocObjects;
     }
 
     public PigUnitaDocObject addPigUnitaDocObject(PigUnitaDocObject pigUnitaDocObject) {
-        getPigUnitaDocObjects().add(pigUnitaDocObject);
-        pigUnitaDocObject.setPigObject(this);
+	getPigUnitaDocObjects().add(pigUnitaDocObject);
+	pigUnitaDocObject.setPigObject(this);
 
-        return pigUnitaDocObject;
+	return pigUnitaDocObject;
     }
 
     public PigUnitaDocObject removePigUnitaDocObject(PigUnitaDocObject pigUnitaDocObject) {
-        getPigUnitaDocObjects().remove(pigUnitaDocObject);
-        pigUnitaDocObject.setPigObject(null);
+	getPigUnitaDocObjects().remove(pigUnitaDocObject);
+	pigUnitaDocObject.setPigObject(null);
 
-        return pigUnitaDocObject;
+	return pigUnitaDocObject;
     }
 
     // bi-directional many-to-one association to PigXmlObject
     @OneToMany(mappedBy = "pigObject")
     public List<PigXmlObject> getPigXmlObjects() {
-        return this.pigXmlObjects;
+	return this.pigXmlObjects;
     }
 
     public void setPigXmlObjects(List<PigXmlObject> pigXmlObjects) {
-        this.pigXmlObjects = pigXmlObjects;
+	this.pigXmlObjects = pigXmlObjects;
     }
 
     public PigXmlObject addPigXmlObject(PigXmlObject pigXmlObject) {
-        getPigXmlObjects().add(pigXmlObject);
-        pigXmlObject.setPigObject(this);
+	getPigXmlObjects().add(pigXmlObject);
+	pigXmlObject.setPigObject(this);
 
-        return pigXmlObject;
+	return pigXmlObject;
     }
 
     public PigXmlObject removePigXmlObject(PigXmlObject pigXmlObject) {
-        getPigXmlObjects().remove(pigXmlObject);
-        pigXmlObject.setPigObject(null);
+	getPigXmlObjects().remove(pigXmlObject);
+	pigXmlObject.setPigObject(null);
 
-        return pigXmlObject;
+	return pigXmlObject;
     }
 
     // bi-directional many-to-one association to PigObjectTrasf
     @OneToMany(mappedBy = "pigObject")
     public List<PigObjectTrasf> getPigObjectTrasfs() {
-        return this.pigObjectTrasfs;
+	return this.pigObjectTrasfs;
     }
 
     public void setPigObjectTrasfs(List<PigObjectTrasf> pigObjectTrasfs) {
-        this.pigObjectTrasfs = pigObjectTrasfs;
+	this.pigObjectTrasfs = pigObjectTrasfs;
     }
 
     public PigObjectTrasf addPigObjectTrasf(PigObjectTrasf pigObjectTrasf) {
-        getPigObjectTrasfs().add(pigObjectTrasf);
-        pigObjectTrasf.setPigObject(this);
+	getPigObjectTrasfs().add(pigObjectTrasf);
+	pigObjectTrasf.setPigObject(this);
 
-        return pigObjectTrasf;
+	return pigObjectTrasf;
     }
 
-    @OneToMany(mappedBy = "pigObject", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(mappedBy = "pigObject", cascade = {
+	    CascadeType.PERSIST, CascadeType.REMOVE })
     public List<PigPrioritaObject> getPigPrioritaObjects() {
-        return pigPrioritaObjects;
+	return pigPrioritaObjects;
     }
 
     public void setPigPrioritaObjects(List<PigPrioritaObject> pigPrioritaObjects) {
-        this.pigPrioritaObjects = pigPrioritaObjects;
+	this.pigPrioritaObjects = pigPrioritaObjects;
     }
 
     private PigPrioritaObject addPigPrioritaObject(PigPrioritaObject pigPrioritaObject) {
-        getPigPrioritaObjects().add(pigPrioritaObject);
-        pigPrioritaObject.setPigObject(this);
-        return pigPrioritaObject;
+	getPigPrioritaObjects().add(pigPrioritaObject);
+	pigPrioritaObject.setPigObject(this);
+	return pigPrioritaObject;
     }
 }

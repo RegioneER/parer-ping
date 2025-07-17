@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.xformer.common;
@@ -23,39 +19,39 @@ package it.eng.xformer.common;
 public class Constants {
 
     public enum Stato {
-        DA_TRASFORMARE, TRASFORMAZIONE_NON_ATTIVA, TRASFORMATO, ERRORE_TRASFORMAZIONE, IN_ATTESA_FILE, IN_ATTESA_SCHED,
-        CHIUSO_OK, VERSATO_A_PING, ERRORE_VERSAMENTO_A_PING, TRASFORMAZIONE_IN_CORSO, PREPARAZIONE_OGG_IN_CORSO,
-        WARNING_TRASFORMAZIONE, IN_CODA_HASH
+	DA_TRASFORMARE, TRASFORMAZIONE_NON_ATTIVA, TRASFORMATO, ERRORE_TRASFORMAZIONE,
+	IN_ATTESA_FILE, IN_ATTESA_SCHED, CHIUSO_OK, VERSATO_A_PING, ERRORE_VERSAMENTO_A_PING,
+	TRASFORMAZIONE_IN_CORSO, PREPARAZIONE_OGG_IN_CORSO, WARNING_TRASFORMAZIONE, IN_CODA_HASH
     }
 
     public enum TipiRegLogJob {
-        ERRORE, FINE_SCHEDULAZIONE, INIZIO_SCHEDULAZIONE
+	ERRORE, FINE_SCHEDULAZIONE, INIZIO_SCHEDULAZIONE
     }
 
     public class TipoHash {
 
-        private TipoHash() {
-            throw new IllegalStateException("Classe di utilità");
-        }
+	private TipoHash() {
+	    throw new IllegalStateException("Classe di utilità");
+	}
 
-        public static final String MD5 = "MD5";
-        public static final String SHA_1 = "SHA-1"; // questo è l'unico valore ammissibile
-        public static final String SHA_256 = "SHA-256";
+	public static final String MD5 = "MD5";
+	public static final String SHA_1 = "SHA-1"; // questo è l'unico valore ammissibile
+	public static final String SHA_256 = "SHA-256";
     }
 
     public enum Flag {
 
-        SI("1"), NO("0");
+	SI("1"), NO("0");
 
-        private final String value;
+	private final String value;
 
-        private Flag(String value) {
-            this.value = value;
-        }
+	private Flag(String value) {
+	    this.value = value;
+	}
 
-        public String getValue() {
-            return value;
-        }
+	public String getValue() {
+	    return value;
+	}
     }
 
     public static final int XF_OUTPUT_FILE_BASE_NAME_MAX_LENGTH = 70;

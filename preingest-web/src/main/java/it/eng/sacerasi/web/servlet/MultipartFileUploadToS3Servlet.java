@@ -1,25 +1,20 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
+ */
 package it.eng.sacerasi.web.servlet;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
@@ -71,114 +66,117 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
     /**
      * Handles an HTTP POST request from Plupload.
      *
-     * @param req
-     *            The HTTP request
-     * @param resp
-     *            The HTTP response
+     * @param req  The HTTP request
+     * @param resp The HTTP response
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String responseString = RESP_SUCCESS;
-        boolean isMultipart = ServletFileUpload.isMultipartContent(req);
-        boolean inErrore = false;
-        int chunk = 0;
-        int chunks = 0;
-        String nomeFile = null;
-        String nomeCampo = null;
-        String idSessione = null;
-        String nmTipoDocumento = null;
-        S3UploadSessionSU s3UploadSession = null;
-        BigDecimal dimensione = null;
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	    throws ServletException, IOException {
+	String responseString = RESP_SUCCESS;
+	boolean isMultipart = ServletFileUpload.isMultipartContent(req);
+	boolean inErrore = false;
+	int chunk = 0;
+	int chunks = 0;
+	String nomeFile = null;
+	String nomeCampo = null;
+	String idSessione = null;
+	String nmTipoDocumento = null;
+	S3UploadSessionSU s3UploadSession = null;
+	BigDecimal dimensione = null;
 
-        if (isMultipart) {
-            ServletFileUpload upload = new ServletFileUpload();
-            try {
-                FileItemIterator iter = upload.getItemIterator(req);
-                while (iter.hasNext()) {
-                    FileItemStream item = iter.next();
-                    InputStream input = item.openStream();
-                    // Gestisce un form field.
-                    if (item.isFormField()) {
-                        nomeCampo = item.getFieldName();
-                        String value = Streams.asString(input);
-                        if ("name".equals(nomeCampo)) {
-                            nomeFile = value;
-                        } else if ("chunks".equals(nomeCampo)) {
-                            chunks = Integer.parseInt(value);
-                        } else if ("chunk".equals(nomeCampo)) {
-                            chunk = Integer.parseInt(value);
-                        } else if ("nmTipoDocumento".equals(nomeCampo)) {
-                            nmTipoDocumento = value;
-                        } else if ("idSessione".equals(nomeCampo)) {
-                            idSessione = value;
-                        } else if ("dimensione".equals(nomeCampo)) {
-                            dimensione = new BigDecimal(value);
-                        }
-                    } // Gestisce un multi-part MIME encoded file.
-                    else {
-                        if (chunk == 0) {
-                            /*
-                             * Prima di iniziare determina il nome del FileOS e lo mette in sessione di Upload. Ottiene
-                             * dalla sessione l'ID dello strumento urbanistico
-                             */
-                            StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) req.getSession()
-                                    .getAttribute("###_FORM_CONTAINER");
-                            BigDecimal idStrumento = form.getDatiGeneraliOutput().getId_strumenti_urbanistici_out()
-                                    .parse();
+	if (isMultipart) {
+	    ServletFileUpload upload = new ServletFileUpload();
+	    try {
+		FileItemIterator iter = upload.getItemIterator(req);
+		while (iter.hasNext()) {
+		    FileItemStream item = iter.next();
+		    InputStream input = item.openStream();
+		    // Gestisce un form field.
+		    if (item.isFormField()) {
+			nomeCampo = item.getFieldName();
+			String value = Streams.asString(input);
+			if ("name".equals(nomeCampo)) {
+			    nomeFile = value;
+			} else if ("chunks".equals(nomeCampo)) {
+			    chunks = Integer.parseInt(value);
+			} else if ("chunk".equals(nomeCampo)) {
+			    chunk = Integer.parseInt(value);
+			} else if ("nmTipoDocumento".equals(nomeCampo)) {
+			    nmTipoDocumento = value;
+			} else if ("idSessione".equals(nomeCampo)) {
+			    idSessione = value;
+			} else if ("dimensione".equals(nomeCampo)) {
+			    dimensione = new BigDecimal(value);
+			}
+		    } // Gestisce un multi-part MIME encoded file.
+		    else {
+			if (chunk == 0) {
+			    /*
+			     * Prima di iniziare determina il nome del FileOS e lo mette in sessione
+			     * di Upload. Ottiene dalla sessione l'ID dello strumento urbanistico
+			     */
+			    StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) req
+				    .getSession().getAttribute("###_FORM_CONTAINER");
+			    BigDecimal idStrumento = form.getDatiGeneraliOutput()
+				    .getId_strumenti_urbanistici_out().parse();
 
-                            // MEV 34843
-                            BackendStorage backendVersamento = salvataggioBackendHelper
-                                    .getBackendForStrumentiUrbanistici();
-                            ObjectStorageBackend config = salvataggioBackendHelper
-                                    .getObjectStorageConfigurationForStrumentiUrbanistici(
-                                            backendVersamento.getBackendName());
+			    // MEV 34843
+			    BackendStorage backendVersamento = salvataggioBackendHelper
+				    .getBackendForStrumentiUrbanistici();
+			    ObjectStorageBackend config = salvataggioBackendHelper
+				    .getObjectStorageConfigurationForStrumentiUrbanistici(
+					    backendVersamento.getBackendName());
 
-                            SUDto su = strumentiUrbanisticiEjb.getSUById(idStrumento);
-                            String nmFileOs = versamentoOggettoEjb.computeOsFileKey(su.getIdVers(), nomeFile,
-                                    VersamentoOggettoEjb.OS_KEY_POSTFIX.SU.name());
-                            s3UploadSession = new S3UploadSessionSU(salvataggioBackendHelper, idStrumento,
-                                    config.getBucket(), nmFileOs);
-                            if (s3UploadSession.existsFileOnOS()) {
-                                responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
-                                log.info(String.format("Il file [%s] già esiste sull'object storage!", nmFileOs));
-                                inErrore = true;
-                            } else {
-                                req.getSession().setAttribute(idSessione, s3UploadSession);
-                            }
-                        } else {
-                            s3UploadSession = (S3UploadSessionSU) req.getSession().getAttribute(idSessione);
-                        }
-                        /* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
-                        if (inErrore == false && s3UploadSession.uploadChunk(input, chunk, chunks)) {
-                            StrumentiUrbanisticiEjb.DocStrumDto dto = new StrumentiUrbanisticiEjb.DocStrumDto();
-                            dto.setIdStrumentiUrbanistici(s3UploadSession.getIdStrumentiUrbanistici());
-                            dto.setNmFileOrig(nomeFile);
-                            dto.setNmFileOs(s3UploadSession.getKeyName());
-                            dto.setNmTipoDocumento(nmTipoDocumento);
-                            dto.setDimensione(dimensione);
-                            strumentiUrbanisticiEjb.salvaTipoDocumento(dto);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                responseString = RESP_ERROR;
-                log.error("Eccezione", e);
-            }
-        } // Non una multi-part MIME request.
-        else {
-            responseString = RESP_ERROR;
-        }
-        if (chunk == chunks - 1) {
-            log.debug("nome：" + nomeFile);
-            log.debug("nmTipoDocumento：" + nmTipoDocumento);
-            req.getSession().removeAttribute(idSessione);
-        }
-        resp.setContentType(JSON);
-        byte[] responseBytes = responseString.getBytes();
-        resp.setContentLength(responseBytes.length);
-        ServletOutputStream output = resp.getOutputStream();
-        output.write(responseBytes);
-        output.flush();
+			    SUDto su = strumentiUrbanisticiEjb.getSUById(idStrumento);
+			    String nmFileOs = versamentoOggettoEjb.computeOsFileKey(su.getIdVers(),
+				    nomeFile, VersamentoOggettoEjb.OS_KEY_POSTFIX.SU.name());
+			    s3UploadSession = new S3UploadSessionSU(salvataggioBackendHelper,
+				    idStrumento, config.getBucket(), nmFileOs);
+			    if (s3UploadSession.existsFileOnOS()) {
+				responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
+				log.info(String.format(
+					"Il file [%s] già esiste sull'object storage!", nmFileOs));
+				inErrore = true;
+			    } else {
+				req.getSession().setAttribute(idSessione, s3UploadSession);
+			    }
+			} else {
+			    s3UploadSession = (S3UploadSessionSU) req.getSession()
+				    .getAttribute(idSessione);
+			}
+			/* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
+			if (inErrore == false
+				&& s3UploadSession.uploadChunk(input, chunk, chunks)) {
+			    StrumentiUrbanisticiEjb.DocStrumDto dto = new StrumentiUrbanisticiEjb.DocStrumDto();
+			    dto.setIdStrumentiUrbanistici(
+				    s3UploadSession.getIdStrumentiUrbanistici());
+			    dto.setNmFileOrig(nomeFile);
+			    dto.setNmFileOs(s3UploadSession.getKeyName());
+			    dto.setNmTipoDocumento(nmTipoDocumento);
+			    dto.setDimensione(dimensione);
+			    strumentiUrbanisticiEjb.salvaTipoDocumento(dto);
+			}
+		    }
+		}
+	    } catch (Exception e) {
+		responseString = RESP_ERROR;
+		log.error("Eccezione", e);
+	    }
+	} // Non una multi-part MIME request.
+	else {
+	    responseString = RESP_ERROR;
+	}
+	if (chunk == chunks - 1) {
+	    log.debug("nome：" + nomeFile);
+	    log.debug("nmTipoDocumento：" + nmTipoDocumento);
+	    req.getSession().removeAttribute(idSessione);
+	}
+	resp.setContentType(JSON);
+	byte[] responseBytes = responseString.getBytes();
+	resp.setContentLength(responseBytes.length);
+	ServletOutputStream output = resp.getOutputStream();
+	output.write(responseBytes);
+	output.flush();
     }
 
 }

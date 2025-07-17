@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.ws.util;
@@ -34,15 +30,17 @@ public class AvanzamentoWs implements java.io.Serializable {
 
     public enum Funzioni {
 
-        VersamentoSync, AggiuntaDocumentiSync, Recupero, // deve essere tolto!!!
-        RichiestaStato, Restituzione, VersamentoAsyncInit, VersamentoAsyncFile, VersamentoAsyncChiusura, RecuperoWeb
+	VersamentoSync, AggiuntaDocumentiSync, Recupero, // deve essere tolto!!!
+	RichiestaStato, Restituzione, VersamentoAsyncInit, VersamentoAsyncFile,
+	VersamentoAsyncChiusura, RecuperoWeb
     }
 
     public enum CheckPoints {
 
-        Inizio, TrasferimentoPayloadIn, VerificaStrutturaChiamataWs, VerificaSemantica, VerificaCoerenzaComponentiFile,
-        VerificaFirmeComponenti, VerificaFormatoFileComponenti, SalvataggioDatiVersati, SalvataggioSessioneWS,
-        CreazioneRisposta, InvioRisposta, Pulizia, Fine
+	Inizio, TrasferimentoPayloadIn, VerificaStrutturaChiamataWs, VerificaSemantica,
+	VerificaCoerenzaComponentiFile, VerificaFirmeComponenti, VerificaFormatoFileComponenti,
+	SalvataggioDatiVersati, SalvataggioSessioneWS, CreazioneRisposta, InvioRisposta, Pulizia,
+	Fine
     }
 
     //
@@ -67,98 +65,100 @@ public class AvanzamentoWs implements java.io.Serializable {
 
     // costruttore privato, la classe non � direttamente istanziabile
     private AvanzamentoWs() {
-        this.reset();
+	this.reset();
     }
 
     // factory, che assegna il session Id
     public static AvanzamentoWs nuovoAvanzamentoWS(String instance, Funzioni funz) {
-        AvanzamentoWs tmpAvanzamentoWS = null;
-        UUID tmpUuid;
+	AvanzamentoWs tmpAvanzamentoWS = null;
+	UUID tmpUuid;
 
-        tmpUuid = UUID.randomUUID();
-        tmpAvanzamentoWS = new AvanzamentoWs();
-        tmpAvanzamentoWS.instanceName = instance;
-        tmpAvanzamentoWS.sessionId = tmpUuid;
-        tmpAvanzamentoWS.funzione = funz;
+	tmpUuid = UUID.randomUUID();
+	tmpAvanzamentoWS = new AvanzamentoWs();
+	tmpAvanzamentoWS.instanceName = instance;
+	tmpAvanzamentoWS.sessionId = tmpUuid;
+	tmpAvanzamentoWS.funzione = funz;
 
-        return tmpAvanzamentoWS;
+	return tmpAvanzamentoWS;
     }
 
     public AvanzamentoWs logAvanzamento() {
 
-        StringBuilder tmpBuilder = new StringBuilder();
+	StringBuilder tmpBuilder = new StringBuilder();
 
-        if (log.isInfoEnabled() && this.sessionId != null) {
-            tmpBuilder.append(String.format("I: %s ; ", this.getInstanceName()));
-            tmpBuilder.append(String.format("SID: %s ; ", this.getFormattedSessionId()));
-            tmpBuilder.append(String.format("F: %s ; ", this.getFunzione().toString()));
-            tmpBuilder.append(String.format("CP: %s ; ", this.getCheckPoint().toString()));
+	if (log.isInfoEnabled() && this.sessionId != null) {
+	    tmpBuilder.append(String.format("I: %s ; ", this.getInstanceName()));
+	    tmpBuilder.append(String.format("SID: %s ; ", this.getFormattedSessionId()));
+	    tmpBuilder.append(String.format("F: %s ; ", this.getFunzione().toString()));
+	    tmpBuilder.append(String.format("CP: %s ; ", this.getCheckPoint().toString()));
 
-            if (!this.getFase().isEmpty()) {
-                tmpBuilder.append(String.format("F: %s ; ", this.getFase()));
-            }
+	    if (!this.getFase().isEmpty()) {
+		tmpBuilder.append(String.format("F: %s ; ", this.getFase()));
+	    }
 
-            if (!this.getVrsAmbiente().isEmpty()) {
-                tmpBuilder.append(String.format("Amb: %s ; ", this.getVrsAmbiente()));
-                tmpBuilder.append(String.format("Ente: %s ; ", this.getVrsEnte()));
-                tmpBuilder.append(String.format("Strutt: %s ; ", this.getVrsStruttura()));
-            }
+	    if (!this.getVrsAmbiente().isEmpty()) {
+		tmpBuilder.append(String.format("Amb: %s ; ", this.getVrsAmbiente()));
+		tmpBuilder.append(String.format("Ente: %s ; ", this.getVrsEnte()));
+		tmpBuilder.append(String.format("Strutt: %s ; ", this.getVrsStruttura()));
+	    }
 
-            if (!this.getVrsUser().isEmpty()) {
-                tmpBuilder.append(String.format("U: %s ; ", this.getVrsUser()));
-            }
+	    if (!this.getVrsUser().isEmpty()) {
+		tmpBuilder.append(String.format("U: %s ; ", this.getVrsUser()));
+	    }
 
-            if (!this.getChAnno().isEmpty()) {
-                tmpBuilder.append(String.format("Anno: %s ; ", this.getChAnno()));
-                tmpBuilder.append(String.format("Num: %s ; ", this.getChNumero()));
-                tmpBuilder.append(String.format("Reg: %s ; ", this.getChRegistro()));
-            }
+	    if (!this.getChAnno().isEmpty()) {
+		tmpBuilder.append(String.format("Anno: %s ; ", this.getChAnno()));
+		tmpBuilder.append(String.format("Num: %s ; ", this.getChNumero()));
+		tmpBuilder.append(String.format("Reg: %s ; ", this.getChRegistro()));
+	    }
 
-            if (!this.getDocumento().isEmpty()) {
-                tmpBuilder.append(String.format("Doc: %s ; ", this.getDocumento()));
-            }
+	    if (!this.getDocumento().isEmpty()) {
+		tmpBuilder.append(String.format("Doc: %s ; ", this.getDocumento()));
+	    }
 
-            if (!this.getComponente().isEmpty()) {
-                tmpBuilder.append(String.format("Comp: %s ; ", this.getComponente()));
-            }
+	    if (!this.getComponente().isEmpty()) {
+		tmpBuilder.append(String.format("Comp: %s ; ", this.getComponente()));
+	    }
 
-            log.info(tmpBuilder.toString());
-        }
+	    log.info(tmpBuilder.toString());
+	}
 
-        return this;
+	return this;
     }
 
     public AvanzamentoWs reset() {
-        checkPoint = CheckPoints.Inizio;
-        chNumero = "";
-        chAnno = "";
-        chRegistro = "";
-        vrsAmbiente = "";
-        vrsEnte = "";
-        vrsStruttura = "";
-        vrsUser = "";
-        this.resetFase();
-        return this;
+	checkPoint = CheckPoints.Inizio;
+	chNumero = "";
+	chAnno = "";
+	chRegistro = "";
+	vrsAmbiente = "";
+	vrsEnte = "";
+	vrsStruttura = "";
+	vrsUser = "";
+	this.resetFase();
+	return this;
     }
 
     public AvanzamentoWs resetFase() {
-        fase = "";
-        documento = "";
-        componente = "";
-        return this;
+	fase = "";
+	documento = "";
+	componente = "";
+	return this;
     }
 
     /*
      *
      */
     public String getFormattedSessionId() {
-        String uuid = null;
-        String tmpString = null;
-        if (this.sessionId != null) {
-            tmpString = StringUtils.leftPad(Long.toHexString(this.sessionId.getMostSignificantBits()), 16, "0");
-            uuid = tmpString + StringUtils.leftPad(Long.toHexString(this.sessionId.getLeastSignificantBits()), 16, "0");
-        }
-        return uuid;
+	String uuid = null;
+	String tmpString = null;
+	if (this.sessionId != null) {
+	    tmpString = StringUtils
+		    .leftPad(Long.toHexString(this.sessionId.getMostSignificantBits()), 16, "0");
+	    uuid = tmpString + StringUtils
+		    .leftPad(Long.toHexString(this.sessionId.getLeastSignificantBits()), 16, "0");
+	}
+	return uuid;
     }
 
     /*
@@ -168,128 +168,128 @@ public class AvanzamentoWs implements java.io.Serializable {
      * )
      */
     public String getInstanceName() {
-        return instanceName;
+	return instanceName;
     }
 
     public AvanzamentoWs setInstanceName(String instanceName) {
-        this.instanceName = instanceName;
-        return this;
+	this.instanceName = instanceName;
+	return this;
     }
 
     public UUID getSessionId() {
-        return sessionId;
+	return sessionId;
     }
 
     public AvanzamentoWs setSessionId(UUID sessionId) {
-        this.sessionId = sessionId;
-        return this;
+	this.sessionId = sessionId;
+	return this;
     }
 
     public Funzioni getFunzione() {
-        return funzione;
+	return funzione;
     }
 
     public AvanzamentoWs setFunzione(Funzioni funzione) {
-        this.funzione = funzione;
-        return this;
+	this.funzione = funzione;
+	return this;
     }
 
     public CheckPoints getCheckPoint() {
-        return checkPoint;
+	return checkPoint;
     }
 
     public AvanzamentoWs setCheckPoint(CheckPoints checkPoint) {
-        this.checkPoint = checkPoint;
-        return this;
+	this.checkPoint = checkPoint;
+	return this;
     }
 
     public String getFase() {
-        return fase;
+	return fase;
     }
 
     public AvanzamentoWs setFase(String fase) {
-        this.fase = fase;
-        return this;
+	this.fase = fase;
+	return this;
     }
 
     public String getChNumero() {
-        return chNumero;
+	return chNumero;
     }
 
     public AvanzamentoWs setChNumero(String chNumero) {
-        this.chNumero = chNumero;
-        return this;
+	this.chNumero = chNumero;
+	return this;
     }
 
     public String getChAnno() {
-        return chAnno;
+	return chAnno;
     }
 
     public AvanzamentoWs setChAnno(String chAnno) {
-        this.chAnno = chAnno;
-        return this;
+	this.chAnno = chAnno;
+	return this;
     }
 
     public String getChRegistro() {
-        return chRegistro;
+	return chRegistro;
     }
 
     public AvanzamentoWs setChRegistro(String chRegistro) {
-        this.chRegistro = chRegistro;
-        return this;
+	this.chRegistro = chRegistro;
+	return this;
     }
 
     public String getVrsAmbiente() {
-        return vrsAmbiente;
+	return vrsAmbiente;
     }
 
     public AvanzamentoWs setVrsAmbiente(String vrsAmbiente) {
-        this.vrsAmbiente = vrsAmbiente;
-        return this;
+	this.vrsAmbiente = vrsAmbiente;
+	return this;
     }
 
     public String getVrsEnte() {
-        return vrsEnte;
+	return vrsEnte;
     }
 
     public AvanzamentoWs setVrsEnte(String vrsEnte) {
-        this.vrsEnte = vrsEnte;
-        return this;
+	this.vrsEnte = vrsEnte;
+	return this;
     }
 
     public String getVrsStruttura() {
-        return vrsStruttura;
+	return vrsStruttura;
     }
 
     public AvanzamentoWs setVrsStruttura(String vrsStruttura) {
-        this.vrsStruttura = vrsStruttura;
-        return this;
+	this.vrsStruttura = vrsStruttura;
+	return this;
     }
 
     public String getVrsUser() {
-        return vrsUser;
+	return vrsUser;
     }
 
     public AvanzamentoWs setVrsUser(String vrsUser) {
-        this.vrsUser = vrsUser;
-        return this;
+	this.vrsUser = vrsUser;
+	return this;
     }
 
     public String getDocumento() {
-        return documento;
+	return documento;
     }
 
     public AvanzamentoWs setDocumento(String documento) {
-        this.documento = documento;
-        return this;
+	this.documento = documento;
+	return this;
     }
 
     public String getComponente() {
-        return componente;
+	return componente;
     }
 
     public AvanzamentoWs setComponente(String componente) {
-        this.componente = componente;
-        return this;
+	this.componente = componente;
+	return this;
     }
 }

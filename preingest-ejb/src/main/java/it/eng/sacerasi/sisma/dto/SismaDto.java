@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -78,383 +74,383 @@ public class SismaDto extends GenericDto {
     private String dsErr;
 
     public SismaDto() {
-        super();
+	super();
     }
 
     public String getTiTipoAtto() {
-        return tiTipoAtto;
+	return tiTipoAtto;
     }
 
     public void setTiTipoAtto(String tiTipoAtto) {
-        this.tiTipoAtto = tiTipoAtto;
+	this.tiTipoAtto = tiTipoAtto;
     }
 
     public String getCodiceIntervento() {
-        return codiceIntervento;
+	return codiceIntervento;
     }
 
     public void setCodiceIntervento(String codiceIntervento) {
-        this.codiceIntervento = codiceIntervento;
+	this.codiceIntervento = codiceIntervento;
     }
 
     public String getDenominazioneIntervento() {
-        return denominazioneIntervento;
+	return denominazioneIntervento;
     }
 
     public void setDenominazioneIntervento(String denominazioneIntervento) {
-        this.denominazioneIntervento = denominazioneIntervento;
+	this.denominazioneIntervento = denominazioneIntervento;
     }
 
     public String getDsFaseSisma() {
-        return dsFaseSisma;
+	return dsFaseSisma;
     }
 
     public void setDsFaseSisma(String dsFaseSisma) {
-        this.dsFaseSisma = dsFaseSisma;
+	this.dsFaseSisma = dsFaseSisma;
     }
 
     public String getCdTipoFinanziamento() {
-        return cdTipoFinanziamento;
+	return cdTipoFinanziamento;
     }
 
     public void setCdTipoFinanziamento(String cdTipoFinanziamento) {
-        this.cdTipoFinanziamento = cdTipoFinanziamento;
+	this.cdTipoFinanziamento = cdTipoFinanziamento;
     }
 
     public BigDecimal getIdTipoFinanziamento() {
-        return idTipoFinanziamento;
+	return idTipoFinanziamento;
     }
 
     public void setIdTipoFinanziamento(BigDecimal idTipoFinanziamento) {
-        this.idTipoFinanziamento = idTipoFinanziamento;
+	this.idTipoFinanziamento = idTipoFinanziamento;
     }
 
     public String getDsTipoFinanziamento() {
-        return dsTipoFinanziamento;
+	return dsTipoFinanziamento;
     }
 
     public void setDsTipoFinanziamento(String dsTipoFinanziamento) {
-        this.dsTipoFinanziamento = dsTipoFinanziamento;
+	this.dsTipoFinanziamento = dsTipoFinanziamento;
     }
 
     public Date getDtStato() {
-        return dtStato;
+	return dtStato;
     }
 
     public void setDtStato(Date dtStato) {
-        this.dtStato = dtStato;
+	this.dtStato = dtStato;
     }
 
     public String getDsDescrizione() {
-        return dsDescrizione;
+	return dsDescrizione;
     }
 
     public void setDsDescrizione(String dsDescrizione) {
-        this.dsDescrizione = dsDescrizione;
+	this.dsDescrizione = dsDescrizione;
     }
 
     public String getCdKey() {
-        return cdKey;
+	return cdKey;
     }
 
     public void setCdKey(String cdKey) {
-        this.cdKey = cdKey;
+	this.cdKey = cdKey;
     }
 
     public Date getData() {
-        return data;
+	return data;
     }
 
     public void setData(Date data) {
-        this.data = data;
+	this.data = data;
     }
 
     public long getIdSisma() {
-        return idSisma;
+	return idSisma;
     }
 
     public void setIdSisma(long idSisma) {
-        this.idSisma = idSisma;
+	this.idSisma = idSisma;
     }
 
     public BigDecimal getIdVers() {
-        return idVers;
+	return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     public String getTiStato() {
-        return tiStato;
+	return tiStato;
     }
 
     public void setTiStato(String tiStato) {
-        this.tiStato = tiStato;
+	this.tiStato = tiStato;
     }
 
     public Date getDtCreazione() {
-        return dtCreazione;
+	return dtCreazione;
     }
 
     public void setDtCreazione(Date dtCreazione) {
-        this.dtCreazione = dtCreazione;
+	this.dtCreazione = dtCreazione;
     }
 
     public BigDecimal getPriorita() {
-        return priorita;
+	return priorita;
     }
 
     public void setPriorita(BigDecimal priorita) {
-        this.priorita = priorita;
+	this.priorita = priorita;
     }
 
     public long getIdUserIam() {
-        return idUserIam;
+	return idUserIam;
     }
 
     public void setIdUserIam(long idUserIam) {
-        this.idUserIam = idUserIam;
+	this.idUserIam = idUserIam;
     }
 
     public BigDecimal getAnno() {
-        return anno;
+	return anno;
     }
 
     public void setAnno(BigDecimal anno) {
-        this.anno = anno;
+	this.anno = anno;
     }
 
     public String getNumero() {
-        return numero;
+	return numero;
     }
 
     public void setNumero(String numero) {
-        this.numero = numero;
+	this.numero = numero;
     }
 
     public String getNmAmbienteVers() {
-        return nmAmbienteVers;
+	return nmAmbienteVers;
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-        this.nmAmbienteVers = nmAmbienteVers;
+	this.nmAmbienteVers = nmAmbienteVers;
     }
 
     public String getNmTipoSisma() {
-        return nmTipoSisma;
+	return nmTipoSisma;
     }
 
     public void setNmTipoSisma(String nmTipoSisma) {
-        this.nmTipoSisma = nmTipoSisma;
+	this.nmTipoSisma = nmTipoSisma;
     }
 
     public String getTiFaseSisma() {
-        return tiFaseSisma;
+	return tiFaseSisma;
     }
 
     public void setTiFaseSisma(String tiFaseSisma) {
-        this.tiFaseSisma = tiFaseSisma;
+	this.tiFaseSisma = tiFaseSisma;
     }
 
     public String getOggetto() {
-        return oggetto;
+	return oggetto;
     }
 
     public void setOggetto(String oggetto) {
-        this.oggetto = oggetto;
+	this.oggetto = oggetto;
     }
 
     public String getCdErr() {
-        return cdErr;
+	return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-        this.cdErr = cdErr;
+	this.cdErr = cdErr;
     }
 
     public String getDsErr() {
-        return dsErr;
+	return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-        this.dsErr = dsErr;
+	this.dsErr = dsErr;
     }
 
     public BigDecimal getIdSismaValAtto() {
-        return idSismaValAtto;
+	return idSismaValAtto;
     }
 
     public void setIdSismaValAtto(BigDecimal idSismaValAtto) {
-        this.idSismaValAtto = idSismaValAtto;
+	this.idSismaValAtto = idSismaValAtto;
     }
 
     public String getNmTipoAtto() {
-        return nmTipoAtto;
+	return nmTipoAtto;
     }
 
     public void setNmTipoAtto(String nmTipoAtto) {
-        this.nmTipoAtto = nmTipoAtto;
+	this.nmTipoAtto = nmTipoAtto;
     }
 
     public BigDecimal getAnnoAg() {
-        return annoAg;
+	return annoAg;
     }
 
     public void setAnnoAg(BigDecimal annoAg) {
-        this.annoAg = annoAg;
+	this.annoAg = annoAg;
     }
 
     public String getNumeroAg() {
-        return numeroAg;
+	return numeroAg;
     }
 
     public void setNumeroAg(String numeroAg) {
-        this.numeroAg = numeroAg;
+	this.numeroAg = numeroAg;
     }
 
     public String getRegistroAg() {
-        return registroAg;
+	return registroAg;
     }
 
     public void setRegistroAg(String registroAg) {
-        this.registroAg = registroAg;
+	this.registroAg = registroAg;
     }
 
     public Date getDataAg() {
-        return dataAg;
+	return dataAg;
     }
 
     public void setDataAg(Date dataAg) {
-        this.dataAg = dataAg;
+	this.dataAg = dataAg;
     }
 
     public String getClassifica() {
-        return classifica;
+	return classifica;
     }
 
     public void setClassifica(String classifica) {
-        this.classifica = classifica;
+	this.classifica = classifica;
     }
 
     public String getIdFascicolo() {
-        return idFascicolo;
+	return idFascicolo;
     }
 
     public void setIdFascicolo(String idFascicolo) {
-        this.idFascicolo = idFascicolo;
+	this.idFascicolo = idFascicolo;
     }
 
     public String getOggettoFascicolo() {
-        return oggettoFascicolo;
+	return oggettoFascicolo;
     }
 
     public void setOggettoFascicolo(String oggettoFascicolo) {
-        this.oggettoFascicolo = oggettoFascicolo;
+	this.oggettoFascicolo = oggettoFascicolo;
     }
 
     public String getIdSottofascicolo() {
-        return idSottofascicolo;
+	return idSottofascicolo;
     }
 
     public void setIdSottofascicolo(String idSottofascicolo) {
-        this.idSottofascicolo = idSottofascicolo;
+	this.idSottofascicolo = idSottofascicolo;
     }
 
     public String getOggettoSottofascicolo() {
-        return oggettoSottofascicolo;
+	return oggettoSottofascicolo;
     }
 
     public void setOggettoSottofascicolo(String oggettoSottofascicolo) {
-        this.oggettoSottofascicolo = oggettoSottofascicolo;
+	this.oggettoSottofascicolo = oggettoSottofascicolo;
     }
 
     public String getClassificaAg() {
-        return classificaAg;
+	return classificaAg;
     }
 
     public void setClassificaAg(String classificaAg) {
-        this.classificaAg = classificaAg;
+	this.classificaAg = classificaAg;
     }
 
     public String getIdFascicoloAg() {
-        return idFascicoloAg;
+	return idFascicoloAg;
     }
 
     public void setIdFascicoloAg(String idFascicoloAg) {
-        this.idFascicoloAg = idFascicoloAg;
+	this.idFascicoloAg = idFascicoloAg;
     }
 
     public String getOggettoFascicoloAg() {
-        return oggettoFascicoloAg;
+	return oggettoFascicoloAg;
     }
 
     public void setOggettoFascicoloAg(String oggettoFascicoloAg) {
-        this.oggettoFascicoloAg = oggettoFascicoloAg;
+	this.oggettoFascicoloAg = oggettoFascicoloAg;
     }
 
     public String getIdSottofascicoloAg() {
-        return idSottofascicoloAg;
+	return idSottofascicoloAg;
     }
 
     public void setIdSottofascicoloAg(String idSottofascicoloAg) {
-        this.idSottofascicoloAg = idSottofascicoloAg;
+	this.idSottofascicoloAg = idSottofascicoloAg;
     }
 
     public String getOggettoSottofascicoloAg() {
-        return oggettoSottofascicoloAg;
+	return oggettoSottofascicoloAg;
     }
 
     public void setOggettoSottofascicoloAg(String oggettoSottofascicoloAg) {
-        this.oggettoSottofascicoloAg = oggettoSottofascicoloAg;
+	this.oggettoSottofascicoloAg = oggettoSottofascicoloAg;
     }
 
     public boolean isFlInviatoAEnte() {
-        return flInviatoAEnte;
+	return flInviatoAEnte;
     }
 
     public void setFlInviatoAEnte(boolean flInviatoAEnte) {
-        this.flInviatoAEnte = flInviatoAEnte;
+	this.flInviatoAEnte = flInviatoAEnte;
     }
 
     public boolean isFlInterventoSoggettoATutela() {
-        return flInterventoSoggettoATutela;
+	return flInterventoSoggettoATutela;
     }
 
     public void setFlInterventoSoggettoATutela(boolean flInterventoSoggettoATutela) {
-        this.flInterventoSoggettoATutela = flInterventoSoggettoATutela;
+	this.flInterventoSoggettoATutela = flInterventoSoggettoATutela;
     }
 
     public BigDecimal getIdSismaProgettiAg() {
-        return idSismaProgettiAg;
+	return idSismaProgettiAg;
     }
 
     public void setIdSismaProgettiAg(BigDecimal idSismaProgettiAg) {
-        this.idSismaProgettiAg = idSismaProgettiAg;
+	this.idSismaProgettiAg = idSismaProgettiAg;
     }
 
     public BigDecimal getIdSismaFaseProgetto() {
-        return idSismaFaseProgetto;
+	return idSismaFaseProgetto;
     }
 
     public void setIdSismaFaseProgetto(BigDecimal idSismaFaseProgetto) {
-        this.idSismaFaseProgetto = idSismaFaseProgetto;
+	this.idSismaFaseProgetto = idSismaFaseProgetto;
     }
 
     public BigDecimal getIdSismaStatoProgetto() {
-        return idSismaStatoProgetto;
+	return idSismaStatoProgetto;
     }
 
     public void setIdSismaStatoProgetto(BigDecimal idSismaStatoProgetto) {
-        this.idSismaStatoProgetto = idSismaStatoProgetto;
+	this.idSismaStatoProgetto = idSismaStatoProgetto;
     }
 
     public String getDsStatoProgetto() {
-        return dsStatoProgetto;
+	return dsStatoProgetto;
     }
 
     public void setDsStatoProgetto(String dsStatoProgetto) {
-        this.dsStatoProgetto = dsStatoProgetto;
+	this.dsStatoProgetto = dsStatoProgetto;
     }
 
 }

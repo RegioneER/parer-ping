@@ -4,7 +4,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>sacerping-jboss</artifactId>
-        <version>8.0.2-SNAPSHOT</version>
+        <version>8.1.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-jpa</artifactId>
@@ -16,11 +16,6 @@
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>        
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-paginator-ejb</artifactId>

@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>8.0.2-SNAPSHOT</version>
+        <version>8.1.0</version>
     </parent>
 
     <artifactId>sacerping-jboss-ejb</artifactId>
@@ -19,19 +19,10 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.4.0.Final</version>
+                <version>${arquillian-bom.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <!-- Utilizzato per il client ejb remoto sul test -->
-            <dependency>
-                <groupId>org.jboss.as</groupId>
-                <artifactId>jboss-as-ejb-client-bom</artifactId>
-                <version>7.5.0.Final-redhat-21</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
+            </dependency>                        
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -147,100 +138,36 @@
             <artifactId>jackson-databind</artifactId>  
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>2.2.0.redhat-00001</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.eng.parer</groupId>    
-            <artifactId>parer-test-suite</artifactId>
-            <version>0.0.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-arquillian-container-managed</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.protocol</groupId>
-            <artifactId>arquillian-protocol-servlet</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>net.sourceforge.javacsv</groupId>
             <artifactId>javacsv</artifactId>
-        </dependency>
-        <!-- JBoss EJB client API jar. We use runtime scope because the EJB client API
-        isn't directly used in this example. We just need it in our runtime classpath -->
-        <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jboss-ejb-client</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- client communications with the server use XNIO -->
-        <dependency>
-            <groupId>org.jboss.xnio</groupId>
-            <artifactId>xnio-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.xnio</groupId>
-            <artifactId>xnio-nio</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- The client needs JBoss remoting to access the server -->
-        <dependency>
-            <groupId>org.jboss.remoting3</groupId>
-            <artifactId>jboss-remoting</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- Remote EJB accesses can be secured -->
-        <dependency>
-            <groupId>org.jboss.sasl</groupId>
-            <artifactId>jboss-sasl</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- data serialization for invoking remote EJBs -->
-        <dependency>
-            <groupId>org.jboss.marshalling</groupId>
-            <artifactId>jboss-marshalling-river</artifactId>
-            <scope>test</scope>
-        </dependency>
-
+        </dependency>		
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-timer-wrapper-ejb</artifactId>
             <type>ejb</type>
         </dependency>
-        <!-- Incluso per l'ejb del logging applicativo -->
+		<!-- Incluso per l'ejb del logging applicativo -->
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-sl-ejb</artifactId>
             <scope>provided</scope>
             <type>ejb</type>
-        </dependency>        
-        <!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
+        </dependency>
+		<!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>idp-jaas-rdbms</artifactId>
-        </dependency>        
-        <!-- xFormer -->
+        </dependency>
+		<!-- xFormer -->
         <dependency>
             <groupId>it.eng.parer</groupId>
             <artifactId>parer-kettle-soap-client</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>xerces</groupId>
+            		<artifactId>xercesImpl</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -251,8 +178,13 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <scope>provided</scope>
-        </dependency>                 
-        <!-- Amazon S3 -->
+        </dependency>         		
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-simple</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Amazon S3 -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
@@ -260,8 +192,8 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>apache-client</artifactId>
-        </dependency>   
-        <!--dependency>
+        </dependency>
+		<!--dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
         </dependency-->
@@ -276,7 +208,52 @@
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
-        </dependency>                     
+        </dependency>
+		<!-- Unit Test -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>it.eng.parer</groupId>
+			<artifactId>parer-test-suite</artifactId>
+			<version>0.0.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.junit5</groupId>
+			<artifactId>arquillian-junit5-container</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wildfly.arquillian</groupId>
+			<artifactId>wildfly-arquillian-container-managed</artifactId>
+			<version>5.0.1.Final</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.protocol</groupId>
+			<artifactId>arquillian-protocol-servlet</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- client communications with the server use XNIO -->
+		<dependency>
+			<groupId>org.jboss.xnio</groupId>
+			<artifactId>xnio-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.xnio</groupId>
+			<artifactId>xnio-nio</artifactId>
+			<scope>test</scope>
+		</dependency>               
     </dependencies>
 
     <build>

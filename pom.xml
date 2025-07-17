@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>8.0.2-SNAPSHOT</version>
+    <version>8.1.0</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -10,7 +10,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>parer-pom</artifactId>
-        <version>7.0.0</version>
+        <version>7.1.1</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,26 +20,25 @@
         <sacer.xmlmodule.version>2.11.1</sacer.xmlmodule.version>
         <preingest.xmlmodule.version>3.2.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
-        <spagofat.version>7.0.0</spagofat.version>
+        <spagofat.version>7.1.2</spagofat.version>
         <parer-kettle-soap-client.version>2.0.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
         <xadisk.version>1.2.2.5</xadisk.version>
         <javacsv.version>2.0</javacsv.version>
-        <software.amazon.awssdk.version>2.30.37</software.amazon.awssdk.version>
+        <software.amazon.awssdk.version>2.31.63</software.amazon.awssdk.version>
         <netty.version>4.1.118.Final</netty.version>
         <xml-resolver.version>1.2</xml-resolver.version>
-        <tika.version>2.9.2</tika.version>  
+        <tika.version>3.1.0</tika.version>  
         <!-- WEBJARS -->        
         <plupload.version>2.3.9</plupload.version>
         <!-- Java 11 - Hibernate jpamodelgen -->
         <hibernate-jpamodelgen-version>5.6.14.Final-redhat-00001</hibernate-jpamodelgen-version>
         <!-- JBoss EAP -->
-        <cxf-rt.version>3.3.13.redhat-00001</cxf-rt.version>  
-<!--        <woodstox-core.version>6.0.3.redhat-00001</woodstox-core.version> -->
+        <cxf-rt.version>3.4.10.redhat-00001</cxf-rt.version>
         <woodstox-core.version>7.0.0.redhat-00001</woodstox-core.version>
-		<!-- jaxp-jdk11 -->
-		<jaxp-jdk11.version>0.0.3</jaxp-jdk11.version>		
+        <!-- jaxp-jdk11 -->
+        <jaxp-jdk11.version>0.0.3</jaxp-jdk11.version>      
     </properties>
 
 <distributionManagement>
@@ -91,12 +90,6 @@
                 <groupId>it.eng.parer</groupId>
                 <artifactId>preingest-xml</artifactId>
                 <version>${preingest.xmlmodule.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>net.java.xadisk</groupId>
@@ -154,19 +147,7 @@
                 <version>${xml-resolver.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <dependency>
-                <groupId>xalan</groupId>
-                <artifactId>xalan</artifactId>
-                <version>${xalan.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>xalan</groupId>
-                <artifactId>serializer</artifactId>
-                <version>${xalan.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <!-- per xFormer -->
+			<!-- per xFormer -->
             <dependency>
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
@@ -204,27 +185,6 @@
                 <artifactId>cxf-rt-frontend-jaxws</artifactId>
                 <version>${cxf-rt.version}</version>
             </dependency>
-            <!-- Nota : inserite dipendenze managed (non presenti su EAR) ma transitive su cfx { -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-ws-addr</artifactId>
-                <version>${cxf-rt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-ws-policy</artifactId>
-                <version>${cxf-rt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-bindings-xml</artifactId>
-                <version>${cxf-rt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-bindings-soap</artifactId>
-                <version>${cxf-rt.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-simple</artifactId>
@@ -232,16 +192,36 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-core</artifactId>
-                <version>${cxf-api.version}</version>
+                <artifactId>cxf-core</artifactId>
+                <version>${cxf-rt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-api</artifactId>
-                <version>${cxf-api.version}</version>
+                <artifactId>cxf-rt-bindings-soap</artifactId>
+                <version>${cxf-rt.version}</version>
             </dependency>
-            <!-- } -->
-            <!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-rt-databinding-jaxb</artifactId>
+				<version>${cxf-rt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-rt-bindings-xml</artifactId>
+				<version>${cxf-rt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-rt-ws-addr</artifactId>
+				<version>${cxf-rt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-rt-ws-policy</artifactId>
+				<version>${cxf-rt.version}</version>
+			</dependency>
+			<!-- } -->
+			<!-- Questo è il modulo di login dell'IDP, usato come libreria per le funzioni di logging -->
             <dependency>
                 <groupId>it.eng.parer</groupId>
                 <artifactId>idp-jaas-rdbms</artifactId>
@@ -264,7 +244,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Netty AWS-->
+			<!-- Netty AWS-->
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
@@ -304,8 +284,8 @@
                 <groupId>org.apache.santuario</groupId>
                 <artifactId>xmlsec</artifactId>
                 <version>${xmlsec.version}</version>
-            </dependency>	
-            <!-- apache commons -->
+            </dependency>
+			<!-- apache commons -->
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
@@ -316,8 +296,8 @@
                 <artifactId>xml-apis</artifactId>
                 <version>${xml-apis.version}</version>
                 <scope>provided</scope>               
-            </dependency>	   
-            <!-- JS webjars -->
+            </dependency>
+			<!-- JS webjars -->
             <dependency>
                 <groupId>org.webjars.bower</groupId>
                 <artifactId>plupload</artifactId>

@@ -18,7 +18,7 @@
                         } 
                         var rigaNuova = '<TD id="filename_' + numero + '">';
                         if (giaInserito) {
-                            rigaNuova+= '<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + nmFileOrig + '" download id="download" class="DownloadSU"></a>' + nmFileOrig;
+                            rigaNuova+= '<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + encodeURIComponent(nmFileOrig) + '" download id="download" class="DownloadSU"></a><span style="white-space: pre">' + nmFileOrig + '</span>';
                         } else {
                             rigaNuova+='File non presente';
                         }
@@ -62,7 +62,7 @@
                         if (parerUploader[numero] == null) {
                             $('#' + bodyTable).append('<TR id="riga_' + numero + '" >' + rigaNuova + '</TR>');
                             
-                            // Attiva la progress bar e se non è caricato lo mette allo 0% altrimenti lo lascia di default al 100%
+                            // Attiva la progress bar e se non ï¿½ caricato lo mette allo 0% altrimenti lo lascia di default al 100%
                             $('#avanz_'+ numero ).progressbar();
                             // Se tolgo questo controllo da qui la barra mi rimane azzurra all'inizio della form
                             if (!giaInserito) {
@@ -154,7 +154,7 @@
                                             });
                                             $.ajaxSetup({async: true});
                                         });
-                                        $('#filename_' + numero).html('<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + file.name + '" download id="download" class="DownloadSU"></a>' + file.name);
+                                        $('#filename_' + numero).html('<a href="StrumentiUrbanisticiDownloadServlet?chiave=' + encodeURIComponent(file.name) + '" download id="download" class="DownloadSU"></a><span style="white-space: pre">' + file.name + '</span>');
                                         $('#dimensione_' + numero).html(formatFileSize(file.size, 2));
                                         $('#dataDoc_' + numero).html((new Date()).toLocaleDateString());
                                         determinaNavigabilita();
@@ -176,7 +176,7 @@
                                         if (verificaFileGiaSelezionato(file.name)==true) {
                                             alert(errori['PING-ERRSU09']);
                                         } else {
-                                            if ( (/[^a-z0-9\.\s\-\_\(\)]/gi.test(file.name)) ) {  // qualsiasi cosa di diverso da a-zA-Z0-9, dot, hypen, space, underscore and parenthesys non è permesso!
+                                            if ( (/[^a-z0-9\.\s\-\_\(\)]/gi.test(file.name)) ) {  // qualsiasi cosa di diverso da a-zA-Z0-9, dot, hypen, space, underscore and parenthesys non ï¿½ permesso!
                                                 alert(errori['PING-ERRSU08']);
                                                 up.splice();
                                             } else if (file.name.length > 84) { // E nemmeno una lunghezza complessiva maggiore di 80 caratteri.

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -54,70 +50,70 @@ public class PigXmlAnnulSessioneIngest implements Serializable {
     private PigSessioneIngest pigSessioneIngest;
 
     public PigXmlAnnulSessioneIngest() {
-        // hibernate
+	// hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_ANNUL_SESSIONE_INGEST_IDXMLANNULSESSIONEINGEST_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_ANNUL_SESSIONE_INGEST"),
-            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_ANNUL_SESSIONE_INGEST"),
+	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_ANNUL_SESSIONE_INGEST_IDXMLANNULSESSIONEINGEST_GENERATOR")
     @Column(name = "ID_XML_ANNUL_SESSIONE_INGEST")
     public Long getIdXmlAnnulSessioneIngest() {
-        return this.idXmlAnnulSessioneIngest;
+	return this.idXmlAnnulSessioneIngest;
     }
 
     public void setIdXmlAnnulSessioneIngest(Long idXmlAnnulSessioneIngest) {
-        this.idXmlAnnulSessioneIngest = idXmlAnnulSessioneIngest;
+	this.idXmlAnnulSessioneIngest = idXmlAnnulSessioneIngest;
     }
 
     @Lob
     @Column(name = "BL_XML_ANNUL")
     public String getBlXmlAnnul() {
-        return this.blXmlAnnul;
+	return this.blXmlAnnul;
     }
 
     public void setBlXmlAnnul(String blXmlAnnul) {
-        this.blXmlAnnul = blXmlAnnul;
+	this.blXmlAnnul = blXmlAnnul;
     }
 
     @Column(name = "CD_VERSIONE_XML_ANNUL")
     public String getCdVersioneXmlAnnul() {
-        return this.cdVersioneXmlAnnul;
+	return this.cdVersioneXmlAnnul;
     }
 
     public void setCdVersioneXmlAnnul(String cdVersioneXmlAnnul) {
-        this.cdVersioneXmlAnnul = cdVersioneXmlAnnul;
+	this.cdVersioneXmlAnnul = cdVersioneXmlAnnul;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REG_XML_ANNUL")
     public Date getDtRegXmlAnnul() {
-        return this.dtRegXmlAnnul;
+	return this.dtRegXmlAnnul;
     }
 
     public void setDtRegXmlAnnul(Date dtRegXmlAnnul) {
-        this.dtRegXmlAnnul = dtRegXmlAnnul;
+	this.dtRegXmlAnnul = dtRegXmlAnnul;
     }
 
     @Column(name = "TI_XML_ANNUL")
     public String getTiXmlAnnul() {
-        return this.tiXmlAnnul;
+	return this.tiXmlAnnul;
     }
 
     public void setTiXmlAnnul(String tiXmlAnnul) {
-        this.tiXmlAnnul = tiXmlAnnul;
+	this.tiXmlAnnul = tiXmlAnnul;
     }
 
     // bi-directional many-to-one association to PigSessioneIngest
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SESSIONE_INGEST")
     public PigSessioneIngest getPigSessioneIngest() {
-        return this.pigSessioneIngest;
+	return this.pigSessioneIngest;
     }
 
     public void setPigSessioneIngest(PigSessioneIngest pigSessioneIngest) {
-        this.pigSessioneIngest = pigSessioneIngest;
+	this.pigSessioneIngest = pigSessioneIngest;
     }
 
 }

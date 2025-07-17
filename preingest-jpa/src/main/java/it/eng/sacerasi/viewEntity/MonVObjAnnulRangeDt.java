@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -46,47 +42,47 @@ public class MonVObjAnnulRangeDt implements Serializable {
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-        return this.idObject;
+	return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-        this.idObject = idObject;
+	this.idObject = idObject;
     }
 
     @Column(name = "ID_TIPO_OBJECT")
     public BigDecimal getIdTipoObject() {
-        return this.idTipoObject;
+	return this.idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-        this.idTipoObject = idTipoObject;
+	this.idTipoObject = idTipoObject;
     }
 
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-        return this.idVers;
+	return this.idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     @Column(name = "TI_DT_CREAZIONE")
     public String getTiDtCreazione() {
-        return this.tiDtCreazione;
+	return this.tiDtCreazione;
     }
 
     public void setTiDtCreazione(String tiDtCreazione) {
-        this.tiDtCreazione = tiDtCreazione;
+	this.tiDtCreazione = tiDtCreazione;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-        return this.tiStatoObject;
+	return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-        this.tiStatoObject = tiStatoObject;
+	this.tiStatoObject = tiStatoObject;
     }
 
 }

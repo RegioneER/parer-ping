@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -46,127 +42,127 @@ public class DocSismaDto extends GenericDto {
     private String blReport;
 
     public DocSismaDto() {
-        super();
+	super();
     }
 
     public String getBlReport() {
-        return blReport;
+	return blReport;
     }
 
     public void setBlReport(String blReport) {
-        this.blReport = blReport;
+	this.blReport = blReport;
     }
 
     public BigDecimal getIdSismaDocumenti() {
-        return idSismaDocumenti;
+	return idSismaDocumenti;
     }
 
     public void setIdSismaDocumenti(BigDecimal idSismaDocumenti) {
-        this.idSismaDocumenti = idSismaDocumenti;
+	this.idSismaDocumenti = idSismaDocumenti;
     }
 
     public BigDecimal getIdSisma() {
-        return idSisma;
+	return idSisma;
     }
 
     public void setIdSisma(BigDecimal idSisma) {
-        this.idSisma = idSisma;
+	this.idSisma = idSisma;
     }
 
     public int getNumFileCaricati() {
-        return numFileCaricati;
+	return numFileCaricati;
     }
 
     public void setNumFileCaricati(int numFileCaricati) {
-        this.numFileCaricati = numFileCaricati;
+	this.numFileCaricati = numFileCaricati;
     }
 
     public String getNmFileOrig() {
-        return nmFileOrig;
+	return nmFileOrig;
     }
 
     public void setNmFileOrig(String nmFileOrig) {
-        this.nmFileOrig = nmFileOrig;
+	this.nmFileOrig = nmFileOrig;
     }
 
     public String getNmFileOs() {
-        return nmFileOs;
+	return nmFileOs;
     }
 
     public void setNmFileOs(String nmFileOs) {
-        this.nmFileOs = nmFileOs;
+	this.nmFileOs = nmFileOs;
     }
 
     public String getNmTipoDocumento() {
-        return nmTipoDocumento;
+	return nmTipoDocumento;
     }
 
     public void setNmTipoDocumento(String nmTipoDocumento) {
-        this.nmTipoDocumento = nmTipoDocumento;
+	this.nmTipoDocumento = nmTipoDocumento;
     }
 
     public BigDecimal getDimensione() {
-        return dimensione;
+	return dimensione;
     }
 
     public void setDimensione(BigDecimal dimensione) {
-        this.dimensione = dimensione;
+	this.dimensione = dimensione;
     }
 
     public boolean isObbligatorio() {
-        return obbligatorio;
+	return obbligatorio;
     }
 
     public void setObbligatorio(boolean obbligatorio) {
-        this.obbligatorio = obbligatorio;
+	this.obbligatorio = obbligatorio;
     }
 
     public String getCdErr() {
-        return cdErr;
+	return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-        this.cdErr = cdErr;
+	this.cdErr = cdErr;
     }
 
     public String getDsErr() {
-        return dsErr;
+	return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-        this.dsErr = dsErr;
+	this.dsErr = dsErr;
     }
 
     public boolean isFlEsitoVerifica() {
-        return flEsitoVerifica;
+	return flEsitoVerifica;
     }
 
     public void setFlEsitoVerifica(boolean flEsitoVerifica) {
-        this.flEsitoVerifica = flEsitoVerifica;
+	this.flEsitoVerifica = flEsitoVerifica;
     }
 
     public Date getDtCaricamento() {
-        return dtCaricamento;
+	return dtCaricamento;
     }
 
     public void setDtCaricamento(Date dtCaricamento) {
-        this.dtCaricamento = dtCaricamento;
+	this.dtCaricamento = dtCaricamento;
     }
 
     public String getTiVerificaAgenzia() {
-        return tiVerificaAgenzia;
+	return tiVerificaAgenzia;
     }
 
     public void setTiVerificaAgenzia(String tiVerificaAgenzia) {
-        this.tiVerificaAgenzia = tiVerificaAgenzia;
+	this.tiVerificaAgenzia = tiVerificaAgenzia;
     }
 
     public boolean isFlDocRicaricato() {
-        return flDocRicaricato;
+	return flDocRicaricato;
     }
 
     public void setFlDocRicaricato(boolean flDocRicaricato) {
-        this.flDocRicaricato = flDocRicaricato;
+	this.flDocRicaricato = flDocRicaricato;
     }
 
 }

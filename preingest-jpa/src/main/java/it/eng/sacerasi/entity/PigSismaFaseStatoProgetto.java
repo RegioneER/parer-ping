@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -41,39 +37,39 @@ public class PigSismaFaseStatoProgetto implements Serializable {
     private PigSismaStatoProgetto pigSismaStatoProgetto;
 
     public PigSismaFaseStatoProgetto() {
-        // for Hibernate
+	// for Hibernate
     }
 
     @Id
     @Column(name = "ID_SISMA_FASE_STATO_PROGETTO")
     public Long getIdSismaFaseStatoProgetto() {
-        return idSismaFaseStatoProgetto;
+	return idSismaFaseStatoProgetto;
     }
 
     public void setIdSismaFaseStatoProgetto(Long idSismaFaseStatoProgetto) {
-        this.idSismaFaseStatoProgetto = idSismaFaseStatoProgetto;
+	this.idSismaFaseStatoProgetto = idSismaFaseStatoProgetto;
     }
 
     // bi-directional many-to-one association to PigSismaFaseProgetto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_FASE_PROGETTO")
     public PigSismaFaseProgetto getPigSismaFaseProgetto() {
-        return pigSismaFaseProgetto;
+	return pigSismaFaseProgetto;
     }
 
     public void setPigSismaFaseProgetto(PigSismaFaseProgetto pigSismaFaseProgetto) {
-        this.pigSismaFaseProgetto = pigSismaFaseProgetto;
+	this.pigSismaFaseProgetto = pigSismaFaseProgetto;
     }
 
     // bi-directional many-to-one association to PigSismaStatoProgetto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_STATO_PROGETTO")
     public PigSismaStatoProgetto getPigSismaStatoProgetto() {
-        return pigSismaStatoProgetto;
+	return pigSismaStatoProgetto;
     }
 
     public void setPigSismaStatoProgetto(PigSismaStatoProgetto pigSismaStatoProgetto) {
-        this.pigSismaStatoProgetto = pigSismaStatoProgetto;
+	this.pigSismaStatoProgetto = pigSismaStatoProgetto;
     }
 
 }

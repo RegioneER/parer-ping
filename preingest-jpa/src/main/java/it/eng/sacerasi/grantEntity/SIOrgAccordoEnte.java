@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.grantEntity;
@@ -76,304 +72,307 @@ public class SIOrgAccordoEnte implements Serializable {
     }
 
     public SIOrgAccordoEnte(long idAccordoEnte) {
-        this.idAccordoEnte = idAccordoEnte;
+	this.idAccordoEnte = idAccordoEnte;
     }
 
     @Id
     @Column(name = "ID_ACCORDO_ENTE")
     public Long getIdAccordoEnte() {
-        return this.idAccordoEnte;
+	return this.idAccordoEnte;
     }
 
     public void setIdAccordoEnte(Long idAccordoEnte) {
-        this.idAccordoEnte = idAccordoEnte;
+	this.idAccordoEnte = idAccordoEnte;
     }
 
     @Basic
     @Column(name = "AA_REPERTORIO")
     public BigDecimal getAaRepertorio() {
-        return this.aaRepertorio;
+	return this.aaRepertorio;
     }
 
     public void setAaRepertorio(BigDecimal aaRepertorio) {
-        this.aaRepertorio = aaRepertorio;
+	this.aaRepertorio = aaRepertorio;
     }
 
     @Basic
     @Column(name = "CD_CAPITOLO")
     public String getCdCapitolo() {
-        return this.cdCapitolo;
+	return this.cdCapitolo;
     }
 
     public void setCdCapitolo(String cdCapitolo) {
-        this.cdCapitolo = cdCapitolo;
+	this.cdCapitolo = cdCapitolo;
     }
 
     @Basic
     @Column(name = "CD_CIG")
     public String getCdCig() {
-        return this.cdCig;
+	return this.cdCig;
     }
 
     public void setCdCig(String cdCig) {
-        this.cdCig = cdCig;
+	this.cdCig = cdCig;
     }
 
     @Basic
     @Column(name = "CD_COGE")
     public String getCdCoge() {
-        return this.cdCoge;
+	return this.cdCoge;
     }
 
     public void setCdCoge(String cdCoge) {
-        this.cdCoge = cdCoge;
+	this.cdCoge = cdCoge;
     }
 
     @Basic
     @Column(name = "CD_CUP")
     public String getCdCup() {
-        return this.cdCup;
+	return this.cdCup;
     }
 
     public void setCdCup(String cdCup) {
-        this.cdCup = cdCup;
+	this.cdCup = cdCup;
     }
 
     @Basic
     @Column(name = "CD_DDT")
     public String getCdDdt() {
-        return cdDdt;
+	return cdDdt;
     }
 
     public void setCdDdt(String cdDdt) {
-        this.cdDdt = cdDdt;
+	this.cdDdt = cdDdt;
     }
 
     @Basic
     @Column(name = "CD_ODA")
     public String getCdOda() {
-        return cdOda;
+	return cdOda;
     }
 
     public void setCdOda(String cdOda) {
-        this.cdOda = cdOda;
+	this.cdOda = cdOda;
     }
 
     @Basic
     @Column(name = "CD_KEY_REPERTORIO")
     public String getCdKeyRepertorio() {
-        return this.cdKeyRepertorio;
+	return this.cdKeyRepertorio;
     }
 
     public void setCdKeyRepertorio(String cdKeyRepertorio) {
-        this.cdKeyRepertorio = cdKeyRepertorio;
+	this.cdKeyRepertorio = cdKeyRepertorio;
     }
 
     @Basic
     @Column(name = "CD_REGISTRO_REPERTORIO")
     public String getCdRegistroRepertorio() {
-        return this.cdRegistroRepertorio;
+	return this.cdRegistroRepertorio;
     }
 
     public void setCdRegistroRepertorio(String cdRegistroRepertorio) {
-        this.cdRegistroRepertorio = cdRegistroRepertorio;
+	this.cdRegistroRepertorio = cdRegistroRepertorio;
     }
 
     @Basic
     @Column(name = "CD_RIF_CONTAB")
     public String getCdRifContab() {
-        return this.cdRifContab;
+	return this.cdRifContab;
     }
 
     public void setCdRifContab(String cdRifContab) {
-        this.cdRifContab = cdRifContab;
+	this.cdRifContab = cdRifContab;
     }
 
     @Basic
     @Column(name = "CD_UFE")
     public String getCdUfe() {
-        return this.cdUfe;
+	return this.cdUfe;
     }
 
     public void setCdUfe(String cdUfe) {
-        this.cdUfe = cdUfe;
+	this.cdUfe = cdUfe;
     }
 
     @Basic
     @Column(name = "DS_ATTO_ACCORDO")
     public String getDsAttoAccordo() {
-        return this.dsAttoAccordo;
+	return this.dsAttoAccordo;
     }
 
     public void setDsAttoAccordo(String dsAttoAccordo) {
-        this.dsAttoAccordo = dsAttoAccordo;
+	this.dsAttoAccordo = dsAttoAccordo;
     }
 
     @Basic
     @Column(name = "DS_FIRMATARIO_ENTE")
     public String getDsFirmatarioEnte() {
-        return this.dsFirmatarioEnte;
+	return this.dsFirmatarioEnte;
     }
 
     public void setDsFirmatarioEnte(String dsFirmatarioEnte) {
-        this.dsFirmatarioEnte = dsFirmatarioEnte;
+	this.dsFirmatarioEnte = dsFirmatarioEnte;
     }
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_RICH_MODULO_INFO")
     public Date getDtRichModuloInfo() {
-        return this.dtRichModuloInfo;
+	return this.dtRichModuloInfo;
     }
 
     public void setDtRichModuloInfo(Date dtRichModuloInfo) {
-        this.dtRichModuloInfo = dtRichModuloInfo;
+	this.dtRichModuloInfo = dtRichModuloInfo;
     }
 
     @Basic
     @Column(name = "DS_NOTE_ACCORDO")
     public String getDsNoteAccordo() {
-        return dsNoteAccordo;
+	return dsNoteAccordo;
     }
 
     public void setDsNoteAccordo(String dsNoteAccordo) {
-        this.dsNoteAccordo = dsNoteAccordo;
+	this.dsNoteAccordo = dsNoteAccordo;
     }
 
     @Basic
     @Column(name = "DS_UFE")
     public String getDsUfe() {
-        return this.dsUfe;
+	return this.dsUfe;
     }
 
     public void setDsUfe(String dsUfe) {
-        this.dsUfe = dsUfe;
+	this.dsUfe = dsUfe;
     }
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_ATTO_ACCORDO")
     public Date getDtAttoAccordo() {
-        return this.dtAttoAccordo;
+	return this.dtAttoAccordo;
     }
 
     public void setDtAttoAccordo(Date dtAttoAccordo) {
-        this.dtAttoAccordo = dtAttoAccordo;
+	this.dtAttoAccordo = dtAttoAccordo;
     }
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REG_ACCORDO")
     public Date getDtRegAccordo() {
-        return this.dtRegAccordo;
+	return this.dtRegAccordo;
     }
 
     public void setDtRegAccordo(Date dtRegAccordo) {
-        this.dtRegAccordo = dtRegAccordo;
+	this.dtRegAccordo = dtRegAccordo;
     }
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_DEC_ACCORDO")
     public Date getDtDecAccordo() {
-        return dtDecAccordo;
+	return dtDecAccordo;
     }
 
     public void setDtDecAccordo(Date dtDecAccordo) {
-        this.dtDecAccordo = dtDecAccordo;
+	this.dtDecAccordo = dtDecAccordo;
     }
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_SCAD_ACCORDO")
     public Date getDtScadAccordo() {
-        return this.dtScadAccordo;
+	return this.dtScadAccordo;
     }
 
     public void setDtScadAccordo(Date dtScadAccordo) {
-        this.dtScadAccordo = dtScadAccordo;
+	this.dtScadAccordo = dtScadAccordo;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_FINE_VALID_ACCORDO")
     public Date getDtFineValidAccordo() {
-        return this.dtFineValidAccordo;
+	return this.dtFineValidAccordo;
     }
 
     public void setDtFineValidAccordo(Date dtFineValidAccordo) {
-        this.dtFineValidAccordo = dtFineValidAccordo;
+	this.dtFineValidAccordo = dtFineValidAccordo;
     }
 
     @Basic
     @Column(name = "FL_PAGAMENTO", columnDefinition = "char")
     public String getFlPagamento() {
-        return this.flPagamento;
+	return this.flPagamento;
     }
 
     public void setFlPagamento(String flPagamento) {
-        this.flPagamento = flPagamento;
+	this.flPagamento = flPagamento;
     }
 
     @Basic
     @Column(name = "FL_RECESSO", columnDefinition = "char")
     public String getFlRecesso() {
-        return this.flRecesso;
+	return this.flRecesso;
     }
 
     public void setFlRecesso(String flRecesso) {
-        this.flRecesso = flRecesso;
+	this.flRecesso = flRecesso;
     }
 
     @Basic
     @Column(name = "NI_ABITANTI")
     public BigDecimal getNiAbitanti() {
-        return this.niAbitanti;
+	return this.niAbitanti;
     }
 
     public void setNiAbitanti(BigDecimal niAbitanti) {
-        this.niAbitanti = niAbitanti;
+	this.niAbitanti = niAbitanti;
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ID_ENTE_CONVENZ", nullable = false)
     public SIOrgEnteSiam getSiOrgEnteConvenz() {
-        return siOrgEnteConvenz;
+	return siOrgEnteConvenz;
     }
 
     public void setSiOrgEnteConvenz(SIOrgEnteSiam siOrgEnteConvenz) {
-        this.siOrgEnteConvenz = siOrgEnteConvenz;
+	this.siOrgEnteConvenz = siOrgEnteConvenz;
     }
 
     // bi-directional many-to-one association to OrgEnteSiam
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENTE_CONVENZ_AMMINISTRATORE")
     public SIOrgEnteSiam getOrgEnteSiamByIdEnteConvenzAmministratore() {
-        return this.orgEnteSiamByIdEnteConvenzAmministratore;
+	return this.orgEnteSiamByIdEnteConvenzAmministratore;
     }
 
-    public void setOrgEnteSiamByIdEnteConvenzAmministratore(SIOrgEnteSiam orgEnteSiamByIdEnteConvenzAmministratore) {
-        this.orgEnteSiamByIdEnteConvenzAmministratore = orgEnteSiamByIdEnteConvenzAmministratore;
+    public void setOrgEnteSiamByIdEnteConvenzAmministratore(
+	    SIOrgEnteSiam orgEnteSiamByIdEnteConvenzAmministratore) {
+	this.orgEnteSiamByIdEnteConvenzAmministratore = orgEnteSiamByIdEnteConvenzAmministratore;
     }
 
     // bi-directional many-to-one association to OrgEnteSiam
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENTE_CONVENZ_CONSERV")
     public SIOrgEnteSiam getOrgEnteSiamByIdEnteConvenzConserv() {
-        return this.orgEnteSiamByIdEnteConvenzConserv;
+	return this.orgEnteSiamByIdEnteConvenzConserv;
     }
 
-    public void setOrgEnteSiamByIdEnteConvenzConserv(SIOrgEnteSiam orgEnteSiamByIdEnteConvenzConserv) {
-        this.orgEnteSiamByIdEnteConvenzConserv = orgEnteSiamByIdEnteConvenzConserv;
+    public void setOrgEnteSiamByIdEnteConvenzConserv(
+	    SIOrgEnteSiam orgEnteSiamByIdEnteConvenzConserv) {
+	this.orgEnteSiamByIdEnteConvenzConserv = orgEnteSiamByIdEnteConvenzConserv;
     }
 
     // bi-directional many-to-one association to OrgEnteSiam
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENTE_CONVENZ_GESTORE")
     public SIOrgEnteSiam getOrgEnteSiamByIdEnteConvenzGestore() {
-        return this.orgEnteSiamByIdEnteConvenzGestore;
+	return this.orgEnteSiamByIdEnteConvenzGestore;
     }
 
-    public void setOrgEnteSiamByIdEnteConvenzGestore(SIOrgEnteSiam orgEnteSiamByIdEnteConvenzGestore) {
-        this.orgEnteSiamByIdEnteConvenzGestore = orgEnteSiamByIdEnteConvenzGestore;
+    public void setOrgEnteSiamByIdEnteConvenzGestore(
+	    SIOrgEnteSiam orgEnteSiamByIdEnteConvenzGestore) {
+	this.orgEnteSiamByIdEnteConvenzGestore = orgEnteSiamByIdEnteConvenzGestore;
     }
 }

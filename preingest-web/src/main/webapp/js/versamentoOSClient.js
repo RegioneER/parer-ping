@@ -1,7 +1,7 @@
-var verODT = {} || verODT;
+var VersamentoOSClient = {} || VersamentoOSClient;
 
-verODT.init = function (extensions_filters) {
-    verODT.os_uploader = new plupload.Uploader({
+VersamentoOSClient.init = function (extensions_filters) {
+    VersamentoOSClient.os_uploader = new plupload.Uploader({
         browse_button: 'File_to_upload_Object_Storage', // you can pass in id...
         url: 'MultipartFileUploadToS3ForVersamentoOggettoServlet',
         runtimes: 'html5,html4',
@@ -23,17 +23,17 @@ verODT.init = function (extensions_filters) {
                     
                     $('input[name="operation__versaOggettoObjectStorage"]').prop('disabled', true);
 
-                    verODT.os_uploader.start();
+                    VersamentoOSClient.os_uploader.start();
                     return false;
                 });
 
                 $('#File_to_upload_rimuovi_Object_Storage').click(function () {
-                    verODT.removeFile();
+                    VersamentoOSClient.removeFile();
                 });
             },
             Error: function (up, err) {
-                verODT.showErrorMessage(err);
-                verODT.showObjectStorageUpload();
+                VersamentoOSClient.showErrorMessage(err);
+                VersamentoOSClient.showObjectStorageUpload();
             },
             FilesAdded: function (up, files) {
                 plupload.each(files, function (file) {
@@ -92,8 +92,8 @@ verODT.init = function (extensions_filters) {
                 var esito = jQuery.parseJSON(result.response);
                 if (esito.error || (esito.result && esito.result.code > 500)) {
                     up.stop();
-                    verODT.showErrorMessage(esito.error? esito.error : esito.result);
-                    verODT.showObjectStorageUpload();
+                    VersamentoOSClient.showErrorMessage(esito.error? esito.error : esito.result);
+                    VersamentoOSClient.showObjectStorageUpload();
                 }
             },
             FileUploaded: function (up, file, result) {
@@ -101,8 +101,8 @@ verODT.init = function (extensions_filters) {
                 //MEV#21995 gestire gli errori.
                 if (esito.result.code != 200) {
                     up.stop();
-                    verODT.showErrorMessage(esito.result);
-                    verODT.showObjectStorageUpload();
+                    VersamentoOSClient.showErrorMessage(esito.result);
+                    VersamentoOSClient.showObjectStorageUpload();
                 } else {
                     //successo, redirect al dettaglio versamento.
                     var _csrf = $('#spagoLiteAppForm').attr('action').substr("VersamentoOggetto.html?".length);
@@ -121,10 +121,10 @@ verODT.init = function (extensions_filters) {
         }
     });
 
-    verODT.os_uploader.init();
+    VersamentoOSClient.os_uploader.init();
 };
 
-verODT.showObjectStorageUpload = function (isDaTrasformare) {
+VersamentoOSClient.showObjectStorageUpload = function (isDaTrasformare) {
     $('input[name="operation__versaOggetto"]').parent().hide();
     $('input[name="operation__versaOggettoObjectStorage"]').parent().show();
     $('input[name="File_to_upload_Object_Storage"]').parent().show();
@@ -159,10 +159,10 @@ verODT.showObjectStorageUpload = function (isDaTrasformare) {
         reader.readAsText(event.target.files[0]);
     });
 
-    verODT.removeFile();
+    VersamentoOSClient.removeFile();
 };
 
-verODT.hideObjectStorageUpload = function (isDaTrasformare) {
+VersamentoOSClient.hideObjectStorageUpload = function (isDaTrasformare) {
     $('input[name="operation__versaOggetto"]').parent().show();
     $('input[name="operation__versaOggettoObjectStorage"]').parent().hide();
     $('input[name="File_to_upload_Object_Storage"]').parent().hide();
@@ -180,9 +180,9 @@ verODT.hideObjectStorageUpload = function (isDaTrasformare) {
     $('#Xml_to_upload').off();
 };
 
-verODT.removeFile = function () {
-    plupload.each(verODT.os_uploader.files, function (file) {
-        verODT.os_uploader.removeFile(file);
+VersamentoOSClient.removeFile = function () {
+    plupload.each(VersamentoOSClient.os_uploader.files, function (file) {
+        VersamentoOSClient.os_uploader.removeFile(file);
     });
 
     $('input[name="operation__versaOggettoObjectStorage"]').prop('disabled', true);
@@ -193,7 +193,7 @@ verODT.removeFile = function () {
 
 };
 
-verODT.showErrorMessage = function (error) {
+VersamentoOSClient.showErrorMessage = function (error) {
     $('div.messages.plainError').hide();
     $('#error_text').text(error.message);
     $('#customMessageBox').show();

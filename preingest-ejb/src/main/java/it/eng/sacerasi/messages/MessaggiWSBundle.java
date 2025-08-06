@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.messages;
@@ -32,57 +28,58 @@ public class MessaggiWSBundle {
     private static Logger log = LoggerFactory.getLogger(MessaggiWSBundle.class);
 
     /*
-     * Metodi statici, implementazione causata dalla necessità di mantenere invariata l'interfaccia della classe
-     * originale: un normalissimo Bundle con un file di properties
+     * Metodi statici, implementazione causata dalla necessità di mantenere invariata l'interfaccia
+     * della classe originale: un normalissimo Bundle con un file di properties
      */
     public static String getString(String key) {
-        switch (key) {
-        case MessaggiWSBundle.ERR_666:
-            return getDefaultErrorMessage(key);
-        case MessaggiWSBundle.ERR_PERSISTENCE:
-            return getDefaultErrorMessage(key);
-        case MessaggiWSBundle.ERR_UPDATE:
-            return getDefaultErrorMessage(key);
-        case MessaggiWSBundle.ERR_XML_MALFORMED:
-            return getDefaultErrorMessage(key);
-        default:
-            // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
-            return lookupCacheRef().getString(key);
-        }
+	switch (key) {
+	case MessaggiWSBundle.ERR_666:
+	    return getDefaultErrorMessage(key);
+	case MessaggiWSBundle.ERR_PERSISTENCE:
+	    return getDefaultErrorMessage(key);
+	case MessaggiWSBundle.ERR_UPDATE:
+	    return getDefaultErrorMessage(key);
+	case MessaggiWSBundle.ERR_XML_MALFORMED:
+	    return getDefaultErrorMessage(key);
+	default:
+	    // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
+	    return lookupCacheRef().getString(key);
+	}
     }
 
     public static String getString(String key, Object... params) {
-        switch (key) {
-        case MessaggiWSBundle.ERR_666:
-            return getDefaultErrorMessage(key, params);
-        case MessaggiWSBundle.ERR_PERSISTENCE:
-            return getDefaultErrorMessage(key, params);
-        case MessaggiWSBundle.ERR_UPDATE:
-            return getDefaultErrorMessage(key, params);
-        case MessaggiWSBundle.ERR_XML_MALFORMED:
-            return getDefaultErrorMessage(key, params);
-        default:
-            // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
-            return lookupCacheRef().getString(key, params);
-        }
+	switch (key) {
+	case MessaggiWSBundle.ERR_666:
+	    return getDefaultErrorMessage(key, params);
+	case MessaggiWSBundle.ERR_PERSISTENCE:
+	    return getDefaultErrorMessage(key, params);
+	case MessaggiWSBundle.ERR_UPDATE:
+	    return getDefaultErrorMessage(key, params);
+	case MessaggiWSBundle.ERR_XML_MALFORMED:
+	    return getDefaultErrorMessage(key, params);
+	default:
+	    // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
+	    return lookupCacheRef().getString(key, params);
+	}
     }
 
     private static MessaggiWSCache lookupCacheRef() {
-        try {
-            return (MessaggiWSCache) new InitialContext().lookup("java:app/SacerAsync-ejb/MessaggiWSCache");
-        } catch (NamingException ex) {
-            log.error("Errore lookup dei messaggi " + ExceptionUtils.getRootCauseMessage(ex), ex);
-            throw new MessageBundleNotFoundException(
-                    "Errore lookup singleton dei messaggi " + ExceptionUtils.getRootCauseMessage(ex));
-        }
+	try {
+	    return (MessaggiWSCache) new InitialContext()
+		    .lookup("java:app/SacerAsync-ejb/MessaggiWSCache");
+	} catch (NamingException ex) {
+	    log.error("Errore lookup dei messaggi " + ExceptionUtils.getRootCauseMessage(ex), ex);
+	    throw new MessageBundleNotFoundException("Errore lookup singleton dei messaggi "
+		    + ExceptionUtils.getRootCauseMessage(ex));
+	}
     }
 
     private static String getDefaultErrorMessage(String key, Object... params) {
-        // get or generate uuid
-        final String uuid = UUIDMdcLogUtil.getUuid();
-        // log original message
-        log.error("Risposta originale : " + lookupCacheRef().getString(key, params));
-        return lookupCacheRef().getString(MessaggiWSBundle.WS_GENERIC_ERROR_UUID, uuid);
+	// get or generate uuid
+	final String uuid = UUIDMdcLogUtil.getUuid();
+	// log original message
+	log.error("Risposta originale : " + lookupCacheRef().getString(key, params));
+	return lookupCacheRef().getString(MessaggiWSBundle.WS_GENERIC_ERROR_UUID, uuid);
     }
 
     // Le righe che seguono verranno mostrate raggruppate in Netbeans
@@ -199,8 +196,8 @@ public class MessaggiWSBundle {
     public static final String PING_NOT_018 = "PING-NOT-018";
     public static final String PING_NOT_019 = "PING-NOT-019";
     /**
-     * Il versamento di almeno uno degli oggetti figli dell''''oggetto {0} \u00E8 fallito e l''''oggetto ''"padre''" ha
-     * assunto stato = {1}
+     * Il versamento di almeno uno degli oggetti figli dell''''oggetto {0} \u00E8 fallito e
+     * l''''oggetto ''"padre''" ha assunto stato = {1}
      */
     public static final String PING_NOT_020 = "PING-NOT-020";
     public static final String PING_NOT_021 = "PING-NOT-021"; // MAC 28343
@@ -247,8 +244,8 @@ public class MessaggiWSBundle {
     public static final String PING_PREPXML_FILE_017 = "PING-PREPXML-FILE-017";
     public static final String PING_VERHASH_FILE_001 = "PING-VERHASH-FILE-001";
     /**
-     * Nel file .zip dell''oggetto {0}, la cartella relativa all''unit\u00e0 documentaria {1} non coincide con la chiave
-     * del SIP XML versato
+     * Nel file .zip dell''oggetto {0}, la cartella relativa all''unit\u00e0 documentaria {1} non
+     * coincide con la chiave del SIP XML versato
      */
     public static final String PING_PREPXML_FILE_018 = "PING-PREPXML-FILE-018";
     /**
@@ -256,8 +253,8 @@ public class MessaggiWSBundle {
      */
     public static final String PING_PREPXML_FILE_019 = "PING-PREPXML-FILE-019";
     /**
-     * Il versamento di almeno uno degli oggetti figli dell’oggetto {0} e’ fallito e l’oggetto “padre” ha assunto stato
-     * = {1}
+     * Il versamento di almeno uno degli oggetti figli dell’oggetto {0} e’ fallito e l’oggetto
+     * “padre” ha assunto stato = {1}
      */
     public static final String PING_PREPXML_FILE_020 = "PING-PREPXML-FILE-020";
 

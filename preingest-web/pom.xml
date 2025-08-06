@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>8.0.2-SNAPSHOT</version>
+        <version>8.1.1</version>
     </parent>
 
     <artifactId>sacerping-jboss-web</artifactId>
@@ -54,25 +54,25 @@
             <scope>provided</scope>
         </dependency>
         <!-- per l'annotation @SchemaValidation -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- BOM per JBoss EAP 7.4 (jboss-eap-jakartaee8) dependencies -->
-        <!-- JBoss Jakarta EJB Api_spec -->
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-core</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- BOM per JBoss EAP 7.4 (jboss-eap-jakartaee8) dependencies -->
+		<!-- JBoss Jakarta EJB Api_spec -->
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
             <artifactId>jboss-ejb-api_3.2_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- JBoss Jakarta Servlet  -->
+		<!-- JBoss Jakarta Servlet  -->
         <dependency>
             <groupId>org.jboss.spec.javax.servlet</groupId>
             <artifactId>jboss-servlet-api_4.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Jakarta Messaging API -->
+		<!-- Jakarta Messaging API -->
         <dependency>
             <groupId>org.jboss.spec.javax.jms</groupId>
             <artifactId>jboss-jms-api_2.0_spec</artifactId>
@@ -145,9 +145,9 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>plupload</artifactId>
-        </dependency>       
-        
-        <!-- OpenSaML -->
+        </dependency>
+
+		<!-- OpenSaML -->
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-core</artifactId>
@@ -163,7 +163,7 @@
             <artifactId>opensaml-saml-impl</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Spring -->   
+		<!-- Spring -->   
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>

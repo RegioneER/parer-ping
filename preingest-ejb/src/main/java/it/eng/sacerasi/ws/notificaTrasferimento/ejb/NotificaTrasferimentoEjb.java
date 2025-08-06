@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 package it.eng.sacerasi.ws.notificaTrasferimento.ejb;
 
@@ -90,276 +86,297 @@ public class NotificaTrasferimentoEjb {
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFileInNewTx(String nmAmbiente, String nmVersatore,
-            String cdKeyObject, ListaFileDepositatoType listaFileDepositati) throws ObjectStorageException {
-        return notificaAvvenutoTrasferimentoFile(nmAmbiente, nmVersatore, cdKeyObject, listaFileDepositati);
+    public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFileInNewTx(String nmAmbiente,
+	    String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
+	    throws ObjectStorageException {
+	return notificaAvvenutoTrasferimentoFile(nmAmbiente, nmVersatore, cdKeyObject,
+		listaFileDepositati);
     }
 
-    public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFile(String nmAmbiente, String nmVersatore,
-            String cdKeyObject, ListaFileDepositatoType listaFileDepositati) throws ObjectStorageException {
+    public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFile(String nmAmbiente,
+	    String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
+	    throws ObjectStorageException {
 
-        log.debug("Ricevuta richiesta di NotificaTrasferimento con i parametri : nmAmbiente = {}, "
-                + "nmVersatore = {} , cdKeyObject = {}", nmAmbiente, nmVersatore, cdKeyObject);
-        // Istanzio la response
-        RispostaNotificaWS risp = new RispostaNotificaWS();
-        risp.setNotificaResponse(new NotificaTrasferimentoRisposta());
-        risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.OK.name());
+	log.debug(
+		"Ricevuta richiesta di NotificaTrasferimento con i parametri : nmAmbiente = {}, "
+			+ "nmVersatore = {} , cdKeyObject = {}",
+		nmAmbiente, nmVersatore, cdKeyObject);
+	// Istanzio la response
+	RispostaNotificaWS risp = new RispostaNotificaWS();
+	risp.setNotificaResponse(new NotificaTrasferimentoRisposta());
+	risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.OK.name());
 
-        // MEV 34843
-        // Aggiungo i dati del backend, il nome file os è impostato dal chiamante, che siano il versamento oggetto o un
-        // software che usa i ws.
-        notificaTrasferimentoCheckHelper.addBackendInfos(nmAmbiente, nmVersatore, cdKeyObject, listaFileDepositati);
+	// MEV 34843
+	// Aggiungo i dati del backend, il nome file os è impostato dal chiamante, che siano il
+	// versamento oggetto o un
+	// software che usa i ws.
+	notificaTrasferimentoCheckHelper.addBackendInfos(nmAmbiente, nmVersatore, cdKeyObject,
+		listaFileDepositati);
 
-        // Istanzio l'oggetto che contiene i parametri ricevuti
-        NotificaTrasferimentoInput nti = new NotificaTrasferimentoInput(nmAmbiente, nmVersatore, cdKeyObject,
-                listaFileDepositati);
-        // Istanzio la Ext con l'oggetto creato
-        NotificaTrasferimentoExt nte = new NotificaTrasferimentoExt();
-        nte.setDescrizione(new WSDescNotificaTrasf());
-        nte.setNotificaTrasf(nti);
-        nte.setFlAggiornaOggetto(false);
+	// Istanzio l'oggetto che contiene i parametri ricevuti
+	NotificaTrasferimentoInput nti = new NotificaTrasferimentoInput(nmAmbiente, nmVersatore,
+		cdKeyObject, listaFileDepositati);
+	// Istanzio la Ext con l'oggetto creato
+	NotificaTrasferimentoExt nte = new NotificaTrasferimentoExt();
+	nte.setDescrizione(new WSDescNotificaTrasf());
+	nte.setNotificaTrasf(nti);
+	nte.setFlAggiornaOggetto(false);
 
-        // Chiamo la classe NotificaTrasferimentoCheck.check() che gestisce i controlli notifica e popola la rispostaWs
-        log.debug("Inizio controlli sui parametri");
-        notificaTrasferimentoCheckHelper.check(nte, risp);
-        log.debug("Fine controlli sui parametri");
-        final Date now = Calendar.getInstance().getTime();
-        try {
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                ctx.getBusinessObject(NotificaTrasferimentoEjb.class).handleCheckSuccess(nte, risp, now);
-            } else {
-                ctx.getBusinessObject(NotificaTrasferimentoEjb.class).handleCheckError(nte, risp, now);
-            }
-        } catch (ParerInternalError | ObjectStorageException pie) {
-            // RollBack già eseguito
-            log.error(pie.getMessage() + " ROLLBACK : " + ctx.getRollbackOnly());
-        }
+	// Chiamo la classe NotificaTrasferimentoCheck.check() che gestisce i controlli notifica e
+	// popola la rispostaWs
+	log.debug("Inizio controlli sui parametri");
+	notificaTrasferimentoCheckHelper.check(nte, risp);
+	log.debug("Fine controlli sui parametri");
+	final Date now = Calendar.getInstance().getTime();
+	try {
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		ctx.getBusinessObject(NotificaTrasferimentoEjb.class).handleCheckSuccess(nte, risp,
+			now);
+	    } else {
+		ctx.getBusinessObject(NotificaTrasferimentoEjb.class).handleCheckError(nte, risp,
+			now);
+	    }
+	} catch (ParerInternalError | ObjectStorageException pie) {
+	    // RollBack già eseguito
+	    log.error(pie.getMessage() + " ROLLBACK : " + ctx.getRollbackOnly());
+	}
 
-        return risp.getNotificaResponse();
+	return risp.getNotificaResponse();
     }
 
     private void setRispostaWsError(RispostaNotificaWS risp, RispostaControlli tmpRispostaControlli)
-            throws ParerInternalError {
-        risp.setSeverity(SeverityEnum.ERROR);
-        risp.setErrorCode(tmpRispostaControlli.getCodErr());
-        risp.setErrorMessage(tmpRispostaControlli.getDsErr());
-        risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.KO.name());
-        risp.getNotificaResponse().setCdErr(tmpRispostaControlli.getCodErr());
-        risp.getNotificaResponse().setDsErr(tmpRispostaControlli.getDsErr());
-        log.debug("Errore Notifica : " + tmpRispostaControlli.getCodErr() + " - " + tmpRispostaControlli.getDsErr());
-        log.debug("Fine transazione - ROLLBACK");
-        throw new ParerInternalError(tmpRispostaControlli.getCodErr());
-        // wtm.rollback(risp);
+	    throws ParerInternalError {
+	risp.setSeverity(SeverityEnum.ERROR);
+	risp.setErrorCode(tmpRispostaControlli.getCodErr());
+	risp.setErrorMessage(tmpRispostaControlli.getDsErr());
+	risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.KO.name());
+	risp.getNotificaResponse().setCdErr(tmpRispostaControlli.getCodErr());
+	risp.getNotificaResponse().setDsErr(tmpRispostaControlli.getDsErr());
+	log.debug("Errore Notifica : " + tmpRispostaControlli.getCodErr() + " - "
+		+ tmpRispostaControlli.getDsErr());
+	log.debug("Fine transazione - ROLLBACK");
+	throw new ParerInternalError(tmpRispostaControlli.getCodErr());
+	// wtm.rollback(risp);
     }
 
-    @Interceptors({ TransactionInterceptor.class })
+    @Interceptors({
+	    TransactionInterceptor.class })
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void handleCheckSuccess(NotificaTrasferimentoExt nte, RispostaNotificaWS risp, final Date now)
-            throws ParerInternalError, ObjectStorageException {
-        // Nessun errore nei controlli
-        log.debug("Cancellazione di tutti i file dalla tabella PigFileObject per l'oggetto corrente");
-        salvataggioDati.deleteFileObject(nte);
+    public void handleCheckSuccess(NotificaTrasferimentoExt nte, RispostaNotificaWS risp,
+	    final Date now) throws ParerInternalError, ObjectStorageException {
+	// Nessun errore nei controlli
+	log.debug(
+		"Cancellazione di tutti i file dalla tabella PigFileObject per l'oggetto corrente");
+	salvataggioDati.deleteFileObject(nte);
 
-        log.debug("Creazione degli oggetti in PigFileObject");
-        RispostaControlli tmpRispostaControlli = salvataggioDati.creaFileObjects(nte, risp);
-        if (tmpRispostaControlli.getCodErr() != null) {
-            setRispostaWsError(risp, tmpRispostaControlli);
-        }
-        log.debug("Fine creazione degli oggetti in PigFileObject");
+	log.debug("Creazione degli oggetti in PigFileObject");
+	RispostaControlli tmpRispostaControlli = salvataggioDati.creaFileObjects(nte, risp);
+	if (tmpRispostaControlli.getCodErr() != null) {
+	    setRispostaWsError(risp, tmpRispostaControlli);
+	}
+	log.debug("Fine creazione degli oggetti in PigFileObject");
 
-        if (nte.getTipoObject().equals(Constants.TipoVersamento.NO_ZIP.name())
-                || nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_NO_XML_SACER.name())
-                || nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
-            // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Modifica sessione in IN_CODA_HASH");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
+	if (nte.getTipoObject().equals(Constants.TipoVersamento.NO_ZIP.name())
+		|| nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_NO_XML_SACER.name())
+		|| nte.getTipoObject().equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
+	    // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Modifica sessione in IN_CODA_HASH");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
+			Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
 
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Creazione stato sessione");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Creazione stato sessione");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
+			Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
 
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Modifica oggetto in IN_ATTESA_SCHED");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
-                        Constants.StatoOggetto.IN_CODA_HASH);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
-        } else if (nte.getTipoObject().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
-            // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Modifica sessione in DA_TRASFORMARE");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Modifica oggetto in IN_ATTESA_SCHED");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
+			Constants.StatoOggetto.IN_CODA_HASH);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
+	} else if (nte.getTipoObject().equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
+	    // MEV 31102 - si aggiunge lo stato IN_CODA_HASH per il job controlla hash
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Modifica sessione in DA_TRASFORMARE");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.modificaSessione(nte.getIdLastSession(),
+			Constants.StatoSessioneIngest.IN_CODA_HASH, null, null);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
 
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Creazione stato sessione");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Creazione stato sessione");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
+			Constants.StatoSessioneIngest.IN_CODA_HASH.name(), now);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
 
-            if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-                log.debug("Modifica oggetto in DA_TRASFORMARE");
-                tmpRispostaControlli.reset();
-                tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
-                        Constants.StatoOggetto.IN_CODA_HASH);
-                if (tmpRispostaControlli.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispostaControlli);
-                }
-            }
-        }
+	    if (risp.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+		log.debug("Modifica oggetto in DA_TRASFORMARE");
+		tmpRispostaControlli.reset();
+		tmpRispostaControlli = salvataggioDati.modificaOggetto(nte.getIdObject(),
+			Constants.StatoOggetto.IN_CODA_HASH);
+		if (tmpRispostaControlli.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispostaControlli);
+		}
+	    }
+	}
     }
 
-    @Interceptors({ TransactionInterceptor.class })
+    @Interceptors({
+	    TransactionInterceptor.class })
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void handleCheckError(NotificaTrasferimentoExt nte, RispostaNotificaWS risp, final Date now)
-            throws ParerInternalError, ObjectStorageException {
-        RispostaControlli tmpRispCon = new RispostaControlli();
-        if (nte.isFlAggiornaOggetto()) {
-            // Se l'errore è diverso da PING_NOT_006
-            if (!risp.getErrorCode().equals(MessaggiWSBundle.PING_NOT_006)) {
-                // Ho passato i primi controlliWS con esito positivo
-                if (nte.getIdLastSession() != null) {
-                    tmpRispCon = salvataggioDati.modificaSessione(nte.getIdLastSession(),
-                            Constants.StatoSessioneIngest.CHIUSO_ERR_NOTIF, risp.getErrorCode(),
-                            risp.getErrorMessage());
-                    if (tmpRispCon.getCodErr() != null) {
-                        setRispostaWsError(risp, tmpRispCon);
-                    }
-                }
+    public void handleCheckError(NotificaTrasferimentoExt nte, RispostaNotificaWS risp,
+	    final Date now) throws ParerInternalError, ObjectStorageException {
+	RispostaControlli tmpRispCon = new RispostaControlli();
+	if (nte.isFlAggiornaOggetto()) {
+	    // Se l'errore è diverso da PING_NOT_006
+	    if (!risp.getErrorCode().equals(MessaggiWSBundle.PING_NOT_006)) {
+		// Ho passato i primi controlliWS con esito positivo
+		if (nte.getIdLastSession() != null) {
+		    tmpRispCon = salvataggioDati.modificaSessione(nte.getIdLastSession(),
+			    Constants.StatoSessioneIngest.CHIUSO_ERR_NOTIF, risp.getErrorCode(),
+			    risp.getErrorMessage());
+		    if (tmpRispCon.getCodErr() != null) {
+			setRispostaWsError(risp, tmpRispCon);
+		    }
+		}
 
-                Date sesDate = tmpRispCon.getrDate();
-                log.debug("Creazione stato sessione");
-                tmpRispCon.reset();
-                tmpRispCon = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
-                        Constants.StatoSessioneIngest.CHIUSO_ERR_NOTIF.name(), sesDate);
-                if (tmpRispCon.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispCon);
-                }
+		Date sesDate = tmpRispCon.getrDate();
+		log.debug("Creazione stato sessione");
+		tmpRispCon.reset();
+		tmpRispCon = salvataggioDati.creaStatoSessione(nte.getIdLastSession(),
+			Constants.StatoSessioneIngest.CHIUSO_ERR_NOTIF.name(), sesDate);
+		if (tmpRispCon.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispCon);
+		}
 
-                tmpRispCon.reset();
-                if (nte.getIdObject() != null) {
-                    tmpRispCon = salvataggioDati.modificaOggetto(nte.getIdObject(),
-                            Constants.StatoOggetto.CHIUSO_ERR_NOTIF);
-                    if (tmpRispCon.getCodErr() != null) {
-                        setRispostaWsError(risp, tmpRispCon);
-                    }
+		tmpRispCon.reset();
+		if (nte.getIdObject() != null) {
+		    tmpRispCon = salvataggioDati.modificaOggetto(nte.getIdObject(),
+			    Constants.StatoOggetto.CHIUSO_ERR_NOTIF);
+		    if (tmpRispCon.getCodErr() != null) {
+			setRispostaWsError(risp, tmpRispCon);
+		    }
 
-                    handleStrumUrbError(nte.getIdObject());
-                    handleSismaError(nte.getIdObject());
-                }
-            }
-        } else {
-            // Non ho passato i primi controlli con esito positivo
-            // Creo una nuova sessione con stato CHIUSO_ERR_NOTIF
-            tmpRispCon = salvataggioDati.creaSessione(nte, risp.getErrorCode(), risp.getErrorMessage());
-            if (tmpRispCon.getCodErr() != null) {
-                setRispostaWsError(risp, tmpRispCon);
-            } else {
-                long idSessione = tmpRispCon.getrLong();
-                Date dtSessione = tmpRispCon.getrDate();
+		    handleStrumUrbError(nte.getIdObject());
+		    handleSismaError(nte.getIdObject());
+		}
+	    }
+	} else {
+	    // Non ho passato i primi controlli con esito positivo
+	    // Creo una nuova sessione con stato CHIUSO_ERR_NOTIF
+	    tmpRispCon = salvataggioDati.creaSessione(nte, risp.getErrorCode(),
+		    risp.getErrorMessage());
+	    if (tmpRispCon.getCodErr() != null) {
+		setRispostaWsError(risp, tmpRispCon);
+	    } else {
+		long idSessione = tmpRispCon.getrLong();
+		Date dtSessione = tmpRispCon.getrDate();
 
-                log.debug("Creazione stato sessione");
-                tmpRispCon.reset();
-                tmpRispCon = salvataggioDati.creaStatoSessione(idSessione,
-                        Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name(), dtSessione);
-                if (tmpRispCon.getCodErr() != null) {
-                    setRispostaWsError(risp, tmpRispCon);
-                }
-            }
-        }
+		log.debug("Creazione stato sessione");
+		tmpRispCon.reset();
+		tmpRispCon = salvataggioDati.creaStatoSessione(idSessione,
+			Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name(), dtSessione);
+		if (tmpRispCon.getCodErr() != null) {
+		    setRispostaWsError(risp, tmpRispCon);
+		}
+	    }
+	}
 
-        // MEV 21995 e MEV34843 elimina i file se presenti su object storage
-        if (nte.isFlCancellaFile()) {
-            for (FileDepositatoRespType fileDep : risp.getNotificaResponse().getListaFileDepositati()
-                    .getFileDepositato()) {
+	// MEV 21995 e MEV34843 elimina i file se presenti su object storage
+	if (nte.isFlCancellaFile()) {
+	    for (FileDepositatoRespType fileDep : risp.getNotificaResponse()
+		    .getListaFileDepositati().getFileDepositato()) {
 
-                BackendStorage backend = salvataggioBackendHelper.getBackend(fileDep.getIdBackend());
-                if (backend.isObjectStorage()) {
-                    ObjectStorageBackend config = salvataggioBackendHelper
-                            .getObjectStorageConfigurationForVersamento(backend.getBackendName());
+		BackendStorage backend = salvataggioBackendHelper
+			.getBackend(fileDep.getIdBackend());
+		if (backend.isObjectStorage()) {
+		    ObjectStorageBackend config = salvataggioBackendHelper
+			    .getObjectStorageConfigurationForVersamento(backend.getBackendName());
 
-                    if (salvataggioBackendHelper.doesObjectExist(config, fileDep.getNmNomeFileOs())) {
-                        salvataggioBackendHelper.deleteObject(config, fileDep.getNmNomeFileOs());
-                    }
-                } else if (backend.isFile() && nte.getFtpPath() != null) {
-                    // Elimina file se presenti nella directory ftp
-                    // Utilizzo XADisk per creare una transazione in modo da eliminare i file in maniera atomica.
-                    tmpRispCon.reset();
-                    tmpRispCon = Util.rimuoviDir(xadCf, nte.getFtpPath());
-                    if (tmpRispCon.getCodErr() != null) {
-                        setRispostaWsError(risp, tmpRispCon);
-                    }
-                }
-            }
-        }
+		    if (salvataggioBackendHelper.doesObjectExist(config,
+			    fileDep.getNmNomeFileOs())) {
+			salvataggioBackendHelper.deleteObject(config, fileDep.getNmNomeFileOs());
+		    }
+		} else if (backend.isFile() && nte.getFtpPath() != null) {
+		    // Elimina file se presenti nella directory ftp
+		    // Utilizzo XADisk per creare una transazione in modo da eliminare i file in
+		    // maniera atomica.
+		    tmpRispCon.reset();
+		    tmpRispCon = Util.rimuoviDir(xadCf, nte.getFtpPath());
+		    if (tmpRispCon.getCodErr() != null) {
+			setRispostaWsError(risp, tmpRispCon);
+		    }
+		}
+	    }
+	}
     }
 
     // MEV 22064 - errore tecnico (per chiuso err notif)
     private void handleStrumUrbError(Long objectId) {
-        PigObject object = strumentiUrbanisticiHelper.getEntityManager().find(PigObject.class, objectId);
-        // MEV 22064 - Il SU va in stato ERRORE
-        if (object.getPigObjectPadre() != null) {
-            // MEV 22064 - ora lo stato da gestire è IN_VERSAMENTO e non più IN_ELABORAZIONE per i SU.
-            PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
-                    .getPigStrumUrbByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
-            if (pigStrumentiUrbanistici != null) {
-                PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
-                pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
-                        PigStrumentiUrbanistici.TiStato.ERRORE);
-                pigStrumentiUrbanistici.setCdErr(errore.getCdErrore());
-                pigStrumentiUrbanistici.setDsErr(errore.getDsErrore());
-            }
-        }
+	PigObject object = strumentiUrbanisticiHelper.getEntityManager().find(PigObject.class,
+		objectId);
+	// MEV 22064 - Il SU va in stato ERRORE
+	if (object.getPigObjectPadre() != null) {
+	    // MEV 22064 - ora lo stato da gestire è IN_VERSAMENTO e non più IN_ELABORAZIONE per i
+	    // SU.
+	    PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+		    .getPigStrumUrbByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
+			    PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+	    if (pigStrumentiUrbanistici != null) {
+		PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
+		pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(
+			pigStrumentiUrbanistici, PigStrumentiUrbanistici.TiStato.ERRORE);
+		pigStrumentiUrbanistici.setCdErr(errore.getCdErrore());
+		pigStrumentiUrbanistici.setDsErr(errore.getDsErrore());
+	    }
+	}
     }
 
     // MEV 30935 - errore tecnico (per chiuso err notif)
     private void handleSismaError(Long objectId) {
-        PigObject object = sismaHelper.getEntityManager().find(PigObject.class, objectId);
+	PigObject object = sismaHelper.getEntityManager().find(PigObject.class, objectId);
 
-        // MEV 30935 - Il SISMA va in stato ERRORE
-        if (object.getPigObjectPadre() != null) {
-            // MEV 30935 - ora lo stato da gestire è IN_VERSAMENTO e non più IN_ELABORAZIONE per
-            // i SU.
-            PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
-                    PigSisma.TiStato.IN_VERSAMENTO);
+	// MEV 30935 - Il SISMA va in stato ERRORE
+	if (object.getPigObjectPadre() != null) {
+	    // MEV 30935 - ora lo stato da gestire è IN_VERSAMENTO e non più IN_ELABORAZIONE per
+	    // i SU.
+	    PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(
+		    object.getPigObjectPadre().getCdKeyObject(), PigSisma.TiStato.IN_VERSAMENTO);
 
-            if (pigSisma == null) {
-                pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
-                        PigSisma.TiStato.IN_VERSAMENTO_SA);
-            }
+	    if (pigSisma == null) {
+		pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(
+			object.getPigObjectPadre().getCdKeyObject(),
+			PigSisma.TiStato.IN_VERSAMENTO_SA);
+	    }
 
-            if (pigSisma != null) {
-                PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSSISMA27");
-                pigSisma = sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.ERRORE);
-                pigSisma.setCdErr(errore.getCdErrore());
-                pigSisma.setDsErr(errore.getDsErrore());
-            }
-        }
+	    if (pigSisma != null) {
+		PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSSISMA27");
+		pigSisma = sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.ERRORE);
+		pigSisma.setCdErr(errore.getCdErrore());
+		pigSisma.setDsErr(errore.getDsErrore());
+	    }
+	}
     }
 }

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -42,62 +38,62 @@ public class DecBackend implements Serializable {
     private List<DecConfigObjectStorage> decConfigObjectStorages;
 
     public DecBackend() {
-        super();
+	super();
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_DEC_BACKEND")
     public Long getIdDecBackend() {
-        return idDecBackend;
+	return idDecBackend;
     }
 
     public void setIdDecBackend(Long idDecBackend) {
-        this.idDecBackend = idDecBackend;
+	this.idDecBackend = idDecBackend;
     }
 
     @Column(name = "NM_BACKEND")
     public String getNmBackend() {
-        return nmBackend;
+	return nmBackend;
     }
 
     public void setNmBackend(String nmBackend) {
-        this.nmBackend = nmBackend;
+	this.nmBackend = nmBackend;
     }
 
     @Column(name = "NM_TIPO_BACKEND")
     public String getNmTipoBackend() {
-        return nmTipoBackend;
+	return nmTipoBackend;
     }
 
     public void setNmTipoBackend(String nmTipoBackend) {
-        this.nmTipoBackend = nmTipoBackend;
+	this.nmTipoBackend = nmTipoBackend;
     }
 
     @Column(name = "DL_BACKEND_URI")
     public String getDlBackendUri() {
-        return dlBackendUri;
+	return dlBackendUri;
     }
 
     public void setDlBackendUri(String dlBackendUri) {
-        this.dlBackendUri = dlBackendUri;
+	this.dlBackendUri = dlBackendUri;
     }
 
     @Column(name = "DS_DESCRIZIONE_BACKEND")
     public String getDsDescrizioneBackend() {
-        return dsDescrizioneBackend;
+	return dsDescrizioneBackend;
     }
 
     public void setDsDescrizioneBackend(String dsDescrizioneBackend) {
-        this.dsDescrizioneBackend = dsDescrizioneBackend;
+	this.dsDescrizioneBackend = dsDescrizioneBackend;
     }
 
     @OneToMany(mappedBy = "decBackend")
     public List<DecConfigObjectStorage> getDecConfigObjectStorages() {
-        return decConfigObjectStorages;
+	return decConfigObjectStorages;
     }
 
     public void setDecConfigObjectStorages(List<DecConfigObjectStorage> decConfigObjectStorages) {
-        this.decConfigObjectStorages = decConfigObjectStorages;
+	this.decConfigObjectStorages = decConfigObjectStorages;
     }
 }

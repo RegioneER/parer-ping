@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.web.servlet;
@@ -58,83 +54,88 @@ public class S3UploadSessionSisma implements Serializable {
     private ObjectStorageBackend config;
 
     public BigDecimal getIdSisma() {
-        return idSisma;
+	return idSisma;
     }
 
     public String getKeyName() {
-        return keyName;
+	return keyName;
     }
 
     public Date getDataInizio() {
-        return dataInizio;
+	return dataInizio;
     }
 
     public Date getDataFine() {
-        return dataFine;
+	return dataFine;
     }
 
-    public S3UploadSessionSisma(SalvataggioBackendHelper salvataggioBackendHelper, BigDecimal idSisma, String keyName,
-            ObjectStorageBackend config) {
-        this.idSisma = idSisma;
-        this.bucketName = config.getBucket();
-        this.keyName = keyName;
-        this.salvataggioBackendHelper = salvataggioBackendHelper;
-        this.config = config;
+    public S3UploadSessionSisma(SalvataggioBackendHelper salvataggioBackendHelper,
+	    BigDecimal idSisma, String keyName, ObjectStorageBackend config) {
+	this.idSisma = idSisma;
+	this.bucketName = config.getBucket();
+	this.keyName = keyName;
+	this.salvataggioBackendHelper = salvataggioBackendHelper;
+	this.config = config;
     }
 
     public boolean existsOnOS() {
-        return salvataggioBackendHelper.doesObjectExist(this.config, this.keyName);
+	return salvataggioBackendHelper.doesObjectExist(this.config, this.keyName);
     }
 
     private void start() {
-        dataInizio = new Date();
-        log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
-        // Create a list of ETag objects. You retrieve ETags for each object part uploaded,
-        // then, after each individual part has been uploaded, pass the list of ETags to
-        // the request to complete the upload.
-        partETags = new ArrayList<CompletedPart>();
-        // Initiate the multipart upload.
-        initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName).build();
-        initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
-        log.info("Multipart Upload Sisma a S3 Inizializzato.");
+	dataInizio = new Date();
+	log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
+	// Create a list of ETag objects. You retrieve ETags for each object part uploaded,
+	// then, after each individual part has been uploaded, pass the list of ETags to
+	// the request to complete the upload.
+	partETags = new ArrayList<CompletedPart>();
+	// Initiate the multipart upload.
+	initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName)
+		.build();
+	initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
+	log.info("Multipart Upload Sisma a S3 Inizializzato.");
     }
 
     private void stop() {
-        software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest compRequest = software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest
-                .builder().uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
-                .multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build()).build();
+	software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest compRequest = software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest
+		.builder().uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
+		.multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build())
+		.build();
 
-        salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
-        dataFine = new Date();
-        log.info(String.format("Fine Sisma UploadMultipart to S3 [%s]", dataFine));
+	salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
+	dataFine = new Date();
+	log.info(String.format("Fine Sisma UploadMultipart to S3 [%s]", dataFine));
     }
 
     /*
-     * Torna TRUE se Ã¨ stato l'upload dell'ultimo chunck e se il file Ã¨ stato caricato completamente
+     * Torna TRUE se Ã¨ stato l'upload dell'ultimo chunck e se il file Ã¨ stato caricato
+     * completamente
      */
     public boolean uploadChunk(InputStream input, int chunk, int chunks) {
-        boolean isLastPart = (chunk == (chunks - 1)) ? true : false;
-        if (chunk == 0) {
-            start();
-        }
-        byte[] bytes = null;
-        try {
-            bytes = IoUtils.toByteArray(input);
-        } catch (IOException ex) {
-            log.error("Errore caricamento chunk su S3!", ex);
-        }
-        log.info(String.format("Inizio l'update del chunk Sisma [%d] di [%d].", chunk, chunks));
-        // Create the request to upload a part.
-        UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName).key(keyName)
-                .uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
-        // Upload the part and add the response's ETag to our list.
-        UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes, config);
-        log.info(String.format("Upload del chunk Sisma [%d] OK.", chunk, chunks));
-        partETags.add(CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
-        if (isLastPart) {
-            stop();
-        }
-        return isLastPart;
+	boolean isLastPart = (chunk == (chunks - 1)) ? true : false;
+	if (chunk == 0) {
+	    start();
+	}
+	byte[] bytes = null;
+	try {
+	    bytes = IoUtils.toByteArray(input);
+	} catch (IOException ex) {
+	    log.error("Errore caricamento chunk su S3!", ex);
+	}
+	log.info(String.format("Inizio l'update del chunk Sisma [%d] di [%d].", chunk, chunks));
+	// Create the request to upload a part.
+	UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName)
+		.key(keyName).uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
+	// Upload the part and add the response's ETag to our list.
+	UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes,
+		config);
+	log.info(String.format("Upload del chunk Sisma [%d] OK.", chunk, chunks));
+	partETags.add(
+		CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
+	if (isLastPart) {
+	    stop();
+	}
+	return isLastPart;
     }
 
 }

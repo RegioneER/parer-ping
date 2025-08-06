@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.ws.richiestaRestituzioneOggetto.dto;
@@ -37,16 +33,15 @@ public class RispostaWSRichiestaRestituzioneOggetto implements IRispostaWS {
      */
     @Override
     public IRispostaWS.SeverityEnum getSeverity() {
-        return severity;
+	return severity;
     }
 
     /**
-     * @param severity
-     *            the severity to set
+     * @param severity the severity to set
      */
     @Override
     public void setSeverity(IRispostaWS.SeverityEnum severity) {
-        this.severity = severity;
+	this.severity = severity;
     }
 
     /**
@@ -54,16 +49,15 @@ public class RispostaWSRichiestaRestituzioneOggetto implements IRispostaWS {
      */
     @Override
     public IRispostaWS.ErrorTypeEnum getErrorType() {
-        return errorType;
+	return errorType;
     }
 
     /**
-     * @param errorType
-     *            the errorType to set
+     * @param errorType the errorType to set
      */
     @Override
     public void setErrorType(IRispostaWS.ErrorTypeEnum errorType) {
-        this.errorType = errorType;
+	this.errorType = errorType;
     }
 
     /**
@@ -71,16 +65,15 @@ public class RispostaWSRichiestaRestituzioneOggetto implements IRispostaWS {
      */
     @Override
     public String getErrorMessage() {
-        return errorMessage;
+	return errorMessage;
     }
 
     /**
-     * @param errorMessage
-     *            the errorMessage to set
+     * @param errorMessage the errorMessage to set
      */
     @Override
     public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+	this.errorMessage = errorMessage;
     }
 
     /**
@@ -88,31 +81,29 @@ public class RispostaWSRichiestaRestituzioneOggetto implements IRispostaWS {
      */
     @Override
     public String getErrorCode() {
-        return errorCode;
+	return errorCode;
     }
 
     /**
-     * @param errorCode
-     *            the errorCode to set
+     * @param errorCode the errorCode to set
      */
     @Override
     public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+	this.errorCode = errorCode;
     }
 
     /**
      * @return the richiestaRestituzioneOggettoRisposta
      */
     public RichiestaRestituzioneOggettoRisposta getRichiestaRestituzioneOggettoRisposta() {
-        return richiestaRestituzioneOggettoRisposta;
+	return richiestaRestituzioneOggettoRisposta;
     }
 
     /**
-     * @param richiestaRestituzioneOggettoRisposta
-     *            the richiestaRestituzioneOggettoRisposta to set
+     * @param richiestaRestituzioneOggettoRisposta the richiestaRestituzioneOggettoRisposta to set
      */
     public void setRichiestaRestituzioneOggettoRisposta(
-            RichiestaRestituzioneOggettoRisposta richiestaRestituzioneOggettoRisposta) {
-        this.richiestaRestituzioneOggettoRisposta = richiestaRestituzioneOggettoRisposta;
+	    RichiestaRestituzioneOggettoRisposta richiestaRestituzioneOggettoRisposta) {
+	this.richiestaRestituzioneOggettoRisposta = richiestaRestituzioneOggettoRisposta;
     }
 }

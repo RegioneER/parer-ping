@@ -3,65 +3,13 @@
 
 <sl:html>
     <sl:head title="Versamento da archivio" >
+        <script type="text/javascript" src="/sacerping/js/versamentoOggetto.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-                //MEV25602                
-                $.get("VersamentoOggetto.html", {operation: "getSupportedArchiveFormatList"}).done(function (data) {
-                    let estensioni = data.map[0].estensioni_ammesse;
-
-                    let filters = [];
-
-                    for (let i = 0; i < estensioni.length; i++) {
-                        let ext = estensioni[i].substring(1);
-                        filters.push(
-                                {title: "Archivi " + ext, extensions: ext}
-                        );
-                    }
-
-                    verODT.init(filters);
-                });
-                
-                $("#Nm_tipo_object").change(function () {
-                    var formData = $("#spagoLiteAppForm").serializeArray();
-                    formData.push({name: 'operation', value: 'triggerVersamentoOggettoDetailNm_tipo_objectOnTrigger'});
-                    $.post("VersamentoOggetto.html", formData).done(function (data) {
-                        CAjaxDataFormWalk(data);
-                        disableForm(data);
-                    });
-                });
-
-
-                if ($("#Nm_tipo_object") && $("#Nm_tipo_object").val().length > 0) {
-                    $("#Nm_tipo_object").trigger('change');
-                }
-
+              initTipoOggettoFieldHandler();
+              // Avvia il processo di recupero dei formati supportati
+              getSupportedFormats();
             });
-
-            function disableForm(jsonData) {
-                switch (jsonData.type) {
-                    case "Form":
-                    case "Fields":
-                        $.each(jsonData.map, function (property, value) {
-                            disableForm(value);
-                        });
-                        break;
-                    case "Input":
-                    case "ComboBox":
-                        var obj = $('#' + jsonData.name);
-                        switch (jsonData.state) {
-                            case "readonly":
-                                obj.attr('readonly', true);
-                                break;
-                            case "view":
-                                obj.attr('readonly', false);
-                                break;
-                            case "edit":
-                                obj.attr('readonly', false);
-                                break;
-                        }
-                        break;
-                }
-            }
         </script>
     </sl:head>
     <sl:body>

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -50,69 +46,69 @@ public class PigXmlSacerUnitaDoc implements Serializable {
     private String flXmlMod;
 
     public PigXmlSacerUnitaDoc() {
-        // hibernate
+	// hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_SACER_UNITA_DOC_IDXMLSACERUNITADOC_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SACER_UNITA_DOC"),
-            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SACER_UNITA_DOC"),
+	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_SACER_UNITA_DOC_IDXMLSACERUNITADOC_GENERATOR")
     @Column(name = "ID_XML_SACER_UNITA_DOC")
     public Long getIdXmlSacerUnitaDoc() {
-        return this.idXmlSacerUnitaDoc;
+	return this.idXmlSacerUnitaDoc;
     }
 
     public void setIdXmlSacerUnitaDoc(Long idXmlSacerUnitaDoc) {
-        this.idXmlSacerUnitaDoc = idXmlSacerUnitaDoc;
+	this.idXmlSacerUnitaDoc = idXmlSacerUnitaDoc;
     }
 
     @Lob()
     @Column(name = "BL_XML_SACER")
     public String getBlXmlSacer() {
-        return this.blXmlSacer;
+	return this.blXmlSacer;
     }
 
     public void setBlXmlSacer(String blXmlSacer) {
-        this.blXmlSacer = blXmlSacer;
+	this.blXmlSacer = blXmlSacer;
     }
 
     @Column(name = "TI_XML_SACER")
     public String getTiXmlSacer() {
-        return this.tiXmlSacer;
+	return this.tiXmlSacer;
     }
 
     public void setTiXmlSacer(String tiXmlSacer) {
-        this.tiXmlSacer = tiXmlSacer;
+	this.tiXmlSacer = tiXmlSacer;
     }
 
     // bi-directional many-to-one association to PigUnitaDocObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_UNITA_DOC_OBJECT")
     public PigUnitaDocObject getPigUnitaDocObject() {
-        return this.pigUnitaDocObject;
+	return this.pigUnitaDocObject;
     }
 
     public void setPigUnitaDocObject(PigUnitaDocObject pigUnitaDocObject) {
-        this.pigUnitaDocObject = pigUnitaDocObject;
+	this.pigUnitaDocObject = pigUnitaDocObject;
     }
 
     // usata solo come chiave di partizionamento, non voglio la join con PigVers
     @Column(name = "ID_VERS")
     public Long getIdVers() {
-        return this.idVers;
+	return this.idVers;
     }
 
     public void setIdVers(Long idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     @Column(name = "FL_XML_MOD", columnDefinition = "char")
     public String getFlXmlMod() {
-        return flXmlMod;
+	return flXmlMod;
     }
 
     public void setFlXmlMod(String flXmlMod) {
-        this.flXmlMod = flXmlMod;
+	this.flXmlMod = flXmlMod;
     }
 }

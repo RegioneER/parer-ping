@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -67,7 +63,7 @@ public class PigSismaDocumenti implements Serializable {
     private PigSismaDocumentiStorage pigSismaDocumentiStorage;
 
     public PigSismaDocumenti() {
-        // non usato
+	// non usato
     }
 
     @Id
@@ -75,161 +71,161 @@ public class PigSismaDocumenti implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_DOCUMENTI_IDSISMADOCUMENTI_GENERATOR")
     @Column(name = "ID_SISMA_DOCUMENTI")
     public Long getIdSismaDocumenti() {
-        return this.idSismaDocumenti;
+	return this.idSismaDocumenti;
     }
 
     public void setIdSismaDocumenti(Long idSismaDocumenti) {
-        this.idSismaDocumenti = idSismaDocumenti;
+	this.idSismaDocumenti = idSismaDocumenti;
     }
 
     @Column(name = "CD_ERR")
     public String getCdErr() {
-        return this.cdErr;
+	return this.cdErr;
     }
 
     public void setCdErr(String cdErr) {
-        this.cdErr = cdErr;
+	this.cdErr = cdErr;
     }
 
     @Column(name = "DS_ERR")
     public String getDsErr() {
-        return this.dsErr;
+	return this.dsErr;
     }
 
     public void setDsErr(String dsErr) {
-        this.dsErr = dsErr;
+	this.dsErr = dsErr;
     }
 
     @Column(name = "FL_DELETED", columnDefinition = "CHAR")
     public String getFlDeleted() {
-        return this.flDeleted;
+	return this.flDeleted;
     }
 
     public void setFlDeleted(String flDeleted) {
-        this.flDeleted = flDeleted;
+	this.flDeleted = flDeleted;
     }
 
     @Column(name = "FL_ESITO_VERIFICA", columnDefinition = "CHAR")
     public String getFlEsitoVerifica() {
-        return this.flEsitoVerifica;
+	return this.flEsitoVerifica;
     }
 
     public void setFlEsitoVerifica(String flEsitoVerifica) {
-        this.flEsitoVerifica = flEsitoVerifica;
+	this.flEsitoVerifica = flEsitoVerifica;
     }
 
     @Column(name = "TI_VERIFICA_AGENZIA")
     public String getTiVerificaAgenzia() {
-        return tiVerificaAgenzia;
+	return tiVerificaAgenzia;
     }
 
     public void setTiVerificaAgenzia(String tiVerificaAgenzia) {
-        this.tiVerificaAgenzia = tiVerificaAgenzia;
+	this.tiVerificaAgenzia = tiVerificaAgenzia;
     }
 
     // bi-directional many-to-one association to PigSisma
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA")
     public PigSisma getPigSisma() {
-        return this.pigSisma;
+	return this.pigSisma;
     }
 
     public void setPigSisma(PigSisma pigSisma) {
-        this.pigSisma = pigSisma;
+	this.pigSisma = pigSisma;
     }
 
     // bi-directional many-to-one association to PigSismaValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_VAL_DOC")
     public PigSismaValDoc getPigSismaValDoc() {
-        return this.pigSismaValDoc;
+	return this.pigSismaValDoc;
     }
 
     public void setPigSismaValDoc(PigSismaValDoc pigSismaValDoc) {
-        this.pigSismaValDoc = pigSismaValDoc;
+	this.pigSismaValDoc = pigSismaValDoc;
     }
 
     @Column(name = "NM_FILE_ORIG")
     public String getNmFileOrig() {
-        return this.nmFileOrig;
+	return this.nmFileOrig;
     }
 
     public void setNmFileOrig(String nmFileOrig) {
-        this.nmFileOrig = nmFileOrig;
+	this.nmFileOrig = nmFileOrig;
     }
 
     @Column(name = "NUM_FILES")
     public BigDecimal getNumFiles() {
-        return this.numFiles;
+	return this.numFiles;
     }
 
     public void setNumFiles(BigDecimal numFiles) {
-        this.numFiles = numFiles;
+	this.numFiles = numFiles;
     }
 
     @Column(name = "DIMENSIONE")
     public BigDecimal getDimensione() {
-        return dimensione;
+	return dimensione;
     }
 
     public void setDimensione(BigDecimal dimensione) {
-        this.dimensione = dimensione;
+	this.dimensione = dimensione;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_CARICAMENTO")
     public Date getDtCaricamento() {
-        return dtCaricamento;
+	return dtCaricamento;
     }
 
     public void setDtCaricamento(Date dtCaricamento) {
-        this.dtCaricamento = dtCaricamento;
+	this.dtCaricamento = dtCaricamento;
     }
 
     @Column(name = "FL_DOC_RICARICATO", columnDefinition = "CHAR")
     public String getFlDocRicaricato() {
-        return flDocRicaricato;
+	return flDocRicaricato;
     }
 
     public void setFlDocRicaricato(String flDocRicaricato) {
-        this.flDocRicaricato = flDocRicaricato;
+	this.flDocRicaricato = flDocRicaricato;
     }
 
     // bi-directional many-to-one association to PigSismaDocEntry
     @OneToMany(mappedBy = "pigSismaDocumenti")
     public List<PigSismaDocEntry> getPigSismaDocEntrys() {
-        return this.pigSismaDocEntrys;
+	return this.pigSismaDocEntrys;
     }
 
     public void setPigSismaDocEntrys(List<PigSismaDocEntry> pigSismaDocEntrys) {
-        this.pigSismaDocEntrys = pigSismaDocEntrys;
+	this.pigSismaDocEntrys = pigSismaDocEntrys;
     }
 
     public PigSismaDocEntry addPigSismaDocEntry(PigSismaDocEntry pigSismaDocEtry) {
-        getPigSismaDocEntrys().add(pigSismaDocEtry);
-        pigSismaDocEtry.setPigSismaDocumenti(this);
+	getPigSismaDocEntrys().add(pigSismaDocEtry);
+	pigSismaDocEtry.setPigSismaDocumenti(this);
 
-        return pigSismaDocEtry;
+	return pigSismaDocEtry;
     }
 
     @Lob()
     @Column(name = "BL_REPORT")
     public String getBlReport() {
-        return blReport;
+	return blReport;
     }
 
     public void setBlReport(String blReport) {
-        this.blReport = blReport;
+	this.blReport = blReport;
     }
 
     // MEV 34843
     @OneToOne(mappedBy = "pigSismaDocumenti", cascade = CascadeType.ALL)
     public PigSismaDocumentiStorage getPigSismaDocumentiStorage() {
-        return pigSismaDocumentiStorage;
+	return pigSismaDocumentiStorage;
     }
 
     public void setPigSismaDocumentiStorage(PigSismaDocumentiStorage pigSismaDocumentiStorage) {
-        this.pigSismaDocumentiStorage = pigSismaDocumentiStorage;
+	this.pigSismaDocumentiStorage = pigSismaDocumentiStorage;
     }
 
 }

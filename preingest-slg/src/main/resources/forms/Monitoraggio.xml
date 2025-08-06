@@ -537,6 +537,7 @@
         <Button Name="modificaTipoOggetto" Description="Modifica il tipo oggetto" Type="STRING" />
         <Button Name="recuperoErrVersamentoPing" Description="Recupero errori di versamento a Ping" Type="STRING" />
         <Button Name="recuperoChiusErrVers" Description="Imposta come errore recuperabile" Type="STRING" />
+        <Button Name="recuperoChiusErrSched" Description="Riporta in attesa schedulazione" Type="STRING" />
         <Button Name="annullaOggettoDetail" Description="Annulla oggetto" Type="STRING" />
         <Button Name="annullaVersamentiUDDetail" Description="Annulla versamenti unità documentarie" Type="STRING" />
         <Button Name="settaDaTrasformareDetail" Description="Set ANNULLATO in DA TRASFORMARE" Type="STRING" />

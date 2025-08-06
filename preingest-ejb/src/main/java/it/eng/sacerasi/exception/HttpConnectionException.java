@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.exception;
@@ -39,69 +35,70 @@ public class HttpConnectionException extends ParerAbstractError {
     private static final String[] stringArray = new String[0];
     private String _code = null;
     private static final Logger logger = LoggerFactory.getLogger(HttpConnectionException.class);
-    private ResourceBundle _bundle = ResourceBundle.getBundle("it.eng.sacerasi.exception.errors", Locale.ITALIAN);
+    private ResourceBundle _bundle = ResourceBundle.getBundle("it.eng.sacerasi.exception.errors",
+	    Locale.ITALIAN);
 
     public HttpConnectionException(String severity, String code, List<?> params) {
-        super();
-        init(severity, code, params);
+	super();
+	init(severity, code, params);
     }
 
     public HttpConnectionException(String message) {
-        super();
-        init(ParerErrorSeverity.ERROR, message);
+	super();
+	init(ParerErrorSeverity.ERROR, message);
     }
 
     public HttpConnectionException() {
-        super();
-        init(ParerErrorSeverity.ERROR, null, null);
+	super();
+	init(ParerErrorSeverity.ERROR, null, null);
     }
 
     /**
-     * Questo metodo ha il compito di inizializzare lo stato dell'oggetto, viene invocato da tutti i costruttori di
-     * <code>ParerUserError</code>.
+     * Questo metodo ha il compito di inizializzare lo stato dell'oggetto, viene invocato da tutti i
+     * costruttori di <code>ParerUserError</code>.
      */
     private void init(String severity, String code, List<?> params) {
-        logger.debug("Http404Exception::init: invocato");
-        setSeverity(severity);
-        logger.debug("Http404Exception::init: severity [{}]", getSeverity());
-        _code = code;
-        logger.debug("Http404Exception::init: code [{}]", code);
-        String text = getText(code, params);
-        setDescription(text);
-        logger.debug("Http404Exception::init: description [{}]", getDescription());
+	logger.debug("Http404Exception::init: invocato");
+	setSeverity(severity);
+	logger.debug("Http404Exception::init: severity [{}]", getSeverity());
+	_code = code;
+	logger.debug("Http404Exception::init: code [{}]", code);
+	String text = getText(code, params);
+	setDescription(text);
+	logger.debug("Http404Exception::init: description [{}]", getDescription());
     }
 
     private void init(String severity, String message) {
-        logger.debug("Http404Exception::init: invocato");
-        setSeverity(severity);
-        logger.debug("Http404Exception::init: severity [{}]", getSeverity());
-        _code = null;
-        logger.debug("Http404Exception::init: code [{}]", _code);
-        setDescription(message);
-        logger.debug("Http404Exception::init: description [{}]", getDescription());
+	logger.debug("Http404Exception::init: invocato");
+	setSeverity(severity);
+	logger.debug("Http404Exception::init: severity [{}]", getSeverity());
+	_code = null;
+	logger.debug("Http404Exception::init: code [{}]", _code);
+	setDescription(message);
+	logger.debug("Http404Exception::init: description [{}]", getDescription());
     }
 
     public String getCategory() {
-        return ParerErrorCategory.USER_ERROR;
+	return ParerErrorCategory.USER_ERROR;
     }
 
     private String getText(String code, List<?> params) {
-        if (code == null)
-            return "";
+	if (code == null)
+	    return "";
 
-        String text;
-        try {
-            text = _bundle.getString(code);
-        } catch (MissingResourceException e) {
-            text = "?? key " + code + " not found ??";
-        }
+	String text;
+	try {
+	    text = _bundle.getString(code);
+	} catch (MissingResourceException e) {
+	    text = "?? key " + code + " not found ??";
+	}
 
-        if (params != null) {
-            Object[] strParams = params.toArray(stringArray);
-            MessageFormat mf = new MessageFormat(text);
-            text = mf.format(strParams, new StringBuffer(), null).toString();
-        }
-        return text;
+	if (params != null) {
+	    Object[] strParams = params.toArray(stringArray);
+	    MessageFormat mf = new MessageFormat(text);
+	    text = mf.format(strParams, new StringBuffer(), null).toString();
+	}
+	return text;
     }
 
 }

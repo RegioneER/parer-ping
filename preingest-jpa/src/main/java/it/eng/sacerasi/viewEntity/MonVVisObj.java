@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -95,455 +91,455 @@ public class MonVVisObj implements Serializable {
     @Lob()
     @Column(name = "BL_XML")
     public String getBlXml() {
-        return this.blXml;
+	return this.blXml;
     }
 
     public void setBlXml(String blXml) {
-        this.blXml = blXml;
+	this.blXml = blXml;
     }
 
     @Column(name = "CD_KEY_OBJECT")
     public String getCdKeyObject() {
-        return this.cdKeyObject;
+	return this.cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-        this.cdKeyObject = cdKeyObject;
+	this.cdKeyObject = cdKeyObject;
     }
 
     @Column(name = "CD_KEY_OBJECT_PADRE")
     public String getCdKeyObjectPadre() {
-        return this.cdKeyObjectPadre;
+	return this.cdKeyObjectPadre;
     }
 
     public void setCdKeyObjectPadre(String cdKeyObjectPadre) {
-        this.cdKeyObjectPadre = cdKeyObjectPadre;
+	this.cdKeyObjectPadre = cdKeyObjectPadre;
     }
 
     @Column(name = "CD_TRASF")
     public String getCdTrasf() {
-        return this.cdTrasf;
+	return this.cdTrasf;
     }
 
     public void setCdTrasf(String cdTrasf) {
-        this.cdTrasf = cdTrasf;
+	this.cdTrasf = cdTrasf;
     }
 
     @Column(name = "CD_VERS_GEN")
     public String getCdVersGen() {
-        return this.cdVersGen;
+	return this.cdVersGen;
     }
 
     public void setCdVersGen(String cdVersGen) {
-        this.cdVersGen = cdVersGen;
+	this.cdVersGen = cdVersGen;
     }
 
     @Column(name = "CD_VERSIONE_TRASF")
     public String getCdVersioneTrasf() {
-        return this.cdVersioneTrasf;
+	return this.cdVersioneTrasf;
     }
 
     public void setCdVersioneTrasf(String cdVersioneTrasf) {
-        this.cdVersioneTrasf = cdVersioneTrasf;
+	this.cdVersioneTrasf = cdVersioneTrasf;
     }
 
     @Column(name = "CD_VERSIONE_XML_VERS")
     public String getCdVersioneXmlVers() {
-        return this.cdVersioneXmlVers;
+	return this.cdVersioneXmlVers;
     }
 
     public void setCdVersioneXmlVers(String cdVersioneXmlVers) {
-        this.cdVersioneXmlVers = cdVersioneXmlVers;
+	this.cdVersioneXmlVers = cdVersioneXmlVers;
     }
 
     @Column(name = "NOTE")
     public String getNote() {
-        return this.note;
+	return this.note;
     }
 
     public void setNote(String note) {
-        this.note = note;
+	this.note = note;
     }
 
     @Column(name = "DL_MOTIVO_CHIUSO_WARNING")
     public String getDlMotivoChiusoWarning() {
-        return this.dlMotivoChiusoWarning;
+	return this.dlMotivoChiusoWarning;
     }
 
     public void setDlMotivoChiusoWarning(String dlMotivoChiusoWarning) {
-        this.dlMotivoChiusoWarning = dlMotivoChiusoWarning;
+	this.dlMotivoChiusoWarning = dlMotivoChiusoWarning;
     }
 
     @Column(name = "DL_MOTIVO_FORZA_ACCETTAZIONE")
     public String getDlMotivoForzaAccettazione() {
-        return this.dlMotivoForzaAccettazione;
+	return this.dlMotivoForzaAccettazione;
     }
 
     public void setDlMotivoForzaAccettazione(String dlMotivoForzaAccettazione) {
-        this.dlMotivoForzaAccettazione = dlMotivoForzaAccettazione;
+	this.dlMotivoForzaAccettazione = dlMotivoForzaAccettazione;
     }
 
     @Column(name = "DS_INFO_OBJECT")
     public String getDsInfoObject() {
-        return this.dsInfoObject;
+	return this.dsInfoObject;
     }
 
     public void setDsInfoObject(String dsInfoObject) {
-        this.dsInfoObject = dsInfoObject;
+	this.dsInfoObject = dsInfoObject;
     }
 
     @Column(name = "DS_OBJECT_PADRE")
     public String getDsObjectPadre() {
-        return this.dsObjectPadre;
+	return this.dsObjectPadre;
     }
 
     public void setDsObjectPadre(String dsObjectPadre) {
-        this.dsObjectPadre = dsObjectPadre;
+	this.dsObjectPadre = dsObjectPadre;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_APERTURA")
     public Date getDtApertura() {
-        return this.dtApertura;
+	return this.dtApertura;
     }
 
     public void setDtApertura(Date dtApertura) {
-        this.dtApertura = dtApertura;
+	this.dtApertura = dtApertura;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_CHIUSURA")
     public Date getDtChiusura() {
-        return this.dtChiusura;
+	return this.dtChiusura;
     }
 
     public void setDtChiusura(Date dtChiusura) {
-        this.dtChiusura = dtChiusura;
+	this.dtChiusura = dtChiusura;
     }
 
     @Column(name = "DT_STATO_COR_PADRE")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDtStatoCorPadre() {
-        return this.dtStatoCorPadre;
+	return this.dtStatoCorPadre;
     }
 
     public void setDtStatoCorPadre(Date dtStatoCorPadre) {
-        this.dtStatoCorPadre = dtStatoCorPadre;
+	this.dtStatoCorPadre = dtStatoCorPadre;
     }
 
     @Column(name = "FL_FORZA_ACCETTAZIONE", columnDefinition = "char")
     public String getFlForzaAccettazione() {
-        return this.flForzaAccettazione;
+	return this.flForzaAccettazione;
     }
 
     public void setFlForzaAccettazione(String flForzaAccettazione) {
-        this.flForzaAccettazione = flForzaAccettazione;
+	this.flForzaAccettazione = flForzaAccettazione;
     }
 
     @Column(name = "FL_FORZA_WARNING", columnDefinition = "char")
     public String getFlForzaWarning() {
-        return this.flForzaWarning;
+	return this.flForzaWarning;
     }
 
     public void setFlForzaWarning(String flForzaWarning) {
-        this.flForzaWarning = flForzaWarning;
+	this.flForzaWarning = flForzaWarning;
     }
 
     @Column(name = "FL_RICH_ANNUL_TIMEOUT", columnDefinition = "char")
     public String getFlRichAnnulTimeout() {
-        return this.flRichAnnulTimeout;
+	return this.flRichAnnulTimeout;
     }
 
     public void setFlRichAnnulTimeout(String flRichAnnulTimeout) {
-        this.flRichAnnulTimeout = flRichAnnulTimeout;
+	this.flRichAnnulTimeout = flRichAnnulTimeout;
     }
 
     @Column(name = "ID_AMBIENTE_VERS")
     public BigDecimal getIdAmbienteVers() {
-        return this.idAmbienteVers;
+	return this.idAmbienteVers;
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-        this.idAmbienteVers = idAmbienteVers;
+	this.idAmbienteVers = idAmbienteVers;
     }
 
     @Column(name = "ID_AMBIENTE_VERS_PADRE")
     public BigDecimal getIdAmbienteVersPadre() {
-        return this.idAmbienteVersPadre;
+	return this.idAmbienteVersPadre;
     }
 
     public void setIdAmbienteVersPadre(BigDecimal idAmbienteVersPadre) {
-        this.idAmbienteVersPadre = idAmbienteVersPadre;
+	this.idAmbienteVersPadre = idAmbienteVersPadre;
     }
 
     @Column(name = "ID_LAST_SESSIONE_INGEST")
     public BigDecimal getIdLastSessioneIngest() {
-        return idLastSessioneIngest;
+	return idLastSessioneIngest;
     }
 
     public void setIdLastSessioneIngest(BigDecimal idLastSessioneIngest) {
-        this.idLastSessioneIngest = idLastSessioneIngest;
+	this.idLastSessioneIngest = idLastSessioneIngest;
     }
 
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-        return this.idObject;
+	return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-        this.idObject = idObject;
+	this.idObject = idObject;
     }
 
     @Column(name = "ID_OBJECT_PADRE")
     public BigDecimal getIdObjectPadre() {
-        return this.idObjectPadre;
+	return this.idObjectPadre;
     }
 
     public void setIdObjectPadre(BigDecimal idObjectPadre) {
-        this.idObjectPadre = idObjectPadre;
+	this.idObjectPadre = idObjectPadre;
     }
 
     @Column(name = "ID_OBJECT_TRASF")
     public BigDecimal getIdObjectTrasf() {
-        return this.idObjectTrasf;
+	return this.idObjectTrasf;
     }
 
     public void setIdObjectTrasf(BigDecimal idObjectTrasf) {
-        this.idObjectTrasf = idObjectTrasf;
+	this.idObjectTrasf = idObjectTrasf;
     }
 
     @Column(name = "ID_TIPO_OBJECT")
     public BigDecimal getIdTipoObject() {
-        return this.idTipoObject;
+	return this.idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-        this.idTipoObject = idTipoObject;
+	this.idTipoObject = idTipoObject;
     }
 
     @Column(name = "ID_TIPO_OBJECT_PADRE")
     public BigDecimal getIdTipoObjectPadre() {
-        return this.idTipoObjectPadre;
+	return this.idTipoObjectPadre;
     }
 
     public void setIdTipoObjectPadre(BigDecimal idTipoObjectPadre) {
-        this.idTipoObjectPadre = idTipoObjectPadre;
+	this.idTipoObjectPadre = idTipoObjectPadre;
     }
 
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-        return this.idVers;
+	return this.idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     @Column(name = "ID_VERS_PADRE")
     public BigDecimal getIdVersPadre() {
-        return this.idVersPadre;
+	return this.idVersPadre;
     }
 
     public void setIdVersPadre(BigDecimal idVersPadre) {
-        this.idVersPadre = idVersPadre;
+	this.idVersPadre = idVersPadre;
     }
 
     @Column(name = "NI_TOT_OBJECT_TRASF")
     public BigDecimal getNiTotObjectTrasf() {
-        return this.niTotObjectTrasf;
+	return this.niTotObjectTrasf;
     }
 
     public void setNiTotObjectTrasf(BigDecimal niTotObjectTrasf) {
-        this.niTotObjectTrasf = niTotObjectTrasf;
+	this.niTotObjectTrasf = niTotObjectTrasf;
     }
 
     @Column(name = "NI_UNITA_DOC_ATTESE")
     public BigDecimal getNiUnitaDocAttese() {
-        return this.niUnitaDocAttese;
+	return this.niUnitaDocAttese;
     }
 
     public void setNiUnitaDocAttese(BigDecimal niUnitaDocAttese) {
-        this.niUnitaDocAttese = niUnitaDocAttese;
+	this.niUnitaDocAttese = niUnitaDocAttese;
     }
 
     @Column(name = "NI_UNITA_DOC_DA_VERS")
     public BigDecimal getNiUnitaDocDaVers() {
-        return this.niUnitaDocDaVers;
+	return this.niUnitaDocDaVers;
     }
 
     public void setNiUnitaDocDaVers(BigDecimal niUnitaDocDaVers) {
-        this.niUnitaDocDaVers = niUnitaDocDaVers;
+	this.niUnitaDocDaVers = niUnitaDocDaVers;
     }
 
     @Column(name = "NI_UNITA_DOC_VERS")
     public BigDecimal getNiUnitaDocVers() {
-        return this.niUnitaDocVers;
+	return this.niUnitaDocVers;
     }
 
     public void setNiUnitaDocVers(BigDecimal niUnitaDocVers) {
-        this.niUnitaDocVers = niUnitaDocVers;
+	this.niUnitaDocVers = niUnitaDocVers;
     }
 
     @Column(name = "NI_UNITA_DOC_VERS_ERR")
     public BigDecimal getNiUnitaDocVersErr() {
-        return this.niUnitaDocVersErr;
+	return this.niUnitaDocVersErr;
     }
 
     public void setNiUnitaDocVersErr(BigDecimal niUnitaDocVersErr) {
-        this.niUnitaDocVersErr = niUnitaDocVersErr;
+	this.niUnitaDocVersErr = niUnitaDocVersErr;
     }
 
     @Column(name = "NI_UNITA_DOC_VERS_OK")
     public BigDecimal getNiUnitaDocVersOk() {
-        return this.niUnitaDocVersOk;
+	return this.niUnitaDocVersOk;
     }
 
     public void setNiUnitaDocVersOk(BigDecimal niUnitaDocVersOk) {
-        this.niUnitaDocVersOk = niUnitaDocVersOk;
+	this.niUnitaDocVersOk = niUnitaDocVersOk;
     }
 
     @Column(name = "NI_UNITA_DOC_VERS_TIMEOUT")
     public BigDecimal getNiUnitaDocVersTimeout() {
-        return this.niUnitaDocVersTimeout;
+	return this.niUnitaDocVersTimeout;
     }
 
     public void setNiUnitaDocVersTimeout(BigDecimal niUnitaDocVersTimeout) {
-        this.niUnitaDocVersTimeout = niUnitaDocVersTimeout;
+	this.niUnitaDocVersTimeout = niUnitaDocVersTimeout;
     }
 
     @Column(name = "NM_AMBIENTE_VERS")
     public String getNmAmbienteVers() {
-        return this.nmAmbienteVers;
+	return this.nmAmbienteVers;
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-        this.nmAmbienteVers = nmAmbienteVers;
+	this.nmAmbienteVers = nmAmbienteVers;
     }
 
     @Column(name = "NM_AMBIENTE_VERS_PADRE")
     public String getNmAmbienteVersPadre() {
-        return this.nmAmbienteVersPadre;
+	return this.nmAmbienteVersPadre;
     }
 
     public void setNmAmbienteVersPadre(String nmAmbienteVersPadre) {
-        this.nmAmbienteVersPadre = nmAmbienteVersPadre;
+	this.nmAmbienteVersPadre = nmAmbienteVersPadre;
     }
 
     @Column(name = "NM_TIPO_OBJECT")
     public String getNmTipoObject() {
-        return this.nmTipoObject;
+	return this.nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-        this.nmTipoObject = nmTipoObject;
+	this.nmTipoObject = nmTipoObject;
     }
 
     @Column(name = "NM_TIPO_OBJECT_PADRE")
     public String getNmTipoObjectPadre() {
-        return this.nmTipoObjectPadre;
+	return this.nmTipoObjectPadre;
     }
 
     public void setNmTipoObjectPadre(String nmTipoObjectPadre) {
-        this.nmTipoObjectPadre = nmTipoObjectPadre;
+	this.nmTipoObjectPadre = nmTipoObjectPadre;
     }
 
     @Column(name = "NM_VERS")
     public String getNmVers() {
-        return this.nmVers;
+	return this.nmVers;
     }
 
     public void setNmVers(String nmVers) {
-        this.nmVers = nmVers;
+	this.nmVers = nmVers;
     }
 
     @Column(name = "NM_VERS_PADRE")
     public String getNmVersPadre() {
-        return this.nmVersPadre;
+	return this.nmVersPadre;
     }
 
     public void setNmVersPadre(String nmVersPadre) {
-        this.nmVersPadre = nmVersPadre;
+	this.nmVersPadre = nmVersPadre;
     }
 
     @Column(name = "PG_OGGETTO_TRASF")
     public BigDecimal getPgOggettoTrasf() {
-        return this.pgOggettoTrasf;
+	return this.pgOggettoTrasf;
     }
 
     public void setPgOggettoTrasf(BigDecimal pgOggettoTrasf) {
-        this.pgOggettoTrasf = pgOggettoTrasf;
+	this.pgOggettoTrasf = pgOggettoTrasf;
     }
 
     @Column(name = "TI_GEST_OGGETTI_FIGLI")
     public String getTiGestOggettiFigli() {
-        return tiGestOggettiFigli;
+	return tiGestOggettiFigli;
     }
 
     public void setTiGestOggettiFigli(String tiGestOggettiFigli) {
-        this.tiGestOggettiFigli = tiGestOggettiFigli;
+	this.tiGestOggettiFigli = tiGestOggettiFigli;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-        return this.tiStatoObject;
+	return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-        this.tiStatoObject = tiStatoObject;
+	this.tiStatoObject = tiStatoObject;
     }
 
     @Column(name = "TI_STATO_OBJECT_PADRE")
     public String getTiStatoObjectPadre() {
-        return this.tiStatoObjectPadre;
+	return this.tiStatoObjectPadre;
     }
 
     public void setTiStatoObjectPadre(String tiStatoObjectPadre) {
-        this.tiStatoObjectPadre = tiStatoObjectPadre;
+	this.tiStatoObjectPadre = tiStatoObjectPadre;
     }
 
     @Column(name = "TI_STATO_VERIFICA_HASH")
     public String getTiStatoVerificaHash() {
-        return this.tiStatoVerificaHash;
+	return this.tiStatoVerificaHash;
     }
 
     public void setTiStatoVerificaHash(String tiStatoVerificaHash) {
-        this.tiStatoVerificaHash = tiStatoVerificaHash;
+	this.tiStatoVerificaHash = tiStatoVerificaHash;
     }
 
     @Column(name = "TI_VERS_FILE")
     public String getTiVersFile() {
-        return this.tiVersFile;
+	return this.tiVersFile;
     }
 
     public void setTiVersFile(String tiVersFile) {
-        this.tiVersFile = tiVersFile;
+	this.tiVersFile = tiVersFile;
     }
 
     @Column(name = "TI_PRIORITA")
     public String getTiPriorita() {
-        return tiPriorita;
+	return tiPriorita;
     }
 
     public void setTiPriorita(String tiPriorita) {
-        this.tiPriorita = tiPriorita;
+	this.tiPriorita = tiPriorita;
     }
 
     @Column(name = "TI_PRIORITA_VERSAMENTO")
     public String getTiPrioritaVersamento() {
-        return tiPrioritaVersamento;
+	return tiPrioritaVersamento;
     }
 
     public void setTiPrioritaVersamento(String tiPrioritaVersamento) {
-        this.tiPrioritaVersamento = tiPrioritaVersamento;
+	this.tiPrioritaVersamento = tiPrioritaVersamento;
     }
 
     @Column(name = "NM_USERID_VERS")
     public String getNmUseridVers() {
-        return nmUseridVers;
+	return nmUseridVers;
     }
 
     public void setNmUseridVers(String nmUseridVers) {
-        this.nmUseridVers = nmUseridVers;
+	this.nmUseridVers = nmUseridVers;
     }
 }

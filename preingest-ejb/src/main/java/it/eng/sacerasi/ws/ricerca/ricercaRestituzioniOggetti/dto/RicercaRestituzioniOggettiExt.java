@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.ws.ricerca.ricercaRestituzioniOggetti.dto;
@@ -45,90 +41,94 @@ public class RicercaRestituzioniOggettiExt {
     private RicercaRestituzioniOggettiInput ricercaRestituzioniOggettiInput;
 
     public IWSDesc getDescrizione() {
-        return descrizione;
+	return descrizione;
     }
 
     public void setDescrizione(IWSDesc descrizione) {
-        this.descrizione = descrizione;
+	this.descrizione = descrizione;
     }
 
     public Long getIdVersatore() {
-        return idVersatore;
+	return idVersatore;
     }
 
     public void setIdVersatore(Long idVersatore) {
-        this.idVersatore = idVersatore;
+	this.idVersatore = idVersatore;
     }
 
     public Long getIdTipoObject() {
-        return idTipoObject;
+	return idTipoObject;
     }
 
     public void setIdTipoObject(Long idTipoObject) {
-        this.idTipoObject = idTipoObject;
+	this.idTipoObject = idTipoObject;
     }
 
     public Date getDtApertura() {
-        return dtApertura;
+	return dtApertura;
     }
 
     public void setDtApertura(Date dtApertura) {
-        this.dtApertura = dtApertura;
+	this.dtApertura = dtApertura;
     }
 
     public Date getDtChiusura() {
-        return dtChiusura;
+	return dtChiusura;
     }
 
     public void setDtChiusura(Date dtChiusura) {
-        this.dtChiusura = dtChiusura;
+	this.dtChiusura = dtChiusura;
     }
 
     public List<AttribDatiSpecBean> getListaAttribDatiSpec() {
-        return listaAttribDatiSpec;
+	return listaAttribDatiSpec;
     }
 
     public void setListaAttribDatiSpec(List<AttribDatiSpecBean> listaAttribDatiSpec) {
-        this.listaAttribDatiSpec = listaAttribDatiSpec;
+	this.listaAttribDatiSpec = listaAttribDatiSpec;
     }
 
     public List<DatoSpecFiltroConNomeColonna> getDatiSpecFiltriConNomeColonna() {
-        return datiSpecFiltriConNomeColonna;
+	return datiSpecFiltriConNomeColonna;
     }
 
-    public void setDatiSpecFiltriConNomeColonna(List<DatoSpecFiltroConNomeColonna> datiSpecFiltriConNomeColonna) {
-        this.datiSpecFiltriConNomeColonna = datiSpecFiltriConNomeColonna;
+    public void setDatiSpecFiltriConNomeColonna(
+	    List<DatoSpecFiltroConNomeColonna> datiSpecFiltriConNomeColonna) {
+	this.datiSpecFiltriConNomeColonna = datiSpecFiltriConNomeColonna;
     }
 
     public List<DatoSpecOutputConNomeColonna> getDatiSpecOutputConNomeColonna() {
-        return datiSpecOutputConNomeColonna;
+	return datiSpecOutputConNomeColonna;
     }
 
-    public void setDatiSpecOutputConNomeColonna(List<DatoSpecOutputConNomeColonna> datiSpecOutputConNomeColonna) {
-        this.datiSpecOutputConNomeColonna = datiSpecOutputConNomeColonna;
+    public void setDatiSpecOutputConNomeColonna(
+	    List<DatoSpecOutputConNomeColonna> datiSpecOutputConNomeColonna) {
+	this.datiSpecOutputConNomeColonna = datiSpecOutputConNomeColonna;
     }
 
     public List<DatoSpecOrderConNomeColonna> getDatiSpecOrderConNomeColonna() {
-        return datiSpecOrderConNomeColonna;
+	return datiSpecOrderConNomeColonna;
     }
 
-    public void setDatiSpecOrderConNomeColonna(List<DatoSpecOrderConNomeColonna> datiSpecOrderConNomeColonna) {
-        this.datiSpecOrderConNomeColonna = datiSpecOrderConNomeColonna;
+    public void setDatiSpecOrderConNomeColonna(
+	    List<DatoSpecOrderConNomeColonna> datiSpecOrderConNomeColonna) {
+	this.datiSpecOrderConNomeColonna = datiSpecOrderConNomeColonna;
     }
 
     public String getXmlDatiSpecOutput() {
-        return xmlDatiSpecOutput;
+	return xmlDatiSpecOutput;
     }
 
     public void setXmlDatiSpecOutput(String xmlDatiSpecOutput) {
-        this.xmlDatiSpecOutput = xmlDatiSpecOutput;
+	this.xmlDatiSpecOutput = xmlDatiSpecOutput;
     }
 
     public RicercaRestituzioniOggettiInput getRicercaRestituzioniOggettiInput() {
-        return ricercaRestituzioniOggettiInput;
+	return ricercaRestituzioniOggettiInput;
     }
 
-    public void setRicercaRestituzioniOggettiInput(RicercaRestituzioniOggettiInput ricercaRestituzioniOggettiInput) {
-        this.ricercaRestituzioniOggettiInput = ricercaRestituzioniOggettiInput;
+    public void setRicercaRestituzioniOggettiInput(
+	    RicercaRestituzioniOggettiInput ricercaRestituzioniOggettiInput) {
+	this.ricercaRestituzioniOggettiInput = ricercaRestituzioniOggettiInput;
     }
 }

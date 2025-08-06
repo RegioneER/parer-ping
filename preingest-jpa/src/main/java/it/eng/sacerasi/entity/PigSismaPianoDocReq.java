@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -45,7 +41,7 @@ public class PigSismaPianoDocReq implements Serializable {
     private PigSismaFaseProgetto pigSismaFaseProgetto;
 
     public PigSismaPianoDocReq() {
-        // hibernate
+	// hibernate
     }
 
     @Id
@@ -53,41 +49,41 @@ public class PigSismaPianoDocReq implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_PIANO_DOC_REQ_IDSISMAPIANODOCREQ_GENERATOR")
     @Column(name = "ID_SISMA_PIANO_DOC_REQ")
     public Long getIdSismaPianoDocReq() {
-        return this.idSismaPianoDocReq;
+	return this.idSismaPianoDocReq;
     }
 
     public void setIdSismaPianoDocReq(Long idSismaPianoDocReq) {
-        this.idSismaPianoDocReq = idSismaPianoDocReq;
+	this.idSismaPianoDocReq = idSismaPianoDocReq;
     }
 
     @Column(name = "FL_DOC_OBBLIGATORIO", columnDefinition = "CHAR")
     public String getFlDocObbligatorio() {
-        return this.flDocObbligatorio;
+	return this.flDocObbligatorio;
     }
 
     public void setFlDocObbligatorio(String flDocObbligatorio) {
-        this.flDocObbligatorio = flDocObbligatorio;
+	this.flDocObbligatorio = flDocObbligatorio;
     }
 
     // bi-directional many-to-one association to PigSismaValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PIG_SISMA_VAL_DOC")
     public PigSismaValDoc getPigSismaValDoc() {
-        return this.pigSismaValDoc;
+	return this.pigSismaValDoc;
     }
 
     public void setPigSismaValDoc(PigSismaValDoc pigSismaValDoc) {
-        this.pigSismaValDoc = pigSismaValDoc;
+	this.pigSismaValDoc = pigSismaValDoc;
     }
 
     // bi-directional many-to-one association to PigSismaValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_FASE_PROGETTO")
     public PigSismaFaseProgetto getPigSismaFaseProgetto() {
-        return pigSismaFaseProgetto;
+	return pigSismaFaseProgetto;
     }
 
     public void setPigSismaFaseProgetto(PigSismaFaseProgetto pigSismaFaseProgetto) {
-        this.pigSismaFaseProgetto = pigSismaFaseProgetto;
+	this.pigSismaFaseProgetto = pigSismaFaseProgetto;
     }
 }

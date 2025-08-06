@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.job.timer;
@@ -51,59 +47,57 @@ public abstract class JobTimer implements JbossJobTimer {
     protected JobLogger jobLogger;
 
     protected JobTimer(Constants.NomiJob jobName) {
-        if (jobName == null) {
-            throw new IllegalArgumentException();
-        }
+	if (jobName == null) {
+	    throw new IllegalArgumentException();
+	}
 
-        this.jobName = jobName.name();
+	this.jobName = jobName.name();
     }
 
     @Override
     public String getJobName() {
-        return jobName;
+	return jobName;
     }
 
     protected boolean isActive() {
-        boolean result = false;
+	boolean result = false;
 
-        for (Object obj : timerService.getTimers()) {
-            Timer timer = (Timer) obj;
-            String scheduled = (String) timer.getInfo();
-            if (scheduled.equals(jobName)) {
-                result = true;
-                break;
-            }
-        }
+	for (Object obj : timerService.getTimers()) {
+	    Timer timer = (Timer) obj;
+	    String scheduled = (String) timer.getInfo();
+	    if (scheduled.equals(jobName)) {
+		result = true;
+		break;
+	    }
+	}
 
-        return result;
+	return result;
     }
 
     @Override
     public Date getNextElaboration(String applicationName) {
-        try {
-            for (Object obj : timerService.getTimers()) {
-                Timer timer = (Timer) obj;
-                String scheduled = (String) timer.getInfo();
+	try {
+	    for (Object obj : timerService.getTimers()) {
+		Timer timer = (Timer) obj;
+		String scheduled = (String) timer.getInfo();
 
-                if (scheduled.equals(jobName)) {
-                    return timer.getNextTimeout();
-                }
-            }
+		if (scheduled.equals(jobName)) {
+		    return timer.getNextTimeout();
+		}
+	    }
 
-        } catch (NoMoreTimeoutsException e) {
-            logger.warn("Il metodo timer.getNextTimeout() ha restituito eccezione");
-        }
-        return null;
+	} catch (NoMoreTimeoutsException e) {
+	    logger.warn("Il metodo timer.getNextTimeout() ha restituito eccezione");
+	}
+	return null;
     }
 
     /**
      * This method is invoked by <code>doJob</code> and invokes the job business logic.
      *
-     * @param timer
-     *            - timer
+     * @param timer - timer
      *
-     * @throws Exception
-     *             errore generico
+     * @throws Exception errore generico
      */
     public abstract void startProcess(Timer timer) throws Exception;
 

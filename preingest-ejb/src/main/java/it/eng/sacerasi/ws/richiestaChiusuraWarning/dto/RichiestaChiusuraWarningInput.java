@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.ws.richiestaChiusuraWarning.dto;
@@ -29,45 +25,44 @@ public class RichiestaChiusuraWarningInput {
     private String CdKeyObject;
     private String DlMotivazione;
 
-    // public RichiestaChiusuraWarningInput(String NmAmbiente, String NmVersatore, String CdPassword, String
+    // public RichiestaChiusuraWarningInput(String NmAmbiente, String NmVersatore, String
+    // CdPassword, String
     // CdKeyObject, String DlMotivazione) {
     public RichiestaChiusuraWarningInput(String NmAmbiente, String NmVersatore, String CdKeyObject,
-            String DlMotivazione) {
-        this.NmAmbiente = NmAmbiente;
-        this.NmVersatore = NmVersatore;
-        // this.CdPassword = CdPassword;
-        this.CdKeyObject = CdKeyObject;
-        this.DlMotivazione = DlMotivazione;
+	    String DlMotivazione) {
+	this.NmAmbiente = NmAmbiente;
+	this.NmVersatore = NmVersatore;
+	// this.CdPassword = CdPassword;
+	this.CdKeyObject = CdKeyObject;
+	this.DlMotivazione = DlMotivazione;
     }
 
     /**
      * @return the NmAmbiente
      */
     public String getNmAmbiente() {
-        return NmAmbiente;
+	return NmAmbiente;
     }
 
     /**
-     * @param NmAmbiente
-     *            the NmAmbiente to set
+     * @param NmAmbiente the NmAmbiente to set
      */
     public void setNmAmbiente(String NmAmbiente) {
-        this.NmAmbiente = NmAmbiente;
+	this.NmAmbiente = NmAmbiente;
     }
 
     /**
      * @return the NmVersatore
      */
     public String getNmVersatore() {
-        return NmVersatore;
+	return NmVersatore;
     }
 
     /**
-     * @param NmVersatore
-     *            the NmVersatore to set
+     * @param NmVersatore the NmVersatore to set
      */
     public void setNmVersatore(String NmVersatore) {
-        this.NmVersatore = NmVersatore;
+	this.NmVersatore = NmVersatore;
     }
 
     // /**
@@ -88,29 +83,27 @@ public class RichiestaChiusuraWarningInput {
      * @return the CdKeyObject
      */
     public String getCdKeyObject() {
-        return CdKeyObject;
+	return CdKeyObject;
     }
 
     /**
-     * @param CdKeyObject
-     *            the CdKeyObject to set
+     * @param CdKeyObject the CdKeyObject to set
      */
     public void setCdKeyObject(String CdKeyObject) {
-        this.CdKeyObject = CdKeyObject;
+	this.CdKeyObject = CdKeyObject;
     }
 
     /**
      * @return the DlMotivazione
      */
     public String getDlMotivazione() {
-        return DlMotivazione;
+	return DlMotivazione;
     }
 
     /**
-     * @param DlMotivazione
-     *            the DlMotivazione to set
+     * @param DlMotivazione the DlMotivazione to set
      */
     public void setDlMotivazione(String DlMotivazione) {
-        this.DlMotivazione = DlMotivazione;
+	this.DlMotivazione = DlMotivazione;
     }
 }

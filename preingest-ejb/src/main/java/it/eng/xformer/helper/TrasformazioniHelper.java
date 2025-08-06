@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.xformer.helper;
@@ -93,475 +89,490 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
     private SalvataggioBackendHelper salvataggioBackendHelper;
 
     public List<XfoTrasf> searchXfoTrasf(RicercaTrasformazioneBean filtri) {
-        String queryStr = "SELECT x FROM XfoTrasf x";
-        StringBuilder whereClause = new StringBuilder("");
+	String queryStr = "SELECT x FROM XfoTrasf x";
+	StringBuilder whereClause = new StringBuilder("");
 
-        if (StringUtils.isNotBlank(filtri.getCd_trasf())) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (StringUtils.isNotBlank(filtri.getCd_trasf())) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("UPPER(x.cdTrasf) LIKE :cdTrasf");
-        }
+	    whereClause.append("UPPER(x.cdTrasf) LIKE :cdTrasf");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getDs_trasf())) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (StringUtils.isNotBlank(filtri.getDs_trasf())) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("UPPER(x.dsTrasf) LIKE :dsTrasf");
-        }
+	    whereClause.append("UPPER(x.dsTrasf) LIKE :dsTrasf");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getCd_versione_cor())) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (StringUtils.isNotBlank(filtri.getCd_versione_cor())) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("UPPER(x.cdVersioneCor) LIKE :cdVersioneCor");
-        }
+	    whereClause.append("UPPER(x.cdVersioneCor) LIKE :cdVersioneCor");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getDs_versione_cor())) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (StringUtils.isNotBlank(filtri.getDs_versione_cor())) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("UPPER(x.dsVersioneCor) LIKE :dsVersioneCor");
-        }
+	    whereClause.append("UPPER(x.dsVersioneCor) LIKE :dsVersioneCor");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getFl_attiva())) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (StringUtils.isNotBlank(filtri.getFl_attiva())) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("x.flAttiva = :flAttiva");
-        }
+	    whereClause.append("x.flAttiva = :flAttiva");
+	}
 
-        if (filtri.getDt_istituz() != null) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (filtri.getDt_istituz() != null) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("x.dtIstituz >= :dtIstituz");
-        }
+	    whereClause.append("x.dtIstituz >= :dtIstituz");
+	}
 
-        if (filtri.getDt_soppres() != null) {
-            if (whereClause.length() != 0) {
-                whereClause.append(" AND ");
-            }
+	if (filtri.getDt_soppres() != null) {
+	    if (whereClause.length() != 0) {
+		whereClause.append(" AND ");
+	    }
 
-            whereClause.append("x.dtSoppres <= :dtSoppres");
-        }
+	    whereClause.append("x.dtSoppres <= :dtSoppres");
+	}
 
-        if (whereClause.length() != 0) {
-            whereClause.insert(0, " WHERE ");
-        }
+	if (whereClause.length() != 0) {
+	    whereClause.insert(0, " WHERE ");
+	}
 
-        Query query = getEntityManager().createQuery(queryStr + whereClause + " ORDER BY x.cdTrasf ASC");
-        if (StringUtils.isNotBlank(filtri.getCd_trasf())) {
-            query.setParameter("cdTrasf", "%" + filtri.getCd_trasf().toUpperCase() + "%");
-        }
+	Query query = getEntityManager()
+		.createQuery(queryStr + whereClause + " ORDER BY x.cdTrasf ASC");
+	if (StringUtils.isNotBlank(filtri.getCd_trasf())) {
+	    query.setParameter("cdTrasf", "%" + filtri.getCd_trasf().toUpperCase() + "%");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getDs_trasf())) {
-            query.setParameter("dsTrasf", "%" + filtri.getDs_trasf().toUpperCase() + "%");
-        }
+	if (StringUtils.isNotBlank(filtri.getDs_trasf())) {
+	    query.setParameter("dsTrasf", "%" + filtri.getDs_trasf().toUpperCase() + "%");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getCd_versione_cor())) {
-            query.setParameter("cdVersioneCor", "%" + filtri.getCd_versione_cor().toUpperCase() + "%");
-        }
+	if (StringUtils.isNotBlank(filtri.getCd_versione_cor())) {
+	    query.setParameter("cdVersioneCor",
+		    "%" + filtri.getCd_versione_cor().toUpperCase() + "%");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getDs_versione_cor())) {
-            query.setParameter("dsVersioneCor", "%" + filtri.getDs_versione_cor().toUpperCase() + "%");
-        }
+	if (StringUtils.isNotBlank(filtri.getDs_versione_cor())) {
+	    query.setParameter("dsVersioneCor",
+		    "%" + filtri.getDs_versione_cor().toUpperCase() + "%");
+	}
 
-        if (StringUtils.isNotBlank(filtri.getFl_attiva())) {
-            query.setParameter("flAttiva", filtri.getFl_attiva());
-        }
+	if (StringUtils.isNotBlank(filtri.getFl_attiva())) {
+	    query.setParameter("flAttiva", filtri.getFl_attiva());
+	}
 
-        if (filtri.getDt_istituz() != null) {
-            query.setParameter("dtIstituz", filtri.getDt_istituz());
-        }
+	if (filtri.getDt_istituz() != null) {
+	    query.setParameter("dtIstituz", filtri.getDt_istituz());
+	}
 
-        if (filtri.getDt_soppres() != null) {
-            query.setParameter("dtSoppres", filtri.getDt_soppres());
-        }
+	if (filtri.getDt_soppres() != null) {
+	    query.setParameter("dtSoppres", filtri.getDt_soppres());
+	}
 
-        return query.getResultList();
+	return query.getResultList();
     }
 
     public List<XfoStoricoTrasf> searchXfoStoricoTrasfbyXfoTrasf(long idTrasf) {
-        String queryStr = "SELECT x FROM XfoStoricoTrasf x WHERE x.xfoTrasf.idTrasf = :idTrasf ORDER BY x.dtIstituz DESC";
+	String queryStr = "SELECT x FROM XfoStoricoTrasf x WHERE x.xfoTrasf.idTrasf = :idTrasf ORDER BY x.dtIstituz DESC";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idTrasf", idTrasf);
 
-        return query.getResultList();
+	return query.getResultList();
     }
 
     public List<XfoSetParamTrasf> searchXfoSetParamTrasfbyXfoTrasf(long idTrasf) {
-        String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.xfoTrasf.idTrasf = :idTrasf";
+	String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idTrasf", idTrasf);
 
-        return query.getResultList();
+	return query.getResultList();
     }
 
     public List<XfoParamTrasf> searchXfoParamTrasfbySet(long idSetParamTrasf) {
-        String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.xfoSetParamTrasf.idSetParamTrasf = :idSetParamTrasf ORDER BY x.nmParamTrasf ASC";
+	String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.xfoSetParamTrasf.idSetParamTrasf = :idSetParamTrasf ORDER BY x.nmParamTrasf ASC";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idSetParamTrasf", idSetParamTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idSetParamTrasf", idSetParamTrasf);
 
-        return query.getResultList();
+	return query.getResultList();
     }
 
     public boolean transformationNameExists(String transformationName) {
-        String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf";
+	String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("cdTrasf", transformationName);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("cdTrasf", transformationName);
 
-        List<XfoTrasf> transfs = query.getResultList();
+	List<XfoTrasf> transfs = query.getResultList();
 
-        return !transfs.isEmpty();
+	return !transfs.isEmpty();
     }
 
     public boolean parametersSetExists(String parametersSetName, long idTrasf) {
-        String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.nmSetParamTrasf = :nmSetParamTrasf AND x.xfoTrasf.idTrasf = :idTrasf";
+	String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.nmSetParamTrasf = :nmSetParamTrasf AND x.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("nmSetParamTrasf", parametersSetName);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("nmSetParamTrasf", parametersSetName);
+	query.setParameter("idTrasf", idTrasf);
 
-        List<XfoSetParamTrasf> parameters = query.getResultList();
+	List<XfoSetParamTrasf> parameters = query.getResultList();
 
-        return !parameters.isEmpty();
+	return !parameters.isEmpty();
     }
 
     public XfoSetParamTrasf getParametersSet(String parametersSetName, long idTrasf) {
-        String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.nmSetParamTrasf = :nmSetParamTrasf AND x.xfoTrasf.idTrasf = :idTrasf";
+	String queryStr = "SELECT x FROM XfoSetParamTrasf x WHERE x.nmSetParamTrasf = :nmSetParamTrasf AND x.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("nmSetParamTrasf", parametersSetName);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("nmSetParamTrasf", parametersSetName);
+	query.setParameter("idTrasf", idTrasf);
 
-        List<XfoSetParamTrasf> parameters = query.getResultList();
-        if (parameters.isEmpty()) {
-            return null;
-        } else {
-            return parameters.get(0);
-        }
+	List<XfoSetParamTrasf> parameters = query.getResultList();
+	if (parameters.isEmpty()) {
+	    return null;
+	} else {
+	    return parameters.get(0);
+	}
     }
 
     public List<XfoParamTrasf> gettAllXfoParamTrasfbyTrasf(long idTrasf) {
-        String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.xfoSetParamTrasf.xfoTrasf.idTrasf = :idTrasf";
+	String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.xfoSetParamTrasf.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idTrasf", idTrasf);
 
-        List<XfoParamTrasf> results = query.getResultList();
+	List<XfoParamTrasf> results = query.getResultList();
 
-        return results;
+	return results;
     }
 
     public XfoParamTrasf searchXfoParamTrasfbyName(String paramenterName, long idTrasf) {
-        String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.nmParamTrasf = :nmParamTrasf AND x.xfoSetParamTrasf.xfoTrasf.idTrasf = :idTrasf";
+	String queryStr = "SELECT x FROM XfoParamTrasf x WHERE x.nmParamTrasf = :nmParamTrasf AND x.xfoSetParamTrasf.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("nmParamTrasf", paramenterName);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("nmParamTrasf", paramenterName);
+	query.setParameter("idTrasf", idTrasf);
 
-        List<XfoParamTrasf> results = query.getResultList();
+	List<XfoParamTrasf> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
-    public PigVValoreParamTrasf searchPigVValoreParamTrasfByName(String paramenterName, long idVersTipoObjectDaTrasf) {
-        String queryStr = "SELECT x FROM PigVValoreParamTrasf x WHERE x.nmParamTrasf = :nmParamTrasf AND x.id.idVersTipoObjectDaTrasf = :idVersTipoObjectDaTrasf";
+    public PigVValoreParamTrasf searchPigVValoreParamTrasfByName(String paramenterName,
+	    long idVersTipoObjectDaTrasf) {
+	String queryStr = "SELECT x FROM PigVValoreParamTrasf x WHERE x.nmParamTrasf = :nmParamTrasf AND x.id.idVersTipoObjectDaTrasf = :idVersTipoObjectDaTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("nmParamTrasf", paramenterName);
-        query.setParameter("idVersTipoObjectDaTrasf", HibernateUtils.bigDecimalFrom(idVersTipoObjectDaTrasf));
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("nmParamTrasf", paramenterName);
+	query.setParameter("idVersTipoObjectDaTrasf",
+		HibernateUtils.bigDecimalFrom(idVersTipoObjectDaTrasf));
 
-        List<PigVValoreParamTrasf> results = query.getResultList();
+	List<PigVValoreParamTrasf> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
     public PigVersTipoObjectDaTrasf getPigVersTipoObjectDaTrasf(PigObject object) {
-        String queryStr = "SELECT x FROM PigVersTipoObjectDaTrasf x WHERE x.cdVersGen= :cdVersGen AND x.pigTipoObjectDaTrasf.idTipoObject = :idTipoObject";
+	String queryStr = "SELECT x FROM PigVersTipoObjectDaTrasf x WHERE x.cdVersGen= :cdVersGen AND x.pigTipoObjectDaTrasf.idTipoObject = :idTipoObject";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("cdVersGen", object.getCdVersGen());
-        query.setParameter("idTipoObject", object.getPigTipoObject().getIdTipoObject());
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("cdVersGen", object.getCdVersGen());
+	query.setParameter("idTipoObject", object.getPigTipoObject().getIdTipoObject());
 
-        List<PigVersTipoObjectDaTrasf> results = query.getResultList();
+	List<PigVersTipoObjectDaTrasf> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
     public List<PigObjectTrasf> searchGeneratedPigObjects(PigObject object) {
-        String queryStr = "SELECT x FROM PigObjectTrasf x WHERE x.pigObject.idObject = :idFatherObject";
+	String queryStr = "SELECT x FROM PigObjectTrasf x WHERE x.pigObject.idObject = :idFatherObject";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idFatherObject", object.getIdObject());
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idFatherObject", object.getIdObject());
 
-        return (List<PigObjectTrasf>) query.getResultList();
+	return (List<PigObjectTrasf>) query.getResultList();
     }
 
     // MEGABUG - serve anche il versatore perchè si incasina se cdkeyobject è doppio.
     public PigObjectTrasf findGeneratedPigObjectTrasf(String cdKeyObjectTrasf, PigObject object) {
-        String queryStr = "SELECT x FROM PigObjectTrasf x WHERE x.cdKeyObjectTrasf = :cdKeyObjectTrasf AND x.pigObject.idObject = :idFatherObject";
+	String queryStr = "SELECT x FROM PigObjectTrasf x WHERE x.cdKeyObjectTrasf = :cdKeyObjectTrasf AND x.pigObject.idObject = :idFatherObject";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idFatherObject", object.getIdObject());
-        query.setParameter("cdKeyObjectTrasf", cdKeyObjectTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idFatherObject", object.getIdObject());
+	query.setParameter("cdKeyObjectTrasf", cdKeyObjectTrasf);
 
-        List<PigObjectTrasf> results = query.getResultList();
+	List<PigObjectTrasf> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public PigObject searchPigObjectTrasfInPigObjects(PigObjectTrasf pot) {
-        String queryStr = "SELECT x FROM PigObject x WHERE x.cdKeyObject = :cdKeyObjectTrasf AND x.pigVer.idVers = :idVersTrasf AND x.pigObjectPadre.idObject = :idFatherObject";
+	String queryStr = "SELECT x FROM PigObject x WHERE x.cdKeyObject = :cdKeyObjectTrasf AND x.pigVer.idVers = :idVersTrasf AND x.pigObjectPadre.idObject = :idFatherObject";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("cdKeyObjectTrasf", pot.getCdKeyObjectTrasf());
-        query.setParameter("idVersTrasf", pot.getPigVer().getIdVers());
-        query.setParameter("idFatherObject", pot.getPigObject().getIdObject());
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("cdKeyObjectTrasf", pot.getCdKeyObjectTrasf());
+	query.setParameter("idVersTrasf", pot.getPigVer().getIdVers());
+	query.setParameter("idFatherObject", pot.getPigObject().getIdObject());
 
-        List<PigObject> results = query.getResultList();
+	List<PigObject> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
     // MEV 31255
     public List<PigVersTipoObjectDaTrasf> searchAssignedPigTipoObjects(long idTrasf) {
-        String queryString = "SELECT x FROM PigVersTipoObjectDaTrasf x WHERE x.pigTipoObjectDaTrasf.xfoTrasf.idTrasf = :idTrasf";
+	String queryString = "SELECT x FROM PigVersTipoObjectDaTrasf x WHERE x.pigTipoObjectDaTrasf.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryString);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryString);
+	query.setParameter("idTrasf", idTrasf);
 
-        return (List<PigVersTipoObjectDaTrasf>) query.getResultList();
+	return (List<PigVersTipoObjectDaTrasf>) query.getResultList();
     }
 
     public boolean isTransformationAssigned(long idTrasf) {
-        String queryString = "SELECT x FROM PigTipoObject x WHERE x.xfoTrasf.idTrasf = :idTrasf";
+	String queryString = "SELECT x FROM PigTipoObject x WHERE x.xfoTrasf.idTrasf = :idTrasf";
 
-        Query query = getEntityManager().createQuery(queryString);
-        query.setParameter("idTrasf", idTrasf);
+	Query query = getEntityManager().createQuery(queryString);
+	query.setParameter("idTrasf", idTrasf);
 
-        List<PigTipoObject> results = query.getResultList();
+	List<PigTipoObject> results = query.getResultList();
 
-        return !results.isEmpty();
+	return !results.isEmpty();
     }
 
-    public XfoFileTrasf insertNewAuxiliaryFile(XfoTrasf transformation, String filename, byte[] fileblob) {
-        XfoFileTrasf xfoFileTrasf = new XfoFileTrasf();
-        xfoFileTrasf.setXfoTrasf(transformation);
-        xfoFileTrasf.setNmFileTrasf(filename);
-        xfoFileTrasf.setBlFileTrasf(fileblob);
+    public XfoFileTrasf insertNewAuxiliaryFile(XfoTrasf transformation, String filename,
+	    byte[] fileblob) {
+	XfoFileTrasf xfoFileTrasf = new XfoFileTrasf();
+	xfoFileTrasf.setXfoTrasf(transformation);
+	xfoFileTrasf.setNmFileTrasf(filename);
+	xfoFileTrasf.setBlFileTrasf(fileblob);
 
-        entityManager.persist(xfoFileTrasf);
+	entityManager.persist(xfoFileTrasf);
 
-        return xfoFileTrasf;
+	return xfoFileTrasf;
     }
 
     public boolean isParameterAssigned(String parameter, long idTrasf) {
-        XfoParamTrasf paramTrasf = searchXfoParamTrasfbyName(parameter, idTrasf);
-        return paramTrasf != null;
+	XfoParamTrasf paramTrasf = searchXfoParamTrasfbyName(parameter, idTrasf);
+	return paramTrasf != null;
     }
 
     public void saveReport(PigSessioneIngest pigSessioneIngest, String idOggetto, String report)
-            throws ObjectStorageException, ParerInternalError {
-        String timestamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String nomeOggetto = idOggetto + "/reports/" + timestamp + "/" + UUID.randomUUID();
+	    throws ObjectStorageException, ParerInternalError {
+	String timestamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
+	String nomeOggetto = idOggetto + "/reports/" + timestamp + "/" + UUID.randomUUID();
 
-        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper.getBackendForReportTrasformazioni();
-        ObjectStorageBackend config = salvataggioBackendHelper
-                .getObjectStorageConfigurationForReportTrasformazioni(backendForReportTrasformazioni.getBackendName());
+	BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper
+		.getBackendForReportTrasformazioni();
+	ObjectStorageBackend config = salvataggioBackendHelper
+		.getObjectStorageConfigurationForReportTrasformazioni(
+			backendForReportTrasformazioni.getBackendName());
 
-        XfoReportObjectStorage xros = new XfoReportObjectStorage();
-        xros.setIdDecBackend(backendForReportTrasformazioni.getBackendId());
-        xros.setNmTenant(configurationHelper
-                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE));
-        xros.setNmBucket(config.getBucket());
-        xros.setCdKeyFile(nomeOggetto);
-        xros.setPigSessioneIngest(pigSessioneIngest);
+	XfoReportObjectStorage xros = new XfoReportObjectStorage();
+	xros.setIdDecBackend(backendForReportTrasformazioni.getBackendId());
+	xros.setNmTenant(configurationHelper.getValoreParamApplicByApplic(
+		it.eng.sacerasi.common.Constants.TENANT_OBJECT_STORAGE));
+	xros.setNmBucket(config.getBucket());
+	xros.setCdKeyFile(nomeOggetto);
+	xros.setPigSessioneIngest(pigSessioneIngest);
 
-        pigSessioneIngest.setXfoReportObjectStorage(xros);
+	pigSessioneIngest.setXfoReportObjectStorage(xros);
 
-        if (backendForReportTrasformazioni.isObjectStorage()) {
-            salvataggioBackendHelper.putS3Object(config, nomeOggetto, report, Optional.empty());
-        } else {
-            throw new ParerInternalError("Il backend per i report trasformazione deve avere tipo OS.");
-        }
+	if (backendForReportTrasformazioni.isObjectStorage()) {
+	    salvataggioBackendHelper.putS3Object(config, nomeOggetto, report, Optional.empty());
+	} else {
+	    throw new ParerInternalError(
+		    "Il backend per i report trasformazione deve avere tipo OS.");
+	}
     }
 
-    public String loadReport(PigSessioneIngest pigSessioneIngest) throws IOException, ObjectStorageException {
-        XfoReportObjectStorage xros = pigSessioneIngest.getXfoReportObjectStorage();
-        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper.getBackend(xros.getIdDecBackend());
-        ObjectStorageBackend config = salvataggioBackendHelper.getObjectStorageConfigurationForReportTrasformazioni(
-                backendForReportTrasformazioni.getBackendName(), xros.getNmBucket());
+    public String loadReport(PigSessioneIngest pigSessioneIngest)
+	    throws IOException, ObjectStorageException {
+	XfoReportObjectStorage xros = pigSessioneIngest.getXfoReportObjectStorage();
+	BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper
+		.getBackend(xros.getIdDecBackend());
+	ObjectStorageBackend config = salvataggioBackendHelper
+		.getObjectStorageConfigurationForReportTrasformazioni(
+			backendForReportTrasformazioni.getBackendName(), xros.getNmBucket());
 
-        ResponseInputStream<GetObjectResponse> is = salvataggioBackendHelper.getObject(config, xros.getCdKeyFile());
+	ResponseInputStream<GetObjectResponse> is = salvataggioBackendHelper.getObject(config,
+		xros.getCdKeyFile());
 
-        return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+	return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
     }
 
     public void saveReportIntoPigSession(PigObject po, String report)
-            throws ObjectStorageException, ParerInternalError {
-        for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
-            if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
-                this.saveReport(psi, String.valueOf(po.getIdObject()), report);
-                entityManager.persist(psi);
-            }
-        }
+	    throws ObjectStorageException, ParerInternalError {
+	for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
+	    if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
+		this.saveReport(psi, String.valueOf(po.getIdObject()), report);
+		entityManager.persist(psi);
+	    }
+	}
     }
 
     public String getSessionReport(BigDecimal sessionId)
-            throws IOException, TransformerException, ObjectStorageException {
-        PigSessioneIngest psi = this.findById(PigSessioneIngest.class, sessionId);
-        String report = "";
-        if (psi.getXfoReportObjectStorage() != null) {
-            report = loadReport(psi);
+	    throws IOException, TransformerException, ObjectStorageException {
+	PigSessioneIngest psi = this.findById(PigSessioneIngest.class, sessionId);
+	String report = "";
+	if (psi.getXfoReportObjectStorage() != null) {
+	    report = loadReport(psi);
 
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	    transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+	    transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+	    Transformer transformer = transformerFactory.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-            StringWriter stringWriter = new StringWriter();
-            StreamResult xmlOutput = new StreamResult(stringWriter);
+	    StringWriter stringWriter = new StringWriter();
+	    StreamResult xmlOutput = new StreamResult(stringWriter);
 
-            Source xmlInput = new StreamSource(new StringReader(report));
-            transformer.transform(xmlInput, xmlOutput);
+	    Source xmlInput = new StreamSource(new StringReader(report));
+	    transformer.transform(xmlInput, xmlOutput);
 
-            report = xmlOutput.getWriter().toString();
-        }
+	    report = xmlOutput.getWriter().toString();
+	}
 
-        return report;
+	return report;
     }
 
     public List<PigKSInstance> getPigKSInstances() {
-        String queryString = "SELECT x FROM PigKSInstance x";
+	String queryString = "SELECT x FROM PigKSInstance x";
 
-        Query query = getEntityManager().createQuery(queryString);
+	Query query = getEntityManager().createQuery(queryString);
 
-        return query.getResultList();
+	return query.getResultList();
     }
 
     public PigKSInstance getPigKSInstanceByName(String nmKsInstance) {
-        String queryString = "SELECT x FROM PigKSInstance x WHERE x.nmKsInstance = :nmKsInstance";
+	String queryString = "SELECT x FROM PigKSInstance x WHERE x.nmKsInstance = :nmKsInstance";
 
-        Query query = getEntityManager().createQuery(queryString);
-        query.setParameter("nmKsInstance", nmKsInstance);
+	Query query = getEntityManager().createQuery(queryString);
+	query.setParameter("nmKsInstance", nmKsInstance);
 
-        List<PigKSInstance> results = query.getResultList();
+	List<PigKSInstance> results = query.getResultList();
 
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
-        }
+	if (results.isEmpty()) {
+	    return null;
+	} else {
+	    return results.get(0);
+	}
     }
 
     public PigKSInstance getPigObjectKettleServerInstance(long idObject) {
-        PigObject po = findById(PigObject.class, idObject);
-        BigDecimal idAmbienteVers = new BigDecimal(po.getPigVer().getPigAmbienteVer().getIdAmbienteVers());
-        BigDecimal idVers = new BigDecimal(po.getPigVer().getIdVers());
-        BigDecimal idTipoObject = new BigDecimal(po.getPigTipoObject().getIdTipoObject());
+	PigObject po = findById(PigObject.class, idObject);
+	BigDecimal idAmbienteVers = new BigDecimal(
+		po.getPigVer().getPigAmbienteVer().getIdAmbienteVers());
+	BigDecimal idVers = new BigDecimal(po.getPigVer().getIdVers());
+	BigDecimal idTipoObject = new BigDecimal(po.getPigTipoObject().getIdTipoObject());
 
-        String nmKsInstance = configurationHelper.getValoreParamApplicByTipoObj(Constants.NM_INSTANZA_KETTLE_SERVER,
-                idAmbienteVers, idVers, idTipoObject);
+	String nmKsInstance = configurationHelper.getValoreParamApplicByTipoObj(
+		Constants.NM_INSTANZA_KETTLE_SERVER, idAmbienteVers, idVers, idTipoObject);
 
-        return getPigKSInstanceByName(nmKsInstance);
+	return getPigKSInstanceByName(nmKsInstance);
     }
 
     public List<PigKSInstance> getAllPigObjectKettleServerInstance() {
-        String queryString = "SELECT x FROM PigKSInstance x";
-        Query query = getEntityManager().createQuery(queryString);
-        return query.getResultList();
+	String queryString = "SELECT x FROM PigKSInstance x";
+	Query query = getEntityManager().createQuery(queryString);
+	return query.getResultList();
     }
 
     @SuppressWarnings("rawtypes")
     public BaseTableInterface getAllPigObjectKettleServerInstanceTable() {
-        BaseTable table = new BaseTable();
-        List<PigKSInstance> instances = getAllPigObjectKettleServerInstance();
-        for (PigKSInstance instance : instances) {
-            BaseRow row = new BaseRow();
-            row.setString("id_istanza", Long.toString(instance.getIdKsInstance()));
-            row.setString("nm_istanza", instance.getNmKsInstance());
-            row.setString("url_istanza", instance.getUrlKsInstance());
-            table.add(row);
-        }
-        return table;
+	BaseTable table = new BaseTable();
+	List<PigKSInstance> instances = getAllPigObjectKettleServerInstance();
+	for (PigKSInstance instance : instances) {
+	    BaseRow row = new BaseRow();
+	    row.setString("id_istanza", Long.toString(instance.getIdKsInstance()));
+	    row.setString("nm_istanza", instance.getNmKsInstance());
+	    row.setString("url_istanza", instance.getUrlKsInstance());
+	    table.add(row);
+	}
+	return table;
     }
 
     public List<Long> getFirstPigObjectByInstance(String nmKsInstance, List<Long> pigObjectsIds) {
-        List<Long> poIds = new ArrayList<>();
+	List<Long> poIds = new ArrayList<>();
 
-        for (Long pigObjectId : pigObjectsIds) {
-            PigObject po = findById(PigObject.class, pigObjectId);
-            BigDecimal idAmbienteVers = new BigDecimal(po.getPigVer().getPigAmbienteVer().getIdAmbienteVers());
-            BigDecimal idVers = new BigDecimal(po.getPigVer().getIdVers());
-            BigDecimal idTipoObject = new BigDecimal(po.getPigTipoObject().getIdTipoObject());
+	for (Long pigObjectId : pigObjectsIds) {
+	    PigObject po = findById(PigObject.class, pigObjectId);
+	    BigDecimal idAmbienteVers = new BigDecimal(
+		    po.getPigVer().getPigAmbienteVer().getIdAmbienteVers());
+	    BigDecimal idVers = new BigDecimal(po.getPigVer().getIdVers());
+	    BigDecimal idTipoObject = new BigDecimal(po.getPigTipoObject().getIdTipoObject());
 
-            String poNmKsInstance = configurationHelper.getValoreParamApplicByTipoObj(
-                    Constants.NM_INSTANZA_KETTLE_SERVER, idAmbienteVers, idVers, idTipoObject);
+	    String poNmKsInstance = configurationHelper.getValoreParamApplicByTipoObj(
+		    Constants.NM_INSTANZA_KETTLE_SERVER, idAmbienteVers, idVers, idTipoObject);
 
-            if (poNmKsInstance.equals(nmKsInstance)) {
-                poIds.add(pigObjectId);
-            }
-        }
+	    if (poNmKsInstance.equals(nmKsInstance)) {
+		poIds.add(pigObjectId);
+	    }
+	}
 
-        return poIds;
+	return poIds;
     }
 
     public boolean isTransformationAlreadyPresent(String kettleId) {
-        String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdKettleId = :cdKettleId";
+	String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdKettleId = :cdKettleId";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("cdKettleId", kettleId);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("cdKettleId", kettleId);
 
-        List<XfoTrasf> transfs = query.getResultList();
-        return !transfs.isEmpty();
+	List<XfoTrasf> transfs = query.getResultList();
+	return !transfs.isEmpty();
     }
 
     public boolean isTransformationPresentByCdTrasf(String cdTrasf) {
-        String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf";
+	String queryStr = "SELECT x FROM XfoTrasf x WHERE x.cdTrasf = :cdTrasf";
 
-        Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("cdTrasf", cdTrasf);
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("cdTrasf", cdTrasf);
 
-        List<XfoTrasf> transfs = query.getResultList();
-        return !transfs.isEmpty();
+	List<XfoTrasf> transfs = query.getResultList();
+	return !transfs.isEmpty();
     }
 
     public PigObject findPigObjectById(Long id) {
-        PigObject po = getEntityManager().find(PigObject.class, id);
-        return po;
+	PigObject po = getEntityManager().find(PigObject.class, id);
+	return po;
     }
 }

@@ -28,7 +28,9 @@
                     // Ora che è editabile bisogna buttare l'input hidden
                     var nomeFileRipulito=nomeFile.slice(1, nomeFile.indexOf('<')-1 );
                     // Altrimenti mette spazi all'inizio e alla fine!
-                    nomeFileRipulito=nomeFileRipulito.trim();
+
+                    //MEV 37654 rimuovi &nbsp
+                    nomeFileRipulito=nomeFileRipulito.trim().replace(/&nbsp;/g, ' ');;
                     var link = '<a href="SismaDownloadServlet?chiave=' + nomeFileRipulito + '" download id="download" class="DownloadSisma"></a>';
                     $($(elemento).find('td')[0]).html(link + '&nbsp;' + nomeOriginaleRipulito);
                 });

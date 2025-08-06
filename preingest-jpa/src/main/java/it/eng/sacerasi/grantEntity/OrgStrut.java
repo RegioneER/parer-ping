@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.grantEntity;
@@ -60,120 +56,120 @@ public class OrgStrut implements Serializable {
     private OrgEnte orgEnte;
 
     public OrgStrut() {
-        // for Hibernate
+	// for Hibernate
     }
 
     @Id
     @Column(name = "ID_STRUT")
     public Long getIdStrut() {
-        return this.idStrut;
+	return this.idStrut;
     }
 
     public void setIdStrut(Long idStrut) {
-        this.idStrut = idStrut;
+	this.idStrut = idStrut;
     }
 
     @Column(name = "CD_IPA")
     public String getCdIpa() {
-        return cdIpa;
+	return cdIpa;
     }
 
     public void setCdIpa(String cdIpa) {
-        this.cdIpa = cdIpa;
+	this.cdIpa = cdIpa;
     }
 
     @Column(name = "DL_NOTE_STRUT")
     public String getDlNoteStrut() {
-        return this.dlNoteStrut;
+	return this.dlNoteStrut;
     }
 
     public void setDlNoteStrut(String dlNoteStrut) {
-        this.dlNoteStrut = dlNoteStrut;
+	this.dlNoteStrut = dlNoteStrut;
     }
 
     @Column(name = "DS_STRUT")
     public String getDsStrut() {
-        return this.dsStrut;
+	return this.dsStrut;
     }
 
     public void setDsStrut(String dsStrut) {
-        this.dsStrut = dsStrut;
+	this.dsStrut = dsStrut;
     }
 
     @Column(name = "CD_STRUT_NORMALIZ")
     public String getCdStrutNormaliz() {
-        return this.cdStrutNormaliz;
+	return this.cdStrutNormaliz;
     }
 
     public void setCdStrutNormaliz(String cdStrutNormaliz) {
-        this.cdStrutNormaliz = cdStrutNormaliz;
+	this.cdStrutNormaliz = cdStrutNormaliz;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_INI_VAL")
     public Date getDtIniVal() {
-        return dtIniVal;
+	return dtIniVal;
     }
 
     public void setDtIniVal(Date dtIniVal) {
-        this.dtIniVal = dtIniVal;
+	this.dtIniVal = dtIniVal;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_FINE_VAL")
     public Date getDtFineVal() {
-        return dtFineVal;
+	return dtFineVal;
     }
 
     public void setDtFineVal(Date dtFineVal) {
-        this.dtFineVal = dtFineVal;
+	this.dtFineVal = dtFineVal;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_INI_VAL_STRUT")
     public Date getDtIniValStrut() {
-        return dtIniValStrut;
+	return dtIniValStrut;
     }
 
     public void setDtIniValStrut(Date dtIniValStrut) {
-        this.dtIniValStrut = dtIniValStrut;
+	this.dtIniValStrut = dtIniValStrut;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_FINE_VAL_STRUT")
     public Date getDtFineValStrut() {
-        return dtFineValStrut;
+	return dtFineValStrut;
     }
 
     public void setDtFineValStrut(Date dtFineValStrut) {
-        this.dtFineValStrut = dtFineValStrut;
+	this.dtFineValStrut = dtFineValStrut;
     }
 
     @Column(name = "FL_TEMPLATE", columnDefinition = "char")
     public String getFlTemplate() {
-        return this.flTemplate;
+	return this.flTemplate;
     }
 
     public void setFlTemplate(String flTemplate) {
-        this.flTemplate = flTemplate;
+	this.flTemplate = flTemplate;
     }
 
     @Column(name = "ID_ENTE_CONVENZ")
     public BigDecimal getIdEnteConvenz() {
-        return idEnteConvenz;
+	return idEnteConvenz;
     }
 
     public void setIdEnteConvenz(BigDecimal idEnteConvenz) {
-        this.idEnteConvenz = idEnteConvenz;
+	this.idEnteConvenz = idEnteConvenz;
     }
 
     @Column(name = "NM_STRUT")
     public String getNmStrut() {
-        return this.nmStrut;
+	return this.nmStrut;
     }
 
     public void setNmStrut(String nmStrut) {
-        this.nmStrut = nmStrut;
+	this.nmStrut = nmStrut;
     }
 
     // bi-directional many-to-one association to OrgEnte
@@ -181,35 +177,35 @@ public class OrgStrut implements Serializable {
     @JoinColumn(name = "ID_ENTE")
     @XmlTransient
     public OrgEnte getOrgEnte() {
-        return this.orgEnte;
+	return this.orgEnte;
     }
 
     public void setOrgEnte(OrgEnte orgEnte) {
-        this.orgEnte = orgEnte;
+	this.orgEnte = orgEnte;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 43 * hash + (int) (this.idStrut ^ (this.idStrut >>> 32));
-        return hash;
+	int hash = 7;
+	hash = 43 * hash + (int) (this.idStrut ^ (this.idStrut >>> 32));
+	return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final OrgStrut other = (OrgStrut) obj;
-        if (this.idStrut != other.idStrut) {
-            return false;
-        }
-        return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final OrgStrut other = (OrgStrut) obj;
+	if (this.idStrut != other.idStrut) {
+	    return false;
+	}
+	return true;
     }
 }

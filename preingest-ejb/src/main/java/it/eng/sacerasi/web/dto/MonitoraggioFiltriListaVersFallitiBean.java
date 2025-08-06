@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.web.dto;
@@ -53,179 +49,179 @@ public class MonitoraggioFiltriListaVersFallitiBean implements Serializable {
     private String chiave;
 
     public BigDecimal getIdAmbienteVers() {
-        return idAmbienteVers;
+	return idAmbienteVers;
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-        this.idAmbienteVers = idAmbienteVers;
+	this.idAmbienteVers = idAmbienteVers;
     }
 
     public BigDecimal getIdVers() {
-        return idVers;
+	return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     public BigDecimal getIdTipoObject() {
-        return idTipoObject;
+	return idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-        this.idTipoObject = idTipoObject;
+	this.idTipoObject = idTipoObject;
     }
 
     public String getNmTipoObject() {
-        return nmTipoObject;
+	return nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-        this.nmTipoObject = nmTipoObject;
+	this.nmTipoObject = nmTipoObject;
     }
 
     public String getTipoErrore() {
-        return tipoErrore;
+	return tipoErrore;
     }
 
     public void setTipoErrore(String tipoErrore) {
-        this.tipoErrore = tipoErrore;
+	this.tipoErrore = tipoErrore;
     }
 
     public String getStatoRisoluzione() {
-        return statoRisoluzione;
+	return statoRisoluzione;
     }
 
     public void setStatoRisoluzione(String statoRisoluzione) {
-        this.statoRisoluzione = statoRisoluzione;
+	this.statoRisoluzione = statoRisoluzione;
     }
 
     public String getPeriodoVers() {
-        return periodoVers;
+	return periodoVers;
     }
 
     public void setPeriodoVers(String periodoVers) {
-        this.periodoVers = periodoVers;
+	this.periodoVers = periodoVers;
     }
 
     public Date getGiornoVersDa() {
-        return giornoVersDa;
+	return giornoVersDa;
     }
 
     public void setGiornoVersDa(Date giornoVersDa) {
-        this.giornoVersDa = giornoVersDa;
+	this.giornoVersDa = giornoVersDa;
     }
 
     public Date getGiornoVersA() {
-        return giornoVersA;
+	return giornoVersA;
     }
 
     public void setGiornoVersA(Date giornoVersA) {
-        this.giornoVersA = giornoVersA;
+	this.giornoVersA = giornoVersA;
     }
 
     public BigDecimal getOreVersDa() {
-        return oreVersDa;
+	return oreVersDa;
     }
 
     public void setOreVersDa(BigDecimal oreVersDa) {
-        this.oreVersDa = oreVersDa;
+	this.oreVersDa = oreVersDa;
     }
 
     public BigDecimal getMinutiVersDa() {
-        return minutiVersDa;
+	return minutiVersDa;
     }
 
     public void setMinutiVersDa(BigDecimal minutiVersDa) {
-        this.minutiVersDa = minutiVersDa;
+	this.minutiVersDa = minutiVersDa;
     }
 
     public BigDecimal getOreVersA() {
-        return oreVersA;
+	return oreVersA;
     }
 
     public void setOreVersA(BigDecimal oreVersA) {
-        this.oreVersA = oreVersA;
+	this.oreVersA = oreVersA;
     }
 
     public BigDecimal getMinutiVersA() {
-        return minutiVersA;
+	return minutiVersA;
     }
 
     public void setMinutiVersA(BigDecimal minutiVersA) {
-        this.minutiVersA = minutiVersA;
+	this.minutiVersA = minutiVersA;
     }
 
     public Date getGiornoVersDaValidato() {
-        return giornoVersDaValidato;
+	return giornoVersDaValidato;
     }
 
     public void setGiornoVersDaValidato(Date giornoVersDaValidato) {
-        this.giornoVersDaValidato = giornoVersDaValidato;
+	this.giornoVersDaValidato = giornoVersDaValidato;
     }
 
     public Date getGiornoVersAValidato() {
-        return giornoVersAValidato;
+	return giornoVersAValidato;
     }
 
     public void setGiornoVersAValidato(Date giornoVersAValidato) {
-        this.giornoVersAValidato = giornoVersAValidato;
+	this.giornoVersAValidato = giornoVersAValidato;
     }
 
     public String getErrore() {
-        return errore;
+	return errore;
     }
 
     public void setErrore(String errore) {
-        this.errore = errore;
+	this.errore = errore;
     }
 
     public String getClasseErrore() {
-        return classeErrore;
+	return classeErrore;
     }
 
     public void setClasseErrore(String classeErrore) {
-        this.classeErrore = classeErrore;
+	this.classeErrore = classeErrore;
     }
 
     public String getVerificati() {
-        return verificati;
+	return verificati;
     }
 
     public void setVerificati(String verificati) {
-        this.verificati = verificati;
+	this.verificati = verificati;
     }
 
     public String getNonRisolubili() {
-        return nonRisolubili;
+	return nonRisolubili;
     }
 
     public void setNonRisolubili(String nonRisolubili) {
-        this.nonRisolubili = nonRisolubili;
+	this.nonRisolubili = nonRisolubili;
     }
 
     public List<String> getStati() {
-        return stati;
+	return stati;
     }
 
     public void setStati(List<String> stati) {
-        this.stati = stati;
+	this.stati = stati;
     }
 
     // MEV 26979
     public BigDecimal getIdObject() {
-        return idObject;
+	return idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-        this.idObject = idObject;
+	this.idObject = idObject;
     }
 
     public String getChiave() {
-        return chiave;
+	return chiave;
     }
 
     public void setChiave(String chiave) {
-        this.chiave = chiave;
+	this.chiave = chiave;
     }
 }

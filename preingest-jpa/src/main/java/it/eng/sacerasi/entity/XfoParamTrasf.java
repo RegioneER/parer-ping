@@ -1,24 +1,19 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package it.eng.sacerasi.entity;
 
@@ -59,79 +54,80 @@ public class XfoParamTrasf implements Serializable {
     }
 
     public XfoParamTrasf(long idParamTrasf) {
-        this.idParamTrasf = idParamTrasf;
+	this.idParamTrasf = idParamTrasf;
     }
 
-    public XfoParamTrasf(long idParamTrasf, String nmParamTrasf, String dsParamTrasf, String tiParamTrasf) {
-        this.idParamTrasf = idParamTrasf;
-        this.nmParamTrasf = nmParamTrasf;
-        this.dsParamTrasf = dsParamTrasf;
-        this.tiParamTrasf = tiParamTrasf;
+    public XfoParamTrasf(long idParamTrasf, String nmParamTrasf, String dsParamTrasf,
+	    String tiParamTrasf) {
+	this.idParamTrasf = idParamTrasf;
+	this.nmParamTrasf = nmParamTrasf;
+	this.dsParamTrasf = dsParamTrasf;
+	this.tiParamTrasf = tiParamTrasf;
     }
 
     @Id
     @GenericGenerator(name = "XFO_PARAM_TRASF_IDVALOREPARAM_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_PARAM_TRASF"),
-            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_PARAM_TRASF"),
+	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "XFO_PARAM_TRASF_IDVALOREPARAM_GENERATOR")
     @Column(name = "ID_PARAM_TRASF")
     public Long getIdParamTrasf() {
-        return idParamTrasf;
+	return idParamTrasf;
     }
 
     public void setIdParamTrasf(Long idParamTrasf) {
-        this.idParamTrasf = idParamTrasf;
+	this.idParamTrasf = idParamTrasf;
     }
 
     @Column(name = "NM_PARAM_TRASF")
     public String getNmParamTrasf() {
-        return nmParamTrasf;
+	return nmParamTrasf;
     }
 
     public void setNmParamTrasf(String nmParamTrasf) {
-        this.nmParamTrasf = nmParamTrasf;
+	this.nmParamTrasf = nmParamTrasf;
     }
 
     @Column(name = "DS_PARAM_TRASF")
     public String getDsParamTrasf() {
-        return dsParamTrasf;
+	return dsParamTrasf;
     }
 
     public void setDsParamTrasf(String dsParamTrasf) {
-        this.dsParamTrasf = dsParamTrasf;
+	this.dsParamTrasf = dsParamTrasf;
     }
 
     @Column(name = "TI_PARAM_TRASF")
     public String getTiParamTrasf() {
-        return tiParamTrasf;
+	return tiParamTrasf;
     }
 
     public void setTiParamTrasf(String tiParamTrasf) {
-        this.tiParamTrasf = tiParamTrasf;
+	this.tiParamTrasf = tiParamTrasf;
     }
 
     @Column(name = "DS_VALORE_PARAM")
     public String getDsValoreParam() {
-        return dsValoreParam;
+	return dsValoreParam;
     }
 
     public void setDsValoreParam(String dsValoreParam) {
-        this.dsValoreParam = dsValoreParam;
+	this.dsValoreParam = dsValoreParam;
     }
 
     @JoinColumn(name = "ID_SET_PARAM_TRASF", referencedColumnName = "ID_SET_PARAM_TRASF")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public XfoSetParamTrasf getXfoSetParamTrasf() {
-        return xfoSetParamTrasf;
+	return xfoSetParamTrasf;
     }
 
     public void setXfoSetParamTrasf(XfoSetParamTrasf idSetParamTrasf) {
-        this.xfoSetParamTrasf = idSetParamTrasf;
+	this.xfoSetParamTrasf = idSetParamTrasf;
     }
 
     @Override
     public String toString() {
-        return "it.eng.xformer.entity.XfoParamTrasf[ idParamTrasf=" + idParamTrasf + " ]";
+	return "it.eng.xformer.entity.XfoParamTrasf[ idParamTrasf=" + idParamTrasf + " ]";
     }
 
 }

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -32,50 +28,50 @@ public class MonVVisObjNonVersId implements Serializable {
 
     @Column(name = "CD_KEY_OBJECT")
     public String getCdKeyObject() {
-        return cdKeyObject;
+	return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-        this.cdKeyObject = cdKeyObject;
+	this.cdKeyObject = cdKeyObject;
     }
 
     private BigDecimal idVers;
 
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-        return idVers;
+	return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-        this.idVers = idVers;
+	this.idVers = idVers;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 71 * hash + Objects.hashCode(this.cdKeyObject);
-        hash = 71 * hash + Objects.hashCode(this.idVers);
-        return hash;
+	int hash = 5;
+	hash = 71 * hash + Objects.hashCode(this.cdKeyObject);
+	hash = 71 * hash + Objects.hashCode(this.idVers);
+	return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final MonVVisObjNonVersId other = (MonVVisObjNonVersId) obj;
-        if (!Objects.equals(this.cdKeyObject, other.cdKeyObject)) {
-            return false;
-        }
-        if (!Objects.equals(this.idVers, other.idVers)) {
-            return false;
-        }
-        return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final MonVVisObjNonVersId other = (MonVVisObjNonVersId) obj;
+	if (!Objects.equals(this.cdKeyObject, other.cdKeyObject)) {
+	    return false;
+	}
+	if (!Objects.equals(this.idVers, other.idVers)) {
+	    return false;
+	}
+	return true;
     }
 }

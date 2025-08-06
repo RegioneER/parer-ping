@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -39,44 +35,44 @@ public class PigStrumUrbAtto implements Serializable {
     private String dsDescrizione;
 
     public PigStrumUrbAtto() {
-        // placeholder
+	// placeholder
     }
 
     @Id
     @Column(name = "ID_ATTO")
     public Long getIdAtto() {
-        return this.idAtto;
+	return this.idAtto;
     }
 
     public void setIdAtto(Long idAtto) {
-        this.idAtto = idAtto;
+	this.idAtto = idAtto;
     }
 
     @Column(name = "TI_ATTO")
     public String getTiAtto() {
-        return tiAtto;
+	return tiAtto;
     }
 
     public void setTiAtto(String tiAtto) {
-        this.tiAtto = tiAtto;
+	this.tiAtto = tiAtto;
     }
 
     @Column(name = "CD_NOME")
     public String getCdNome() {
-        return cdNome;
+	return cdNome;
     }
 
     public void setCdNome(String cdName) {
-        this.cdNome = cdName;
+	this.cdNome = cdName;
     }
 
     @Column(name = "DS_DESCRIZIONE")
     public String getDsDescrizione() {
-        return dsDescrizione;
+	return dsDescrizione;
     }
 
     public void setDsDescrizione(String dsDescription) {
-        this.dsDescrizione = dsDescription;
+	this.dsDescrizione = dsDescription;
     }
 
 }

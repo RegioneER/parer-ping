@@ -1,23 +1,18 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in the editor.
  */
 package it.eng.sacerasi.job.preparaxml.dto;
 
@@ -42,42 +37,42 @@ public class OggettoInCoda implements IRispostaWS {
 
     public class ContUnitaDocSacer {
 
-        private BigDecimal valore;
-        private long rifIdPigContUnitaDocSacer;
-        private long rifIdPigTipoObject;
-        private BigDecimal annoUnitaDocSacer;
+	private BigDecimal valore;
+	private long rifIdPigContUnitaDocSacer;
+	private long rifIdPigTipoObject;
+	private BigDecimal annoUnitaDocSacer;
 
-        public BigDecimal getValore() {
-            return valore;
-        }
+	public BigDecimal getValore() {
+	    return valore;
+	}
 
-        public void setValore(BigDecimal valore) {
-            this.valore = valore;
-        }
+	public void setValore(BigDecimal valore) {
+	    this.valore = valore;
+	}
 
-        public long getRifIdPigContUnitaDocSacer() {
-            return rifIdPigContUnitaDocSacer;
-        }
+	public long getRifIdPigContUnitaDocSacer() {
+	    return rifIdPigContUnitaDocSacer;
+	}
 
-        public void setRifIdPigContUnitaDocSacer(long rifIdPigContUnitaDocSacer) {
-            this.rifIdPigContUnitaDocSacer = rifIdPigContUnitaDocSacer;
-        }
+	public void setRifIdPigContUnitaDocSacer(long rifIdPigContUnitaDocSacer) {
+	    this.rifIdPigContUnitaDocSacer = rifIdPigContUnitaDocSacer;
+	}
 
-        public long getRifIdPigTipoObject() {
-            return rifIdPigTipoObject;
-        }
+	public long getRifIdPigTipoObject() {
+	    return rifIdPigTipoObject;
+	}
 
-        public void setRifIdPigTipoObject(long rifIdPigTipoObject) {
-            this.rifIdPigTipoObject = rifIdPigTipoObject;
-        }
+	public void setRifIdPigTipoObject(long rifIdPigTipoObject) {
+	    this.rifIdPigTipoObject = rifIdPigTipoObject;
+	}
 
-        public BigDecimal getAnnoUnitaDocSacer() {
-            return annoUnitaDocSacer;
-        }
+	public BigDecimal getAnnoUnitaDocSacer() {
+	    return annoUnitaDocSacer;
+	}
 
-        public void setAnnoUnitaDocSacer(BigDecimal annoUnitaDocSacer) {
-            this.annoUnitaDocSacer = annoUnitaDocSacer;
-        }
+	public void setAnnoUnitaDocSacer(BigDecimal annoUnitaDocSacer) {
+	    this.annoUnitaDocSacer = annoUnitaDocSacer;
+	}
     }
 
     //
@@ -93,7 +88,8 @@ public class OggettoInCoda implements IRispostaWS {
     private Constants.TipoCalcolo tipoCalcolo;
     private PigObject rifPigObject;
     private ArrayList<FileObjectExt> listaFileObjectExt;
-    private ArrayList<UnitaDocObject> listaUnitaDocObject; // lista delle UnitaDoc che dovranno essere gestite
+    private ArrayList<UnitaDocObject> listaUnitaDocObject; // lista delle UnitaDoc che dovranno
+							   // essere gestite
 
     private String urnDirectoryOgg;
     //
@@ -101,114 +97,114 @@ public class OggettoInCoda implements IRispostaWS {
 
     @Override
     public SeverityEnum getSeverity() {
-        return severity;
+	return severity;
     }
 
     @Override
     public void setSeverity(SeverityEnum severity) {
-        this.severity = severity;
+	this.severity = severity;
     }
 
     @Override
     public ErrorTypeEnum getErrorType() {
-        return errorType;
+	return errorType;
     }
 
     @Override
     public void setErrorType(ErrorTypeEnum errorType) {
-        this.errorType = errorType;
+	this.errorType = errorType;
     }
 
     @Override
     public String getErrorCode() {
-        return errorCode;
+	return errorCode;
     }
 
     @Override
     public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+	this.errorCode = errorCode;
     }
 
     @Override
     public String getErrorMessage() {
-        return errorMessage;
+	return errorMessage;
     }
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+	this.errorMessage = errorMessage;
     }
 
     //
     public ListaUnitaDocumentarieType getParsedListaUnitaDoc() {
-        return parsedListaUnitaDoc;
+	return parsedListaUnitaDoc;
     }
 
     public void setParsedListaUnitaDoc(ListaUnitaDocumentarieType parsedListaUnitaDoc) {
-        this.parsedListaUnitaDoc = parsedListaUnitaDoc;
+	this.parsedListaUnitaDoc = parsedListaUnitaDoc;
     }
 
     public TipoVersamento getTipoVersamento() {
-        return tipoVersamento;
+	return tipoVersamento;
     }
 
     public void setTipoVersamento(TipoVersamento tipoVersamento) {
-        this.tipoVersamento = tipoVersamento;
+	this.tipoVersamento = tipoVersamento;
     }
 
     public PigObject getRifPigObject() {
-        return rifPigObject;
+	return rifPigObject;
     }
 
     public TipiOggetto getTipoOggetto() {
-        return tipoOggetto;
+	return tipoOggetto;
     }
 
     public void setTipoOggetto(TipiOggetto tipoOggetto) {
-        this.tipoOggetto = tipoOggetto;
+	this.tipoOggetto = tipoOggetto;
     }
 
     public TipoCalcolo getTipoCalcolo() {
-        return tipoCalcolo;
+	return tipoCalcolo;
     }
 
     public void setTipoCalcolo(TipoCalcolo tipoCalcolo) {
-        this.tipoCalcolo = tipoCalcolo;
+	this.tipoCalcolo = tipoCalcolo;
     }
 
     public void setRifPigObject(PigObject rifPigObject) {
-        this.rifPigObject = rifPigObject;
+	this.rifPigObject = rifPigObject;
     }
 
     public ArrayList<FileObjectExt> getListaFileObjectExt() {
-        return listaFileObjectExt;
+	return listaFileObjectExt;
     }
 
     public void setListaFileObjectExt(ArrayList<FileObjectExt> listaFileObjectExt) {
-        this.listaFileObjectExt = listaFileObjectExt;
+	this.listaFileObjectExt = listaFileObjectExt;
     }
 
     public ArrayList<UnitaDocObject> getListaUnitaDocObject() {
-        return listaUnitaDocObject;
+	return listaUnitaDocObject;
     }
 
     public void setListaUnitaDocObject(ArrayList<UnitaDocObject> listaUnitaDocObject) {
-        this.listaUnitaDocObject = listaUnitaDocObject;
+	this.listaUnitaDocObject = listaUnitaDocObject;
     }
 
     public String getUrnDirectoryOgg() {
-        return urnDirectoryOgg;
+	return urnDirectoryOgg;
     }
 
     public void setUrnDirectoryOgg(String urnDirectoryOgg) {
-        this.urnDirectoryOgg = urnDirectoryOgg;
+	this.urnDirectoryOgg = urnDirectoryOgg;
     }
 
     public ContUnitaDocSacer getValoreContUnitaDocSacer() {
-        return valoreContUnitaDocSacer;
+	return valoreContUnitaDocSacer;
     }
 
     public void setValoreContUnitaDocSacer(ContUnitaDocSacer valoreContUnitaDocSacer) {
-        this.valoreContUnitaDocSacer = valoreContUnitaDocSacer;
+	this.valoreContUnitaDocSacer = valoreContUnitaDocSacer;
     }
 }

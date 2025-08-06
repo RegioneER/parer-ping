@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -57,165 +53,166 @@ public class PigDecJobFoto implements Serializable {
     private String tiStatoTimerFoto;
 
     public PigDecJobFoto() {
-        // placeholder
+	// placeholder
     }
 
     @Id
     // @SequenceGenerator(name="PIG_DEC_JOB_FOTO_IDJOBFOTO_GENERATOR", sequenceName="$STABLE")
-    // @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PIG_DEC_JOB_FOTO_IDJOBFOTO_GENERATOR")
+    // @GeneratedValue(strategy=GenerationType.SEQUENCE,
+    // generator="PIG_DEC_JOB_FOTO_IDJOBFOTO_GENERATOR")
     @Column(name = "ID_JOB_FOTO")
     public long getIdJobFoto() {
-        return this.idJobFoto;
+	return this.idJobFoto;
     }
 
     public void setIdJobFoto(long idJobFoto) {
-        this.idJobFoto = idJobFoto;
+	this.idJobFoto = idJobFoto;
     }
 
     @Column(name = "CD_SCHED_DAYOFMONTH_FOTO")
     public String getCdSchedDayofmonthFoto() {
-        return this.cdSchedDayofmonthFoto;
+	return this.cdSchedDayofmonthFoto;
     }
 
     public void setCdSchedDayofmonthFoto(String cdSchedDayofmonthFoto) {
-        this.cdSchedDayofmonthFoto = cdSchedDayofmonthFoto;
+	this.cdSchedDayofmonthFoto = cdSchedDayofmonthFoto;
     }
 
     @Column(name = "CD_SCHED_DAYOFWEEK_FOTO")
     public String getCdSchedDayofweekFoto() {
-        return this.cdSchedDayofweekFoto;
+	return this.cdSchedDayofweekFoto;
     }
 
     public void setCdSchedDayofweekFoto(String cdSchedDayofweekFoto) {
-        this.cdSchedDayofweekFoto = cdSchedDayofweekFoto;
+	this.cdSchedDayofweekFoto = cdSchedDayofweekFoto;
     }
 
     @Column(name = "CD_SCHED_HOUR_FOTO")
     public String getCdSchedHourFoto() {
-        return this.cdSchedHourFoto;
+	return this.cdSchedHourFoto;
     }
 
     public void setCdSchedHourFoto(String cdSchedHourFoto) {
-        this.cdSchedHourFoto = cdSchedHourFoto;
+	this.cdSchedHourFoto = cdSchedHourFoto;
     }
 
     @Column(name = "CD_SCHED_MINUTE_FOTO")
     public String getCdSchedMinuteFoto() {
-        return this.cdSchedMinuteFoto;
+	return this.cdSchedMinuteFoto;
     }
 
     public void setCdSchedMinuteFoto(String cdSchedMinuteFoto) {
-        this.cdSchedMinuteFoto = cdSchedMinuteFoto;
+	this.cdSchedMinuteFoto = cdSchedMinuteFoto;
     }
 
     @Column(name = "CD_SCHED_MONTH_FOTO")
     public String getCdSchedMonthFoto() {
-        return this.cdSchedMonthFoto;
+	return this.cdSchedMonthFoto;
     }
 
     public void setCdSchedMonthFoto(String cdSchedMonthFoto) {
-        this.cdSchedMonthFoto = cdSchedMonthFoto;
+	this.cdSchedMonthFoto = cdSchedMonthFoto;
     }
 
     @Column(name = "DS_JOB_FOTO")
     public String getDsJobFoto() {
-        return this.dsJobFoto;
+	return this.dsJobFoto;
     }
 
     public void setDsJobFoto(String dsJobFoto) {
-        this.dsJobFoto = dsJobFoto;
+	this.dsJobFoto = dsJobFoto;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_JOB_FOTO")
     public Date getDtJobFoto() {
-        return this.dtJobFoto;
+	return this.dtJobFoto;
     }
 
     public void setDtJobFoto(Date dtJobFoto) {
-        this.dtJobFoto = dtJobFoto;
+	this.dtJobFoto = dtJobFoto;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_PROSSIMA_ATTIVAZIONE_FOTO")
     public Date getDtProssimaAttivazioneFoto() {
-        return this.dtProssimaAttivazioneFoto;
+	return this.dtProssimaAttivazioneFoto;
     }
 
     public void setDtProssimaAttivazioneFoto(Date dtProssimaAttivazioneFoto) {
-        this.dtProssimaAttivazioneFoto = dtProssimaAttivazioneFoto;
+	this.dtProssimaAttivazioneFoto = dtProssimaAttivazioneFoto;
     }
 
     @Column(name = "FL_DATA_ACCURATA_FOTO")
     public String getFlDataAccurataFoto() {
-        return this.flDataAccurataFoto;
+	return this.flDataAccurataFoto;
     }
 
     public void setFlDataAccurataFoto(String flDataAccurataFoto) {
-        this.flDataAccurataFoto = flDataAccurataFoto;
+	this.flDataAccurataFoto = flDataAccurataFoto;
     }
 
     @Column(name = "NI_ORD_EXEC_FOTO")
     public BigDecimal getNiOrdExecFoto() {
-        return this.niOrdExecFoto;
+	return this.niOrdExecFoto;
     }
 
     public void setNiOrdExecFoto(BigDecimal niOrdExecFoto) {
-        this.niOrdExecFoto = niOrdExecFoto;
+	this.niOrdExecFoto = niOrdExecFoto;
     }
 
     @Column(name = "NM_AMBITO_FOTO")
     public String getNmAmbitoFoto() {
-        return this.nmAmbitoFoto;
+	return this.nmAmbitoFoto;
     }
 
     public void setNmAmbitoFoto(String nmAmbitoFoto) {
-        this.nmAmbitoFoto = nmAmbitoFoto;
+	this.nmAmbitoFoto = nmAmbitoFoto;
     }
 
     @Column(name = "NM_JOB_FOTO")
     public String getNmJobFoto() {
-        return this.nmJobFoto;
+	return this.nmJobFoto;
     }
 
     public void setNmJobFoto(String nmJobFoto) {
-        this.nmJobFoto = nmJobFoto;
+	this.nmJobFoto = nmJobFoto;
     }
 
     @Column(name = "NM_NODO_ASSEGNATO_FOTO")
     public String getNmNodoAssegnatoFoto() {
-        return this.nmNodoAssegnatoFoto;
+	return this.nmNodoAssegnatoFoto;
     }
 
     public void setNmNodoAssegnatoFoto(String nmNodoAssegnatoFoto) {
-        this.nmNodoAssegnatoFoto = nmNodoAssegnatoFoto;
+	this.nmNodoAssegnatoFoto = nmNodoAssegnatoFoto;
     }
 
     @Column(name = "TI_SCHED_JOB_FOTO")
     public String getTiSchedJobFoto() {
-        return this.tiSchedJobFoto;
+	return this.tiSchedJobFoto;
     }
 
     public void setTiSchedJobFoto(String tiSchedJobFoto) {
-        this.tiSchedJobFoto = tiSchedJobFoto;
+	this.tiSchedJobFoto = tiSchedJobFoto;
     }
 
     @Column(name = "TI_SCOPO_JOB_FOTO")
     public String getTiScopoJobFoto() {
-        return this.tiScopoJobFoto;
+	return this.tiScopoJobFoto;
     }
 
     public void setTiScopoJobFoto(String tiScopoJobFoto) {
-        this.tiScopoJobFoto = tiScopoJobFoto;
+	this.tiScopoJobFoto = tiScopoJobFoto;
     }
 
     @Column(name = "TI_STATO_TIMER_FOTO")
     public String getTiStatoTimerFoto() {
-        return this.tiStatoTimerFoto;
+	return this.tiStatoTimerFoto;
     }
 
     public void setTiStatoTimerFoto(String tiStatoTimerFoto) {
-        this.tiStatoTimerFoto = tiStatoTimerFoto;
+	this.tiStatoTimerFoto = tiStatoTimerFoto;
     }
 
 }

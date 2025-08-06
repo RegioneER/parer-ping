@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -52,111 +48,111 @@ public class MonVLisFileObject implements Serializable {
 
     @Column(name = "CD_ENCODING_HASH_FILE_VERS")
     public String getCdEncodingHashFileVers() {
-        return this.cdEncodingHashFileVers;
+	return this.cdEncodingHashFileVers;
     }
 
     public void setCdEncodingHashFileVers(String cdEncodingHashFileVers) {
-        this.cdEncodingHashFileVers = cdEncodingHashFileVers;
+	this.cdEncodingHashFileVers = cdEncodingHashFileVers;
     }
 
     @Column(name = "DS_HASH_FILE_VERS")
     public String getDsHashFileVers() {
-        return this.dsHashFileVers;
+	return this.dsHashFileVers;
     }
 
     public void setDsHashFileVers(String dsHashFileVers) {
-        this.dsHashFileVers = dsHashFileVers;
+	this.dsHashFileVers = dsHashFileVers;
     }
 
     @Id
     @Column(name = "ID_FILE_OBJECT")
     public BigDecimal getIdFileObject() {
-        return this.idFileObject;
+	return this.idFileObject;
     }
 
     public void setIdFileObject(BigDecimal idFileObject) {
-        this.idFileObject = idFileObject;
+	this.idFileObject = idFileObject;
     }
 
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-        return this.idObject;
+	return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-        this.idObject = idObject;
+	this.idObject = idObject;
     }
 
     @Column(name = "ID_TIPO_FILE_OBJECT")
     public BigDecimal getIdTipoFileObject() {
-        return this.idTipoFileObject;
+	return this.idTipoFileObject;
     }
 
     public void setIdTipoFileObject(BigDecimal idTipoFileObject) {
-        this.idTipoFileObject = idTipoFileObject;
+	this.idTipoFileObject = idTipoFileObject;
     }
 
     @Column(name = "NM_FILE_OBJECT")
     public String getNmFileObject() {
-        return this.nmFileObject;
+	return this.nmFileObject;
     }
 
     public void setNmFileObject(String nmFileObject) {
-        this.nmFileObject = nmFileObject;
+	this.nmFileObject = nmFileObject;
     }
 
     @Column(name = "NM_TIPO_FILE_OBJECT")
     public String getNmTipoFileObject() {
-        return this.nmTipoFileObject;
+	return this.nmTipoFileObject;
     }
 
     public void setNmTipoFileObject(String nmTipoFileObject) {
-        this.nmTipoFileObject = nmTipoFileObject;
+	this.nmTipoFileObject = nmTipoFileObject;
     }
 
     @Column(name = "TI_ALGO_HASH_FILE_VERS")
     public String getTiAlgoHashFileVers() {
-        return this.tiAlgoHashFileVers;
+	return this.tiAlgoHashFileVers;
     }
 
     public void setTiAlgoHashFileVers(String tiAlgoHashFileVers) {
-        this.tiAlgoHashFileVers = tiAlgoHashFileVers;
+	this.tiAlgoHashFileVers = tiAlgoHashFileVers;
     }
 
     @Column(name = "NI_SIZE_FILE_VERS")
     public BigDecimal getNiSizeFileVers() {
-        return this.niSizeFileVers;
+	return this.niSizeFileVers;
     }
 
     public void setNiSizeFileVers(BigDecimal niSizeFileVers) {
-        this.niSizeFileVers = niSizeFileVers;
+	this.niSizeFileVers = niSizeFileVers;
     }
 
     @Column(name = "ID_DEC_BACKEND")
     public BigDecimal getIdBackend() {
-        return idBackend;
+	return idBackend;
     }
 
     public void setIdBackend(BigDecimal idBackend) {
-        this.idBackend = idBackend;
+	this.idBackend = idBackend;
     }
 
     @Column(name = "NM_BUCKET")
     public String getNmBucket() {
-        return nmBucket;
+	return nmBucket;
     }
 
     public void setNmBucket(String nmBucket) {
-        this.nmBucket = nmBucket;
+	this.nmBucket = nmBucket;
     }
 
     @Column(name = "CD_KEY_FILE")
     public String getCdKeyFile() {
-        return cdKeyFile;
+	return cdKeyFile;
     }
 
     public void setCdKeyFile(String cdKeyFile) {
-        this.cdKeyFile = cdKeyFile;
+	this.cdKeyFile = cdKeyFile;
     }
 
 }

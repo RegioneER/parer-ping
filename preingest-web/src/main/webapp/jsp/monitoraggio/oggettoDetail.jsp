@@ -546,6 +546,7 @@
             <sl:newLine skipLine="true"/>
             <sl:pulsantiera>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_ERR_TRASFORMAZIONE%>"/>
+                <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_CHIUS_ERR_SCHED%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_ERR_VERSAMENTO_PING%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_CHIUS_ERR_VERS%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.MODIFICA_TIPO_OGGETTO%>"/>

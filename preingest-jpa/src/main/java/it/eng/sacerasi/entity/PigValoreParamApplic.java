@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.entity;
@@ -50,83 +46,83 @@ public class PigValoreParamApplic implements Serializable {
     private PigVers pigVer;
 
     public PigValoreParamApplic() {
-        // hibernate
+	// hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_VALORE_PARAM_APPLIC_IDVALOREPARAMAPPLIC_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_VALORE_PARAM_APPLIC"),
-            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_VALORE_PARAM_APPLIC"),
+	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_VALORE_PARAM_APPLIC_IDVALOREPARAMAPPLIC_GENERATOR")
     @Column(name = "ID_VALORE_PARAM_APPLIC")
     public Long getIdValoreParamApplic() {
-        return this.idValoreParamApplic;
+	return this.idValoreParamApplic;
     }
 
     public void setIdValoreParamApplic(Long idValoreParamApplic) {
-        this.idValoreParamApplic = idValoreParamApplic;
+	this.idValoreParamApplic = idValoreParamApplic;
     }
 
     @Column(name = "DS_VALORE_PARAM_APPLIC")
     public String getDsValoreParamApplic() {
-        return this.dsValoreParamApplic;
+	return this.dsValoreParamApplic;
     }
 
     public void setDsValoreParamApplic(String dsValoreParamApplic) {
-        this.dsValoreParamApplic = dsValoreParamApplic;
+	this.dsValoreParamApplic = dsValoreParamApplic;
     }
 
     @Column(name = "TI_APPART")
     public String getTiAppart() {
-        return this.tiAppart;
+	return this.tiAppart;
     }
 
     public void setTiAppart(String tiAppart) {
-        this.tiAppart = tiAppart;
+	this.tiAppart = tiAppart;
     }
 
     // bi-directional many-to-one association to PigAmbienteVer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_AMBIENTE_VERS")
     public PigAmbienteVers getPigAmbienteVer() {
-        return this.pigAmbienteVer;
+	return this.pigAmbienteVer;
     }
 
     public void setPigAmbienteVer(PigAmbienteVers pigAmbienteVer) {
-        this.pigAmbienteVer = pigAmbienteVer;
+	this.pigAmbienteVer = pigAmbienteVer;
     }
 
     // bi-directional many-to-one association to PigParamApplic
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PARAM_APPLIC")
     public PigParamApplic getPigParamApplic() {
-        return this.pigParamApplic;
+	return this.pigParamApplic;
     }
 
     public void setPigParamApplic(PigParamApplic pigParamApplic) {
-        this.pigParamApplic = pigParamApplic;
+	this.pigParamApplic = pigParamApplic;
     }
 
     // bi-directional many-to-one association to PigTipoObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_TIPO_OBJECT")
     public PigTipoObject getPigTipoObject() {
-        return this.pigTipoObject;
+	return this.pigTipoObject;
     }
 
     public void setPigTipoObject(PigTipoObject pigTipoObject) {
-        this.pigTipoObject = pigTipoObject;
+	this.pigTipoObject = pigTipoObject;
     }
 
     // bi-directional many-to-one association to PigVer
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VERS")
     public PigVers getPigVer() {
-        return this.pigVer;
+	return this.pigVer;
     }
 
     public void setPigVer(PigVers pigVer) {
-        this.pigVer = pigVer;
+	this.pigVer = pigVer;
     }
 
 }

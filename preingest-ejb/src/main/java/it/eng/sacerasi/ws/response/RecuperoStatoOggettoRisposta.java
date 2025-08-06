@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.ws.response;
@@ -27,8 +23,9 @@ import javax.xml.bind.annotation.XmlType;
  * @author Gilioli_P
  */
 @XmlRootElement(name = "RecuperoStatoOggetto")
-@XmlType(propOrder = { "cdEsito", "cdErr", "dlErr", "nmAmbiente", "nmVersatore", "cdKeyObject", "statoOggetto",
-        "descrizioneStatoOggetto" })
+@XmlType(propOrder = {
+	"cdEsito", "cdErr", "dlErr", "nmAmbiente", "nmVersatore", "cdKeyObject", "statoOggetto",
+	"descrizioneStatoOggetto" })
 public class RecuperoStatoOggettoRisposta {
 
     private Constants.EsitoServizio cdEsito;
@@ -45,15 +42,14 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "cdEsito")
     public Constants.EsitoServizio getCdEsito() {
-        return cdEsito;
+	return cdEsito;
     }
 
     /**
-     * @param cdEsito
-     *            the cdEsito to set
+     * @param cdEsito the cdEsito to set
      */
     public void setCdEsito(Constants.EsitoServizio cdEsito) {
-        this.cdEsito = cdEsito;
+	this.cdEsito = cdEsito;
     }
 
     /**
@@ -61,15 +57,14 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "cdErr")
     public String getCdErr() {
-        return cdErr;
+	return cdErr;
     }
 
     /**
-     * @param cdErr
-     *            the cdErr to set
+     * @param cdErr the cdErr to set
      */
     public void setCdErr(String cdErr) {
-        this.cdErr = cdErr;
+	this.cdErr = cdErr;
     }
 
     /**
@@ -77,15 +72,14 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "dlErr")
     public String getDlErr() {
-        return dlErr;
+	return dlErr;
     }
 
     /**
-     * @param dlErr
-     *            the dlErr to set
+     * @param dlErr the dlErr to set
      */
     public void setDlErr(String dlErr) {
-        this.dlErr = dlErr;
+	this.dlErr = dlErr;
     }
 
     /**
@@ -93,15 +87,14 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "nmAmbiente")
     public String getNmAmbiente() {
-        return nmAmbiente;
+	return nmAmbiente;
     }
 
     /**
-     * @param nmAmbiente
-     *            the nmAmbiente to set
+     * @param nmAmbiente the nmAmbiente to set
      */
     public void setNmAmbiente(String nmAmbiente) {
-        this.nmAmbiente = nmAmbiente;
+	this.nmAmbiente = nmAmbiente;
     }
 
     /**
@@ -109,15 +102,14 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "nmVersatore")
     public String getNmVersatore() {
-        return nmVersatore;
+	return nmVersatore;
     }
 
     /**
-     * @param nmVersatore
-     *            the nmVersatore to set
+     * @param nmVersatore the nmVersatore to set
      */
     public void setNmVersatore(String nmVersatore) {
-        this.nmVersatore = nmVersatore;
+	this.nmVersatore = nmVersatore;
     }
 
     /**
@@ -125,32 +117,31 @@ public class RecuperoStatoOggettoRisposta {
      */
     @XmlElement(name = "cdKeyObject")
     public String getCdKeyObject() {
-        return cdKeyObject;
+	return cdKeyObject;
     }
 
     /**
-     * @param cdKeyObject
-     *            the cdKeyObject to set
+     * @param cdKeyObject the cdKeyObject to set
      */
     public void setCdKeyObject(String cdKeyObject) {
-        this.cdKeyObject = cdKeyObject;
+	this.cdKeyObject = cdKeyObject;
     }
 
     @XmlElement(name = "statoOggetto")
     public String getStatoOggetto() {
-        return statoOggetto;
+	return statoOggetto;
     }
 
     public void setStatoOggetto(String statoOggetto) {
-        this.statoOggetto = statoOggetto;
+	this.statoOggetto = statoOggetto;
     }
 
     @XmlElement(name = "descrizioneStatoOggetto")
     public String getDescrizioneStatoOggetto() {
-        return descrizioneStatoOggetto;
+	return descrizioneStatoOggetto;
     }
 
     public void setDescrizioneStatoOggetto(String descrizioneStatoOggetto) {
-        this.descrizioneStatoOggetto = descrizioneStatoOggetto;
+	this.descrizioneStatoOggetto = descrizioneStatoOggetto;
     }
 }

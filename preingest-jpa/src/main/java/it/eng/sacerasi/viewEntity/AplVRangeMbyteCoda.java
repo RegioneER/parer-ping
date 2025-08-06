@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.sacerasi.viewEntity;
@@ -42,30 +38,30 @@ public class AplVRangeMbyteCoda implements Serializable {
 
     @Column(name = "ID_CODA_DA_USARE")
     public String getIdCodaDaUsare() {
-        return this.idCodaDaUsare;
+	return this.idCodaDaUsare;
     }
 
     public void setIdCodaDaUsare(String idCodaDaUsare) {
-        this.idCodaDaUsare = idCodaDaUsare;
+	this.idCodaDaUsare = idCodaDaUsare;
     }
 
     @Id
     @Column(name = "NI_LIMITE_INF")
     public BigDecimal getNiLimiteInf() {
-        return this.niLimiteInf;
+	return this.niLimiteInf;
     }
 
     public void setNiLimiteInf(BigDecimal niLimiteInf) {
-        this.niLimiteInf = niLimiteInf;
+	this.niLimiteInf = niLimiteInf;
     }
 
     @Column(name = "NI_LIMITE_SUP")
     public BigDecimal getNiLimiteSup() {
-        return this.niLimiteSup;
+	return this.niLimiteSup;
     }
 
     public void setNiLimiteSup(BigDecimal niLimiteSup) {
-        this.niLimiteSup = niLimiteSup;
+	this.niLimiteSup = niLimiteSup;
     }
 
 }

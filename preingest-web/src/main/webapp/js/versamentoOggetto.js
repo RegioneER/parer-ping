@@ -49,7 +49,7 @@ function getSupportedFormats(maxRetries = 5, retryInterval = 1000, currentRetry 
 
 function initTipoOggettoFieldHandler() {
     $("#Nm_tipo_object").change(function () {
-        var formData = $("#spagoLiteAppForm").serializeArray();
+        let formData = $("#spagoLiteAppForm").serializeArray();
         formData.push({name: 'operation', value: 'triggerVersamentoOggettoDetailNm_tipo_objectOnTrigger'});
         $.post("VersamentoOggetto.html", formData).done(function (data) {
             CAjaxDataFormWalk(data);
@@ -75,7 +75,7 @@ function disableForm(jsonData) {
             break;
         case "Input":
         case "ComboBox":
-            var obj = $('#' + jsonData.name);
+            let obj = $('#' + jsonData.name);
             switch (jsonData.state) {
                 case "readonly":
                     obj.attr('readonly', true);

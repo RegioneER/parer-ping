@@ -1,4 +1,4 @@
-## 8.1.1 (06-08-2025)
+## 8.1.2 (17-09-2025)
 
 ### Bugfix: 1
-- [#38818](https://parermine.regione.emilia-romagna.it/issues/38818) Correzione della errata gestione del versamento in casi di singolo tipo oggetto sul versatore
+- [#39085](https://parermine.regione.emilia-romagna.it/issues/39085) Correzione del problema SISMA con errore PING-ERRSISMA19

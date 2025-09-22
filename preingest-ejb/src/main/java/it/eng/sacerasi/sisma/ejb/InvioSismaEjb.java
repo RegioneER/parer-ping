@@ -13,6 +13,7 @@
 package it.eng.sacerasi.sisma.ejb;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -78,7 +79,6 @@ import it.eng.sacerasi.viewEntity.PigVSismaChecks;
 import it.eng.sacerasi.web.ejb.AmministrazioneEjb;
 import it.eng.sacerasi.web.helper.AmministrazioneHelper;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import it.eng.sacerasi.web.util.Utils;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
 import it.eng.sacerasi.ws.invioOggettoAsincrono.ejb.InvioOggettoAsincronoEjb;
 import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
@@ -86,9 +86,10 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
+
 import java.util.Optional;
+
 import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 @Stateless(mappedName = "InvioSismaEjb")
@@ -184,7 +185,7 @@ public class InvioSismaEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciInvioSisma(long idSismaDaInviare)
-	    throws InvioSismaException, ObjectStorageException, IOException {
+	    throws InvioSismaException, ObjectStorageException {
 	// Locko sisma
 	PigSisma sismaDaInviare = genericHelper.findByIdWithLock(PigSisma.class, idSismaDaInviare);
 	/*
@@ -227,7 +228,7 @@ public class InvioSismaEjb {
 		    throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(),
 			    errore.getDsErrore());
 		}
-		/**
+		/*
 		 * ******** AVVIO IL PROCESSO DI INVIO ********
 		 */
 
@@ -295,7 +296,7 @@ public class InvioSismaEjb {
 			    if (doesObjectExist) {
 				File tempFile = File.createTempFile(nmFileOrig, "",
 					new File(dirCompletaFtp));
-				try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
+				try (FileOutputStream fosTemp = new FileOutputStream(tempFile)) {
 				    ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper
 					    .getObject(config, nmFileOs);
 				    // Creo il file in una cartella temporanea
@@ -481,42 +482,6 @@ public class InvioSismaEjb {
 				    errore.getDsErrore());
 			}
 		    }
-		    // Il sistema effettua il caricamento del file ZipSisma nel Bucket
-		    // BUCKET_SISMA_TRASFORMATI
-		    try {
-			BackendStorage backend = salvataggioBackendHelper.getBackendForSisma();
-
-			if (backend.isObjectStorage()) {
-			    ObjectStorageBackend config = salvataggioBackendHelper
-				    .getObjectStorageConfigurationForSismaTrasformati(
-					    backend.getBackendName());
-			    if (fileTemporaneoGenerale.exists()) { // il backend è su object storage
-								   // e
-								   // fileTemporaneoGenerale esiste
-								   // ancora.
-				salvataggioBackendHelper.putS3Object(config,
-					sismaDaInviare.getCdKeyOs() + ".zip",
-					fileTemporaneoGenerale, Optional.empty());
-			    } else { // il backend è su disco e fileTemporaneoGenerale è stato
-				     // spostato nella sua
-				     // posizione definitiva.
-				salvataggioBackendHelper
-					.putS3Object(
-						config, sismaDaInviare.getCdKeyOs() + ".zip", Paths
-							.get(String.join(cdKeyObject,
-								dirCompletaFtp, "/", ".zip"))
-							.toFile(),
-						Optional.empty());
-			    }
-			}
-		    } catch (Exception e) {
-			log.error("{}{}{}", InvioSismaEjb.class.getSimpleName(),
-				" --- ERRORE invio sisma: ", e.getMessage());
-			PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSISMA19");
-			throw new InvioSismaException(idSismaDaInviare, errore.getCdErrore(),
-				errore.getDsErrore());
-		    }
-
 		    // MEV 30936
 		    sismaHelper.creaStatoStorico(sismaDaInviare, sismaDaInviare.getTiStato().name(),
 			    sismaDaInviare.getDtStato(), "");
@@ -604,7 +569,7 @@ public class InvioSismaEjb {
 	    sisma.setTipoRegistro(pigSismaFinanziamento.getDsTipoRegistroAgenzia());
 	    sisma.setData(dateFormat.format(sismaDaInviare.getDataAg())); // CAMPO DATA AGENZIA
 	    sisma.setNumero(sismaDaInviare.getRegistroAg() + "_" + sismaDaInviare.getNumeroAg()); // CAMPO
-												  // NUMERO
+	    // NUMERO
 	    // AGENZIA
 	    sisma.setAnno(sismaDaInviare.getAnnoAg().intValueExact()); // CAMPO ANNO AGENZIA
 	    // Dati Ente

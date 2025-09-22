@@ -13,6 +13,7 @@
 package it.eng.sacerasi.job.invioSU.ejb;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,13 +86,14 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
+
 import java.util.Optional;
+
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
- *
  * @author Gilioli_P
  */
 @Stateless(mappedName = "InvioSUEjb")
@@ -344,9 +346,9 @@ public class InvioSUEjb {
 		    // Controlla che nel sistema non esista già l’ oggetto in fase di invio
 		    if ((!invioSUHelper.existsPigObjectPerVersatore(vers.getIdVers(),
 			    strumentoUrbanisticoDaInviare.getCdKey())) || // Ora include anche gli
-									  // oggetti in stato
-									  // annullato per
-									  // reinviarli
+		    // oggetti in stato
+		    // annullato per
+		    // reinviarli
 			    invioSUHelper.existsPigObjectPerVersatoreStrumUrbAnnullato(
 				    vers.getIdVers(), strumentoUrbanisticoDaInviare.getCdKey())) {
 			// Chiama il servizio NotificaInvioOggetto (metodo invioOggettoAsincrono)
@@ -390,10 +392,10 @@ public class InvioSUEjb {
 			log.error("{} --- ERRORE invio strumenti urbanistici",
 				InvioSUEjb.class.getSimpleName());
 			PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU01"); // TODO
-											     // DA
-											     // MODIFICARE
-											     // IN
-											     // 21
+			// DA
+			// MODIFICARE
+			// IN
+			// 21
 			throw new InvioSUException(idStrumentoUrbanisticoDaInviare,
 				errore.getCdErrore(), errore.getDsErrore());
 		    }
@@ -501,44 +503,6 @@ public class InvioSUEjb {
 			}
 		    }
 
-		    // Il sistema effettua il caricamento del file ZipStrumentiUrbanistici nel
-		    // Bucket
-		    // BUCKET_STRUMENTI_URBANISTICI_TRASFORMATI
-		    try {
-			BackendStorage backend = salvataggioBackendHelper
-				.getBackendForStrumentiUrbanistici();
-
-			if (backend.isObjectStorage()) {
-			    ObjectStorageBackend config = salvataggioBackendHelper
-				    .getObjectStorageConfigurationForStrumentiUrbanisticiTrasformati(
-					    backend.getBackendName());
-
-			    if (fileTemporaneoGenerale.exists()) { // il backend è su object storage
-								   // e
-								   // fileTemporaneoGenerale esiste
-								   // ancora.
-				salvataggioBackendHelper.putS3Object(config,
-					strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip",
-					fileTemporaneoGenerale, Optional.empty());
-			    } else { // il backend è su disco e fileTemporaneoGenerale è stato
-				     // spostato nella sua
-				     // posizione definitiva.
-				salvataggioBackendHelper.putS3Object(config,
-					strumentoUrbanisticoDaInviare.getCdKeyOs() + ".zip",
-					Paths.get(dirCompletaFtp + cdKeyObject + "/" + cdKeyObject
-						+ it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION)
-						.toFile(),
-					Optional.empty());
-			    }
-			}
-
-		    } catch (Exception e) {
-			log.error("{} --- ERRORE invio strumenti urbanistici: ",
-				InvioSUEjb.class.getSimpleName(), e);
-			PigErrore errore = messaggiHelper.retrievePigErroreNewTx("PING-ERRSU19");
-			throw new InvioSUException(idStrumentoUrbanisticoDaInviare,
-				errore.getCdErrore(), errore.getDsErrore());
-		    }
 		    // Setta lo stato di PigStrumentiUrbanistici
 		    // MEV 31096
 		    strumentiUrbanisticiHelper.creaStatoStorico(strumentoUrbanisticoDaInviare,

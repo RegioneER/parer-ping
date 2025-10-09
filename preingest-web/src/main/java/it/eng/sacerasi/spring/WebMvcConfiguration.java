@@ -33,6 +33,7 @@ import it.eng.spagoLite.actions.security.LogoutAction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.Ordered;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -126,27 +127,32 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
      * delle action ereditate dal framework
      */
     @Bean(value = "/View.html")
+    @Scope("prototype")
     RedirectAction redirectAction() {
 	return new RedirectAction();
     }
 
     @Bean(value = "/Login.html")
+    @Scope("prototype")
     LoginAction loginAction() {
 	return new LoginAction();
     }
 
     @Bean(value = "/Logout.html")
+    @Scope("prototype")
     LogoutAction logoutAction() {
 	return new LogoutAction();
     }
 
     /* Configurazione delle action specifiche del modulo web */
     @Bean(value = "/Home.html")
+    @Scope("prototype")
     HomeAction homeAction() {
 	return new HomeAction();
     }
 
     @Bean(value = "/SceltaOrganizzazione.html")
+    @Scope("prototype")
     SceltaOrganizzazioneAction sceltaOrganizzazioneAction() {
 	return new SceltaOrganizzazioneAction();
     }
@@ -154,26 +160,31 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
     /* Action specifiche di sacerping */
 
     @Bean(value = "/Amministrazione.html")
+    @Scope("prototype")
     AmministrazioneAction amministrazioneAction() {
 	return new AmministrazioneAction();
     }
 
     @Bean(value = "/Monitoraggio.html")
+    @Scope("prototype")
     MonitoraggioAction monitoraggioAction() {
 	return new MonitoraggioAction();
     }
 
     @Bean(value = "/GestioneJob.html")
+    @Scope("prototype")
     GestioneJobAction gestioneJobAction() {
 	return new GestioneJobAction();
     }
 
     @Bean(value = "/VersamentoOggetto.html")
+    @Scope("prototype")
     VersamentoOggettoAction versamentoOggettoAction() {
 	return new VersamentoOggettoAction();
     }
 
     @Bean(value = "/EntiConvenzionati.html")
+    @Scope("prototype")
     EntiConvenzionatiAction entiConvenzionatiAction() {
 	return new EntiConvenzionatiAction();
     }
@@ -181,26 +192,31 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
     /** xFormer **/
 
     @Bean(value = "/Trasformazioni.html")
+    @Scope("prototype")
     TrasformazioniAction trasformazioniAction() {
 	return new TrasformazioniAction();
     }
 
     @Bean(value = "/RicercaTrasformazioni.html")
+    @Scope("prototype")
     TrasformazioniAction ricercaTrasformazioniAction() {
 	return new TrasformazioniAction();
     }
 
     @Bean(value = "/MonitoraggioServerTrasformazioni.html")
+    @Scope("prototype")
     TrasformazioniAction monitoraggioServerTrasformazioni() {
 	return new TrasformazioniAction();
     }
 
     @Bean(value = "/StrumentiUrbanistici.html")
+    @Scope("prototype")
     StrumentiUrbanisticiAction strumentiUrbanisticiAction() {
 	return new StrumentiUrbanisticiAction();
     }
 
     @Bean(value = "/Sisma.html")
+    @Scope("prototype")
     SismaAction sismaAction() {
 	return new SismaAction();
     }

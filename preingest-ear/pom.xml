@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sacerping-jboss</artifactId>
         <groupId>it.eng.parer</groupId>
-        <version>8.1.3-SNAPSHOT</version>
+        <version>8.1.3</version>
     </parent>
 
     <artifactId>sacerping-jboss-ear</artifactId>

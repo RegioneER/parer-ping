@@ -88,9 +88,7 @@ public class MonitorCoda {
      *
      * @param queue           nome coda
      * @param messageSelector selettore
-     *
      * @return lista di messaggi
-     *
      * @throws JMSException errore generico
      */
     public List<InfoCoda> retrieveMsgInQueue(String queue, String messageSelector)
@@ -212,12 +210,9 @@ public class MonitorCoda {
     }
 
     /**
-     *
      * @param queue           nome coda
      * @param messageSelector selettore
-     *
      * @return elementi di tipo {@link InfoCoda}
-     *
      * @throws JMSException errore generico
      */
     public List<InfoCoda> retrieveGenericMsgInQueue(String queue, String messageSelector)
@@ -250,8 +245,8 @@ public class MonitorCoda {
 			    .getStringProperty(Costanti.JMSMsgProperties.MSG_K_QUEUETYPE));
 		} else {
 		    continue; // passa al messaggio successivo (Nota: avendo inserito un selettore,
-			      // caso che non
-			      // dovrebbe mai verificarsi)
+		    // caso che non
+		    // dovrebbe mai verificarsi)
 		}
 
 		infoCoda.setSentTimestamp(new Date(objMessage.getJMSTimestamp()));
@@ -288,9 +283,7 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
-     *
      * @return L'id del messaggio inviato
-     *
      * @throws ParerInternalError errore generico
      * @throws JMSException       errore generico
      */
@@ -307,7 +300,6 @@ public class MonitorCoda {
      * Invia un messaggio alla coda
      *
      * @param message dto messaggio {@link Message}
-     *
      * @throws JMSException errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -341,9 +333,7 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
-     *
      * @return il messaggio letto e consumato
-     *
      * @throws JMSException errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -356,18 +346,16 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
-     *
      * @return il messaggio letto e consumato
-     *
      * @throws JMSException errore generico
      */
     public Message readMsgFromQueue(String msgID, String queueName) throws JMSException {
 	QueueConnection queueConn = null;
 	QueueSession queueSession = null;
+	QueueReceiver qReceiver = null;
 	try {
 	    // A cosa serve questo sleep?
 	    Thread.sleep(4000);
-	    QueueReceiver qReceiver = null;
 	    queueConn = connFactory.createQueueConnection();
 	    // E' corretto effettare esplicitamente lo start?
 	    queueConn.start();
@@ -400,6 +388,9 @@ public class MonitorCoda {
 	    if (queueConn != null) {
 		queueConn.close();
 	    }
+	    if (qReceiver != null) {
+		qReceiver.close();
+	    }
 	}
     }
 
@@ -408,9 +399,7 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
-     *
      * @return L'id del messaggio eliminato
-     *
      * @throws JMSException errore generico
      */
     public String deleteMsgFromQueue(String msgID, String queueName) throws JMSException {
@@ -423,9 +412,7 @@ public class MonitorCoda {
      *
      * @param messageSelector selettore
      * @param parToCheck      numero parametro da verificare
-     *
      * @return Il numero di occorrenze del messaggio cercato all'interno della coda
-     *
      * @throws JMSException errore generico
      */
     public int checkMsgInQueue(String messageSelector, BigDecimal parToCheck) throws JMSException {
@@ -505,7 +492,6 @@ public class MonitorCoda {
      *
      * @param messageSelector selettore
      * @param paramToCheck    parametro da verificare
-     *
      * @return numero messaggi consumati
      */
     public int checkMsgConsumed(String messageSelector, BigDecimal paramToCheck) {
@@ -515,13 +501,10 @@ public class MonitorCoda {
     }
 
     /**
-     *
      * @param msgConsumedNum  numero messaggi consumati
      * @param msgDeliveredNum numero messaggi inviati
      * @param messageSelector selettore
-     *
      * @return La stringa del messaggio da visualizzare all'utente
-     *
      * @throws JMSException errore generico
      */
     public String buildSingleUserMsg(int msgConsumedNum, int msgDeliveredNum,
@@ -541,7 +524,7 @@ public class MonitorCoda {
 		    userMsg = "Messaggio con selettore " + messageSelector
 			    + " inviato e consegnato alla coda 'producerCodaVersQueue' ma non ancora processato dal sistema";
 		} else { // messaggio né consegnato né processato. Questo potrebbe essere un
-			 // problema.
+		    // problema.
 		    userMsg = "Attenzione: il messaggio con selettore " + messageSelector
 			    + " è stato inviato alla coda 'producerCodaVersQueue' ma non risulta ancora né consegnato né processato dal sistema";
 		}

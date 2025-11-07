@@ -13,6 +13,7 @@
 package it.eng.sacerasi.web.action;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +29,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 
+import it.eng.spagoLite.db.base.row.BaseRow;
+import it.eng.spagoLite.db.base.table.BaseTable;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -99,13 +102,13 @@ import org.codehaus.jettison.json.JSONException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.web.helper.S3ServletHelper;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 /**
- *
  * @author Bonora_L
  */
 @SuppressWarnings("unchecked")
@@ -139,22 +142,18 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	/* empty */
     }
 
-    private void initForm(Fields<Field> formFields, String ambienteComponent, String versComponent,
-	    String tipoObjectComponent, String tiStatoObjectComponent, String tiVersFileComponent,
-	    String... tipoObjectVersamento) {
+    private void initForm() {
+	VersamentoOggettoForm.FiltriVersamentiOggetto filtriVersamentiOggetto = getForm()
+		.getFiltriVersamentiOggetto();
 	// Caricamento delle combo
 	BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
 	BigDecimal idAmbienteVers = comboHelper.getIdAmbienteVersatore(idVers);
-	final ComboBox<BigDecimal> ambienteCombo = (ComboBox<BigDecimal>) formFields
-		.getComponent(ambienteComponent);
-	final ComboBox<BigDecimal> versCombo = (ComboBox<BigDecimal>) formFields
-		.getComponent(versComponent);
-	final ComboBox<BigDecimal> tipoObjectCombo = (ComboBox<BigDecimal>) formFields
-		.getComponent(tipoObjectComponent);
-	final MultiSelect<String> tiStatoObjectMultiSelect = (MultiSelect<String>) formFields
-		.getComponent(tiStatoObjectComponent);
-	final MultiSelect<String> tiVersFileMultiSelect = (MultiSelect<String>) formFields
-		.getComponent(tiVersFileComponent);
+	final ComboBox<BigDecimal> ambienteCombo = filtriVersamentiOggetto.getNm_ambiente_vers();
+	final ComboBox<BigDecimal> versCombo = filtriVersamentiOggetto.getNm_vers();
+	final ComboBox<BigDecimal> tipoObjectCombo = filtriVersamentiOggetto.getNm_tipo_object();
+	final MultiSelect<String> tiStatoObjectMultiSelect = filtriVersamentiOggetto
+		.getTi_stato_object();
+	final MultiSelect<String> tiVersFileMultiSelect = filtriVersamentiOggetto.getTi_vers_file();
 
 	// Ricavo i valori della combo AMBIENTE dalla tabella PIG_AMBIENTE_VERS
 	PigAmbienteVersTableBean ambienteVersTableBean = comboHelper
@@ -163,8 +162,9 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	PigVersTableBean versTableBean = comboHelper
 		.getVersatoreFromAmbienteVersatore(getUser().getIdUtente(), idAmbienteVers);
 	// Ricavo i valori della combo TIPO OBJECT
-	PigTipoObjectTableBean tipoObjectTableBean = comboHelper
-		.getTipoObjectFromVersatore(getUser().getIdUtente(), idVers, tipoObjectVersamento);
+	PigTipoObjectTableBean tipoObjectTableBean = comboHelper.getTipoObjectFromVersatore(
+		getUser().getIdUtente(), idVers, Constants.TipoVersamento.DA_TRASFORMARE.name(),
+		Constants.TipoVersamento.ZIP_CON_XML_SACER.name());
 
 	ambienteCombo.setDecodeMap(DecodeMap.Factory.newInstance(ambienteVersTableBean,
 		"id_ambiente_vers", "nm_ambiente_vers"));
@@ -176,8 +176,61 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 		Constants.StatoOggetto.getStatiOggettoMonitoraggioListaOggetti()));
 	tiVersFileMultiSelect.setDecodeMap(ComboGetter.getMappaSortedGenericEnum("ti_vers_file",
 		Constants.TipoVersamento.values()));
-	formFields.setEditMode();
+
+	// MEV 39090
+	DecodeMap mapTiContenuto = new DecodeMap();
+	BaseTable bt = new BaseTable();
+	for (Enum<?> row : it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto.values()) {
+	    BaseRow br = new BaseRow();
+	    br.setString("ti_contenuto", row.name());
+	    bt.add(br);
+	}
+	mapTiContenuto.populatedMap(bt, "ti_contenuto", "ti_contenuto");
+	filtriVersamentiOggetto.getTi_contenuto_oggetto().setDecodeMap(mapTiContenuto);
+
+	filtriVersamentiOggetto.setEditMode();
     }
+
+    // private void initForm_old(Fields<Field> formFields, String ambienteComponent, String
+    // versComponent,
+    // String tipoObjectComponent, String tiStatoObjectComponent, String tiVersFileComponent,
+    // String... tipoObjectVersamento) {
+    // // Caricamento delle combo
+    // BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
+    // BigDecimal idAmbienteVers = comboHelper.getIdAmbienteVersatore(idVers);
+    // final ComboBox<BigDecimal> ambienteCombo = (ComboBox<BigDecimal>) formFields
+    // .getComponent(ambienteComponent);
+    // final ComboBox<BigDecimal> versCombo = (ComboBox<BigDecimal>) formFields
+    // .getComponent(versComponent);
+    // final ComboBox<BigDecimal> tipoObjectCombo = (ComboBox<BigDecimal>) formFields
+    // .getComponent(tipoObjectComponent);
+    // final MultiSelect<String> tiStatoObjectMultiSelect = (MultiSelect<String>) formFields
+    // .getComponent(tiStatoObjectComponent);
+    // final MultiSelect<String> tiVersFileMultiSelect = (MultiSelect<String>) formFields
+    // .getComponent(tiVersFileComponent);
+    //
+    // // Ricavo i valori della combo AMBIENTE dalla tabella PIG_AMBIENTE_VERS
+    // PigAmbienteVersTableBean ambienteVersTableBean = comboHelper
+    // .getAmbienteVersatoreFromUtente(getUser().getIdUtente());
+    // // Ricavo i valori della combo VERSATORE
+    // PigVersTableBean versTableBean = comboHelper
+    // .getVersatoreFromAmbienteVersatore(getUser().getIdUtente(), idAmbienteVers);
+    // // Ricavo i valori della combo TIPO OBJECT
+    // PigTipoObjectTableBean tipoObjectTableBean = comboHelper
+    // .getTipoObjectFromVersatore(getUser().getIdUtente(), idVers, tipoObjectVersamento);
+    //
+    // ambienteCombo.setDecodeMap(DecodeMap.Factory.newInstance(ambienteVersTableBean,
+    // "id_ambiente_vers", "nm_ambiente_vers"));
+    // ambienteCombo.setValue(idAmbienteVers.toPlainString());
+    // versCombo.setDecodeMap(DecodeMap.Factory.newInstance(versTableBean, "id_vers", "nm_vers"));
+    // versCombo.setValue(idVers.toPlainString());
+    // setTipoObjectDecodeMap(tipoObjectCombo, tipoObjectTableBean);
+    // tiStatoObjectMultiSelect.setDecodeMap(ComboGetter.getMappaSortedGenericEnum("ti_stato_doc",
+    // Constants.StatoOggetto.getStatiOggettoMonitoraggioListaOggetti()));
+    // tiVersFileMultiSelect.setDecodeMap(ComboGetter.getMappaSortedGenericEnum("ti_vers_file",
+    // Constants.TipoVersamento.values()));
+    // formFields.setEditMode();
+    // }
 
     @Secure(action = "Menu.Versamenti.VersamentoOggetto")
     public void loadVersamentoOggetto() {
@@ -252,7 +305,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	// Ricavo i valori della combo TIPO OBJECT
 	BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
 	PigTipoObjectTableBean tipoObjectTableBean = comboHelper
-		.getTipoObjectFromVersatoreNoFleggati(getUser().getIdUtente(), idVers,
+		.getTipoObjectFromVersatoreNoFleggatiUD(getUser().getIdUtente(), idVers,
 			Constants.TipoVersamento.ZIP_CON_XML_SACER.name());
 	setTipoObjectDecodeMap(getForm().getVersamentoOggettoDetail().getNm_tipo_object(),
 		tipoObjectTableBean);
@@ -260,6 +313,28 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	postLoad();
 
 	forwardToPublisher(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE);
+    }
+
+    @Secure(action = "Menu.Versamenti.VersamentoFascicoli")
+    public void loadVersamentoFascicoli() {
+	getUser().getMenu().reset();
+	getUser().getMenu().select("Menu.Versamenti.VersamentoFascicoli");
+
+	// Inizializzo le combo per l'oggetto da inviare
+	getForm().getVersamentoOggettoDetail().reset();
+	getForm().getVersamentoOggettoDetail().clear();
+	setReadonlyVersamentoOggettoDaTrasformare(false);
+	// Ricavo i valori della combo TIPO OBJECT
+	BigDecimal idVers = getUser().getIdOrganizzazioneFoglia();
+	PigTipoObjectTableBean tipoObjectTableBean = comboHelper
+		.getTipoObjectFromVersatoreNoFleggatiFascicoli(getUser().getIdUtente(), idVers,
+			Constants.TipoVersamento.ZIP_CON_XML_SACER.name());
+	setTipoObjectDecodeMap(getForm().getVersamentoOggettoDetail().getNm_tipo_object(),
+		tipoObjectTableBean);
+	initVersamentoOggetto();
+	postLoad();
+
+	forwardToPublisher(Application.Publisher.VERSAMENTO_FASCICOLI);
     }
 
     // MEV32647
@@ -389,8 +464,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
     @Override
     public void versaOggettoDaArchivio() throws EMFError {
 	getForm().getVersamentoOggettoDetail().getFl_trasm_ftp().setValue("1"); // fatto qui per
-										// passare la
-										// validazione
+	// passare la
+	// validazione
 	// sotto.
 
 	if (getForm().getVersamentoOggettoDetail().validate(getMessageBox())) {
@@ -1209,7 +1284,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 			    .equals(Application.Publisher.VERSAMENTO_OGGETTO_DA_TRASFORMARE)
 		    || getLastPublisher()
 			    .equals(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE)
-		    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_DA_ARCHIVIO)) {
+		    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_DA_ARCHIVIO)
+		    || getLastPublisher().equals(Application.Publisher.VERSAMENTO_FASCICOLI)) {
 		BigDecimal size = null;
 		try {
 		    String dim = configurationHelper
@@ -1305,13 +1381,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 			.parse();
 		// MEV 30343
 		String note = getForm().getFiltriVersamentiOggetto().getNote().parse();
+		// MEV 39090
+		String tiContenutoOggetto = getForm().getFiltriVersamentiOggetto()
+			.getTi_contenuto_oggetto().parse();
 
 		MonVLisStatoVersTableBean monVLisStatoVersTableBean = new MonVLisStatoVersTableBean();
 		try {
 		    monVLisStatoVersTableBean = versamentoOggettoEjb.getMonVLisStatoVersTableBean(
 			    getUser().getIdUtente(), idAmbiente, idVers, idTipoOggetto, idOggetto,
 			    cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject,
-			    tiVersFile, note);
+			    tiVersFile, note, tiContenutoOggetto);
 		} catch (ParerUserError e) {
 		    getMessageBox().addError(e.getDescription());
 		}
@@ -1342,20 +1421,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	getUser().getMenu().reset();
 	getUser().getMenu().select("Menu.Versamenti.StatoVersamenti");
 
-	String ambienteComponent = getForm().getFiltriVersamentiOggetto().getNm_ambiente_vers()
-		.getName();
-	String versComponent = getForm().getFiltriVersamentiOggetto().getNm_vers().getName();
-	String tipoObjectComponent = getForm().getFiltriVersamentiOggetto().getNm_tipo_object()
-		.getName();
-	String tiStatoObjectComponent = getForm().getFiltriVersamentiOggetto().getTi_stato_object()
-		.getName();
-	String tiVersFileComponent = getForm().getFiltriVersamentiOggetto().getTi_vers_file()
-		.getName();
 	getForm().getFiltriVersamentiOggetto().reset();
-	initForm(getForm().getFiltriVersamentiOggetto(), ambienteComponent, versComponent,
-		tipoObjectComponent, tiStatoObjectComponent, tiVersFileComponent,
-		Constants.TipoVersamento.DA_TRASFORMARE.name(),
-		Constants.TipoVersamento.ZIP_CON_XML_SACER.name());
+	initForm();
 	getForm().getVersamentiOggettoList().clear();
 	forwardToPublisher(Application.Publisher.VISUALIZZA_STATO_VERSAMENTI);
     }
@@ -1406,12 +1473,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	    // MEV 30343
 	    String note = getForm().getFiltriVersamentiOggetto().getNote().parse();
 
+	    // MEV 30090
+	    String tiContenutoOggetto = getForm().getFiltriVersamentiOggetto()
+		    .getTi_contenuto_oggetto().parse();
+
 	    MonVLisStatoVersTableBean monVLisStatoVersTableBean = new MonVLisStatoVersTableBean();
 	    try {
 		monVLisStatoVersTableBean = versamentoOggettoEjb.getMonVLisStatoVersTableBean(
 			getUser().getIdUtente(), idAmbiente, idVers, idTipoOggetto, idOggetto,
 			cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject,
-			tiVersFile, note);
+			tiVersFile, note, tiContenutoOggetto);
 	    } catch (ParerUserError e) {
 		getMessageBox().addError(e.getDescription());
 	    }
@@ -1758,6 +1829,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 	    loadVersamentoOggettoDaTrasf();
 	} else if (getLastPublisher().equals(Application.Publisher.VERSAMENTO_UNITA_DOCUMENTARIE)) {
 	    loadVersamentoUnitaDoc();
+	} else if (getLastPublisher().equals(Application.Publisher.VERSAMENTO_FASCICOLI)) {
+	    loadVersamentoFascicoli();
 	}
     }
 

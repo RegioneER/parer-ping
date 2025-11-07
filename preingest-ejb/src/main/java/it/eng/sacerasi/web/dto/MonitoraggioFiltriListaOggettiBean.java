@@ -43,6 +43,7 @@ public class MonitoraggioFiltriListaOggettiBean implements Serializable {
     private String chiave;
     private List<String> tiVersFile;
     private BigDecimal idObject;
+    private String tiContenuto;
 
     public BigDecimal getIdAmbienteVers() {
 	return idAmbienteVers;
@@ -195,5 +196,14 @@ public class MonitoraggioFiltriListaOggettiBean implements Serializable {
 
     public void setIdObject(BigDecimal idObject) {
 	this.idObject = idObject;
+    }
+
+    // MEV 39012
+    public String getTiContenuto() {
+	return tiContenuto;
+    }
+
+    public void setTiContenuto(String tiContenuto) {
+	this.tiContenuto = tiContenuto;
     }
 }

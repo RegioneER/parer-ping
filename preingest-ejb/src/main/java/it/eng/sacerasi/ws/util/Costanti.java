@@ -93,6 +93,7 @@ public class Costanti {
     // payload Type
     public final static String PAYLOAD_TYPE_CODA_VERS = "PayloadCodaVersamento";
     public final static String PAYLOAD_TYPE_VERIFICAH = "PayloadCodaVerificaH";
+    public final static String PAYLOAD_TYPE_CODA_VERS_FASCICOLO = "PayloadCodaVersamentoFascicolo";
 
     public enum ModificatoriWS {
 	// TAG_VERIFICA_FORMATI_OLD,

@@ -57,7 +57,8 @@
         <Input Type="STRING" Description="Stato" Name="ti_stato_esterno" />
         <MultiSelect Type="STRING" Description="Dettaglio stato" Name="ti_stato_object" />
         <MultiSelect Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
-        <Input Type="STRING" Description="Note" Name="note" />    
+        <Input Type="STRING" Description="Note" Name="note" />
+        <ComboBox Type="STRING" Description="Tipo contenuto" Name="ti_contenuto_oggetto"/>
         
         <Button Name="ricercaVersamentiOggetto" Description="Ricerca versamenti oggetto" Type="STRING"/>
     </Fields>
@@ -77,6 +78,7 @@
         <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
         <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
         <Input Name="note" Description="Note" Type="STRING" />
+        <Input Name="ti_contenuto_oggetto" Description="Contenuto" Type="STRING" />
         <Input Name="nm_userid_vers" Description="Utente" Type="STRING" />
     </List>
 </Form>

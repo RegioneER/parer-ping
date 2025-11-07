@@ -34,8 +34,10 @@ public class MonVLisObj implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private BigDecimal aaUnitaDocSacer;
+    private BigDecimal aaFascicoloSacer;
     private String cdKeyObject;
     private String cdKeyUnitaDocSacer;
+    private String cdKeyFascicoloSacer;
     private String cdRegistroUnitaDocSacer;
     private String dsInfoObject;
     private String dsKeyOrd;
@@ -58,6 +60,7 @@ public class MonVLisObj implements Serializable {
     private String note;
     private BigDecimal niUdProdotte;
     private String tiGestOggettiFigli;
+    private String tiContenuto;
 
     public MonVLisObj() {
     }
@@ -70,7 +73,7 @@ public class MonVLisObj implements Serializable {
 	    String dsKeyOrd) {
 	this(nmAmbienteVers, nmVers, idObject, tiStatoObject, tiStatoObjectVis, tiStatoVerificaHash,
 		cdKeyObject, dtVers, dsInfoObject, dtStatoCor, niSizeFileVers, nmTipoObject, note,
-		trasformazioneUtilizzata, niUdProdotte, tiVersFile, dsKeyOrd, null);
+		trasformazioneUtilizzata, niUdProdotte, tiVersFile, dsKeyOrd, null, "");
     }
 
     public MonVLisObj(String nmAmbienteVers, String nmVers, BigDecimal idObject,
@@ -78,7 +81,7 @@ public class MonVLisObj implements Serializable {
 	    String cdKeyObject, Date dtVers, String dsInfoObject, Date dtStatoCor,
 	    BigDecimal niSizeFileVers, String nmTipoObject, String note,
 	    String trasformazioneUtilizzata, BigDecimal niUdProdotte, String tiVersFile,
-	    String dsKeyOrd, String tiGestOggettiFigli) {
+	    String dsKeyOrd, String tiGestOggettiFigli, String tiContenuto) {
 	this.nmAmbienteVers = nmAmbienteVers;
 	this.nmVers = nmVers;
 	this.idObject = idObject;
@@ -97,6 +100,7 @@ public class MonVLisObj implements Serializable {
 	this.tiVersFile = tiVersFile;
 	this.dsKeyOrd = dsKeyOrd;
 	this.tiGestOggettiFigli = tiGestOggettiFigli;
+	this.tiContenuto = tiContenuto;
     }
 
     @Column(name = "AA_UNITA_DOC_SACER")
@@ -106,6 +110,15 @@ public class MonVLisObj implements Serializable {
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
 	this.aaUnitaDocSacer = aaUnitaDocSacer;
+    }
+
+    @Column(name = "AA_FASCICOLO_SACER")
+    public BigDecimal getAaFascicoloSacer() {
+	return this.aaFascicoloSacer;
+    }
+
+    public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
+	this.aaFascicoloSacer = aaFascicoloSacer;
     }
 
     @Column(name = "CD_KEY_OBJECT")
@@ -124,6 +137,15 @@ public class MonVLisObj implements Serializable {
 
     public void setCdKeyUnitaDocSacer(String cdKeyUnitaDocSacer) {
 	this.cdKeyUnitaDocSacer = cdKeyUnitaDocSacer;
+    }
+
+    @Column(name = "CD_KEY_FASCICOLO_SACER")
+    public String getCdKeyFascicoloSacer() {
+	return this.cdKeyFascicoloSacer;
+    }
+
+    public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
+	this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
     }
 
     @Column(name = "CD_REGISTRO_UNITA_DOC_SACER")
@@ -325,5 +347,14 @@ public class MonVLisObj implements Serializable {
 
     public void setTiGestOggettiFigli(String tiGestOggettiFigli) {
 	this.tiGestOggettiFigli = tiGestOggettiFigli;
+    }
+
+    @Column(name = "TI_CONTENUTO")
+    public String getTiContenuto() {
+	return tiContenuto;
+    }
+
+    public void setTiContenuto(String tiContenuto) {
+	this.tiContenuto = tiContenuto;
     }
 }

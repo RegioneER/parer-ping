@@ -27,7 +27,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_SESSIONE_INGEST database table.
- *
  */
 @NamedStoredProcedureQuery(name = "aggiornaContatori", procedureName = "AGGIORNA_CONTATORI", parameters = {
 	@StoredProcedureParameter(name = "IDSESSIONEINGEST", type = Long.class, mode = ParameterMode.IN),
@@ -80,9 +79,18 @@ public class PigSessioneIngest implements Serializable {
     private PigVers pigVer;
     private List<PigStatoSessioneIngest> pigStatoSessioneIngests = new ArrayList<>();
     private List<PigUnitaDocSessione> pigUnitaDocSessiones = new ArrayList<>();
+    private List<PigFascicoloSessione> pigFascicoloSessiones = new ArrayList<>();
     private List<PigXmlSessioneIngest> pigXmlSessioneIngests = new ArrayList<>();
     private List<PigXmlAnnulSessioneIngest> pigXmlAnnulSessioneIngests = new ArrayList<>();
     private XfoReportObjectStorage xfoReportObjectStorage;
+
+    // MEV 32983
+    private BigDecimal niFascicoliAttesi;
+    private BigDecimal niFascicoliDaVers;
+    private BigDecimal niFascicoliVers;
+    private BigDecimal niFascicoliVersErr;
+    private BigDecimal niFascicoliVersOk;
+    private BigDecimal niFascicoliVersTimeout;
 
     public PigSessioneIngest() {
 	// for Hibernate
@@ -502,6 +510,32 @@ public class PigSessioneIngest implements Serializable {
 	return pigUnitaDocSessione;
     }
 
+    // bi-directional many-to-one association to PigUnitaDocSessione
+    @OneToMany(mappedBy = "pigSessioneIngest", cascade = {
+	    CascadeType.PERSIST })
+    public List<PigFascicoloSessione> getPigFascicoloSessiones() {
+	return this.pigFascicoloSessiones;
+    }
+
+    public void setPigFascicoloSessiones(List<PigFascicoloSessione> pigFascicoloSessiones) {
+	this.pigFascicoloSessiones = pigFascicoloSessiones;
+    }
+
+    public PigFascicoloSessione addPigFascicoloSessione(PigFascicoloSessione pigFascicoloSessione) {
+	getPigFascicoloSessiones().add(pigFascicoloSessione);
+	pigFascicoloSessione.setPigSessioneIngest(this);
+
+	return pigFascicoloSessione;
+    }
+
+    public PigFascicoloSessione removePigFascicoloSessione(
+	    PigFascicoloSessione pigFascicoloSessione) {
+	getPigFascicoloSessiones().remove(pigFascicoloSessione);
+	pigFascicoloSessione.setPigSessioneIngest(null);
+
+	return pigFascicoloSessione;
+    }
+
     // bi-directional many-to-one association to PigXmlSessioneIngest
     @OneToMany(mappedBy = "pigSessioneIngest", cascade = {
 	    CascadeType.PERSIST })
@@ -553,6 +587,60 @@ public class PigSessioneIngest implements Serializable {
 	pigXmlAnnulSessioneIngest.setPigSessioneIngest(null);
 
 	return pigXmlAnnulSessioneIngest;
+    }
+
+    @Column(name = "NI_FASCICOLI_ATTESI")
+    public BigDecimal getNiFascicoliAttesi() {
+	return niFascicoliAttesi;
+    }
+
+    public void setNiFascicoliAttesi(BigDecimal niFascicoliAttesi) {
+	this.niFascicoliAttesi = niFascicoliAttesi;
+    }
+
+    @Column(name = "NI_FASCICOLI_DA_VERS")
+    public BigDecimal getNiFascicoliDaVers() {
+	return niFascicoliDaVers;
+    }
+
+    public void setNiFascicoliDaVers(BigDecimal niFascicoliDaVers) {
+	this.niFascicoliDaVers = niFascicoliDaVers;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS")
+    public BigDecimal getNiFascicoliVers() {
+	return niFascicoliVers;
+    }
+
+    public void setNiFascicoliVers(BigDecimal niFascicoliVers) {
+	this.niFascicoliVers = niFascicoliVers;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_ERR")
+    public BigDecimal getNiFascicoliVersErr() {
+	return niFascicoliVersErr;
+    }
+
+    public void setNiFascicoliVersErr(BigDecimal niFascicoliVersErr) {
+	this.niFascicoliVersErr = niFascicoliVersErr;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_OK")
+    public BigDecimal getNiFascicoliVersOk() {
+	return niFascicoliVersOk;
+    }
+
+    public void setNiFascicoliVersOk(BigDecimal niFascicoliVersOk) {
+	this.niFascicoliVersOk = niFascicoliVersOk;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_TIMEOUT")
+    public BigDecimal getNiFascicoliVersTimeout() {
+	return niFascicoliVersTimeout;
+    }
+
+    public void setNiFascicoliVersTimeout(BigDecimal niFascicoliVersTimeout) {
+	this.niFascicoliVersTimeout = niFascicoliVersTimeout;
     }
 
     // MEV 34843

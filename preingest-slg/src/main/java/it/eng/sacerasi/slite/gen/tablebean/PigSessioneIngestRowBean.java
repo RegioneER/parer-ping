@@ -25,7 +25,6 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
 
 /**
  * RowBean per la tabella Pig_Sessione_Ingest
- *
  */
 public class PigSessioneIngestRowBean extends BaseRow implements JEEBaseRowInterface {
 
@@ -305,6 +304,9 @@ public class PigSessioneIngestRowBean extends BaseRow implements JEEBaseRowInter
 	this.setNiUnitaDocVersTimeout(entity.getNiUnitaDocVersTimeout());
 	this.setTiStatoVerificaHash(entity.getTiStatoVerificaHash());
 	this.setNote(entity.getNote());
+
+	// MEV 32983
+	// TODO
     }
 
     @Override
@@ -349,6 +351,10 @@ public class PigSessioneIngestRowBean extends BaseRow implements JEEBaseRowInter
 	entity.setNiUnitaDocVersTimeout(this.getNiUnitaDocVersTimeout());
 	entity.setTiStatoVerificaHash(this.getTiStatoVerificaHash());
 	entity.setNote(this.getNote());
+
+	// MEV 32983
+	// TODO
+
 	return entity;
     }
 

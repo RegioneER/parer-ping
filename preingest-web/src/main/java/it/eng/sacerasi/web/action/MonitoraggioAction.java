@@ -104,6 +104,8 @@ import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectTableBean;
 import it.eng.sacerasi.slite.gen.tablebean.PigVersTableBean;
 import it.eng.sacerasi.slite.gen.tablebean.PigXmlAnnulSessioneIngestRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.IamVLisOrganizDaReplicTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVLisFascicoloObjectTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVLisFascicoloObjectTableDescriptor;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisFileObjectRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisFileObjectTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisObjNonVersTableBean;
@@ -127,6 +129,7 @@ import it.eng.sacerasi.slite.gen.viewbean.MonVObjRangeDtTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVRiepVersTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVSesRangeDtRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVSesRangeDtTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVVisFascicoloObjectRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisLastSchedJobRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisObjNonVersRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisObjRowBean;
@@ -178,7 +181,6 @@ import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.menu.impl.Menu;
 import it.eng.xformer.helper.TrasformazioniHelper;
 
-import java.util.logging.Level;
 import javax.xml.XMLConstants;
 
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -344,9 +346,40 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		    // MEV 31639
 		    getForm().getUnitaDocDetail().getFl_xml_modificato()
 			    .setValue(objRB.getFlXmlMod());
+		    // MEV 31639
+		    getForm().getUnitaDocDetail().getFl_xml_modificato()
+			    .setValue(objRB.getFlXmlMod());
+		}
+		/* Se ho cliccato sul dettaglio di un FASCICOLO dal dettaglio oggetto */
+		else if (getForm().getOggettoDetailFascicoliList().getName().equals(lista)) {
+		    getForm().getFascicoloDetail().setStatus(Status.view);
 
-		    // Se ho cliccato sul dettaglio di un Versamento Fallito venendo da più parti
-		} else if (getForm().getVersamentiList().getName().equals(lista)
+		    // Ottengo l'id unita doc e lo salvo in getSession()
+		    BigDecimal idFascicoloObject = getForm().getOggettoDetailFascicoliList()
+			    .getTable().getCurrentRow().getBigDecimal("id_fascicolo_object");
+		    getSession().setAttribute("idFascicoloObject", idFascicoloObject);
+		    // Carico il rowbean del dettaglio unitÃ  doc.
+		    MonVVisFascicoloObjectRowBean objRB = monitoraggioHelper
+			    .getMonVVisFascicoloObjectRowBean(idFascicoloObject);
+		    getForm().getFascicoloDetail().copyFromBean(objRB);
+		    // MAC 29700 - se lo recupero dal form l'xml è troncato prima che possa essere
+		    // formattato,
+		    // impendendo una corretta formattazione. Ora lo recupero direttamente
+		    // dall'entity e poi lo
+		    // riimmetto nel form.
+		    String xmlvers = objRB.getBlXmlVersSacer();
+		    if (xmlvers != null) {
+			xmlvers = formatter.prettyPrintWithDOM3LS(xmlvers);
+			getForm().getFascicoloDetail().getBl_xml_vers_sacer().setValue(xmlvers);
+			getForm().getFascicoloDetail().getBl_xml_vers_sacer().setViewMode();
+		    }
+
+		    // MEV 31639
+		    getForm().getFascicoloDetail().getFl_xml_modificato()
+			    .setValue(objRB.getFlXmlMod());
+		}
+		// Se ho cliccato sul dettaglio di un Versamento Fallito venendo da più parti
+		else if (getForm().getVersamentiList().getName().equals(lista)
 			|| getForm().getOggettoDaVersamentiFallitiDetailVersamentiList().getName()
 				.equals(lista)
 			|| getForm().getOggettoDetailSessioniList().getName().equals(lista)) {
@@ -579,6 +612,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		    .setEditMode();
 	    getForm().getOggettiDerVersFallitiButtonList().getAnnullaVersamentiUDDerVersFalliti()
 		    .setHidden(true);
+	    // MEV 39009
+	    getForm().getOggettiDerVersFallitiButtonList()
+		    .getAnnullaVersamentiFascicoliDerVersFalliti().setEditMode();
+	    getForm().getOggettiDerVersFallitiButtonList()
+		    .getAnnullaVersamentiFascicoliDerVersFalliti().setHidden(true);
 	    // MEV 31134 Nuova logica di visualizzazione del pulsante ANNULLA OGGETTO
 	    boolean isLastVerificata = monitoraggioHelper.isLastVerificata(idVers, cdKeyObject,
 		    nmTipoObject);
@@ -613,11 +651,19 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 			&& monitoraggioEjb.checkTiStatoPigObject(idOgg,
 				Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
 				Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-			&& isLastVerificata && !isLastRisolubile
-			&& monitoraggioHelper.existsUDPerObjectVersataOkOrVersataErr(idOgg,
-				Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
-		    getForm().getOggettiDerVersFallitiButtonList()
-			    .getAnnullaVersamentiUDDerVersFalliti().setHidden(false);
+			&& isLastVerificata && !isLastRisolubile) {
+
+		    if (monitoraggioHelper.existsUdPerObjectVersataOkOrVersataErr(idOgg,
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
+			getForm().getOggettiDerVersFallitiButtonList()
+				.getAnnullaVersamentiUDDerVersFalliti().setHidden(false);
+		    }
+
+		    if (monitoraggioHelper.existsFascicoloPerObjectVersataOkOrVersataErr(idOgg,
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO)) {
+			getForm().getOggettiDerVersFallitiButtonList()
+				.getAnnullaVersamentiFascicoliDerVersFalliti().setHidden(false);
+		    }
 		}
 	    }
 	}
@@ -675,6 +721,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	final String tiVers = getForm().getOggettoDetail().getTi_vers_file().getValue();
 	if (tiVers.equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
 	    getForm().getOggettoSubTabs().getListaUnitaDoc().setHidden(true);
+	    getForm().getOggettoSubTabs().getListaFascicoli().setHidden(true);
 	    getForm().getOggettoSubTabs().getListaOggettiTrasf().setHidden(false);
 	    getForm().getOggettoTabs().getReportTrasformazione().setHidden(false);
 	    getForm().getOggettoSubTabs()
@@ -721,6 +768,9 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    // MEV 26942
 	    getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(true);
 	    getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail().setHidden(true);
+	    // MEV 39009
+	    getForm().getOggettoDetailButtonList().getAnnullaVersamentiFascicoliDetail()
+		    .setHidden(true);
 
 	    if ((objRB.getTiStatoObject().equals(Constants.StatoOggetto.IN_ATTESA_FILE.name())
 		    || objRB.getTiStatoObject().equals(Constants.StatoOggetto.DA_TRASFORMARE.name())
@@ -942,15 +992,15 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		    }
 		}
 	    } else if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MAC
-												   // 29616
-												   // -
+	    // 29616
+	    // -
 	    // Estensione
 	    // annullamento
 	    // oggetti in chiuso
 	    // ok con warning
 		    objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name()) || // MEV
-												    // #14561
-												    // -
+		    // #14561
+		    // -
 		    // Estensione
 		    // annullamento
 		    // oggetti in errore
@@ -982,25 +1032,31 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    }
 
 	    // MEV#14652 - Nuovo ramo IF per il pulsante di annullamento versamenti delle UD
-	    if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MAC
-											    // 29616
-											    // -
-											    // Estensione
-	    // annullamento oggetti in
-	    // chiuso ok con warning
+	    if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) ||
+	    // MAc 29616 - Estensione annullamento oggetti in chiuso ok con warning
 		    objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name())
 		    || ((objRB.getTiStatoObject()
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
 			    || objRB.getTiStatoObject()
 				    .equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-			    && monitoraggioHelper.existsUDPerObjectVersataOkOrVersataErr(idObject,
-				    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
-		getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail()
-			.setHidden(false);
+			    && (monitoraggioHelper.existsUdPerObjectVersataOkOrVersataErr(idObject,
+				    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)
+				    || monitoraggioHelper
+					    .existsFascicoloPerObjectVersataOkOrVersataErr(idObject,
+						    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO)))) {
 
-		// MEV26216 - Calcolo dati per il popup di conferma annullamento UD
-		// getRequest().getSession().setAttribute("ANNULLAMENTO_UD_NUM_UD", objRB)
+		// MEV 39009
+		if (getForm().getOggettoDetail().getTi_contenuto_tipo_oggetto().getValue()
+			.equals(Constants.TipoContenutoTipoOggetto.UD.name())) {
+		    getForm().getOggettoDetailButtonList().getAnnullaVersamentiUDDetail()
+			    .setHidden(false);
+		} else if (getForm().getOggettoDetail().getTi_contenuto_tipo_oggetto().getValue()
+			.equals(Constants.TipoContenutoTipoOggetto.FASCICOLO.name())) {
+		    getForm().getOggettoDetailButtonList().getAnnullaVersamentiFascicoliDetail()
+			    .setHidden(false);
+		}
 	    }
+
 	    if ((tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())
 		    || tiVers.equals(Constants.TipoVersamento.ZIP_NO_XML_SACER.name()))
 		    && (filtriUd
@@ -1020,10 +1076,31 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				    .equals(Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name())
 			    || objRB.getTiStatoObject()
 				    .equals(Constants.StatoOggetto.CHIUSO_OK.name()))) {
-		getForm().getOggettoTabs().getFiltriUnitaDocObj().setHidden(false);
 		getForm().getOggettoDetailButtonList().getFiltraUnitaDocObj().setHidden(false);
 		getForm().getFiltriUnitaDocObj().reset();
 		getForm().getFiltriUnitaDocObj().setEditMode();
+
+		// MEV 32983
+		getForm().getOggettoDetailButtonList().getFiltraFascicoliObj().setHidden(false);
+		getForm().getFiltriFascicoliObj().reset();
+		getForm().getFiltriFascicoliObj().setEditMode();
+
+		if (objRB.getTiContenutoTipoOggetto() != null && objRB.getTiContenutoTipoOggetto()
+			.equals(Constants.TipoContenutoTipoOggetto.FASCICOLO.name())) {
+		    getForm().getOggettoTabs().getFiltriUnitaDocObj().setHidden(true);
+		    getForm().getOggettoTabs().getFiltriFascicoliObj().setHidden(false);
+		    getForm().getOggettoSubTabs().getListaUnitaDoc().setHidden(true);
+		    getForm().getOggettoSubTabs().getListaUnitaDoc().setCurrent(false);
+		    getForm().getOggettoSubTabs().getListaFascicoli().setHidden(false);
+		    getForm().getOggettoSubTabs().getListaFascicoli().setCurrent(true);
+		} else {
+		    getForm().getOggettoTabs().getFiltriUnitaDocObj().setHidden(false);
+		    getForm().getOggettoTabs().getFiltriFascicoliObj().setHidden(true);
+		    getForm().getOggettoSubTabs().getListaUnitaDoc().setHidden(false);
+		    getForm().getOggettoSubTabs().getListaUnitaDoc().setCurrent(true);
+		    getForm().getOggettoSubTabs().getListaFascicoli().setHidden(true);
+		    getForm().getOggettoSubTabs().getListaFascicoli().setCurrent(false);
+		}
 
 		getForm().getFiltriUnitaDocObj().getCd_registro_unita_doc_sacer()
 			.setDecodeMap(DecodeMap.Factory.newInstance(monitoraggioHelper
@@ -1052,6 +1129,30 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 			.setDecodeMap(DecodeMap.Factory.newInstance(
 				monitoraggioHelper
 					.getCdErrSacerFromMonVLisUnitaDocObjectTableBean(idObject),
+				MonVLisUnitaDocObjectTableDescriptor.COL_CD_ERR_SACER,
+				MonVLisUnitaDocObjectTableDescriptor.COL_CD_CONCAT_DL_ERR_SACER));
+
+		// MEV 32983
+		getForm().getFiltriFascicoliObj().getAa_fascicolo_sacer()
+			.setDecodeMap(DecodeMap.Factory.newInstance(monitoraggioHelper
+				.getDistinctColumnFromMonVLisFascicoloObjectTableBean(idObject,
+					BigDecimal.class,
+					MonVLisFascicoloObjectTableDescriptor.COL_AA_FASCICOLO_SACER),
+				MonVLisFascicoloObjectTableDescriptor.COL_AA_FASCICOLO_SACER,
+				MonVLisFascicoloObjectTableDescriptor.COL_AA_FASCICOLO_SACER
+					+ "_str"));
+		getForm().getFiltriFascicoliObj().getTi_stato_fascicolo_object()
+			.setDecodeMap(DecodeMap.Factory.newInstance(monitoraggioHelper
+				.getDistinctColumnFromMonVLisFascicoloObjectTableBean(idObject,
+					String.class,
+					MonVLisFascicoloObjectTableDescriptor.COL_TI_STATO_FASCICOLO_OBJECT),
+				MonVLisFascicoloObjectTableDescriptor.COL_TI_STATO_FASCICOLO_OBJECT,
+				MonVLisFascicoloObjectTableDescriptor.COL_TI_STATO_FASCICOLO_OBJECT));
+		// nuovo codice MAC#13039
+		getForm().getFiltriFascicoliObj().getCd_concat_dl_err_sacer()
+			.setDecodeMap(DecodeMap.Factory.newInstance(
+				monitoraggioHelper
+					.getCdErrSacerFromMonVLisFascicoloObjectTableBean(idObject),
 				MonVLisUnitaDocObjectTableDescriptor.COL_CD_ERR_SACER,
 				MonVLisUnitaDocObjectTableDescriptor.COL_CD_CONCAT_DL_ERR_SACER));
 	    }
@@ -1178,7 +1279,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    // MEV 37583
 	    if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
 		if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
-			&& (fileInput.exists() || areFileObjectsStoredInObjectStorage)) {
+			&& (fileInput.exists() && areFileObjectsStoredInObjectStorage)) {
 		    getForm().getOggettoDetailButtonList().getRecuperoChiusErrSched()
 			    .setHidden(false);
 		    getForm().getOggettoDetailButtonList().getRecuperoChiusErrSched().setEditMode();
@@ -1196,6 +1297,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	getForm().getOggettoDetailUnitaDocList().setTable(udObjectTB);
 	getForm().getOggettoDetailUnitaDocList().getTable().setPageSize(10);
 	getForm().getOggettoDetailUnitaDocList().getTable().first();
+	// MEV 32983 Carico la lista fascicoli.
+	MonVLisFascicoloObjectTableBean fascicoliObjectTB = monitoraggioHelper
+		.getMonVLisFascicoloObjectTableBean(idObject);
+	getForm().getOggettoDetailFascicoliList().setTable(fascicoliObjectTB);
+	getForm().getOggettoDetailFascicoliList().getTable().setPageSize(10);
+	getForm().getOggettoDetailFascicoliList().getTable().first();
+
 	// Carico la lista versamenti
 	MonVLisVersObjTableBean versTB = monitoraggioHelper.getMonVLisVersObjTableBean(idObject);
 	getForm().getOggettoDetailSessioniList().setTable(versTB);
@@ -1291,7 +1399,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      * Imposta lo status del flag fl_vers_sacer_da_recup: editabile o meno
      *
      * @param isEditable true se editabile
-     *
      * @throws Exception errore generico
      */
     private void setStatusFlVersSacerDaRecup(boolean isEditable) {
@@ -1355,16 +1462,9 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				    .equals(getForm().getVersamentiList().getName())) {
 				getForm().getVersamentiList().setStatus(Status.view);
 				getForm().getVersamentiList().setUserOperations(true, true, false,
-					false); // MAC #15911
-				// - Errore
-				// su
-				// "Indietro"
-				// dopo
-				// "modifica"
-				// in
-				// "dettaglio
-				// sessione
-				// fallita"
+					false);
+				// MAC #15911 - Errore su "Indietro" dopo "modifica" in "dettaglio
+				// sessione fallita"
 			    } else if (getRequest().getParameter("table")
 				    .equals(getForm()
 					    .getOggettoDaVersamentiFallitiDetailVersamentiList()
@@ -1485,11 +1585,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				"ATTENZIONE: Il versatore dell'xml di versamento non è conforme a quello atteso.");
 		    }
 
-		} catch (JAXBException | SAXException ex) {
+		} catch (JAXBException | SAXException | ParserConfigurationException ex) {
 		    getMessageBox().addError("ATTENZIONE: l'xml di versamento non è conforme.");
-		} catch (ParserConfigurationException ex) {
-		    java.util.logging.Logger.getLogger(MonitoraggioAction.class.getName())
-			    .log(Level.SEVERE, null, ex);
 		}
 	    } else {
 		getMessageBox().addError("ATTENZIONE: l'xml di versamento non può essere vuoto.");
@@ -1538,6 +1635,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		getForm().getUnitaDocDetail().getEditUnitaDocumentaria().setEditMode();
 	    }
 	    forwardToPublisher(Application.Publisher.UNITA_DOC_DETAIL);
+	} else if (getForm().getOggettoDetailFascicoliList().getName().equals(lista)) {
+	    getForm().getOggettoDetailFascicoliList().setUserOperations(true, false, false, false);
+	    getForm().getOggettoDetailFascicoliList().setViewMode();
+	    getForm().getOggettoDetailFascicoliList().setStatus(Status.view);
+	    getForm().getFascicoloDetail().getDownloadXMLFascicoloObject()
+		    .setDisableHourGlass(true);
+	    getForm().getFascicoloDetail().getDownloadXMLFascicoloObject().setEditMode();
+	    forwardToPublisher(Application.Publisher.FASCICOLO_DETAIL);
 	} else if (getForm().getOggettoDetailSessioniList().getName().equals(lista)) {
 	    getForm().getOggettoDetailSessioniList().setUserOperations(true, true, false, false);
 	    getForm().getOggettoDetailSessioniList().setViewMode();
@@ -1825,7 +1930,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	updateDettaglioVersamentoCommon();
     }
 
-    // MEV33098 e MEV37583
     @Override
     public void updateUnitaDocDetail() throws EMFError {
 	BigDecimal idObject = (BigDecimal) getSession().getAttribute(ID_OBJECT);
@@ -1938,8 +2042,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				getForm().getSalvaVerificaButtonList().getImpostaVerificato()
 					.setViewMode();
 			    }
-
-			    calcolaTotaliRiepilogoVersamentiPerReload();
+			    try {
+				calcolaTotaliRiepilogoVersamentiPerReload();
+			    } catch (ParerUserError ex) {
+				getMessageBox().addError(ex.getDescription());
+			    }
 			    // Ora che ho ricaricato, rimuovo l'attributo
 			    getSession().removeAttribute("modificaVF");
 			}
@@ -2000,7 +2107,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				getForm().getSalvaVerificaButtonList().getImpostaVerificato()
 					.setViewMode();
 			    }
-
 			    calcolaTotaliRiepilogoVersamentiPerReload();
 			    // Ora che ho ricaricato, rimuovo l'attributo
 			    getSession().removeAttribute("modificaVF");
@@ -2228,8 +2334,12 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	getForm().getFiltriRiepilogoVersamenti().getGeneraRiepilogoVersamenti()
 		.setDisableHourGlass(true);
 
-	// Calcolo i totali per l'attuale versatore
-	calcolaTotaliRiepilogoVersamenti(idAmbienteVers, idVers, null);
+	try {
+	    // Calcolo i totali per l'attuale versatore
+	    calcolaTotaliRiepilogoVersamenti(idAmbienteVers, idVers, null);
+	} catch (ParerUserError ex) {
+	    getMessageBox().addError(ex.getDescription());
+	}
 
 	getSession().removeAttribute(GET_ID_OBJ_STACK);
 	getSession().removeAttribute(ID_OBJECT);
@@ -2243,9 +2353,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      *
      * @param filtri  filtro di tipo {@link Fields}
      * @param sezione sezione monitoraggio di tipo {@link SezioneMonitoraggio}
-     *
      * @return oggetto di tipo {@link Fields}
-     *
      * @throws EMFError errore generico
      */
     public Fields triggerAmbienteVersatoreGenerico(Fields filtri, SezioneMonitoraggio sezione)
@@ -2294,9 +2402,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      * un campo "versatore" piazzato in una qualunque jsp
      *
      * @param filtri filtro di tipo {@link Fields}
-     *
      * @return oggetto di tipo {@link Fields}
-     *
      * @throws EMFError errore generico
      */
     public Fields triggerVersatoreGenerico(Fields filtri) throws EMFError {
@@ -2336,7 +2442,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      *
      * @param idVers  id versamento
      * @param sezione sezione monitoraggio di tipo (enumerativo)
-     *
      * @throws EMFError errore generico
      */
     public void checkUniqueVersatoreInCombo(BigDecimal idVers, Enum sezione) throws EMFError {
@@ -4236,6 +4341,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 				    Constants.TipoVersamento.ZIP_CON_XML_SACER.name(),
 				    Constants.TipoVersamento.ZIP_NO_XML_SACER.name())
 				    .toArray(new String[Constants.TipoVersamento.values().length]));
+
+	    // MEV 39012
+	    DecodeMap mappaTipoContenuto = new DecodeMap();
+	    BaseTable bt = new BaseTable();
+	    for (Enum<?> row : it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto.values()) {
+		BaseRow br = new BaseRow();
+		br.setString("ti_contenuto", row.name());
+		bt.add(br);
+	    }
+	    mappaTipoContenuto.populatedMap(bt, "ti_contenuto", "ti_contenuto");
+	    getForm().getFiltriOggetti().getTi_contenuto().setDecodeMap(mappaTipoContenuto);
+
 	    forwardToPublisher(Application.Publisher.OGGETTI_LIST);
 	} // MOSTRA LISTA VERSAMENTI FALLITI
 	else if (getRequest().getParameter("pagina")
@@ -4580,7 +4697,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      * @param out      outputstream {@link ZipOutputStream}
      * @param filename nome file
      * @param blob     contenuto file
-     *
      * @throws EMFError    errore genrico
      * @throws IOException errore generico di tipo IO
      */
@@ -4652,7 +4768,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    filtriListaOggetti.setIdObject(filtri.getId_object().parse());
 	    filtriListaOggetti.setChiave(filtri.getFiltri_oggetti_cd_key_object().parse());
 	    filtriListaOggetti.setTiVersFile(filtri.getTi_vers_file().parse());
-
+	    filtriListaOggetti.setTiContenuto(filtri.getTi_contenuto().parse());
 	    getSession().setAttribute("filtriListaOggetti", filtriListaOggetti);
 
 	    /*
@@ -4803,6 +4919,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     }
 
     @Override
+    public void tabListaFascicoliOnClick() throws EMFError {
+	getForm().getOggettoSubTabs()
+		.setCurrentTab(getForm().getOggettoSubTabs().getListaFascicoli());
+	forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
+    }
+
+    @Override
     public void tabListaOggettiTrasfOnClick() throws EMFError {
 	getForm().getOggettoSubTabs()
 		.setCurrentTab(getForm().getOggettoSubTabs().getListaOggettiTrasf());
@@ -4924,15 +5047,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	String xmlvers = objRB.getBlXmlVersSacer();
 	String xmlindice = objRB.getBlXmlIndiceSacer();
 	XmlPrettyPrintFormatter formatter = new XmlPrettyPrintFormatter();
-	if (xmlvers != null) {
-	    xmlvers = formatter.prettyPrintWithDOM3LS(xmlvers);
-	}
-	if (xmlindice != null) {
-	    xmlindice = formatter.prettyPrintWithDOM3LS(xmlindice);
-	}
 
-	downloadXMLUnitaDoc(chiaveUd, xmlvers.getBytes(StandardCharsets.UTF_8),
-		xmlindice.getBytes(StandardCharsets.UTF_8));
+	if (xmlvers != null && xmlindice != null) {
+	    xmlvers = formatter.prettyPrintWithDOM3LS(xmlvers);
+	    xmlindice = formatter.prettyPrintWithDOM3LS(xmlindice);
+	    downloadXML(chiaveUd, xmlvers.getBytes(StandardCharsets.UTF_8), "sip_versamento_ud.xml",
+		    xmlindice.getBytes(StandardCharsets.UTF_8), "indice_file_ud.xml");
+	}
     }
 
     @Override
@@ -4942,11 +5063,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		.getBytes();
 	byte[] xmlIndice = getForm().getUnitaDocVersamentoDetail().getBl_xml_indice_sacer()
 		.getValue().getBytes();
-	downloadXMLUnitaDoc(chiaveUd, xmlVers, xmlIndice);
+	downloadXML(chiaveUd, xmlVers, "sip_versamento_ud.xml", xmlIndice, "indice_file_ud.xml");
     }
 
-    public void downloadXMLUnitaDoc(String chiaveUd, byte[] xmlVersamento, byte[] xmlIndice)
-	    throws EMFError {
+    public void downloadXML(String chiaveUd, byte[] xmlVersamento, String nameXmlVersamento,
+	    byte[] xmlIndice, String nameXmlIndice) throws EMFError {
 	// Comincio a costruire lo zippone che conterrÃ  i file
 	String fileNamePart = chiaveUd.replaceAll(" ", "");
 	String nomeZippone = fileNamePart + "_preingest";
@@ -4955,17 +5076,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 		"attachment; filename=\"" + nomeZippone + ".zip");
 	// Ricavo lo stream di output
 	ZipOutputStream out = new ZipOutputStream(getServletOutputStream());
-	String filename = "";
 	try {
 	    // Caccio dentro lo zippone il file xml di versamento
 	    if (xmlVersamento != null && xmlVersamento.length > 0) {
-		filename = "vers_ud.xml";
-		zipBlob(out, filename, xmlVersamento);
+		zipBlob(out, nameXmlVersamento, xmlVersamento);
 	    }
 	    // Caccio dentro lo zippone il file xml di indice
 	    if (xmlIndice != null && xmlIndice.length > 0) {
-		filename = "indice_file_ud.xml";
-		zipBlob(out, filename, xmlIndice);
+		zipBlob(out, nameXmlIndice, xmlIndice);
 	    }
 	    out.flush();
 	    out.close();
@@ -5279,7 +5397,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      *
      * @param lista lista elementi di tipo {@link SingleValueField}
      * @param tb    tabella
-     *
      * @throws EMFError errore generico
      */
     public void refreshLista(it.eng.spagoLite.form.list.List<SingleValueField<?>> lista,
@@ -5374,7 +5491,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      * @param idSessioneIngest id sessione versamento
      * @param verificato       verifica
      * @param nonRisolubile    non risolubile
-     *
      * @throws EMFError errore generico
      */
     public void checkIsOggettoDaRecuperare(BigDecimal idSessioneIngest, String verificato,
@@ -6167,7 +6283,62 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    throw new EMFError(EMFError.ERROR, ex.getMessage());
 	}
 
-	redirectToAjax(getForm().getOggettoDetail().asJSON());
+	redirectToAjax(getForm().asJSON());
+    }
+
+    // MEV 39009
+    public void annullaVersamentiFascicoliDetail() throws EMFError {
+	getRequest().setAttribute("confermaAnnullamentoFascicoli", true);
+
+	BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
+	Long countPigFascicoloObjectDuplicati = monitoraggioHelper
+		.countPigFascicoloObjectDuplicati(idObject);
+
+	if (annullamentoEjb.controllaSeSimsmaNonAnnullabile(idObject)) {
+	    getRequest().setAttribute("confermaAnnullamentoOggettoSisma", true);
+	}
+
+	getRequest().setAttribute("ni_fascicoli_vers",
+		getForm().getOggettoDetail().getNi_fascicoli_vers().parse());
+	getRequest().setAttribute("ni_fascicoli_vers_dup", countPigFascicoloObjectDuplicati);
+	forwardToPublisher(getLastPublisher());
+    }
+
+    // MEV 39009
+    public void annullaVersamentiFascicoliDetailAction() throws EMFError {
+	BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
+	boolean richiestoAnnullamentoVersamentiFascicoliDuplicati = getRequest()
+		.getParameter("Ti_annullamento_ud").equals("1");
+	// MEV 27691
+	String motivazioneAnnullamento = getRequest().getParameter("ds_annullamento_ud");
+
+	if (motivazioneAnnullamento != null && motivazioneAnnullamento.length() > 2000) {
+	    getMessageBox().addError(
+		    "La motivazione annullamento non può essere più lunga di 2000 caratteri.");
+	    redirectToAjax(getForm().getOggettoDetail().asJSON());
+	    return;
+	}
+
+	motivazioneAnnullamento = StringEscapeUtils.escapeHtml4(motivazioneAnnullamento);
+	motivazioneAnnullamento = StringEscapeUtils.escapeEcmaScript(motivazioneAnnullamento);
+	motivazioneAnnullamento = StringEscapeUtils.escapeXml10(motivazioneAnnullamento);
+
+	try {
+	    // MEV 32543 - impostiamo l'ultima sessione a verificata e non risolubile.
+	    String errore = monitoraggioEjb.preAnnullamentoSetup(idObject);
+
+	    if (errore != null) {
+		getMessageBox().addError(errore);
+	    } else {
+		// richiede cancellazione UD versate
+		annullaOggetto(idObject, true, richiestoAnnullamentoVersamentiFascicoliDuplicati,
+			motivazioneAnnullamento);
+	    }
+	} catch (Exception ex) {
+	    throw new EMFError(EMFError.ERROR, ex.getMessage());
+	}
+
+	redirectToAjax(getForm().asJSON());
     }
 
     @Override
@@ -6189,14 +6360,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     // SUE26200 - Aggiunta opzione per escludere dall'annullamento le UD già versate da un'altro
     // oggetto (Errore
     // UD-002-001)
-    private void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
-	    boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento)
-	    throws EMFError {
+    private void annullaOggetto(BigDecimal idObject,
+	    boolean richiestoAnnullamentoVersamentiDocumenti,
+	    boolean richiestoAnnullamentoVersamentiFascicoliDuplicati,
+	    String motivazioneAnnullamento) throws EMFError {
 	try {
 
 	    String username = getUser().getUsername();
-	    annullamentoEjb.annullaOggetto(idObject, richiestoAnnullamentoVersamentiUD,
-		    richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento, username);
+	    annullamentoEjb.annullaOggetto(idObject, richiestoAnnullamentoVersamentiDocumenti,
+		    richiestoAnnullamentoVersamentiFascicoliDuplicati, motivazioneAnnullamento,
+		    username);
 	} catch (ParerUserError | ParerInternalError ex) {
 	    getMessageBox().addError(ex.getDescription());
 	}
@@ -6263,6 +6436,34 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    getForm().getOggettoDetailUnitaDocList().setTable(udObjectTB);
 	    getForm().getOggettoDetailUnitaDocList().getTable().setPageSize(pageSize);
 	    getForm().getOggettoDetailUnitaDocList().getTable().first();
+	}
+	forwardToPublisher(getLastPublisher());
+    }
+
+    @Override
+    public void filtraFascicoliObj() throws EMFError {
+	BigDecimal idObject = getForm().getOggettoDetail().getId_object().parse();
+	if (idObject != null && getForm().getFiltriFascicoliObj().postAndValidate(getRequest(),
+		getMessageBox())) {
+	    BigDecimal aaFascicolo = getForm().getFiltriFascicoliObj().getAa_fascicolo_sacer()
+		    .parse();
+	    String cdKeyFascicolo = getForm().getFiltriFascicoliObj().getCd_key_fascicolo_sacer()
+		    .parse();
+	    String tiStatoFascicolo = getForm().getFiltriFascicoliObj()
+		    .getTi_stato_fascicolo_object().parse();
+	    String cdErrore = getForm().getFiltriFascicoliObj().getCd_concat_dl_err_sacer().parse();
+
+	    int pageSize = 10;
+	    if (getForm().getOggettoDetailUnitaDocList().getTable() != null) {
+		pageSize = getForm().getOggettoDetailUnitaDocList().getTable().getPageSize();
+	    }
+	    // Carico la lista unitÃ  doc.
+	    MonVLisFascicoloObjectTableBean fascicoliObjectTB = monitoraggioHelper
+		    .getMonVLisFascicoloObjectTableBean(idObject, aaFascicolo, cdKeyFascicolo,
+			    tiStatoFascicolo, cdErrore);
+	    getForm().getOggettoDetailFascicoliList().setTable(fascicoliObjectTB);
+	    getForm().getOggettoDetailFascicoliList().getTable().setPageSize(pageSize);
+	    getForm().getOggettoDetailFascicoliList().getTable().first();
 	}
 	forwardToPublisher(getLastPublisher());
     }
@@ -6343,6 +6544,49 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	// richiede cancellazione UD
 	annullaOggetto(new BigDecimal(obj.getIdObject()), true,
 		richiestoAnnullamentoVersamentiUDDuplicati, motivazioneAnnullamento);
+	forwardToPublisher(getLastPublisher());
+    }
+
+    // MEV 39009
+    public void annullaVersamentiFascicoliDerVersFalliti() {
+	getRequest().setAttribute("confermaAnnullamentoFascicoli", true);
+
+	BigDecimal idVers = getForm().getOggettiDaVersamentiFallitiList().getTable().getCurrentRow()
+		.getBigDecimal("id_vers");
+	String cdKeyObject = getForm().getOggettiDaVersamentiFallitiList().getTable()
+		.getCurrentRow().getString("cd_key_object");
+
+	PigObject obj = monitoraggioHelper.getPigObject(idVers, cdKeyObject);
+	BigDecimal idObject = BigDecimal.valueOf(obj.getIdObject());
+	Long countPigFascicolObject = monitoraggioHelper.countPigFascicoloObject(idObject);
+	Long countPigFascicoloObjectDuplicati = monitoraggioHelper
+		.countPigFascicoloObjectDuplicati(idObject);
+
+	getRequest().setAttribute("ni_fascicoli_vers", countPigFascicolObject);
+	getRequest().setAttribute("ni_fascicoli_vers_dup", countPigFascicoloObjectDuplicati);
+
+	forwardToPublisher(getLastPublisher());
+    }
+
+    public void annullaVersamentiFascicoliDerVersFallitiAction() throws EMFError {
+	BigDecimal idVers = getForm().getOggettiDaVersamentiFallitiList().getTable().getCurrentRow()
+		.getBigDecimal("id_vers");
+	String cdKeyObject = getForm().getOggettiDaVersamentiFallitiList().getTable()
+		.getCurrentRow().getString("cd_key_object");
+
+	boolean richiestoAnnullamentoVersamentiFascicoliDuplicati = getRequest()
+		.getParameter("Ti_annullamento_ud").equals("1");
+
+	// MEV 27691
+	String motivazioneAnnullamento = getRequest().getParameter("ds_annullamento_ud");
+	motivazioneAnnullamento = StringEscapeUtils.escapeHtml4(motivazioneAnnullamento);
+	motivazioneAnnullamento = StringEscapeUtils.escapeEcmaScript(motivazioneAnnullamento);
+	motivazioneAnnullamento = StringEscapeUtils.escapeXml10(motivazioneAnnullamento);
+
+	PigObject obj = monitoraggioHelper.getPigObject(idVers, cdKeyObject);
+	// richiede cancellazione UD
+	annullaOggetto(new BigDecimal(obj.getIdObject()), true,
+		richiestoAnnullamentoVersamentiFascicoliDuplicati, motivazioneAnnullamento);
 	forwardToPublisher(getLastPublisher());
     }
 
@@ -6488,7 +6732,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	    // Rieseguo anche la query di Riepilogo Versamenti
 	    calcolaTotaliRiepilogoVersamenti(filtriListaVersFalliti.getIdAmbienteVers(),
 		    filtriListaVersFalliti.getIdVers(), filtriListaVersFalliti.getIdTipoObject());
-
 	    getMessageBox().addMessage(
 		    new Message(MessageLevel.INF, "Aggiornate " + modificati + " sessioni."));
 	} catch (ParerUserError e) {
@@ -6659,6 +6902,32 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 	getMessageBox().setViewMode(ViewMode.plain);
 	forwardToPublisher(Application.Publisher.OGGETTO_DA_VERSAMENTI_FALLITI_DETAIL);
 
+    }
+
+    @Override
+    public void downloadXMLFascicoloObject() throws EMFError {
+	String chiaveFascicolo = getForm().getFascicoloDetail().getChiave_fascicolo().parse();
+	// Ottengo l'id fascicolo e lo salvo in getSession()
+	BigDecimal idFascicoloObject = getForm().getOggettoDetailFascicoliList().getTable()
+		.getCurrentRow().getBigDecimal("id_fascicolo_object");
+	// Carico il rowbean del dettaglio unità  doc.
+	MonVVisFascicoloObjectRowBean objRB = monitoraggioHelper
+		.getMonVVisFascicoloObjectRowBean(idFascicoloObject);
+	getForm().getUnitaDocDetail().copyFromBean(objRB);
+	String xmlvers = objRB.getBlXmlVersSacer();
+	XmlPrettyPrintFormatter formatter = new XmlPrettyPrintFormatter();
+	if (xmlvers != null) {
+	    xmlvers = formatter.prettyPrintWithDOM3LS(xmlvers);
+	    downloadXML(chiaveFascicolo, xmlvers.getBytes(StandardCharsets.UTF_8),
+		    "sip_versamento_fascicolo.xml", null, "");
+	}
+    }
+
+    @Override
+    public void tabFiltriFascicoliObjOnClick() throws EMFError {
+	getForm().getOggettoTabs()
+		.setCurrentTab(getForm().getOggettoTabs().getFiltriFascicoliObj());
+	forwardToPublisher(Application.Publisher.OGGETTO_DETAIL);
     }
 
     private enum TiRecuperoErrore {
@@ -6873,7 +7142,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
      *
      * @param idAmbienteVers id ambiente versamento
      * @param sezione        sesione (enumerativo)
-     *
      * @throws EMFError errore generico
      */
     public void checkUniqueAmbienteVersatoreInCombo(BigDecimal idAmbienteVers, Enum sezione)

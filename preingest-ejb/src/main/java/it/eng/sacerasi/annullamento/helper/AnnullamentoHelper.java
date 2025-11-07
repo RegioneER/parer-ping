@@ -15,6 +15,7 @@ package it.eng.sacerasi.annullamento.helper;
 
 import it.eng.paginator.util.HibernateUtils;
 import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.entity.PigFascicoloObject;
 import it.eng.sacerasi.entity.PigUnitaDocObject;
 import it.eng.sacerasi.entity.PigXmlAnnulSessioneIngest;
 import it.eng.sacerasi.helper.GenericHelper;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * @author Bonora_L
  */
 @Stateless
@@ -67,11 +67,41 @@ public class AnnullamentoHelper extends GenericHelper {
 	q.executeUpdate();
     }
 
+    /**
+     * Aggiorna i fascicoli appartenenti alla sessione con stato {@code oldState} assegnando stato
+     * {@code newState}
+     *
+     * @param idSessioneIngest id sessione versamento
+     * @param oldState         stato precedente
+     * @param newState         stato successivo
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliSessione(BigDecimal idSessioneIngest, String oldState,
+	    String newState) {
+	Query q = getEntityManager().createQuery(
+		"UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState");
+	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+	q.setParameter("oldState", oldState);
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocSessioneNoError(BigDecimal idSessioneIngest, String oldState,
 	    String newState) {
 	Query q = getEntityManager().createQuery(
 		"UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState AND udSes.cdErrSacer IS NULL");
+	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+	q.setParameter("oldState", oldState);
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliSessioneNoError(BigDecimal idSessioneIngest, String oldState,
+	    String newState) {
+	Query q = getEntityManager().createQuery(
+		"UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer IS NULL");
 	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
 	q.setParameter("oldState", oldState);
 	q.setParameter("newState", newState);
@@ -107,6 +137,34 @@ public class AnnullamentoHelper extends GenericHelper {
     }
 
     /**
+     * Aggiorna i fascicoli appartenenti alla sessione con stato di errore {@code oldState} e codice
+     * di errore {@code cdErrSacer} assegnando stato {@code newState}
+     *
+     * @param idSessioneIngest id sessione versamento
+     * @param oldState         stato precedente
+     * @param cdErrSacer       codice di errore
+     * @param newState         stato successivo
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliSessioneWithError(BigDecimal idSessioneIngest, String oldState,
+	    String cdErrSacer, String newState) {
+	String query = "UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer ";
+	if (StringUtils.isNotBlank(cdErrSacer)) {
+	    query += " = :cdErrSacer";
+	} else {
+	    query += " IS NOT NULL";
+	}
+	Query q = getEntityManager().createQuery(query);
+	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+	q.setParameter("oldState", oldState);
+	if (StringUtils.isNotBlank(cdErrSacer)) {
+	    q.setParameter("cdErrSacer", cdErrSacer);
+	}
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
+    /**
      * Aggiorna le unità documentarie appartenenti all'oggetto con stato {@code oldState} assegnando
      * stato {@code newState}
      *
@@ -124,10 +182,39 @@ public class AnnullamentoHelper extends GenericHelper {
 	q.executeUpdate();
     }
 
+    /**
+     * Aggiorna i fascicoli appartenenti all'oggetto con stato {@code oldState} assegnando stato
+     * {@code newState}
+     *
+     * @param idObject id oggetto
+     * @param oldState stato precedente
+     * @param newState stato successivo
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliObject(BigDecimal idObject, String oldState, String newState) {
+	Query q = getEntityManager().createQuery(
+		"UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState");
+	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	q.setParameter("oldState", oldState);
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocObjectNoError(BigDecimal idObject, String oldState, String newState) {
 	Query q = getEntityManager().createQuery(
 		"UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState AND udObj.cdErrSacer IS NULL");
+	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	q.setParameter("oldState", oldState);
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliObjectNoError(BigDecimal idObject, String oldState,
+	    String newState) {
+	Query q = getEntityManager().createQuery(
+		"UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer IS NULL");
 	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
 	q.setParameter("oldState", oldState);
 	q.setParameter("newState", newState);
@@ -162,11 +249,49 @@ public class AnnullamentoHelper extends GenericHelper {
 	q.executeUpdate();
     }
 
+    /**
+     * Aggiorna le unità documentarie appartenenti all'oggetto con stato di errore {@code oldState}
+     * e codice di errore {@code cdErrSacer} assegnando stato {@code newState}
+     *
+     * @param idObject   id oggetto
+     * @param oldState   stato precedente
+     * @param cdErrSacer codice errore
+     * @param newState   stato successivo
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateFascicoliObjectWithError(BigDecimal idObject, String oldState,
+	    String cdErrSacer, String newState) {
+	String query = "UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer ";
+	if (StringUtils.isNotBlank(cdErrSacer)) {
+	    query += " = :cdErrSacer";
+	} else {
+	    query += " IS NOT NULL";
+	}
+	Query q = getEntityManager().createQuery(query);
+	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	q.setParameter("oldState", oldState);
+	if (StringUtils.isNotBlank(cdErrSacer)) {
+	    q.setParameter("cdErrSacer", cdErrSacer);
+	}
+	q.setParameter("newState", newState);
+	q.executeUpdate();
+    }
+
     @SuppressWarnings("unchecked")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<PigUnitaDocObject> retrievePigUnitaDocObject(long idObject, String state) {
 	Query q = getEntityManager().createQuery(
 		"SELECT udObj FROM PigUnitaDocObject udObj WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :state");
+	q.setParameter("idObject", idObject);
+	q.setParameter("state", state);
+	return q.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<PigFascicoloObject> retrievePigFascicoloObject(long idObject, String state) {
+	Query q = getEntityManager().createQuery(
+		"SELECT fasObj FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
 	q.setParameter("idObject", idObject);
 	q.setParameter("state", state);
 	return q.getResultList();
@@ -181,12 +306,20 @@ public class AnnullamentoHelper extends GenericHelper {
 	return (Long) q.getSingleResult();
     }
 
+    // MV 39009
+    public Long countPigFascicoloObject(long idObject, String state) {
+	Query q = getEntityManager().createQuery(
+		"SELECT count(fasObj) FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
+	q.setParameter("idObject", idObject);
+	q.setParameter("state", state);
+	return (Long) q.getSingleResult();
+    }
+
     /**
      * Ritorna il numero degli oggetti figli che non hanno stato ANNULLATO
      *
      * @param idObjectPadre  id padre
      * @param idObjectFiglio id figlio
-     *
      * @return count conteggio
      */
     public Long countFigliNonAnnullati(long idObjectPadre, BigDecimal idObjectFiglio) {
@@ -203,7 +336,6 @@ public class AnnullamentoHelper extends GenericHelper {
      *
      * @param idObjectPadre  id padre
      * @param idObjectFiglio id figlio
-     *
      * @return count conteggio
      */
     public Long countFigliNonAnnullatiOCorretti(long idObjectPadre, BigDecimal idObjectFiglio) {
@@ -221,6 +353,14 @@ public class AnnullamentoHelper extends GenericHelper {
 	final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
 		"SELECT DISTINCT (u.idOrganizIam) "
 			+ "FROM MonVLisUnitaDocObject u WHERE u.idObject = :idObject AND u.idOrganizIam IS NOT NULL",
+		BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
+	return idOrganizIam.getSingleResult();
+    }
+
+    public BigDecimal getIdOrganizIamFromMonVLisFascicoloObject(long idObject) {
+	final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
+		"SELECT DISTINCT (f.idOrganizIam) "
+			+ "FROM MonVLisFascicoloObject f WHERE f.idObject = :idObject AND f.idOrganizIam IS NOT NULL",
 		BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
 	return idOrganizIam.getSingleResult();
     }

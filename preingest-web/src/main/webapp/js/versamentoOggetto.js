@@ -66,6 +66,7 @@ function initTipoOggettoFieldHandler() {
 }
 
 function disableForm(jsonData) {
+    let obj = $('#' + jsonData.name);
     switch (jsonData.type) {
         case "Form":
         case "Fields":
@@ -75,7 +76,6 @@ function disableForm(jsonData) {
             break;
         case "Input":
         case "ComboBox":
-            let obj = $('#' + jsonData.name);
             switch (jsonData.state) {
                 case "readonly":
                     obj.attr('readonly', true);

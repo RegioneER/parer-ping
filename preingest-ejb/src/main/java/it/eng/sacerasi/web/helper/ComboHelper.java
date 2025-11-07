@@ -14,6 +14,7 @@
 package it.eng.sacerasi.web.helper;
 
 import it.eng.paginator.util.HibernateUtils;
+import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigAmbienteVers;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigVers;
@@ -22,6 +23,7 @@ import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectTableBean;
 import it.eng.sacerasi.slite.gen.tablebean.PigVersRowBean;
 import it.eng.sacerasi.slite.gen.tablebean.PigVersTableBean;
 import it.eng.sacerasi.web.util.Transform;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +60,6 @@ public class ComboHelper {
      * Recupera l'ambiente versatore in base alle abilitazioni
      *
      * @param idUtente id utente
-     *
      * @return ambienteTableBean, il tablebean di ambienti versatore
      */
     public PigAmbienteVersTableBean getAmbienteVersatoreFromUtente(long idUtente) {
@@ -144,7 +146,7 @@ public class ComboHelper {
 
     public PigTipoObjectTableBean getTipoObjectFromVersatore(long idUtente, BigDecimal idVers,
 	    String... tipoVers) {
-	return getTipoObjectFromVersatore(idUtente, idVers, false, tipoVers);
+	return getTipoObjectFromVersatore(idUtente, idVers, false, null, tipoVers);
     }
 
     /*
@@ -152,15 +154,28 @@ public class ComboHelper {
      */
     public PigTipoObjectTableBean getTipoObjectFromVersatoreNoFleggati(long idUtente,
 	    BigDecimal idVers, String... tipoVers) {
-	return getTipoObjectFromVersatore(idUtente, idVers, true, tipoVers);
+	return getTipoObjectFromVersatore(idUtente, idVers, true, null, tipoVers);
+    }
+
+    public PigTipoObjectTableBean getTipoObjectFromVersatoreNoFleggatiUD(long idUtente,
+	    BigDecimal idVers, String... tipoVers) {
+	return getTipoObjectFromVersatore(idUtente, idVers, true,
+		Constants.TipoContenutoTipoOggetto.UD.name(), tipoVers);
+    }
+
+    public PigTipoObjectTableBean getTipoObjectFromVersatoreNoFleggatiFascicoli(long idUtente,
+	    BigDecimal idVers, String... tipoVers) {
+	return getTipoObjectFromVersatore(idUtente, idVers, true,
+		Constants.TipoContenutoTipoOggetto.FASCICOLO.name(), tipoVers);
     }
 
     /*
      * Se viene passato il flag a vero non vengono estratti i tipi oggetto con il flag di visibilità
      * alzato
      */
+    // MEV 32982
     private PigTipoObjectTableBean getTipoObjectFromVersatore(long idUtente, BigDecimal idVers,
-	    boolean escludiFleggati, String... tipoVers) {
+	    boolean escludiFleggati, String tiContenuto, String... tipoVers) {
 	StringBuilder queryStr = new StringBuilder(
 		"SELECT DISTINCT u from PigTipoObject u, IamAbilTipoDato iatd "
 			+ "WHERE iatd.idTipoDatoApplic = u.idTipoObject "
@@ -181,6 +196,10 @@ public class ComboHelper {
 	    }
 	}
 
+	if (tiContenuto != null) {
+	    queryStr.append("AND u.tiContenuto = :tiContenuto ");
+	}
+
 	queryStr.append("ORDER BY u.nmTipoObject ");
 
 	Query query = entityManager.createQuery(queryStr.toString());
@@ -195,6 +214,11 @@ public class ComboHelper {
 		query.setParameter("tiVers", tmp);
 	    }
 	}
+
+	if (tiContenuto != null) {
+	    query.setParameter("tiContenuto", tiContenuto);
+	}
+
 	query.setParameter("idUtente", idUtente);
 
 	PigTipoObjectTableBean tipoObjectTableBean = new PigTipoObjectTableBean();
@@ -216,7 +240,6 @@ public class ComboHelper {
      * effettuato il login
      *
      * @param idUtente id utente
-     *
      * @return Object[], l'object array contenente i dati sui versatori
      */
     public Object[] getVersatori(long idUtente) {

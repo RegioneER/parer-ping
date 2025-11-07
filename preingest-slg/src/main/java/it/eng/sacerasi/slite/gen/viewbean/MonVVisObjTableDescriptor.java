@@ -79,6 +79,7 @@ public class MonVVisObjTableDescriptor extends TableDescriptor {
     public static final String COL_DT_STATO_COR_PADRE = "dt_stato_cor_padre";
     public static final String COL_NI_TOT_OBJECT_TRASF = "ni_tot_object_trasf";
     public static final String COL_ID_OBJECT_TRASF = "id_object_trasf";
+    public static final String COL_TI_CONTENUTO_TIPO_OGGETTO = "ti_contenuto_tipo_oggetto";
     public static final String COL_NM_USERID_VERS = "nm_userid_vers";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
@@ -167,6 +168,8 @@ public class MonVVisObjTableDescriptor extends TableDescriptor {
 		new ColumnDescriptor(COL_NI_TOT_OBJECT_TRASF, Types.DECIMAL, 22, true));
 	map.put(COL_ID_OBJECT_TRASF,
 		new ColumnDescriptor(COL_ID_OBJECT_TRASF, Types.DECIMAL, 22, true));
+	map.put(COL_TI_CONTENUTO_TIPO_OGGETTO,
+		new ColumnDescriptor(COL_TI_CONTENUTO_TIPO_OGGETTO, Types.VARCHAR, 100, true));
 	map.put(COL_NM_USERID_VERS,
 		new ColumnDescriptor(COL_NM_USERID_VERS, Types.VARCHAR, 100, true));
     }

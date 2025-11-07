@@ -317,6 +317,7 @@ public class MessaggiWSBundle {
 
     // Errori Producer / Consumer
     public static final String PING_PRODCODA_001 = "PING-PRODCODA-001";
+    public static final String PING_PRODCODAFASC_001 = "PING-PRODCODAFASC-001";
     public static final String PING_CONSCODA_001 = "PING-CONSCODA-001";
     public static final String PING_CONSCODA_002 = "PING-CONSCODA-002";
 

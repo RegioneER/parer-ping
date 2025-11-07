@@ -68,6 +68,7 @@ import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigAttribDatiSpec;
 import it.eng.sacerasi.entity.PigInfoDicom;
 import it.eng.sacerasi.entity.PigObject;
+import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigXsdDatiSpec;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.preparaxml.dto.FileUnitaDoc;
@@ -95,6 +96,11 @@ public class ProduzioneXmlEjb {
      * @throws ParerInternalError In caso di eccezione
      */
     public void produci(OggettoInCoda oggetto) throws ParerInternalError {
+	// MEV32983
+	PigTipoObject pigTipoObject = oggetto.getRifPigObject().getPigTipoObject();
+	Constants.TipoContenutoTipoOggetto tipoContenutoTipoObject = Constants.TipoContenutoTipoOggetto
+		.valueOf(pigTipoObject.getTiContenuto());
+
 	switch (oggetto.getTipoVersamento()) {
 	case NO_ZIP:
 	case ZIP_NO_XML_SACER:
@@ -102,10 +108,14 @@ public class ProduzioneXmlEjb {
 	    gestisciCreazioneXml(oggetto);
 	    break;
 	case ZIP_CON_XML_SACER:
-	    // Eseguo solo la creazione dell'indice multimedia in quanto
-	    // l'xml è già stato recuperato in fase di preparazione
-	    gestisciRecuperoXml(oggetto);
-	    break;
+	    if (tipoContenutoTipoObject.equals(Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+		// forse nulla da fare?
+	    } else if (tipoContenutoTipoObject.equals(Constants.TipoContenutoTipoOggetto.UD)) {
+		// Eseguo solo la creazione dell'indice multimedia in quanto
+		// l'xml è già stato recuperato in fase di preparazione
+		gestisciRecuperoXml(oggetto);
+		break;
+	    }
 	}
     }
 
@@ -181,7 +191,7 @@ public class ProduzioneXmlEjb {
 
 	    try {
 		marshallXmlVers(unitaDoc, udObj);
-		log.debug(udObj.getUnitaDocumentariaXml());
+		log.debug(udObj.getDocumentoXml());
 		marshallXmlMm(indiceMm, udObj);
 		log.debug(udObj.getIndiceMMXml());
 	    } catch (Exception ex) {
@@ -197,7 +207,7 @@ public class ProduzioneXmlEjb {
 	Marshaller udMarshaller = xmlContextCache.getVersReqCtxforUD().createMarshaller();
 	udMarshaller.marshal(unitaDoc, tmpWriter);
 	tmpWriter.flush();
-	udObj.setUnitaDocumentariaXml(tmpWriter.toString());
+	udObj.setDocumentoXml(tmpWriter.toString());
     }
 
     private void marshallXmlMm(IndiceMM indiceMm, UnitaDocObject udObj) throws JAXBException {

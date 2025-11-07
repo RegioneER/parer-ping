@@ -17,15 +17,10 @@ import it.eng.paginator.util.HibernateUtils;
 import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
 import it.eng.sacerasi.common.Constants.StatoUnitaDocSessione;
 import it.eng.sacerasi.common.Constants.StatoVerificaHash;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
-import it.eng.sacerasi.entity.PigStatoSessioneIngest;
-import it.eng.sacerasi.entity.PigUnitaDocObject;
-import it.eng.sacerasi.entity.PigUnitaDocSessione;
-import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.entity.PigXmlSacerUnitaDoc;
+import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.viewEntity.MonVCalcStatoObjDaTrasf;
 import it.eng.sacerasi.web.util.Constants;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import static it.eng.sacerasi.common.Constants.JPA_PORPERTIES_TIMEOUT;
 
 /**
- *
  * @author Agati_D
  */
 @SuppressWarnings("unchecked")
@@ -65,12 +59,15 @@ public class CodaHelper {
 	return q.getResultList();
     }
 
-    public Stream<PigObject> retrieveObjectsByState(StatoSessioneIngest stato) {
+    // MEV 32984
+    public Stream<PigObject> retrieveObjectsByStateAndContentType(StatoSessioneIngest stato,
+	    it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto contenutoTipoOggetto) {
 	Query q = em.createQuery("SELECT obj FROM PigSessioneIngest ses, PigObject obj "
 		+ "WHERE ses.idSessioneIngest = obj.idLastSessioneIngest "
-		+ "AND ses.tiStato=:statoSessione "
+		+ "AND ses.tiStato=:statoSessione AND obj.pigTipoObject.tiContenuto = :contenutoTipoOggetto "
 		+ "ORDER BY obj.tiPrioritaVersamento, ses.dtApertura ASC");
 	q.setParameter("statoSessione", stato.name());
+	q.setParameter("contenutoTipoOggetto", contenutoTipoOggetto.name());
 	return q.getResultStream();
     }
 
@@ -126,8 +123,23 @@ public class CodaHelper {
 	return q.getResultList();
     }
 
+    // MEV32984
+    public List<Long> retrieveFascicoliIdByIdObjAndState(Long objId, String state) {
+	Query q = em.createQuery("SELECT fasc.idFascicoloObject " + "FROM PigFascicoloObject fasc "
+		+ "where fasc.pigObject.idObject = :objId "
+		+ "and fasc.tiStatoFascicoloObject = :state");
+	q.setParameter("objId", objId);
+	q.setParameter("state", state);
+	return q.getResultList();
+    }
+
     public PigUnitaDocObject findPigUnitaDocObjectById(Long unitaDocId) {
 	return em.find(PigUnitaDocObject.class, unitaDocId);
+    }
+
+    // MEV32984
+    public PigFascicoloObject findPigFascicoloObjectById(Long fascicoloId) {
+	return em.find(PigFascicoloObject.class, fascicoloId);
     }
 
     public PigUnitaDocObject findLockPigUnitaDocObjectById(Long unitaDocId) {
@@ -141,6 +153,20 @@ public class CodaHelper {
 	 * gli eventuali update fatti in quest sessione
 	 */
 	return em.find(PigUnitaDocObject.class, unitaDocId, lockType, properties);
+    }
+
+    // MEV 32984
+    public PigFascicoloObject findLockPigFascicoloObjectById(Long fascicoloId) {
+	final LockModeType lockType = LockModeType.PESSIMISTIC_WRITE;
+	log.debug("Leggo PigFascicoloObject id={} e faccio lock {}", fascicoloId, lockType);
+	Map<String, Object> properties = new HashMap<>();
+	properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
+	/*
+	 * Attenzione, Oracle usa multi version control quindi il LockModeType.PESSIMISTIC_WRITE
+	 * impedisce scritture concorrenti ma ammette che qualcun altro legga questo record ma senza
+	 * gli eventuali update fatti in quest sessione
+	 */
+	return em.find(PigFascicoloObject.class, fascicoloId, lockType, properties);
     }
 
     public String selectQueue(BigDecimal niSizeFileByte) {
@@ -224,13 +250,19 @@ public class CodaHelper {
     }
 
     public Long countUdInObj(PigObject object, String state, String errCode) {
-	Query q = em.createQuery(
-		"SELECT count(ud) " + "FROM PigObject obj JOIN obj.pigUnitaDocObjects ud "
-			+ "WHERE obj.idObject = :objId " + "AND ud.tiStatoUnitaDocObject = :state "
-			+ "AND ud.cdErrSacer = :errCode ");
+	String query = "SELECT count(ud) " + "FROM PigObject obj JOIN obj.pigUnitaDocObjects ud "
+		+ "WHERE obj.idObject = :objId " + "AND ud.tiStatoUnitaDocObject = :state ";
+
+	if (errCode != null) {
+	    query += " AND ud.cdErrSacer = :errCode ";
+	}
+
+	Query q = em.createQuery(query);
+
 	q.setParameter("objId", object.getIdObject());
 	q.setParameter("state", state);
-	q.setParameter("errCode", errCode);
+	if (errCode != null)
+	    q.setParameter("errCode", errCode);
 	return (Long) q.getSingleResult();
     }
 
@@ -272,6 +304,21 @@ public class CodaHelper {
 	return em.find(PigUnitaDocSessione.class, unitaDocSessionId, lockModeType, properties);
     }
 
+    // MEV 32984
+    public PigFascicoloSessione findLockPigFascicoloSessioneById(Long fascicoloSessionId) {
+	final LockModeType lockModeType = LockModeType.PESSIMISTIC_WRITE;
+	log.debug("Leggo il record PigFascicoloSessione id={} e faccio lock {}", fascicoloSessionId,
+		lockModeType);
+	Map<String, Object> properties = new HashMap<>();
+	properties.put(JPA_PORPERTIES_TIMEOUT, 25000);
+	/*
+	 * Attenzione, Oracle usa multi version control quindi il LockModeType.PESSIMISTIC_WRITE
+	 * impedisce scritture concorrenti ma ammette che qualcun altro legga questo record ma senza
+	 * gli eventuali update fatti in quest sessione
+	 */
+	return em.find(PigFascicoloSessione.class, fascicoloSessionId, lockModeType, properties);
+    }
+
     public PigUnitaDocSessione retrievePigUnitaDocSessioneByKeyUD(BigDecimal idSessioneIngest,
 	    BigDecimal aaUnitaDocSacer, String cdKeyUnitaDocSacer, String cdRegistroUnitaDocSacer) {
 	Query q = em.createQuery("SELECT udSes " + "FROM PigUnitaDocSessione udSes "
@@ -283,6 +330,19 @@ public class CodaHelper {
 	q.setParameter("keyUd", cdKeyUnitaDocSacer);
 	q.setParameter("regUd", cdRegistroUnitaDocSacer);
 	return (PigUnitaDocSessione) q.getSingleResult();
+    }
+
+    // MEV 32984
+    public PigFascicoloSessione retrievePigFascicoloSessioneByKeyUD(BigDecimal idSessioneIngest,
+	    BigDecimal aaFascicoloSacer, String cdKeyFascicoloSacer) {
+	Query q = em.createQuery("SELECT fasSes " + "FROM PigFascicoloSessione fasSes "
+		+ "WHERE fasSes.pigSessioneIngest.idSessioneIngest = :idSessione "
+		+ "AND fasSes.aaFascicoloSacer = :aaFascicolo "
+		+ "AND fasSes.cdKeyFascicoloSacer = :keyFascicolo ");
+	q.setParameter("idSessione", HibernateUtils.longFrom(idSessioneIngest));
+	q.setParameter("aaFascicolo", aaFascicoloSacer);
+	q.setParameter("keyFascicolo", cdKeyFascicoloSacer);
+	return (PigFascicoloSessione) q.getSingleResult();
     }
 
     public Long checkConsumed(String messageSelector, BigDecimal paramToCheck) {
@@ -322,7 +382,6 @@ public class CodaHelper {
      * Calcola lo stato che l'oggetto padre dovrà assumere come da analisi (punto 2.11.2)
      *
      * @param idObjectPadre id padre
-     *
      * @return valore calcolo
      */
     public String getCalcoloStatoObjDaTrasf(Long idObjectPadre) {
@@ -333,17 +392,13 @@ public class CodaHelper {
 
     /**
      * Effettua l'aggiornamento dei contatori in un'operazione singola per demandare al database la
-     * gestione della concorrenza. Aggiorna sempre {@link PigSessioneIngest#niUnitaDocVers} ed
-     * eventuali altri contatori in base ai parametri che vengono passati.
+     * gestione della concorrenza. Aggiorna sempre niUnitaDocVers ed eventuali altri contatori in
+     * base ai parametri che vengono passati.
      *
      * @param idSessioneIngest         primary key di {@link PigSessioneIngest}
-     * @param incrementaVersateOk      se true indica di aggiornare
-     *                                 {@link PigSessioneIngest#niUnitaDocVersOk}
-     * @param incrementaVersateErrore  se true indica di aggiornare
-     *                                 {@link PigSessioneIngest#niUnitaDocVersErr}
-     * @param incrementaVersateTimeout se true indica di aggiornare
-     *                                 {@link PigSessioneIngest#niUnitaDocVersTimeout}
-     *
+     * @param incrementaVersateOk      se true indica di aggiornare niUnitaDocVersOk
+     * @param incrementaVersateErrore  se true indica di aggiornare niUnitaDocVersErr
+     * @param incrementaVersateTimeout se true indica di aggiornare niUnitaDocVersTimeout
      * @return {@link PigSessioneIngest} aggiornato
      */
     public PigSessioneIngest aggiornaContatori(long idSessioneIngest, boolean incrementaVersateOk,

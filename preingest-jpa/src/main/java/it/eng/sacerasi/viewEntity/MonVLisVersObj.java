@@ -141,7 +141,7 @@ public class MonVLisVersObj implements Serializable {
 	this.tsRegStato = tsRegStato;
     }
 
-    @Column(name = "NM_REPORT_TRASF_OS")
+    @Column(name = "NM_REPORT_TRASF_OS", columnDefinition = "char")
     public String getNmReportTrasfOS() {
 	return nmReportTrasfOS;
     }

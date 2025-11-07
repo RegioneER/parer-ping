@@ -6,6 +6,26 @@
 
         <script type='text/javascript' >
             function disable(value) {
+                
+                $('#Ti_contenuto').prop("disabled", true);
+                $("#Cd_registro_unita_doc_sacer").prop("disabled", false);
+                $("#Nm_tipo_unita_doc_sacer").prop("disabled", false);
+                $("#Fl_forza_accettazione_sacer").prop("disabled", false);
+                $("#Fl_forza_conservazione").prop("disabled", false);
+                $("#Fl_forza_collegamento").prop("disabled", false);
+                $("#Ti_conservazione").prop("disabled", false);
+                $("#Fl_contr_hash").prop("disabled", false);
+                $("#Id_trasf").prop("disabled", true);
+                $("#Id_trasf").val(null);
+                $("#Prio_trasf").prop("disabled", false);
+                $("#Prio_trasf").val(null);
+                $("#Ds_reg_exp_cd_vers").prop("disabled", true);
+                $("#Ds_reg_exp_cd_vers").val(null);
+                $("#Id_set_valori_param").prop("disabled", true);
+                $("#Id_set_valori_param").val(null);
+                $("#Ti_calc_key_unita_doc").prop("disabled", false);
+                $("#Ti_priorita_versamento").prop("disabled", true);
+                $("#Ti_priorita_versamento").val('');
 
                 if ((value === "ZIP_CON_XML_SACER" || value === "DA_TRASFORMARE")) {
                     $("#Cd_registro_unita_doc_sacer").prop("disabled", true);
@@ -21,50 +41,32 @@
                     $("#Fl_forza_collegamento").prop("disabled", true);
                     $("#Ti_conservazione").prop("disabled", true);
                     $("#Cd_registro_unita_doc_sacer").val(null);
-                    if (value === "DA_TRASFORMARE") {
-                        $("#Id_trasf").prop("disabled", false);
-                        $("#Prio_trasf").prop("disabled", false);
-                        $("#Id_set_valori_param").prop("disabled", false);
-                        $("#Ds_reg_exp_cd_vers").prop("disabled", false);
-                    }
-                } else {
-                    if ((value === "ZIP_NO_XML_SACER")) {
-                        $("#Cd_registro_unita_doc_sacer").prop("disabled", true);
-                        $("#Cd_registro_unita_doc_sacer").val(null);
-                    } else {
-                        $("#Cd_registro_unita_doc_sacer").prop("disabled", false);
-                    }
-                    $("#Nm_tipo_unita_doc_sacer").prop("disabled", false);
-                    $("#Fl_forza_accettazione_sacer").prop("disabled", false);
-                    $("#Fl_forza_conservazione").prop("disabled", false);
-                    $("#Fl_forza_collegamento").prop("disabled", false);
-                    $("#Ti_conservazione").prop("disabled", false);
-                    $("#Fl_contr_hash").prop("disabled", false);
-                    $("#Id_trasf").prop("disabled", true);
-                    $("#Id_trasf").val(null);
-                    $("#Prio_trasf").prop("disabled", false);
-                    $("#Prio_trasf").val(null);
-                    $("#Ds_reg_exp_cd_vers").prop("disabled", true);
-                    $("#Ds_reg_exp_cd_vers").val(null);
-                    $("#Id_set_valori_param").prop("disabled", true);
-                    $("#Id_set_valori_param").val(null);
+                    
                 }
-
-                if ((value === "DA_TRASFORMARE")) {
-                    $("#Ti_calc_key_unita_doc").prop("disabled", true);
-                    $("#Ti_calc_key_unita_doc").val(null);
-                } else {
-                    $("#Ti_calc_key_unita_doc").prop("disabled", false);
-                }
+                
                 // MEV#27321 - Introduzione della priorità di versamento di un oggetto ZIP_CON_XML_SACER e NO_ZIP
                 if ((value === "ZIP_CON_XML_SACER") || (value === "NO_ZIP") ) {
                     $("#Ti_priorita_versamento").prop("disabled", false);
- //                   var tipoImpostato = $("#Ti_priorita_versamento").val();
-                } else {
-                    $("#Ti_priorita_versamento").prop("disabled", true);
-                    $("#Ti_priorita_versamento").val('');
+                } 
+                
+                if (value === "DA_TRASFORMARE") {
+                    $("#Id_trasf").prop("disabled", false);
+                    $("#Prio_trasf").prop("disabled", false);
+                    $("#Id_set_valori_param").prop("disabled", false);
+                    $("#Ds_reg_exp_cd_vers").prop("disabled", false);
+                    $("#Ti_calc_key_unita_doc").prop("disabled", true);
+                    $("#Ti_calc_key_unita_doc").val(null);
                 }
-
+                
+                if (value === "ZIP_CON_XML_SACER" || value === "NO_ZIP" || value === "ZIP_NO_XML_SACER") {
+                    $('#Ti_contenuto').prop("disabled", false); 
+                }
+        
+        
+                if ((value === "ZIP_NO_XML_SACER")) {
+                    $("#Cd_registro_unita_doc_sacer").prop("disabled", true);
+                    $("#Cd_registro_unita_doc_sacer").val(null);
+                } 
             }
 
             $(document).ready(function () {
@@ -115,6 +117,8 @@
                     <slf:lblField name="<%=AmministrazioneForm.TipoObject.DS_TIPO_OBJECT%>" colSpan="2" controlWidth="w80" />
                     <sl:newLine />
                     <slf:lblField name="<%=AmministrazioneForm.TipoObject.TI_VERS_FILE%>" colSpan="2" controlWidth="w40" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=AmministrazioneForm.TipoObject.TI_CONTENUTO%>" colSpan="2" controlWidth="w40" />
                     <sl:newLine />
                     <slf:lblField name="<%=AmministrazioneForm.TipoObject.TI_CALC_KEY_UNITA_DOC%>" colSpan="2" controlWidth="w40" />
                     <sl:newLine />

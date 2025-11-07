@@ -171,6 +171,22 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
 
 	gestisciStatoJob(producerCodaVers);
 
+	// <editor-fold defaultstate="collapsed" desc="UI Gestione job per Producer coda
+	// versamento">
+	dataAttivazioneJob = getActivationDateJob(
+		Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name());
+	StatoJob producerCodaVersFascicoli = new StatoJob(
+		Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+		getForm().getProducerCodaVersamento().getFl_data_accurata(),
+		getForm().getProducerCodaVersamento().getStartProducerCodaVersamento(),
+		getForm().getProducerCodaVersamento().getStartOnceProducerCodaVersamento(),
+		getForm().getProducerCodaVersamento().getStopProducerCodaVersamento(),
+		getForm().getProducerCodaVersamento().getDt_prossima_attivazione(),
+		getForm().getProducerCodaVersamento().getAttivo(),
+		getForm().getProducerCodaVersamento().getDt_reg_log_job_ini(), dataAttivazioneJob);
+
+	gestisciStatoJob(producerCodaVersFascicoli);
+
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="UI Gestione job per Recupera errori in coda">
 	dataAttivazioneJob = getActivationDateJob(Constants.NomiJob.RECUPERA_ERRORI_IN_CODA.name());
@@ -586,6 +602,27 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
     public void stopProducerCodaVersamento() throws EMFError {
 	esegui(Constants.NomiJob.PRODUCER_CODA_VERS.name(), "Producer coda versamento", null,
 		OPERAZIONE.STOP);
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Methods end manage ProducerCodaVersamento
+    // schedulation">
+    @Override
+    public void startProducerCodaVersamentoFascicoli() throws EMFError {
+	esegui(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+		"Producer coda versamento fascicoli", null, OPERAZIONE.START);
+    }
+
+    @Override
+    public void startOnceProducerCodaVersamentoFascicoli() throws EMFError {
+	esegui(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+		"Producer coda versamento fascicoli", null, OPERAZIONE.ESECUZIONE_SINGOLA);
+    }
+
+    @Override
+    public void stopProducerCodaVersamentoFascicoli() throws EMFError {
+	esegui(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+		"Producer coda versamento fascicoli", null, OPERAZIONE.STOP);
     }
     // </editor-fold>
 

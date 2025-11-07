@@ -462,8 +462,8 @@ public class InviaOggettiGeneratiAPing {
 	    boolean flFileCifrato = false;
 	    boolean flForzaWarning = false;
 	    boolean flForzaAccettazione = false;
-	    String cdVersioneXml = null; // TODO da gestire sia qui che nel job 2
-	    String xml = null; // TODO da gestire sia qui che nel job 2
+	    String cdVersioneXml = null;
+	    String xml = null;
 	    String nmAmbienteObjectPadre = pot.getPigObject().getPigVer().getPigAmbienteVer()
 		    .getNmAmbienteVers();
 	    String nmVersatoreObjectPadre = pot.getPigObject().getPigVer().getNmVers();

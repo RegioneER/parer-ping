@@ -60,6 +60,34 @@
                     }
                 });
 
+                $('.confermaAnnullamentoFascicoli').dialog({
+                    autoOpen: true,
+                    width: 600,
+                    modal: true,
+                    closeOnEscape: true,
+                    resizable: false,
+                    dialogClass: "alertBox",
+                    title: "Conferma annullamento fascicoli",
+                    buttons: {
+                        "Conferma": function () {
+                            $(this).dialog("close");
+                            var cdKey = $("#Cd_key_object_hidden").val();
+                            var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
+                            var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
+                            if (cdKey) {
+                                $.post("Monitoraggio.html", {operation: "annullaVersamentiFascicoliDerVersFallitiAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
+                                    CAjaxDataFormWalk(data);
+
+                                    window.location = "Monitoraggio.html?operation=listNavigationOnClick&table=OggettiDaVersamentiFallitiList&navigationEvent=elenco&riga=-1&forceReload=false";
+                                });
+                            }
+                        },
+                        "Annulla": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
                 $('.confermaImpostaVerificNonRisolubOggettiDaVersFalliti').dialog({
                     autoOpen: true,
                     width: 600,
@@ -158,6 +186,29 @@
                     </div>
                 </div>
             </c:if>
+            <c:if test="${!empty requestScope.confermaAnnullamentoFascicoli}">
+                <div class="messages confermaAnnullamentoFascicoli">
+                    <div class="message info ">
+                        <p><span>L'operazione coinvolge <c:out value="${requestScope.ni_fascicoli_vers}" /> fascicoli. Risultano presenti <c:out value="${requestScope.ni_fascicoli_vers_dup}" /> fascicoli in stato di errore per chiave già presente che potrebbero essere stati versati da altri oggetti.</span></p>
+                    </div>
+                    <div class="message">
+                        <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
+                        <label for="ti_annullamento_ud_1">preservare questi <c:out value="${requestScope.ni_fascicoli_vers_dup}" /> fascicoli e annullare i fascicoli rimanenti.</label>
+                    </div>
+                    <div class="message">
+                        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
+                        <label for="ti_annullamento_ud_2">annullare tutte i <c:out value="${requestScope.ni_fascicoli_vers}" /> fascicoli.</label>
+                    </div>
+                    <div class="message">
+                        <p>
+                            <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale)</label>
+                        <div>
+                            <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </c:if>
             <c:if test="${!empty requestScope.confermaImpostaVerificNonRisolubOggettiDaVersFalliti}">
                 <div class="messages confermaImpostaVerificNonRisolubOggettiDaVersFalliti">
                     <div class="message info ">
@@ -218,6 +269,7 @@
                 <slf:lblField name="<%=MonitoraggioForm.OggettiDerVersFallitiButtonList.IMPOSTA_TUTTI_NON_RISOLUB_OGGETTI_DA_VERS_FALLITI%>" colSpan="2" />
                 <slf:lblField name="<%=MonitoraggioForm.OggettiDerVersFallitiButtonList.ANNULLA_OGGETTO_DER_VERS_FALLITI%>" colSpan="2" />
                 <slf:lblField name="<%=MonitoraggioForm.OggettiDerVersFallitiButtonList.ANNULLA_VERSAMENTI_UDDER_VERS_FALLITI%>" colSpan="2" />
+                <slf:lblField name="<%=MonitoraggioForm.OggettiDerVersFallitiButtonList.ANNULLA_VERSAMENTI_FASCICOLI_DER_VERS_FALLITI%>" colSpan="2" />
             </sl:pulsantiera>
 
         </sl:content>

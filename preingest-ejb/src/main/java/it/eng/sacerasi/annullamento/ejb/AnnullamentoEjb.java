@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -34,11 +33,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 
+import it.eng.sacerasi.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -49,23 +46,11 @@ import it.eng.parer.ws.xml.richAnnullVers.RichiestaAnnullamentoVersamenti;
 import it.eng.parer.ws.xml.richAnnullVers.RichiestaAnnullamentoVersamenti.VersamentiDaAnnullare;
 import it.eng.parer.ws.xml.richAnnullVers.TipoVersamentoType;
 import it.eng.parer.ws.xml.richAnnullVers.VersamentoDaAnnullareType;
-import it.eng.sacerasi.annullamento.dto.ChiaveUd;
+import it.eng.sacerasi.annullamento.dto.ChiaveDocumento;
 import it.eng.sacerasi.annullamento.helper.AnnullamentoHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
-import it.eng.sacerasi.entity.PigSisma;
-import it.eng.sacerasi.entity.PigStatoSessioneIngest;
-import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici.TiStato;
-import it.eng.sacerasi.entity.PigTipoObject;
-import it.eng.sacerasi.entity.PigUnitaDocObject;
-import it.eng.sacerasi.entity.PigUnitaDocSessione;
-import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.entity.PigXmlAnnulSessioneIngest;
-import it.eng.sacerasi.entity.PigXmlSacerUnitaDoc;
-import it.eng.sacerasi.entity.PigXmlSacerUnitaDocSes;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.helper.RichiestaSacerHelper;
@@ -82,7 +67,6 @@ import it.eng.sacerasi.web.util.Transform;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
 
 /**
- *
  * @author Bonora_L
  */
 @Stateless
@@ -92,7 +76,6 @@ import it.eng.sacerasi.ws.ejb.XmlContextCache;
 public class AnnullamentoEjb {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnullamentoEjb.class);
-    private static final String UD_002_001 = "UD-002-001";
 
     @EJB
     private AnnullamentoHelper helper;
@@ -149,23 +132,26 @@ public class AnnullamentoEjb {
      * Esegue l'annullamento dell'oggetto di PreIngest e, se necessario, l'invio della richiesta di
      * annullamento a Sacer
      *
-     * @param idObject                                   id object
-     * @param richiestoAnnullamentoVersamentiUD          true se richiesto annullamento unita doc
-     *
-     * @param richiestoAnnullamentoVersamentiUDDuplicati true se richiesto annullamento ud duplicati
-     * @param motivazioneAnnullamento                    motivazione dell'annullamento
-     * @param username                                   nome dell'utente che richiede
-     *                                                   l'annullamento
-     *
+     * @param idObject                                          id object
+     * @param richiestoAnnullamentoVersamentidocumenti          true se richiesto annullamento unita
+     *                                                          doc
+     * @param richiestoAnnullamentoVersamentiDocumentiDuplicati true se richiesto annullamento ud
+     *                                                          duplicati
+     * @param motivazioneAnnullamento                           motivazione dell'annullamento
+     * @param username                                          nome dell'utente che richiede
+     *                                                          l'annullamento
      * @throws ParerUserError     errore generico
      * @throws ParerInternalError errore generico
      */
-    public void annullaOggetto(BigDecimal idObject, boolean richiestoAnnullamentoVersamentiUD,
-	    boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento,
-	    String username) throws ParerUserError, ParerInternalError {
+    public void annullaOggetto(BigDecimal idObject,
+	    boolean richiestoAnnullamentoVersamentidocumenti,
+	    boolean richiestoAnnullamentoVersamentiDocumentiDuplicati,
+	    String motivazioneAnnullamento, String username)
+	    throws ParerUserError, ParerInternalError {
 	RichiestaSacerInput input = self.eseguiAnnullamentoPing(idObject,
-		richiestoAnnullamentoVersamentiUD, richiestoAnnullamentoVersamentiUDDuplicati,
-		motivazioneAnnullamento, username);
+		richiestoAnnullamentoVersamentidocumenti,
+		richiestoAnnullamentoVersamentiDocumentiDuplicati, motivazioneAnnullamento,
+		username);
 	if (input != null) {
 	    // E' stato generato un xml di invio richiesta di annullamento a Sacer, eseguo
 	    // l'attivazione del servizio
@@ -176,7 +162,7 @@ public class AnnullamentoEjb {
 	    if (esitoConnAnnul.isErroreConnessione()) {
 		// Il servizio non ha risposto per un errore di connessione
 		throw new ParerUserError(
-			"Il servizio InvioRichiestaAnnullamentoVersamenti non risponde; verificare pi\u00F9 tardi se l'annullamento in Sacer \u00E8 terminato");
+			"Il servizio InvioRichiestaAnnullamentoVersamenti non risponde; verificare più tardi se l'annullamento in Sacer è terminato");
 	    }
 	}
     }
@@ -290,9 +276,9 @@ public class AnnullamentoEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public RichiestaSacerInput eseguiAnnullamentoPing(BigDecimal idObject,
-	    boolean richiestoAnnullamentoVersamentiUD,
-	    boolean richiestoAnnullamentoVersamentiUDDuplicati, String motivazioneAnnullamento,
-	    String username) throws ParerUserError {
+	    boolean richiestoAnnullamentoVersamentiDocumenti,
+	    boolean richiestoAnnullamentoVersamentiDocumentiDuplicati,
+	    String motivazioneAnnullamento, String username) throws ParerUserError {
 	PigObject object = helper.findByIdWithLock(PigObject.class, idObject);
 	PigTipoObject tipoObject = object.getPigTipoObject();
 	final String tiVers = tipoObject.getTiVersFile();
@@ -318,25 +304,23 @@ public class AnnullamentoEjb {
 		    || !object.getPigObjectTrasfs().isEmpty())) {
 		// se il controllo fallisce...
 		throw new ParerUserError("L'oggetto di tipo SIP " + tiVers + " e stato "
-			+ object.getTiStatoObject() + " non \u00E8 annullabile");
+			+ object.getTiStatoObject() + " non è annullabile");
 		// MEV#14652
-	    } else if ((!richiestoAnnullamentoVersamentiUD)
-		    && tiVers.equals(Constants.TipoVersamento.DA_TRASFORMARE.name())
-		    && (object.getTiStatoObject()
-			    .equals(Constants.StatoOggetto.IN_ATTESA_FILE.name())
-			    // MEV #14561 - Estensione annullamento oggetti in errore
-			    || object.getTiStatoObject()
-				    .equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
-			    || object.getTiStatoObject()
-				    .equals(Constants.StatoOggetto.DA_TRASFORMARE.name())
-			    || object.getTiStatoObject()
-				    .equals(Constants.StatoOggetto.TRASFORMAZIONE_NON_ATTIVA.name())
-			    || object.getTiStatoObject()
-				    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
-			    || object.getTiStatoObject()
-				    .equals(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
-			    || object.getTiStatoObject().equals(
-				    Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name()))) {
+	    } else if ((!richiestoAnnullamentoVersamentiDocumenti) && (object.getTiStatoObject()
+		    .equals(Constants.StatoOggetto.IN_ATTESA_FILE.name())
+		    // MEV #14561 - Estensione annullamento oggetti in errore
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.DA_TRASFORMARE.name())
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.TRASFORMAZIONE_NON_ATTIVA.name())
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name())
+		    || object.getTiStatoObject()
+			    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name()))) {
 
 		logger.debug(
 			"Aggiorna l'oggetto con stato ANNULLATO e registra un nuovo stato corrente della sessione");
@@ -356,20 +340,8 @@ public class AnnullamentoEjb {
 	    boolean isLastNonRisolubile = monitoraggioHelper.isLastNonRisolubile(idVers,
 		    object.getCdKeyObject(), tipoObject.getNmTipoObject());
 	    // Punto 3 dell'analisi
-	    if (!(object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MEV
-											       // #14561
-											       // -
-											       // Estensione
-											       // annullamento
-											       // oggetti
-											       // in
-											       // errore
-											       // (aggiunti
-											       // 4
-											       // altri
-											       // test
-											       // in
-											       // OR)
+	    if (!(object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) ||
+	    // MEV #14561 - Estensione annullamento oggetti in errore (aggiunti 4 altri test in OR)
 		    ((object.getTiStatoObject()
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
 			    || object.getTiStatoObject()
@@ -382,21 +354,19 @@ public class AnnullamentoEjb {
 				    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name()))
 			    && isLastVerificata && isLastNonRisolubile))) {
 		throw new ParerUserError("L'oggetto di tipo SIP " + tiVers + " e stato "
-			+ object.getTiStatoObject() + " non \u00E8 annullabile");
-	    } else if (richiestoAnnullamentoVersamentiUD && (object.getTiStatoObject()
+			+ object.getTiStatoObject() + " non è annullabile");
+	    } else if (richiestoAnnullamentoVersamentiDocumenti && (object.getTiStatoObject()
 		    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
 		    || object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name())
 		    || object.getTiStatoObject()
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
 		    && // MAC #13060 - Chiamata al servizio di richiesta annullamento di un oggetto
-		       // contenente solo UD
-		       // in
-		       // stato VERSATA_ERR
-		    esisteUdStatoChiusoOErr(object)) {
+		       // contenente solo UD in stato VERSATA_ERR
+		    esisteDocumentoStatoChiusoOErr(object)) {
 
 		logger.debug(
 			"STATO CHIUSO_ERR_VERS, CHIUSO_OK - Aggiorna tutte le unità documentarie dell'oggetto e della sessione con stato VERSATA_OK assegnando stato IN_CORSO_ANNULLAMENTO");
-		// Aggiorna tutte le unità  documentarie dell'oggetto e della sessione con stato
+		// Aggiorna tutte le unità documentarie dell'oggetto e della sessione con stato
 		// VERSATA_OK assegnando
 		// stato IN_CORSO_ANNULLAMENTO
 		helper.updateUnitaDocSessione(object.getIdLastSessioneIngest(),
@@ -405,28 +375,46 @@ public class AnnullamentoEjb {
 		helper.updateUnitaDocObject(idObject,
 			Constants.StatoUnitaDocObject.VERSATA_OK.name(),
 			Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name());
+		// MEV 39009
+		helper.updateFascicoliSessione(object.getIdLastSessioneIngest(),
+			Constants.StatoUnitaDocSessione.VERSATA_OK.name(),
+			Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name());
+		helper.updateFascicoliObject(idObject,
+			Constants.StatoUnitaDocObject.VERSATA_OK.name(),
+			Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name());
 
 		// SUE26200 - se flag impostata a false allora NON annulleremo le ud con errore
 		// UD-002-001
-		if (richiestoAnnullamentoVersamentiUDDuplicati) {
+		if (richiestoAnnullamentoVersamentiDocumentiDuplicati) {
 		    helper.updateUnitaDocSessioneWithError(object.getIdLastSessioneIngest(),
-			    Constants.StatoUnitaDocSessione.VERSATA_ERR.name(), UD_002_001,
+			    Constants.StatoUnitaDocSessione.VERSATA_ERR.name(),
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW,
 			    Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name());
 		    helper.updateUnitaDocObjectWithError(idObject,
-			    Constants.StatoUnitaDocObject.VERSATA_ERR.name(), UD_002_001,
+			    Constants.StatoUnitaDocObject.VERSATA_ERR.name(),
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW,
+			    Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name());
+		    // MEV 39009
+		    helper.updateFascicoliSessioneWithError(object.getIdLastSessioneIngest(),
+			    Constants.StatoUnitaDocSessione.VERSATA_ERR.name(),
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO,
+			    Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name());
+		    helper.updateFascicoliObjectWithError(idObject,
+			    Constants.StatoUnitaDocObject.VERSATA_ERR.name(),
+			    Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO,
 			    Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name());
 		}
 
 		logger.debug(
 			"STATO CHIUSO_ERR_VERS, CHIUSO_OK - Prepara XML di richiesta annullamento");
-
 		// SUE26200 - Se l'oggetto contiene solo ud in errore UD-002-001 potrebbe non essere
-		// necessario chiamare
-		// il servizio di annullamento di sacer, in tal caso annulliamo direttamente anche
-		// il PigObject cone nel
-		// caso più sotto.
+		// necessario chiamare il servizio di annullamento di sacer, in tal caso annulliamo
+		// direttamente anche
+		// il PigObject cone nel caso più sotto.
 		if (helper.countPigUnitaDocObject(object.getIdObject(),
-			Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name()) > 0) {
+			Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name()) > 0
+			|| helper.countPigFascicoloObject(object.getIdObject(),
+				Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name()) > 0) {
 		    logger.debug(
 			    "STATO CHIUSO_ERR_VERS, CHIUSO_OK - Aggiorna l'oggetto con stato IN_CORSO_ANNULLAMENTO e registra un nuovo stato corrente della sessione");
 		    // Aggiorna l'oggetto con stato IN_CORSO_ANNULLAMENTO e registra un nuovo stato
@@ -463,16 +451,10 @@ public class AnnullamentoEjb {
 		annullaEventualeOggettoPadre(object);
 
 		// MAC #13060 - Chiamata al servizio di richiesta annullamento di un oggetto
-		// contenente solo UD in stato
-		// VERSATA_ERR
-		// Punto 7 dell'analisi
-	    } else if (richiestoAnnullamentoVersamentiUD && ((object.getTiStatoObject()
-		    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name()) || // MEV#14561
-									      // -
-									      // Estensione
-									      // annullamento
-									      // oggetti
-									      // in errore
+		// contenente solo UD in stato VERSATA_ERR Punto 7 dell'analisi
+	    } else if (richiestoAnnullamentoVersamentiDocumenti && ((object.getTiStatoObject()
+		    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name()) ||
+	    // MEV#14561 - Estensione annullamento oggetti in errore
 		    object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
 		    || object.getTiStatoObject()
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_VERIFICA_HASH.name())
@@ -480,23 +462,15 @@ public class AnnullamentoEjb {
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
 		    || object.getTiStatoObject()
 			    .equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name()))
-		    && // MEV#14100
-		       // -
-		       // Tolto
-		       // il
-		       // check
-		       // su
-		       // CHIUSO_OK
-		       // ||
-		       // object.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()))
-		       // &&
-		    (!esisteUdStatoChiusoOErr(object)))) {
+		    // MEV#14100 - Tolto il check su CHIUSO_OK
+		    && (!esisteDocumentoStatoChiusoOErr(object)))) {
 
 		object.setTiStatoObject(Constants.StatoOggetto.ANNULLATO.name());
 		PigSessioneIngest pigSessioneIngest = helper.findById(PigSessioneIngest.class,
 			object.getIdLastSessioneIngest());
 		monitoraggioHelper.creaStatoSessione(pigSessioneIngest,
 			Constants.StatoSessioneIngest.ANNULLATA.name(), now);
+
 		List<PigUnitaDocSessione> lud = pigSessioneIngest.getPigUnitaDocSessiones();
 		if (lud != null) {
 		    for (PigUnitaDocSessione pigUnitaDocSessione : lud) {
@@ -504,7 +478,7 @@ public class AnnullamentoEjb {
 				.equals(Constants.StatoUnitaDocSessione.VERSATA_ERR.name())
 				&& (!(pigUnitaDocSessione.getCdErrSacer()
 					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)
-					&& richiestoAnnullamentoVersamentiUDDuplicati))) {
+					&& richiestoAnnullamentoVersamentiDocumentiDuplicati))) {
 			    // SUE26200 - Non annullo le sessioni delle UD in errore UD-002-001
 			    // perchè richiesto
 			    // dall'utente.
@@ -525,11 +499,48 @@ public class AnnullamentoEjb {
 			    // dall'utente.
 			    if (!(pigUnitaDocObject.getCdErrSacer()
 				    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)
-				    && richiestoAnnullamentoVersamentiUDDuplicati)) {
+				    && richiestoAnnullamentoVersamentiDocumentiDuplicati)) {
 				pigUnitaDocObject.setTiStatoUnitaDocObject(
 					Constants.StatoUnitaDocObject.ANNULLATA.name());
 				// MEV 27407
 				pigUnitaDocObject.setDtStato(now);
+			    }
+			}
+		    }
+		}
+		// MEV 39009
+		List<PigFascicoloSessione> fascicoloSessiones = pigSessioneIngest
+			.getPigFascicoloSessiones();
+		if (fascicoloSessiones != null) {
+		    for (PigFascicoloSessione pigFascicoloSessione : fascicoloSessiones) {
+			if (pigFascicoloSessione.getTiStatoFascicoloSessione()
+				.equals(Constants.StatoUnitaDocSessione.VERSATA_ERR.name())
+				&& (!(pigFascicoloSessione.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO)
+					&& richiestoAnnullamentoVersamentiDocumentiDuplicati))) {
+			    // SUE26200 - Non annullo le sessioni delle UD in errore UD-002-001
+			    // perchè richiesto dall'utente.
+			    pigFascicoloSessione.setTiStatoFascicoloSessione(
+				    Constants.StatoUnitaDocSessione.ANNULLATA.name());
+			    // MEV 27407
+			    pigFascicoloSessione.setDtStato(now);
+			}
+		    }
+		}
+		List<PigFascicoloObject> fascicoli = object.getPigFascicoloObjects();
+		if (fascicoli != null) {
+		    for (PigFascicoloObject pigFascicoloObject : fascicoli) {
+			if (pigFascicoloObject.getTiStatoFascicoloObject()
+				.equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())) {
+			    // SUE26200 - Non annullo le sessioni delle UD in errore UD-002-001
+			    // perchè richiesto dall'utente.
+			    if (!(pigFascicoloObject.getCdErrSacer()
+				    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO)
+				    && richiestoAnnullamentoVersamentiDocumentiDuplicati)) {
+				pigFascicoloObject.setTiStatoFascicoloObject(
+					Constants.StatoUnitaDocObject.ANNULLATA.name());
+				// MEV 27407
+				pigFascicoloObject.setDtStato(now);
 			    }
 			}
 		    }
@@ -540,7 +551,7 @@ public class AnnullamentoEjb {
 		annullamentoEventualeStrumentoUrbanistico(object, tipoObject.getTiVersFile());
 		annullamentoEventualeSisma(object, tipoObject.getTiVersFile());
 
-	    } else if (!richiestoAnnullamentoVersamentiUD) {
+	    } else if (!richiestoAnnullamentoVersamentiDocumenti) {
 		object.setTiStatoObject(Constants.StatoOggetto.ANNULLATO.name());
 		monitoraggioHelper.creaStatoSessione(object.getIdLastSessioneIngest(),
 			Constants.StatoSessioneIngest.ANNULLATA.name(), now);
@@ -549,7 +560,6 @@ public class AnnullamentoEjb {
 		// MEV#20819
 		annullamentoEventualeStrumentoUrbanistico(object, tipoObject.getTiVersFile());
 		annullamentoEventualeSisma(object, tipoObject.getTiVersFile());
-
 	    }
 	}
 	return input;
@@ -593,7 +603,6 @@ public class AnnullamentoEjb {
 	    logger.debug("RISPOSTA ANNULLAMENTO - Richiesta non in timeout");
 	    object.setFlRichAnnulTimeout("0");
 
-	    List<PigUnitaDocSessione> listaUDSessione = null;
 	    if (codiceEsitoAnnul.equals(Constants.EsitoVersamento.POSITIVO.name())
 		    || codiceEsitoAnnul.equals(Constants.EsitoVersamento.WARNING.name())
 		    || (codiceEsitoAnnul.equals(Constants.EsitoVersamento.NEGATIVO.name())
@@ -608,7 +617,7 @@ public class AnnullamentoEjb {
 		// IN_CORSO_ANNULLAMENTO
 		// assegnando stato ANNULLATA
 		logger.debug(
-			"Aggiorna tutte le unità documentarie dell'oggetto e della sessione con stato DA_VERSARE assegnando stato annullata");
+			"Aggiorna tutte le unità documentarie o i fascicoli dell'oggetto e della sessione con stato DA_VERSARE assegnando stato annullata");
 		// MEV#14663 - Punto 4.4 dell'analisi
 		if (xmlAnnul.getCdVersioneXmlAnnul().equals("1.0")
 			|| xmlAnnul.getCdVersioneXmlAnnul().equals("1.1")) {
@@ -618,6 +627,13 @@ public class AnnullamentoEjb {
 			    Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name(),
 			    Constants.StatoUnitaDocSessione.ANNULLATA.name());
 		    helper.updateUnitaDocObject(idObject,
+			    Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(),
+			    Constants.StatoUnitaDocObject.ANNULLATA.name());
+		    // MEV 39009
+		    helper.updateFascicoliSessione(object.getIdLastSessioneIngest(),
+			    Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name(),
+			    Constants.StatoUnitaDocSessione.ANNULLATA.name());
+		    helper.updateFascicoliObject(idObject,
 			    Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(),
 			    Constants.StatoUnitaDocObject.ANNULLATA.name());
 		} else {
@@ -672,125 +688,19 @@ public class AnnullamentoEjb {
 			}
 			InputSource is = new InputSource(new StringReader(strXml));
 			Document doc = builder.parse(is);
-			XPath xPath = XPathFactory.newInstance().newXPath();
-			// Punto 4.5.1, DETERMINA TAG XML ...
-			listaUDSessione = pigSessioneIngest.getPigUnitaDocSessiones();
-			if (listaUDSessione != null) {
-			    for (PigUnitaDocSessione pigUnitaDocSessione : listaUDSessione) {
-				if (pigSessioneIngest.getTiStato().equals(
-					Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO
-						.name())) {
-				    // Determina l'XML di versamento della UD
-				    List<PigXmlSacerUnitaDocSes> listaPigXmlSacerUnitaDocSes = pigUnitaDocSessione
-					    .getPigXmlSacerUnitaDocSes();
-				    for (PigXmlSacerUnitaDocSes pigXmlSacerUnitaDocSes : listaPigXmlSacerUnitaDocSes) {
-					if (pigXmlSacerUnitaDocSes.getTiXmlSacer()
-						.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
-					    ChiaveUd chiaveUd = estraiXPathPerEsitoAnnullamento(
-						    pigXmlSacerUnitaDocSes.getBlXmlSacer());
-					    XPathExpression expr = xPath.compile(
-						    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"UNITA' DOCUMENTARIA\" and TipoRegistro='"
-							    + chiaveUd.getRegistro()
-							    + "' and Anno='" + chiaveUd.getAnno()
-							    + "' and Numero='"
-							    + chiaveUd.getNumero()
-							    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
-					    NodeList nodes = (NodeList) expr.evaluate(doc,
-						    XPathConstants.NODESET);
-					    if (nodes.getLength() > 0) {
-						pigUnitaDocSessione.setTiStatoUnitaDocSessione(
-							Constants.StatoUnitaDocSessione.ANNULLATA
-								.name());
-						pigUnitaDocSessione.setDtStato(now);
-					    }
-					    break;
-					}
-				    }
-				}
-			    }
-			}
-			// MEV#14663 - Punto 4.5.3, DETERMINA TAG XML ...
-			List<PigUnitaDocObject> listaUDObject = object.getPigUnitaDocObjects();
-			if (listaUDObject != null) {
-			    for (PigUnitaDocObject pigUnitaDocObject : listaUDObject) {
-				if (pigUnitaDocObject.getTiStatoUnitaDocObject()
-					.equals(Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO
-						.name())) {
-				    // Determina l'XML di versamento della UD
-				    List<PigXmlSacerUnitaDoc> listaPigXmlSacerUnitaDoc = pigUnitaDocObject
-					    .getPigXmlSacerUnitaDocs();
-				    for (PigXmlSacerUnitaDoc pigXmlSacerUnitaDoc : listaPigXmlSacerUnitaDoc) {
-					if (pigXmlSacerUnitaDoc.getTiXmlSacer()
-						.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
-					    ChiaveUd chiaveUd = estraiXPathPerEsitoAnnullamento(
-						    pigXmlSacerUnitaDoc.getBlXmlSacer());
-					    XPathExpression expr = xPath.compile(
-						    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"UNITA' DOCUMENTARIA\" and TipoRegistro='"
-							    + chiaveUd.getRegistro()
-							    + "' and Anno='" + chiaveUd.getAnno()
-							    + "' and Numero='"
-							    + chiaveUd.getNumero()
-							    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
-					    NodeList nodes = (NodeList) expr.evaluate(doc,
-						    XPathConstants.NODESET);
-					    if (nodes.getLength() > 0) {
-						pigUnitaDocObject.setTiStatoUnitaDocObject(
-							Constants.StatoUnitaDocObject.ANNULLATA
-								.name());
-						// MEV 27407
-						pigUnitaDocObject.setDtStato(now);
-					    }
-					    break;
-					}
-				    }
-				}
-			    }
-			}
+			// Punto 4.5.1, DETERMINA TAG XML e MEV#14663 - Punto 4.5.5 dell'analisi
+			gestisciAnnullamentoSessioniUd(doc, pigSessioneIngest,
+				pigSessioneIngest.getPigUnitaDocSessiones(), now);
+			gestisciAnnullamentoSessioniFascicoli(doc, pigSessioneIngest,
+				pigSessioneIngest.getPigFascicoloSessiones(), now);
+
+			// MEV#14663 - Punto 4.5.3, DETERMINA TAG XML e MEV#14663 - Punto 4.5.6
+			// dell'analisi
+			gestisciAnnullamentoUd(doc, object.getPigUnitaDocObjects(), now);
+			gestisciAnnullamentoFascicoli(doc, object.getPigFascicoloObjects(), now);
+
 		    } catch (Exception ex) {
 			throw new ParerUserError(ex.getMessage());
-		    }
-		    // MEV#14663 - Punto 4.5.5 dell'analisi
-		    listaUDSessione = pigSessioneIngest.getPigUnitaDocSessiones();
-		    if (listaUDSessione != null) {
-			for (PigUnitaDocSessione pigUnitaDocSessione : listaUDSessione) {
-			    // MAC#15507
-			    if (pigUnitaDocSessione.getTiStatoUnitaDocSessione().equals(
-				    Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name())) {
-				if (pigUnitaDocSessione.getCdErrSacer() != null
-					&& pigUnitaDocSessione.getCdErrSacer().equals(
-						Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
-				    pigUnitaDocSessione.setTiStatoUnitaDocSessione(
-					    Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
-				} else {
-				    pigUnitaDocSessione.setTiStatoUnitaDocSessione(
-					    Constants.StatoUnitaDocSessione.VERSATA_OK.name());
-				}
-
-				// MEV 27407
-				pigUnitaDocSessione.setDtStato(now);
-			    }
-			}
-		    }
-		    // MEV#14663 - Punto 4.5.6 dell'analisi
-		    List<PigUnitaDocObject> listaUDObject = object.getPigUnitaDocObjects();
-		    if (listaUDObject != null) {
-			for (PigUnitaDocObject pigUnitaDocObject : listaUDObject) {
-			    if (pigUnitaDocObject.getTiStatoUnitaDocObject().equals(
-				    Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name())) {
-				if (pigUnitaDocObject.getCdErrSacer() != null
-					&& pigUnitaDocObject.getCdErrSacer().equals(
-						Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
-				    pigUnitaDocObject.setTiStatoUnitaDocObject(
-					    Constants.StatoUnitaDocObject.VERSATA_ERR.name());
-				} else {
-				    pigUnitaDocObject.setTiStatoUnitaDocObject(
-					    Constants.StatoUnitaDocObject.VERSATA_OK.name());
-				}
-
-				// MEV 27407
-				pigUnitaDocObject.setDtStato(now);
-			    }
-			}
 		    }
 		} // fine else
 		  // -----
@@ -814,6 +724,223 @@ public class AnnullamentoEjb {
 		// MEV#20819
 		annullamentoEventualeStrumentoUrbanistico(object, tipoObject.getTiVersFile());
 		annullamentoEventualeSisma(object, tipoObject.getTiVersFile());
+	    }
+	}
+    }
+
+    private void gestisciAnnullamentoSessioniUd(Document doc, PigSessioneIngest pigSessioneIngest,
+	    List<PigUnitaDocSessione> listaUDSessione, Date now)
+	    throws ParerUserError, XPathExpressionException {
+	XPath xPath = XPathFactory.newInstance().newXPath();
+
+	if (listaUDSessione != null) {
+	    for (PigUnitaDocSessione pigUnitaDocSessione : listaUDSessione) {
+		if (pigSessioneIngest.getTiStato()
+			.equals(Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name())) {
+		    // Determina l'XML di versamento della UD
+		    List<PigXmlSacerUnitaDocSes> listaPigXmlSacerUnitaDocSes = pigUnitaDocSessione
+			    .getPigXmlSacerUnitaDocSes();
+		    for (PigXmlSacerUnitaDocSes pigXmlSacerUnitaDocSes : listaPigXmlSacerUnitaDocSes) {
+			if (pigXmlSacerUnitaDocSes.getTiXmlSacer()
+				.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
+			    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
+				    pigXmlSacerUnitaDocSes.getBlXmlSacer());
+			    XPathExpression expr = xPath.compile(
+				    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"UNITA' DOCUMENTARIA\" and TipoRegistro='"
+					    + chiaveUd.getRegistro() + "' and Anno='"
+					    + chiaveUd.getAnno() + "' and Numero='"
+					    + chiaveUd.getNumero()
+					    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
+			    NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			    if (nodes.getLength() > 0) {
+				pigUnitaDocSessione.setTiStatoUnitaDocSessione(
+					Constants.StatoUnitaDocSessione.ANNULLATA.name());
+				pigUnitaDocSessione.setDtStato(now);
+			    }
+			    break;
+			}
+		    }
+
+		    // Se è ancora in corso di annullamento (non è stata trovata nell'xml)
+		    // MAC#15507
+		    if (pigUnitaDocSessione.getTiStatoUnitaDocSessione()
+			    .equals(Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name())) {
+			if (pigUnitaDocSessione.getCdErrSacer() != null
+				&& pigUnitaDocSessione.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
+			    pigUnitaDocSessione.setTiStatoUnitaDocSessione(
+				    Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
+			} else {
+			    pigUnitaDocSessione.setTiStatoUnitaDocSessione(
+				    Constants.StatoUnitaDocSessione.VERSATA_OK.name());
+			}
+
+			// MEV 27407
+			pigUnitaDocSessione.setDtStato(now);
+		    }
+		}
+	    }
+	}
+    }
+
+    private void gestisciAnnullamentoSessioniFascicoli(Document doc,
+	    PigSessioneIngest pigSessioneIngest, List<PigFascicoloSessione> listFascicoliSessione,
+	    Date now) throws ParerUserError, XPathExpressionException {
+	XPath xPath = XPathFactory.newInstance().newXPath();
+
+	if (listFascicoliSessione != null) {
+	    for (PigFascicoloSessione pigFascicoloSessione : listFascicoliSessione) {
+		if (pigSessioneIngest.getTiStato()
+			.equals(Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name())) {
+		    // Determina l'XML di versamento del fascicolo
+		    List<PigXmlSacerFascicoloSes> listaPigXmlSacerFascicolioSes = pigFascicoloSessione
+			    .getPigXmlSacerFascicolosSes();
+		    for (PigXmlSacerFascicoloSes pigXmlSacerFascicoliSes : listaPigXmlSacerFascicolioSes) {
+			if (pigXmlSacerFascicoliSes.getTiXmlSacer()
+				.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
+			    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
+				    pigXmlSacerFascicoliSes.getBlXmlSacer());
+			    XPathExpression expr = xPath.compile(
+				    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"FASCICOLO\" "
+					    + "' and Anno='" + chiaveUd.getAnno() + "' and Numero='"
+					    + chiaveUd.getNumero()
+					    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
+			    NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			    if (nodes.getLength() > 0) {
+				pigFascicoloSessione.setTiStatoFascicoloSessione(
+					Constants.StatoUnitaDocSessione.ANNULLATA.name());
+				pigFascicoloSessione.setDtStato(now);
+			    }
+			    break;
+			}
+		    }
+
+		    // Se è ancora in corso di annullamento (non è stata trovata nell'xml)
+		    // MAC#15507
+		    if (pigFascicoloSessione.getTiStatoFascicoloSessione()
+			    .equals(Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name())) {
+			if (pigFascicoloSessione.getCdErrSacer() != null
+				&& pigFascicoloSessione.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
+			    pigFascicoloSessione.setTiStatoFascicoloSessione(
+				    Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
+			} else {
+			    pigFascicoloSessione.setTiStatoFascicoloSessione(
+				    Constants.StatoUnitaDocSessione.VERSATA_OK.name());
+			}
+
+			// MEV 27407
+			pigFascicoloSessione.setDtStato(now);
+		    }
+		}
+	    }
+	}
+    }
+
+    private void gestisciAnnullamentoUd(Document doc, List<PigUnitaDocObject> listaUDObject,
+	    Date now) throws ParerUserError, XPathExpressionException {
+	XPath xPath = XPathFactory.newInstance().newXPath();
+
+	if (listaUDObject != null) {
+	    for (PigUnitaDocObject pigUnitaDocObject : listaUDObject) {
+		if (pigUnitaDocObject.getTiStatoUnitaDocObject()
+			.equals(Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name())) {
+		    // Determina l'XML di versamento della UD
+		    List<PigXmlSacerUnitaDoc> listaPigXmlSacerUnitaDoc = pigUnitaDocObject
+			    .getPigXmlSacerUnitaDocs();
+		    for (PigXmlSacerUnitaDoc pigXmlSacerUnitaDoc : listaPigXmlSacerUnitaDoc) {
+			if (pigXmlSacerUnitaDoc.getTiXmlSacer()
+				.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
+			    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
+				    pigXmlSacerUnitaDoc.getBlXmlSacer());
+			    XPathExpression expr = xPath.compile(
+				    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"UNITA' DOCUMENTARIA\" and TipoRegistro='"
+					    + chiaveUd.getRegistro() + "' and Anno='"
+					    + chiaveUd.getAnno() + "' and Numero='"
+					    + chiaveUd.getNumero()
+					    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
+			    NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			    if (nodes.getLength() > 0) {
+				pigUnitaDocObject.setTiStatoUnitaDocObject(
+					Constants.StatoUnitaDocObject.ANNULLATA.name());
+				// MEV 27407
+				pigUnitaDocObject.setDtStato(now);
+			    }
+			    break;
+			}
+		    }
+
+		    // Se è ancora in corso di annullamento (non è stata trovata nell'xml)
+		    if (pigUnitaDocObject.getTiStatoUnitaDocObject()
+			    .equals(Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name())) {
+			if (pigUnitaDocObject.getCdErrSacer() != null
+				&& pigUnitaDocObject.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
+			    pigUnitaDocObject.setTiStatoUnitaDocObject(
+				    Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+			} else {
+			    pigUnitaDocObject.setTiStatoUnitaDocObject(
+				    Constants.StatoUnitaDocObject.VERSATA_OK.name());
+			}
+
+			// MEV 27407
+			pigUnitaDocObject.setDtStato(now);
+		    }
+		}
+	    }
+	}
+    }
+
+    private void gestisciAnnullamentoFascicoli(Document doc,
+	    List<PigFascicoloObject> listaFascicoliObject, Date now)
+	    throws ParerUserError, XPathExpressionException {
+	XPath xPath = XPathFactory.newInstance().newXPath();
+
+	if (listaFascicoliObject != null) {
+	    for (PigFascicoloObject pigFascicoloObject : listaFascicoliObject) {
+		if (pigFascicoloObject.getTiStatoFascicoloObject()
+			.equals(Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name())) {
+		    // Determina l'XML di versamento della UD
+		    List<PigXmlSacerFascicolo> listaPigXmlSacerFascicolo = pigFascicoloObject
+			    .getPigXmlSacerFascicolos();
+		    for (PigXmlSacerFascicolo pigXmlSacerFascicolo : listaPigXmlSacerFascicolo) {
+			if (pigXmlSacerFascicolo.getTiXmlSacer()
+				.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
+			    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
+				    pigXmlSacerFascicolo.getBlXmlSacer());
+			    XPathExpression expr = xPath.compile(
+				    "//EsitoRichiestaAnnullamentoVersamenti/VersamentiDaAnnullare/VersamentoDaAnnullare[TipoVersamento=\"FASCICOLO\" and Anno='"
+					    + chiaveUd.getAnno() + "' and Numero='"
+					    + chiaveUd.getNumero()
+					    + "' and (Stato='ANNULLATO' or (Stato='NON_ANNULLABILE' and contains(ErroriRilevati/text(),'ITEM_GIA_ANNULLATO')) )]");
+			    NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+			    if (nodes.getLength() > 0) {
+				pigFascicoloObject.setTiStatoFascicoloObject(
+					Constants.StatoUnitaDocObject.ANNULLATA.name());
+				// MEV 27407
+				pigFascicoloObject.setDtStato(now);
+			    }
+			    break;
+			}
+		    }
+
+		    // Se è ancora in corso di annullamento (non è stata trovata nell'xml)
+		    if (pigFascicoloObject.getTiStatoFascicoloObject()
+			    .equals(Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name())) {
+			if (pigFascicoloObject.getCdErrSacer() != null
+				&& pigFascicoloObject.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW)) {
+			    pigFascicoloObject.setTiStatoFascicoloObject(
+				    Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+			} else {
+			    pigFascicoloObject.setTiStatoFascicoloObject(
+				    Constants.StatoUnitaDocObject.VERSATA_OK.name());
+			}
+
+			// MEV 27407
+			pigFascicoloObject.setDtStato(now);
+		    }
+		}
 	    }
 	}
     }
@@ -936,12 +1063,9 @@ public class AnnullamentoEjb {
 	if (pigSisma != null) {
 	    Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
 		    .getTipoVersatore(pigSisma.getPigVer());
-	    if (tipoVersatore.equals(Constants.TipoVersatore.SA_PUBBLICO)
-		    && pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO)
-		    && sismaHelper.getTipoVersatore(pigVers)
-			    .equals(Constants.TipoVersatore.SA_PUBBLICO)) {
-		return true;
-	    }
+	    return tipoVersatore.equals(Constants.TipoVersatore.SA_PUBBLICO)
+		    && pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO) && sismaHelper
+			    .getTipoVersatore(pigVers).equals(Constants.TipoVersatore.SA_PUBBLICO);
 	}
 
 	return false;
@@ -958,8 +1082,20 @@ public class AnnullamentoEjb {
 
 	richAnnulVers.setVersamentiDaAnnullare(new VersamentiDaAnnullare());
 
-	final BigDecimal idOrganizIamFromUdObject = helper
-		.getIdOrganizIamFromMonVLisUnitaDocObject(object.getIdObject());
+	BigDecimal idOrganizIamFromDocObject;
+	if (Constants.TipoContenutoTipoOggetto.UD.name()
+		.equals(object.getPigTipoObject().getTiContenuto())) {
+	    idOrganizIamFromDocObject = helper
+		    .getIdOrganizIamFromMonVLisUnitaDocObject(object.getIdObject());
+	} else if (Constants.TipoContenutoTipoOggetto.FASCICOLO.name()
+		.equals(object.getPigTipoObject().getTiContenuto())) {
+	    idOrganizIamFromDocObject = helper
+		    .getIdOrganizIamFromMonVLisFascicoloObject(object.getIdObject());
+	} else {
+	    logger.error("generaRichiestaAnnullamentoVersamenti: tipo contenuto non valorizzato.");
+	    throw new ParerUserError(
+		    "Errore inatteso nella creazione della richiesta di annullamento, tipo contenuto non valorizzato.");
+	}
 
 	final String cdKeyObject = object.getCdKeyObject();
 	final BigDecimal idSessioneIngest = object.getIdLastSessioneIngest();
@@ -988,7 +1124,7 @@ public class AnnullamentoEjb {
 	    for (PigXmlSacerUnitaDoc pigXmlSacerUnitaDoc : listaPigXmlSacerUnitaDoc) {
 		if (pigXmlSacerUnitaDoc.getTiXmlSacer()
 			.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
-		    ChiaveUd chiaveUd = estraiXPathPerEsitoAnnullamento(
+		    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
 			    pigXmlSacerUnitaDoc.getBlXmlSacer());
 		    udVers.setTipoRegistro(chiaveUd.getRegistro());
 		    udVers.setAnno((int) ud.getAaUnitaDocSacer().longValue());
@@ -998,6 +1134,30 @@ public class AnnullamentoEjb {
 	    }
 	    richAnnulVers.getVersamentiDaAnnullare().getVersamentoDaAnnullare().add(udVers);
 	}
+
+	// MEV 39009
+	List<PigFascicoloObject> fascicoli = helper.retrievePigFascicoloObject(object.getIdObject(),
+		Constants.StatoOggetto.IN_CORSO_ANNULLAMENTO.name());
+	for (PigFascicoloObject fascicolo : fascicoli) {
+	    VersamentoDaAnnullareType fascicoloVers = new VersamentoDaAnnullareType();
+	    fascicoloVers.setTipoVersamento(TipoVersamentoType.FASCICOLO);
+
+	    // Modifica: i dati della chiave UD li prende dall'XMl vi versamento sacer
+	    List<PigXmlSacerFascicolo> listaPigXmlSacerFascicolo = fascicolo
+		    .getPigXmlSacerFascicolos();
+	    for (PigXmlSacerFascicolo pigXmlSacerFascicolo : listaPigXmlSacerFascicolo) {
+		if (pigXmlSacerFascicolo.getTiXmlSacer()
+			.equals(Constants.TipiXmlSacer.XML_VERS.name())) {
+		    ChiaveDocumento chiaveUd = estraiXPathPerEsitoAnnullamento(
+			    pigXmlSacerFascicolo.getBlXmlSacer());
+		    fascicoloVers.setAnno((int) fascicolo.getAaFascicoloSacer().longValue());
+		    fascicoloVers.setNumero(chiaveUd.getNumero());
+		    break;
+		}
+	    }
+	    richAnnulVers.getVersamentiDaAnnullare().getVersamentoDaAnnullare().add(fascicoloVers);
+	}
+
 	// Per motivi di sicurezza i dati di user e pwd li ottengo per ultimi
 	RichiestaSacerInput input = null;
 	BigDecimal idAmbienteVers = BigDecimal.valueOf(
@@ -1013,7 +1173,7 @@ public class AnnullamentoEjb {
 	richAnnulVers.getVersatore().setUtente(username);
 
 	UsrVAbilStrutSacerXping strutturaAbilitata = corVersHelper
-		.getStrutturaAbilitata(idOrganizIamFromUdObject, nmUseridSacer);
+		.getStrutturaAbilitata(idOrganizIamFromDocObject, nmUseridSacer);
 	richAnnulVers.getVersatore().setAmbiente(strutturaAbilitata.getNmAmbiente());
 	richAnnulVers.getVersatore().setEnte(strutturaAbilitata.getNmEnte());
 	richAnnulVers.getVersatore().setStruttura(strutturaAbilitata.getNmStrut());
@@ -1046,7 +1206,6 @@ public class AnnullamentoEjb {
      *
      * @param idObject id object
      * @param username nome dell'utente che ha richiesto l'annullamento
-     *
      * @throws ParerUserError     errore generico
      * @throws ParerInternalError errore generico
      */
@@ -1064,7 +1223,7 @@ public class AnnullamentoEjb {
 	    if (esitoConnAnnul.isErroreConnessione()) {
 		// Il servizio non ha risposto per un errore di connessione
 		throw new ParerUserError(
-			"Il servizio InvioRichiestaAnnullamentoVersamenti non risponde; verificare pi\u00F9 tardi se l'annullamento in Sacer \u00E8 terminato");
+			"Il servizio InvioRichiestaAnnullamentoVersamenti non risponde; verificare più tardi se l'annullamento in Sacer è terminato");
 	    }
 	}
     }
@@ -1138,10 +1297,10 @@ public class AnnullamentoEjb {
 
 	RichiestaSacerInput input = generaRichiestaAnnullamentoVersamenti(object,
 		motivazioneAnnullamento, username);
-	if (input != null) {
-	    xmlAnnul.setBlXmlAnnul(input.getXmlRichiestaSacer());
-	    xmlAnnul.setDtRegXmlAnnul(Calendar.getInstance().getTime());
-	}
+
+	xmlAnnul.setBlXmlAnnul(input.getXmlRichiestaSacer());
+	xmlAnnul.setDtRegXmlAnnul(Calendar.getInstance().getTime());
+
 	return input;
     }
 
@@ -1168,7 +1327,7 @@ public class AnnullamentoEjb {
 	object.setTiStatoObject(lastStato.getTiStato());
 	object.setFlRichAnnulTimeout(null);
 	logger.debug(
-		"Accetta annullamento fallito - Aggiorna tutte le unit\u00E0 documentarie dell'oggetto e della sessione con stato IN_CORSO_ANNULLAMENTO");
+		"Accetta annullamento fallito - Aggiorna tutte le unità documentarie dell'oggetto e della sessione con stato IN_CORSO_ANNULLAMENTO");
 	// Aggiorna tutte le unitÃ  documentarie dell'oggetto e della sessione con stato
 	// IN_CORSO_ANNULLAMENTO e codice
 	// errore NULLO assegnando stato VERSATA_OK
@@ -1178,6 +1337,13 @@ public class AnnullamentoEjb {
 	helper.updateUnitaDocObjectNoError(idObject,
 		Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(),
 		Constants.StatoUnitaDocObject.VERSATA_OK.name());
+	helper.updateFascicoliSessioneNoError(object.getIdLastSessioneIngest(),
+		Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name(),
+		Constants.StatoUnitaDocSessione.VERSATA_OK.name());
+	helper.updateFascicoliObjectNoError(idObject,
+		Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(),
+		Constants.StatoUnitaDocObject.VERSATA_OK.name());
+
 	// Aggiorna tutte le unitÃ  documentarie dell'oggetto e della sessione con stato
 	// IN_CORSO_ANNULLAMENTO e codice
 	// errore NON NULLO assegnando stato VERSATA_ERR
@@ -1185,6 +1351,12 @@ public class AnnullamentoEjb {
 		Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name(), null,
 		Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
 	helper.updateUnitaDocObjectWithError(idObject,
+		Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(), null,
+		Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+	helper.updateFascicoliSessioneWithError(object.getIdLastSessioneIngest(),
+		Constants.StatoUnitaDocSessione.IN_CORSO_ANNULLAMENTO.name(), null,
+		Constants.StatoUnitaDocSessione.VERSATA_ERR.name());
+	helper.updateFascicoliObjectWithError(idObject,
 		Constants.StatoUnitaDocObject.IN_CORSO_ANNULLAMENTO.name(), null,
 		Constants.StatoUnitaDocObject.VERSATA_ERR.name());
 	// Elimina lo XML di richiesta e quello di risposta di annullamento registrati per la
@@ -1200,24 +1372,41 @@ public class AnnullamentoEjb {
 	}
     }
 
-    private boolean esisteUdStatoChiusoOErr(PigObject oggetto) {
+    private boolean esisteDocumentoStatoChiusoOErr(PigObject oggetto) {
 	boolean esiste = false;
 
 	List<PigUnitaDocObject> l = oggetto.getPigUnitaDocObjects();
 	if (l != null) {
-	    for (Iterator<PigUnitaDocObject> iterator = l.iterator(); iterator.hasNext();) {
-		PigUnitaDocObject ud = iterator.next();
+	    for (PigUnitaDocObject ud : l) {
 		if (ud.getTiStatoUnitaDocObject()
 			.equals(Constants.StatoUnitaDocObject.VERSATA_OK.name())
 			|| (ud.getTiStatoUnitaDocObject()
 				.equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
-				&& ud.getCdErrSacer() != null
-				&& ud.getCdErrSacer().equals(UD_002_001))) {
+				&& ud.getCdErrSacer() != null && ud.getCdErrSacer()
+					.equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
 		    esiste = true;
 		    break;
 		}
 	    }
 	}
+
+	// MEV 39009
+	List<PigFascicoloObject> fascicoli = oggetto.getPigFascicoloObjects();
+	if (fascicoli != null) {
+	    for (PigFascicoloObject fascicolo : fascicoli) {
+		if (fascicolo.getTiStatoFascicoloObject()
+			.equals(Constants.StatoUnitaDocObject.VERSATA_OK.name())
+			|| (fascicolo.getTiStatoFascicoloObject()
+				.equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
+				&& fascicolo.getCdErrSacer() != null
+				&& fascicolo.getCdErrSacer().equals(
+					Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO))) {
+		    esiste = true;
+		    break;
+		}
+	    }
+	}
+
 	return esiste;
     }
 
@@ -1225,8 +1414,8 @@ public class AnnullamentoEjb {
      * Estrae dall'XML di versamento UD i dati della chiave UD e compone la stringa xpath per
      * valutare l'XMl di annullamento
      */
-    private ChiaveUd estraiXPathPerEsitoAnnullamento(String xml) throws ParerUserError {
-	ChiaveUd chiaveUd = null;
+    private ChiaveDocumento estraiXPathPerEsitoAnnullamento(String xml) throws ParerUserError {
+	ChiaveDocumento chiaveUd = null;
 
 	try {
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1261,7 +1450,8 @@ public class AnnullamentoEjb {
 	    InputSource is = new InputSource(new StringReader(xml));
 	    Document doc = builder.parse(is);
 	    XPath xPath = XPathFactory.newInstance().newXPath();
-	    String query = "//UnitaDocumentaria/Intestazione/Chiave";
+	    // MEV 39009
+	    String query = "//UnitaDocumentaria/Intestazione/Chiave | //IndiceSIPFascicolo/Intestazione/Chiave";
 	    XPathExpression expr = xPath.compile(query);
 	    NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 	    for (int i = 0; i < nodes.getLength(); i++) {
@@ -1269,22 +1459,20 @@ public class AnnullamentoEjb {
 		String registroFiglio = null;
 		String numeroFiglio = null;
 		String annoFiglio = null;
-		if (nodiFigli != null) {
-		    for (int f = 0; f < nodiFigli.getLength(); f++) {
-			switch (nodiFigli.item(f).getNodeName()) {
-			case "TipoRegistro":
-			    registroFiglio = nodiFigli.item(f).getTextContent();
-			    break;
-			case "Anno":
-			    annoFiglio = nodiFigli.item(f).getTextContent();
-			    break;
-			case "Numero":
-			    numeroFiglio = nodiFigli.item(f).getTextContent();
-			    break;
-			}
+		for (int f = 0; f < nodiFigli.getLength(); f++) {
+		    switch (nodiFigli.item(f).getNodeName()) {
+		    case "TipoRegistro":
+			registroFiglio = nodiFigli.item(f).getTextContent();
+			break;
+		    case "Anno":
+			annoFiglio = nodiFigli.item(f).getTextContent();
+			break;
+		    case "Numero":
+			numeroFiglio = nodiFigli.item(f).getTextContent();
+			break;
 		    }
-		    chiaveUd = new ChiaveUd(annoFiglio, numeroFiglio, registroFiglio);
 		}
+		chiaveUd = new ChiaveDocumento(annoFiglio, numeroFiglio, registroFiglio);
 	    }
 	} catch (Exception ex) {
 	    throw new ParerUserError(ex.getMessage());

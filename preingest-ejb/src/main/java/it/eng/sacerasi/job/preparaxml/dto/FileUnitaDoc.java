@@ -19,11 +19,13 @@ package it.eng.sacerasi.job.preparaxml.dto;
 import it.eng.sacerasi.entity.PigTipoFileObject;
 import it.eng.sacerasi.ws.xml.invioAsync.FileType;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Fioravanti_F
  */
-public class FileUnitaDoc {
+public class FileUnitaDoc implements Serializable {
 
     String idFile;
     String nomeFile;

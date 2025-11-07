@@ -18,15 +18,7 @@ package it.eng.sacerasi.job.recuperaVersErr.ejb;
 
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
-import it.eng.sacerasi.entity.PigSisma;
-import it.eng.sacerasi.entity.PigStatoSessioneIngest;
-import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
-import it.eng.sacerasi.entity.PigUnitaDocObject;
-import it.eng.sacerasi.entity.PigUnitaDocSessione;
-import it.eng.sacerasi.entity.PigXmlSacerUnitaDocSes;
-import it.eng.sacerasi.entity.PigXmlSessioneIngest;
+import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.sisma.ejb.SismaHelper;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiHelper;
 import java.math.BigDecimal;
@@ -191,7 +183,15 @@ public class RecuperaVersErrHelper {
 	sessione.setNiUnitaDocDaVers(new BigDecimal(udDaVersare.size()));
 	sessione.setNiUnitaDocVers(BigDecimal.ZERO);
 	sessione.setPigUnitaDocSessiones(new ArrayList<>());
+
+	List<PigFascicoloObject> fascicoliDaVersare = getFascicoliVersTimeout(obj);
+	sessione.setNiFascicoliDaVers(new BigDecimal(fascicoliDaVersare.size()));
+	sessione.setNiFascicoliVers(BigDecimal.ZERO);
+	sessione.setPigFascicoloSessiones(new ArrayList<>());
+
 	registraUD(udDaVersare, sessione, oldSession);
+	registraFascicoli(fascicoliDaVersare, sessione, oldSession);
+
 	entityManager.persist(sessione);
 	entityManager.flush();
 	PigStatoSessioneIngest pigStatoSessione = new PigStatoSessioneIngest();
@@ -229,6 +229,11 @@ public class RecuperaVersErrHelper {
 		+ Constants.StatoUnitaDocObject.IN_CODA_VERS.name() + "' "
 		+ "OR ud.tiStatoUnitaDocObject = '"
 		+ Constants.StatoUnitaDocObject.DA_VERSARE.name() + "') " + ") "
+		+ "AND NOT EXISTS(SELECT fasc FROM PigFascicoloObject fasc WHERE fasc.pigObject.idObject = obj.idObject AND ("
+		+ "fasc.tiStatoFascicoloObject ='"
+		+ Constants.StatoUnitaDocObject.IN_CODA_VERS.name()
+		+ "' OR fasc.tiStatoFascicoloObject ='"
+		+ Constants.StatoUnitaDocObject.DA_VERSARE.name() + "'))"
 		+ "AND obj.idLastSessioneIngest = siIng.idSessioneIngest ";
 	javax.persistence.Query query = entityManager.createQuery(queryStr);
 	query.setParameter("statoTimeout", statoTimeout);
@@ -258,6 +263,21 @@ public class RecuperaVersErrHelper {
 			    && !ud.getCdErrSacer()
 				    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW))) {
 		list.add(ud);
+	    }
+	}
+	return list;
+    }
+
+    public List<PigFascicoloObject> getFascicoliVersTimeout(PigObject obj) {
+	List<PigFascicoloObject> list = new ArrayList<>();
+	for (PigFascicoloObject fascicolo : obj.getPigFascicoloObjects()) {
+	    if (fascicolo.getTiStatoFascicoloObject()
+		    .equals(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name())
+		    || (fascicolo.getTiStatoFascicoloObject()
+			    .equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
+			    && !fascicolo.getCdErrSacer()
+				    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO))) {
+		list.add(fascicolo);
 	    }
 	}
 	return list;
@@ -324,6 +344,73 @@ public class RecuperaVersErrHelper {
 			    newUdSessXml.setPigUnitaDocSessione(udSessione);
 			    // MAC#15916 - Aggiunto metodo
 			    udSessione.addPigXmlSacerUnitaDocS(newUdSessXml);
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    public void registraFascicoli(List<PigFascicoloObject> pigFascicoloObjects,
+	    PigSessioneIngest sessione, PigSessioneIngest oldSession) {
+	for (PigFascicoloObject pfo : pigFascicoloObjects) {
+	    if (pfo.getTiStatoFascicoloObject()
+		    .equals(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name())
+		    || (pfo.getTiStatoFascicoloObject()
+			    .equals(Constants.StatoUnitaDocObject.VERSATA_ERR.name())
+			    && !pfo.getCdErrSacer()
+				    .equals(Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO))) {
+
+		// MEV 27407
+		Date dtStato = new Date();
+
+		// Registra una UD della sessione per ogni UD dell'oggetto con stato =
+		// VERSATA_TIMEOUT o stato =
+		// VERSATA_ERR
+		PigFascicoloSessione fascicoloSessione = new PigFascicoloSessione();
+		fascicoloSessione.setTiStatoFascicoloSessione(
+			Constants.StatoUnitaDocObject.DA_VERSARE.name());
+		fascicoloSessione.setDtStato(dtStato);
+		fascicoloSessione.setPigSessioneIngest(sessione);
+		fascicoloSessione.setIdVers(sessione.getPigVer().getIdVers());
+		fascicoloSessione.setAaFascicoloSacer(pfo.getAaFascicoloSacer());
+		fascicoloSessione.setCdKeyFascicoloSacer(pfo.getCdKeyFascicoloSacer());
+		fascicoloSessione.setNiSizeFileByte(pfo.getNiSizeFileByte());
+		// Aggiunti nuovi campi relativi alla trasformazione
+		fascicoloSessione.setIdOrganizIam(pfo.getIdOrganizIam());
+		fascicoloSessione.setFlVersSimulato(pfo.getFlVersSimulato());
+		// MAC#15916 - Aggiunto metodo
+		fascicoloSessione.setPigXmlSacerFascicolosSes(new ArrayList<>());
+		sessione.getPigFascicoloSessiones().add(fascicoloSessione);
+		/*
+		 * aggiorno le unità documentarie dell’oggetto con stato = VERSATA_TIMEOUT o
+		 * VERSATA_ERR, assegnando stato = DA_VERSARE e annullo il codice e la descrizione
+		 * dell’errore
+		 */
+		pfo.setTiStatoFascicoloObject(Constants.StatoUnitaDocObject.DA_VERSARE.name());
+		pfo.setDtStato(dtStato);
+		pfo.setCdErrSacer(null);
+		pfo.setDlErrSacer(null);
+
+		/*
+		 * Copia nella Ud di sessione appena creata tutti gli xml della ud dell'oggetto
+		 * della vecchia sessione
+		 */
+		for (PigFascicoloSessione oldFascicoloSessione : oldSession
+			.getPigFascicoloSessiones()) {
+		    if (fascicoloSessione.getAaFascicoloSacer()
+			    .equals(oldFascicoloSessione.getAaFascicoloSacer())
+			    && fascicoloSessione.getCdKeyFascicoloSacer()
+				    .equals(oldFascicoloSessione.getCdKeyFascicoloSacer())) {
+			for (PigXmlSacerFascicoloSes oldFascicoloSessXml : oldFascicoloSessione
+				.getPigXmlSacerFascicolosSes()) {
+			    PigXmlSacerFascicoloSes newFascicoloSessXml = new PigXmlSacerFascicoloSes();
+			    newFascicoloSessXml.setIdVers(sessione.getPigVer().getIdVers());
+			    newFascicoloSessXml.setBlXmlSacer(oldFascicoloSessXml.getBlXmlSacer());
+			    newFascicoloSessXml.setTiXmlSacer(oldFascicoloSessXml.getTiXmlSacer());
+			    newFascicoloSessXml.setPigFascicoloSessione(fascicoloSessione);
+			    // MAC#15916 - Aggiunto metodo
+			    fascicoloSessione.addPigXmlSacerFascicoloSes(newFascicoloSessXml);
 			}
 		    }
 		}

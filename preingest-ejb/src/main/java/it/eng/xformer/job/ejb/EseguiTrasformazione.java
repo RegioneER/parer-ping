@@ -95,6 +95,7 @@ import it.eng.xformer.common.Constants;
 import it.eng.xformer.helper.GenericJobHelper;
 import it.eng.xformer.helper.TrasformazioniHelper;
 import it.eng.xformer.kettle.ejb.RepositoryManagerEjb;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -1112,7 +1113,19 @@ public class EseguiTrasformazione {
 	    List<String> zipNames = null;
 
 	    try {
-		boolean verificationResult = verifyUdsNames(udsFinalDirectory.getCanonicalPath());
+		it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto tipoContenutoTipoObject = it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto
+			.valueOf(pigTipoObject.getTiContenuto());
+
+		boolean verificationResult = false;
+
+		if (tipoContenutoTipoObject.equals(
+			it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+		    verificationResult = verifyFascicoliNames(udsFinalDirectory.getCanonicalPath());
+		} else if (tipoContenutoTipoObject
+			.equals(it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto.UD)) {
+		    verificationResult = verifyUdsNames(udsFinalDirectory.getCanonicalPath());
+		}
+
 		if (verificationResult) {
 		    zipNames = createOutputPackages(udsFinalDirectory.getCanonicalPath(),
 			    parkingDirectory, po);
@@ -1150,7 +1163,7 @@ public class EseguiTrasformazione {
 				Constants.PING_ERRSSISMA27);
 		    }
 		} else {
-		    String messaggio = "UD malformata/e.";
+		    String messaggio = "Contenuto malformato.";
 		    jobHelper.changePigObjectAndSessionStateAtomic(po.getIdObject(),
 			    Constants.Stato.ERRORE_TRASFORMAZIONE.name(), Constants.XF_ERROR_CODE,
 			    messaggio);
@@ -1404,30 +1417,38 @@ public class EseguiTrasformazione {
 	}
     }
 
+    private boolean verifyFascicoliNames(String fascicoliFinalDirectory) {
+	return verifyFilesCommon(fascicoliFinalDirectory, "^(([0-9]{4})\\^([^\\^]+))$",
+		"^(([0-9]{4})\\^([^\\^]+)\\.xml)$", 3);
+    }
+
     private boolean verifyUdsNames(String udsFinalDirectory) {
-	// la cartella che passiamo come argomento deve contenere solo alre cartelle ben formarte,
+	return verifyFilesCommon(udsFinalDirectory, "^(([^\\^]+)\\^([0-9]{4})\\^([^\\^]+))$",
+		"^(([^\\^]+)\\^([0-9]{4})\\^([^\\^]+)\\.xml)$", 4);
+    }
+
+    private boolean verifyFilesCommon(String finalDirectory, String regExpDirectory,
+	    String regExpFiles, int groupCount) {
+	// la cartella che passiamo come argomento deve contenere solo altre cartelle ben formate,
 	// contenenti un file
 	// con nome ben formato.
-	String regExp = "^(([^\\^]+)\\^([0-9]{4})\\^([^\\^]+))$";
-	Pattern validEntryPattern = Pattern.compile(regExp);
+	Pattern validEntryPattern = Pattern.compile(regExpDirectory);
+	Pattern validEntryPatternForFile = Pattern.compile(regExpFiles);
 
-	regExp = "^(([^\\^]+)\\^([0-9]{4})\\^([^\\^]+)\\.xml)$";
-	Pattern validEntryPatternForFile = Pattern.compile(regExp);
-
-	File udsFinalDirectoryFile = new File(udsFinalDirectory);
+	File udsFinalDirectoryFile = new File(finalDirectory);
 	String[] entries = udsFinalDirectoryFile.list();
 	for (String entry : entries) {
-	    File udDirectory = new File(udsFinalDirectory, entry);
+	    File udDirectory = new File(finalDirectory, entry);
 	    Matcher entryMatcher = validEntryPattern.matcher(entry);
 
 	    if (udDirectory.isDirectory() && entryMatcher.find()
-		    && entryMatcher.groupCount() == 4) {
+		    && entryMatcher.groupCount() == groupCount) {
 		boolean udFound = false;
 
 		String[] files = udDirectory.list();
 		for (String file : files) {
 		    Matcher entryMatcherFile = validEntryPatternForFile.matcher(file);
-		    if (entryMatcherFile.find() && entryMatcherFile.groupCount() == 4) {
+		    if (entryMatcherFile.find() && entryMatcherFile.groupCount() == groupCount) {
 			udFound = true;
 		    }
 		}

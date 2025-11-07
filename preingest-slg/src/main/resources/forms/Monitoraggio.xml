@@ -436,11 +436,12 @@
         <Input Type="STRING" Description="Numero" Name="cd_key_unita_doc_sacer" />
         <Input Type="INTEGER" Description="Id oggetto" Name="id_object" />
         <Input Type="STRING" Description="Chiave" Name="filtri_oggetti_cd_key_object" />
+        <ComboBox Type="STRING" Description="Tipo Contenuto" Name="ti_contenuto" />
         <MultiSelect Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
         <Button Name="ricercaOggetti" Description="Ricerca" Type="STRING" />
     </Fields> 
  
-    <Section Name="ChiaveUDListaOggettiSection" Description="" Legend="Chiave UD" LoadOpened="true"/>
+    <Section Name="ChiaveUDListaOggettiSection" Description="" Legend="Chiave Documento" LoadOpened="true"/>
  
     <List Name="OggettiList" Description="Lista oggetti" hideInsertButton="true" hideDeleteButton="true" >
         <!--<Link Name="unitaDoc" Tooltip="Dettaglio unità documentaria" Description="" Type="STRING" Target="UnitaDocumentariaList" />
@@ -455,9 +456,10 @@
         <Input Type="DATETIME" Description="Data stato corrente" Name="dt_stato_cor"/>        
         <Input Type="INTEGER" Description="Size" Name="ni_size_file_vers" GroupingDecimal="true" />
         <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
-        <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
+        <Input Type="INTEGER" Description="Num. Doc." Name="ni_ud_prodotte" />
         <Input Type="STRING" Description="Stato verifica hash" Name="ti_stato_verifica_hash"/>
         <Input Type="STRING" Description="Note" Name="note"/>
+        <Input Type="STRING" Description="Contenuto" Name="ti_contenuto"/>
     </List>
  
     <!-- Dettaglio oggetto -->
@@ -525,6 +527,16 @@
         
         <!-- SUE26200 -->
         <ComboBox Type="STRING" Description=""  Name="ti_annullamento_ud" AddBlank="false"/>
+        
+        <!-- MEV32983 -->
+        <Input Type="STRING" Description="Tipo contenuto" Name="ti_contenuto_tipo_oggetto"/>
+        <Input Type="INTEGER" Description="Num. fascicoli attesi" Name="ni_fascicoli_attesi" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. fascicoli da vers." Name="ni_fascicoli_da_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. fascicoli versati" Name="ni_fascicoli_vers" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. fascicoli versati OK" Name="ni_fascicoli_vers_OK" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. fascicoli versati KO" Name="ni_fascicoli_vers_err" GroupingDecimal="true" />
+        <Input Type="INTEGER" Description="Num. fascicoli versati con timeout" Name="ni_fascicoli_vers_timeout" GroupingDecimal="true" />
+
         <!-- MEV 34034 -->
         <Input Name="nm_userid_vers" Description="Nome utente" Type="STRING" Readonly="true"/>
     </Fields>
@@ -533,18 +545,20 @@
         <Button Name="downloadXMLOggetto" Description="Download XML oggetto" Type="STRING" DisableHourGlass="true"/>
         <Button Name="downloadFileOggettoObjDetail" Description="Download file di un oggetto" Type="STRING" DisableHourGlass="true"/>
         <Button Name="oggettoDaTrasformareObjDetail" Description="Oggetto da trasformare" Type="STRING" />
-        <Button Name="recuperoErrTrasformazione" Description="Recupero errori di traformazione" Type="STRING" />
+        <Button Name="recuperoErrTrasformazione" Description="Recupero errori di trasformazione" Type="STRING" />
         <Button Name="modificaTipoOggetto" Description="Modifica il tipo oggetto" Type="STRING" />
         <Button Name="recuperoErrVersamentoPing" Description="Recupero errori di versamento a Ping" Type="STRING" />
         <Button Name="recuperoChiusErrVers" Description="Imposta come errore recuperabile" Type="STRING" />
-        <Button Name="recuperoChiusErrSched" Description="Riporta in attesa schedulazione" Type="STRING" />
+        <Button Name="recuperoChiusErrSched" Description="Riporta in attesa versamento" Type="STRING" />
         <Button Name="annullaOggettoDetail" Description="Annulla oggetto" Type="STRING" />
         <Button Name="annullaVersamentiUDDetail" Description="Annulla versamenti unità documentarie" Type="STRING" />
+        <Button Name="annullaVersamentiFascicoliDetail" Description="Annulla versamenti fascicoli" Type="STRING" />
         <Button Name="settaDaTrasformareDetail" Description="Set ANNULLATO in DA TRASFORMARE" Type="STRING" />
         <Button Name="settaErroreTrasformazioneDetail" Description="Set ERRORE TRASFORMAZIONE" Type="STRING" />
         <Button Name="verificaAnnullamento" Description="Verifica annullamento terminato" Type="STRING" />
         <Button Name="accettaAnnullamentoFallito" Description="Accetta annullamento fallito" Type="STRING" />
         <Button Name="filtraUnitaDocObj" Description="Filtra unità documentarie" Type="STRING" />
+        <Button Name="filtraFascicoliObj" Description="Filtra fascicoli" Type="STRING" />
         <Button Name="settaChiusoErrVersamento" Description="Set CHIUSO ERR VERS" Type="STRING" />
     </ButtonList>
  
@@ -612,6 +626,16 @@
         <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
         <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
     </List>
+    
+    <!-- Lista fascicoli -->
+    <List Name="OggettoDetailFascicoliList" Description="Lista fascicoli" hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+        <Input Type="INTEGER" Description="Id fascicolo" Name="id_fascicolo_object" Hidden="true" />
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz" />
+        <Input Type="STRING" Description="Chiave" Name="chiave_fascicolo" />
+        <Input Type="STRING" Description="Stato" Name="ti_stato_fascicolo_object" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+    </List>
  
     <!-- Dettaglio unità doc. -->
     <Fields Name="UnitaDocDetail" Description="Dettaglio unità documentaria" >
@@ -636,6 +660,26 @@
         <Button Name="editUnitaDocumentaria" Description="Modifica Indice SIP" Type="STRING"/>
         <Button Name="saveUnitaDocumentaria" Description="Salva Indice SIP" Type="STRING"/>
         <Button Name="undoUnitaDocumentaria" Description="Annulla modifica Indice SIP" Type="STRING"/>
+    </Fields>
+    
+    <!-- Dettaglio fascicolo. -->
+    <Fields Name="FascicoloDetail" Description="Dettaglio fascicolo" >
+        <Input Type="INTEGER" Description="Id fascicolo." Name="id_fascicolo_object" Hidden="true"/>
+        <Input Type="STRING" Description="Versatore" Name="versatore"/>
+        <Input Type="STRING" Description="Ambiente / Ente / Struttura" Name="dl_composito_organiz"/>
+        <Input Type="STRING" Description="Chiave" Name="cd_key_object"/>
+        <Input Type="STRING" Description="Tipo oggetto" Name="nm_tipo_object" />
+        <Input Type="STRING" Description="Descrizione" Name="ds_info_object" />
+        <Input Type="STRING" Description="Stato oggetto" Name="ti_stato_object" />
+        <Input Type="STRING" Description="Chiave fascicolo" Name="chiave_fascicolo" />
+        <Input Type="INTEGER" Description="Dim. file in byte" Name="ni_size_file_byte" GroupingDecimal="true" />
+        <Input Type="STRING" Description="Stato fascicolo" Name="ti_stato_fascicolo_object" />
+        <Input Type="STRING" Description="Codice errore" Name="cd_err_sacer" />
+        <Input Type="STRING" Description="Descr." Name="dl_err_sacer" />
+        <CheckBox Type="STRING" Description="Versamento simulato" Name="fl_vers_simulato" Readonly="true"/>
+        <CheckBox Type="STRING" Description="XML versato modificato" Name="fl_xml_modificato" Readonly="true"/>
+        <TextArea Name="bl_xml_vers_sacer" Description="XML vers." Type="STRING" Rows="50" Cols="50" MaxLength="100000"/> 
+        <Button Name="downloadXMLFascicoloObject" Description="Download XML fascicolo" Type="STRING" DisableHourGlass="true"/> 
     </Fields>
  
     <!-- Lista versamenti -->
@@ -709,6 +753,14 @@
         <ComboBox Type="STRING" Description="Stato" Name="ti_stato_unita_doc_object" />
         <ComboBox Type="STRING" Description="Errore" Name="cd_concat_dl_err_sacer" />
     </Fields>
+    
+    <Fields Name="FiltriFascicoliObj" Description="">
+        <!--Filtri per fascicoli-->
+        <ComboBox Type="INTEGER" Description="Anno" Name="aa_fascicolo_sacer"/>
+        <Input Type="STRING" Description="Numero" Name="cd_key_fascicolo_sacer" />
+        <ComboBox Type="STRING" Description="Stato" Name="ti_stato_fascicolo_object" />
+        <ComboBox Type="STRING" Description="Errore" Name="cd_concat_dl_err_sacer" />
+    </Fields>
  
     <Tab Name="OggettoTabs" Description="Dettaglio oggetto tabs">
         <TabElement Name="DettaglioOggetto" Description="Dettaglio oggetto" />
@@ -718,10 +770,12 @@
         <TabElement Name="XMLRichAnnul" Description="XML di richiesta annullamento" />
         <TabElement Name="XMLRispAnnul" Description="XML di risposta richiesta annullamento" />
         <TabElement Name="FiltriUnitaDocObj" Description="Filtri per unità documentarie" />
+        <TabElement Name="FiltriFascicoliObj" Description="Filtri per fascicoli" />
     </Tab>
     
     <Tab Name="OggettoSubTabs" Description="Dettaglio oggetto sottotabs">
         <TabElement Name="ListaUnitaDoc" Description="Lista unità documentarie" />
+        <TabElement Name="ListaFascicoli" Description="Lista fascicoli" />
         <TabElement Name="ListaFile" Description="Lista file" />
         <TabElement Name="ListaVersamenti" Description="Lista versamenti" />
         <TabElement Name="ListaOggetti" Description="Lista oggetti con stesso DCM hash" />
@@ -948,6 +1002,7 @@
         <Button Name="impostaTuttiVerificOggettiDaVersFalliti" Description="Imposta TUTTI i versamenti come verificati" Type="STRING" />
         <Button Name="annullaOggettoDerVersFalliti" Description="Annulla oggetto" Type="STRING" />
         <Button Name="annullaVersamentiUDDerVersFalliti" Description="Annulla versamenti unità documentarie" Type="STRING" />
+        <Button Name="annullaVersamentiFascicoliDerVersFalliti" Description="Annulla versamenti fascicoli" Type="STRING" />
     </ButtonList>
  
     <!-- Sessione errata -->

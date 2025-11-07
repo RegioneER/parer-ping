@@ -140,6 +140,36 @@ public class ControlliPrepXml {
 	return tmpRet;
     }
 
+    public boolean verificaPFascicoloObjNonVersato(Chiave chiave, long idObj) {
+	boolean tmpRet = false;
+	long conta;
+
+	String queryStr = "select count(pig_fo) from PigFascicoloObject pig_fo "
+		+ " where pig_fo.pigObject.idObject = :idObjectIn "
+		+ "and pig_fo.aaFascicoloSacer = :aaFascicoloSacerIn "
+		+ "and pig_fo.cdKeyFascicoloSacer = :cdKeyFascicoloSacerIn "
+		+ "and (pig_fo.tiStatoFascicoloObject = :stateOk "
+		+ " or (pig_fo.tiStatoFascicoloObject = :stateErr "
+		+ "  and (pig_fo.cdErrSacer = :errCode "
+		+ "    or pig_fo.cdErrSacer = :errCodeAlt))) ";
+
+	javax.persistence.Query query = entityManager.createQuery(queryStr);
+	query.setParameter("idObjectIn", idObj);
+	query.setParameter("aaFascicoloSacerIn", new BigDecimal(chiave.getAnno()));
+	query.setParameter("cdKeyFascicoloSacerIn", chiave.getNumero());
+	query.setParameter("stateOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
+	query.setParameter("stateErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+	query.setParameter("errCode", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_OLD);
+	query.setParameter("errCodeAlt", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
+
+	conta = (Long) query.getSingleResult();
+
+	if (conta == 0) {
+	    tmpRet = true;
+	}
+	return tmpRet;
+    }
+
     public PigTipoFileObject getPigTipoFileObj(String nmTipoFileObj, long idTipoObj) {
 	List<PigTipoFileObject> pigTipoFileObjects;
 

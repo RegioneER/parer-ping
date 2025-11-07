@@ -225,7 +225,6 @@ public class PayloadManagerEjb {
 					Constants.StatoUnitaDocObject.VERSATA_ERR.name(),
 					Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
 			long timeoutUd = session.getNiUnitaDocVersTimeout().longValue();
-			BigDecimal niUdVersOk = session.getNiUnitaDocVersOk();
 			// MEV 30209 - Quante ud in ERR_666?
 			long err666Ud = codaHelper.countUdInObj(object,
 				Constants.StatoUnitaDocObject.VERSATA_ERR.name(),
@@ -234,14 +233,19 @@ public class PayloadManagerEjb {
 			long err666PUd = codaHelper.countUdInObj(object,
 				Constants.StatoUnitaDocObject.VERSATA_ERR.name(),
 				MessaggiWSBundle.ERR_666P);
+			long errUd = codaHelper.countUdInObj(object,
+				StatoUnitaDocObject.VERSATA_ERR.name(), null);
+
+			long errNotDuplicateUd = errUd - duplicateUd;
 
 			boolean deleteFtp = false;
 			Date now = Calendar.getInstance().getTime();
 			// PUNTO a
 			if (session.getNiUnitaDocVersOk().intValue() == session
-				.getNiUnitaDocDaVers().intValue()
-				|| (timeoutUd == 0 && niUdVersOk.add(new BigDecimal(duplicateUd))
-					.equals(session.getNiUnitaDocDaVers()))) {
+				.getNiUnitaDocDaVers().intValue() // ho versato correttamente tutte
+								  // le ud per questa sessione.
+				|| (timeoutUd == 0 && errNotDuplicateUd == 0)) {// nessun ud in
+										// errore critico
 			    // tutte le UD contenute nello zip sono state chiuse positivamente o
 			    // sono fallite per errore
 			    // di una chiave già presente e nessuna è andata in timeout
@@ -311,8 +315,6 @@ public class PayloadManagerEjb {
 					now);
 				// PUNTO b
 			    } else {
-				long errNotDuplicateUd = session.getNiUnitaDocDaVers().longValue()
-					- (niUdVersOk.longValue() + duplicateUd);
 				log.debug(
 					"{} Nello zip sono presenti {} UD versate con errore diverso da CHIAVE DUPLICATA",
 					infoLog, errNotDuplicateUd);

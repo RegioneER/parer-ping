@@ -18,7 +18,7 @@ package it.eng.sacerasi.annullamento.dto;
 
 import java.io.Serializable;
 
-public class ChiaveUd implements Serializable {
+public class ChiaveDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class ChiaveUd implements Serializable {
     private String numero;
     private String registro;
 
-    public ChiaveUd(String anno, String numero, String registro) {
+    public ChiaveDocumento(String anno, String numero, String registro) {
 	this.anno = anno;
 	this.numero = numero;
 	this.registro = registro;

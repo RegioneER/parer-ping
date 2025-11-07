@@ -30,7 +30,6 @@ import it.eng.sacerasi.viewEntity.MonVLisStatoVers;
 import it.eng.sacerasi.web.util.Utils;
 
 /**
- *
  * @author Bonora_L
  */
 @Stateless
@@ -42,27 +41,28 @@ public class VersamentoOggettoHelper extends GenericHelper {
      * <code>idUtente</code> dati i parametri passati in input NB.Il parametro dsObject andrà
      * aggiunto in un prossimo momento
      *
-     * @param idUtente       id utente
-     * @param idAmbiente     id ambiente
-     * @param idVers         id versamento
-     * @param idTipoOggetto  id tipo oggetto
-     * @param idObject       id oggetto
-     * @param cdKeyObject    chiave oggetto
-     * @param dsObject       descrizione oggetto
-     * @param dataDa         data da
-     * @param dataA          da a
-     * @param tiStatoEsterno tipo stato
-     * @param tiStatoObject  tipo stato oggetto
-     * @param tiVersFile     tipo versamento file
-     * @param note           campo note dell'oggetto
-     *
+     * @param idUtente           id utente
+     * @param idAmbiente         id ambiente
+     * @param idVers             id versamento
+     * @param idTipoOggetto      id tipo oggetto
+     * @param idObject           id oggetto
+     * @param cdKeyObject        chiave oggetto
+     * @param dsObject           descrizione oggetto
+     * @param dataDa             data da
+     * @param dataA              da a
+     * @param tiStatoEsterno     tipo stato
+     * @param tiStatoObject      tipo stato oggetto
+     * @param tiVersFile         tipo versamento file
+     * @param note               campo note dell'oggetto
+     * @param tiContenutoOggetto tipo contenuto oggetto
      * @return la lista di record
      */
     @SuppressWarnings("unchecked")
     public List<MonVLisStatoVers> getMonVLisStatoVers(long idUtente, BigDecimal idAmbiente,
 	    BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject, String cdKeyObject,
 	    String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
-	    List<String> tiStatoObject, List<String> tiVersFile, String note) {
+	    List<String> tiStatoObject, List<String> tiVersFile, String note,
+	    String tiContenutoOggetto) {
 	StringBuilder queryStr = new StringBuilder(
 		"SELECT m FROM MonVLisStatoVers m WHERE m.id.idUserIam =:idUserIam AND m.idAmbienteVers = :idAmbiente");
 	String clause = " AND ";
@@ -88,13 +88,8 @@ public class VersamentoOggettoHelper extends GenericHelper {
 	    queryStr.append(clause).append("m.tiStatoEsterno LIKE :tiStatoEsterno");
 	}
 	if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
-	    queryStr.append(clause).append("m.tiStatoCalcolato IN (:tiStatoObject)"); // MEV 29266 -
-										      // Gestione
-										      // degli
-										      // stati
-										      // fittizi in
-										      // ricerca
-										      // oggetto
+	    // MEV 29266 - Gestione degli stati fittizi in ricerca oggetto
+	    queryStr.append(clause).append("m.tiStatoCalcolato IN (:tiStatoObject)");
 	}
 	if (tiVersFile != null && !tiVersFile.isEmpty()) {
 	    queryStr.append(clause).append("m.tiVersFile IN (:tiVersFile)");
@@ -103,6 +98,12 @@ public class VersamentoOggettoHelper extends GenericHelper {
 	if (StringUtils.isNotBlank(note)) {
 	    queryStr.append(clause).append("LOWER(m.note) like LOWER(:note)");
 	}
+
+	// MEV 39090
+	if (StringUtils.isNotBlank(tiContenutoOggetto)) {
+	    queryStr.append(clause).append("m.tiContenutoOggetto = :tiContenutoOggetto");
+	}
+
 	queryStr.append(" ORDER BY m.dtVers DESC");
 	Query query = getEntityManager().createQuery(queryStr.toString());
 	query.setParameter("idUserIam", HibernateUtils.bigDecimalFrom(idUtente));
@@ -137,6 +138,9 @@ public class VersamentoOggettoHelper extends GenericHelper {
 	}
 	if (StringUtils.isNotBlank(note)) {
 	    query.setParameter("note", "%" + note + "%");
+	}
+	if (StringUtils.isNotBlank(tiContenutoOggetto)) {
+	    query.setParameter("tiContenutoOggetto", tiContenutoOggetto);
 	}
 	return query.getResultList();
     }

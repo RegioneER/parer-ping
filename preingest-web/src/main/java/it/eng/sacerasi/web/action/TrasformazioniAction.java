@@ -485,19 +485,19 @@ public class TrasformazioniAction extends TrasformazioniAbstractAction {
 	    try {
 		if (getLastPublisher().equals(Application.Publisher.DETTAGLIO_TRASFORMAZIONE)) {
 		    a = getForm().getTransformationDetail().postMultipart(getRequest(),
-			    size.intValue());
+			    size.longValue());
 		} else if (getLastPublisher()
 			.equals(Application.Publisher.INSERIMENTO_SET_PARAMETRI)) {
 		    a = getForm().getInserimentoSetParametri().postMultipart(getRequest(),
-			    size.intValue());
+			    size.longValue());
 		} else if (getLastPublisher()
 			.equals(Application.Publisher.INSERIMENTO_NUOVA_VERSIONE)) {
 		    a = getForm().getInserimentoNuovaVersione().postMultipart(getRequest(),
-			    size.intValue());
+			    size.longValue());
 		} else if (getLastPublisher()
 			.equals(Application.Publisher.INSERIMENTO_TRASFORMAZIONI)) {
 		    a = getForm().getInserisciTrasformazione().postMultipart(getRequest(),
-			    size.intValue());
+			    size.longValue());
 		}
 	    } catch (FileUploadException | SecurityException | IllegalArgumentException ex) {
 		log.error("Errore nella processazione del form: "

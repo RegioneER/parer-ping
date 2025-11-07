@@ -32,6 +32,7 @@ import it.eng.sacerasi.job.timer.InvioSUTimer;
 import it.eng.sacerasi.job.timer.InvioSismaTimer;
 import it.eng.sacerasi.job.timer.PreparaXmlTimer;
 import it.eng.sacerasi.job.timer.ProducerCodaVerificaHTimer;
+import it.eng.sacerasi.job.timer.ProducerCodaVersamentoFascicoliTimer;
 import it.eng.sacerasi.job.timer.ProducerCodaVersamentoTimer;
 import it.eng.sacerasi.job.timer.RecuperaErroriInCodaTimer;
 import it.eng.sacerasi.job.timer.RecuperaVersErrTimer;
@@ -52,6 +53,10 @@ public class TimerRepository {
 
     @EJB
     private ProducerCodaVersamentoTimer producerCodaVersamento;
+
+    // MEV32984
+    @EJB
+    private ProducerCodaVersamentoFascicoliTimer producerCodaVersamentoFascicoli;
 
     @EJB
     private AllineamentoOrganizzazioniTimer allineamentoOrganizzazioni;
@@ -93,6 +98,8 @@ public class TimerRepository {
 	map.put(Constants.NomiJob.PREPARA_XML.name(), preparaXml);
 	map.put(Constants.NomiJob.PRODUCER_CODA_VERIFICA_H.name(), producerCodaVerificaH);
 	map.put(Constants.NomiJob.PRODUCER_CODA_VERS.name(), producerCodaVersamento);
+	map.put(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+		producerCodaVersamentoFascicoli);
 	map.put(Constants.NomiJob.RECUPERA_ERRORI_IN_CODA.name(), recuperaErroriInCoda);
 	map.put(Constants.NomiJob.RECUPERA_VERS_ERR.name(), recuperaVersErr);
 	map.put(Constants.NomiJob.RECUPERO_SACER.name(), recuperoSacer);

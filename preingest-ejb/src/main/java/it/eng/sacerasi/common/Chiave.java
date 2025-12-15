@@ -11,20 +11,22 @@
  * see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package it.eng.sacerasi.common;
+
+import java.io.Serializable;
 
 /**
  *
  * @author Quaranta_M
  */
-public class Chiave {
+public class Chiave implements Serializable {
 
     private Long anno;
     private String registro;
     private String numero;
+
+    private String chiaveCompatta;
+    private String nomefileDerivato;
 
     public Long getAnno() {
 	return anno;
@@ -48,6 +50,22 @@ public class Chiave {
 
     public void setRegistro(String registro) {
 	this.registro = registro;
+    }
+
+    public String getChiaveCompatta() {
+	return chiaveCompatta;
+    }
+
+    public void setChiaveCompatta(String chiaveCompatta) {
+	this.chiaveCompatta = chiaveCompatta;
+    }
+
+    public String getNomefileDerivato() {
+	return nomefileDerivato;
+    }
+
+    public void setNomefileDerivato(String nomefileDerivato) {
+	this.nomefileDerivato = nomefileDerivato;
     }
 
     @Override

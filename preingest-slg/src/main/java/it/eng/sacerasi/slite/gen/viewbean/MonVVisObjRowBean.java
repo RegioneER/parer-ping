@@ -436,6 +436,54 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	setObject("ti_priorita_versamento", tiPrioritaVersamento);
     }
 
+    public String getTiContenutoTipoOggetto() {
+	return getString("ti_contenuto_tipo_oggetto");
+    }
+
+    public void setTiContenutoTipoOggetto(String tiContenutoTipoOggetto) {
+	setObject("ti_contenuto_tipo_oggetto", tiContenutoTipoOggetto);
+    }
+
+    public BigDecimal getNiFascicoliDaVers() {
+	return getBigDecimal("ni_fascicoli_da_vers");
+    }
+
+    public void setNiFascicoliDaVers(BigDecimal niUnitaDocDaVers) {
+	setObject("ni_fascicoli_da_vers", niUnitaDocDaVers);
+    }
+
+    public BigDecimal getNiFascicoliVers() {
+	return getBigDecimal("ni_fascicoli_vers");
+    }
+
+    public void setNiFascicoliVers(BigDecimal niUnitaDocVers) {
+	setObject("ni_fascicoli_vers", niUnitaDocVers);
+    }
+
+    public BigDecimal getNiFascicoliVersOk() {
+	return getBigDecimal("ni_fascicoli_vers_ok");
+    }
+
+    public void setNiFascicoliVersOk(BigDecimal niUnitaDocVersOk) {
+	setObject("ni_fascicoli_vers_ok", niUnitaDocVersOk);
+    }
+
+    public BigDecimal getNiFascicoliVersErr() {
+	return getBigDecimal("ni_fascicoli_vers_err");
+    }
+
+    public void setNiFascicoliVersErr(BigDecimal niUnitaDocVersErr) {
+	setObject("ni_fascicoli_vers_err", niUnitaDocVersErr);
+    }
+
+    public BigDecimal getNiFascicoliVersTimeout() {
+	return getBigDecimal("ni_fascicoli_vers_timeout");
+    }
+
+    public void setNiFascicoliVersTimeout(BigDecimal niUnitaDocVersTimeout) {
+	setObject("ni_fascicoli_vers_timeout", niUnitaDocVersTimeout);
+    }
+
     public String getNmUseridVers() {
 	return getString("nm_userid_vers");
     }
@@ -502,6 +550,12 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	this.setIdObjectTrasf(entity.getIdObjectTrasf());
 	this.setTiPriorita(entity.getTiPriorita());
 	this.setTiPrioritaVersamento(entity.getTiPrioritaVersamento());
+	this.setTiContenutoTipoOggetto(entity.getTiContenutoTipoOggetto());
+	this.setNiFascicoliDaVers(entity.getNiFascicoliDaVers());
+	this.setNiFascicoliVers(entity.getNiFascicoliVers());
+	this.setNiFascicoliVersErr(entity.getNiFascicoliVersErr());
+	this.setNiFascicoliVersOk(entity.getNiFascicoliVersOk());
+	this.setNiFascicoliVersTimeout(entity.getNiFascicoliVersTimeout());
 	this.setNmUseridVers(entity.getNmUseridVers());
     }
 
@@ -561,6 +615,12 @@ public class MonVVisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	entity.setIdObjectTrasf(this.getIdObjectTrasf());
 	entity.setTiPriorita(this.getTiPriorita());
 	entity.setTiPrioritaVersamento(this.getTiPrioritaVersamento());
+	entity.setTiContenutoTipoOggetto(this.getTiContenutoTipoOggetto());
+	entity.setNiFascicoliDaVers(this.getNiFascicoliDaVers());
+	entity.setNiFascicoliVers(this.getNiFascicoliVers());
+	entity.setNiFascicoliVersErr(this.getNiFascicoliVersErr());
+	entity.setNiFascicoliVersOk(this.getNiFascicoliVersOk());
+	entity.setNiFascicoliVersTimeout(this.getNiFascicoliVersTimeout());
 	entity.setNmUseridVers(this.getNmUseridVers());
 	return entity;
     }

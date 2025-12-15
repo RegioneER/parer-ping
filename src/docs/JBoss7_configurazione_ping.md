@@ -66,10 +66,15 @@ Cliccare su
 
 Aggiungere Name=**ProducerCodaVersQueue** e JNDI=**java:/jms/queue/ProducerCodaVersQueue**
 
+quindi ripetere
+
+aggiungendo Name=**ProducerCodaVersFascicoliQueue** e JNDI=**java:/jms/queue/ProducerCodaVersFascicoliQueue**
+
 #### Configurazione tramite CLI
 
 ```bash
 jms-queue add --queue-address=ProducerCodaVersQueue --entries=[java:/jms/queue/ProducerCodaVersQueue]
+jms-queue add --queue-address=ProducerCodaVersFascicoliQueue --entries=[java:/jms/queue/ProducerCodaVersFascicoliQueue]
 ```
 
 ### Bean pool per gli MDB

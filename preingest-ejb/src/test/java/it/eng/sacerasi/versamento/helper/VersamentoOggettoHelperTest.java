@@ -73,9 +73,10 @@ public class VersamentoOggettoHelperTest {
 	String tiStatoEsterno = aString();
 	List<String> tiStatoObject = aListOfString(2);
 	List<String> tiVersFile = aListOfString(2);
+	String tiContenutoOggetto = aString();
 	helper.getMonVLisStatoVers(idUtente, idAmbiente, idVers, idTipoOggetto, idOggetto,
 		cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject, tiVersFile,
-		note);
+		note, tiContenutoOggetto);
 	assertTrue(true);
     }
 }

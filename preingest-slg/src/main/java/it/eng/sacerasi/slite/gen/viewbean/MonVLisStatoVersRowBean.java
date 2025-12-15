@@ -229,6 +229,14 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
 	setObject("note", note);
     }
 
+    public String getTiContenutoOggetto() {
+	return getString("ti_contenuto_oggetto");
+    }
+
+    public void setTiContenutoOggetto(String tiConteutoOggetto) {
+	setObject("ti_contenuto_oggetto", tiConteutoOggetto);
+    }
+
     public String getTiStatoVisualizzato() {
 	return getString("ti_stato_visualizzato");
     }
@@ -275,6 +283,7 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
 	this.setNiUdProdotte(entity.getNiUdProdotte());
 	this.setTiGestOggettiFigli(entity.getTiGestOggettiFigli());
 	this.setNote(entity.getNote());
+	this.setTiContenutoOggetto(entity.getTiContenutoOggetto());
 	this.setTiStatoVisaulizzato(entity.getTiStatoVisualizzato());
 	this.setTiStatoCalcolato(entity.getTiStatoCalcolato());
     }
@@ -306,6 +315,7 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
 	entity.setNiUdProdotte(this.getNiUdProdotte());
 	entity.setTiGestOggettiFigli(this.getTiGestOggettiFigli());
 	entity.setNote(this.getNote());
+	entity.setTiContenutoOggetto(this.getTiContenutoOggetto());
 	entity.setTiStatoVisualizzato(this.getTiStatoVisualizzato());
 	entity.setTiStatoCalcolato(this.getTiStatoCalcolato());
 	return entity;

@@ -181,6 +181,22 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
     }
 
+    public BigDecimal getAaFascicoloSacer() {
+	return getBigDecimal("aa_fascicolo_sacer");
+    }
+
+    public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
+	setObject("aa_fascicolo_sacer", aaFascicoloSacer);
+    }
+
+    public String getCdKeyFascicoloSacer() {
+	return getString("cd_key_fascicolo_sacer");
+    }
+
+    public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
+	setObject("cd_key_fascicolo_sacer", cdKeyFascicoloSacer);
+    }
+
     public String getDsKeyOrd() {
 	return getString("ds_key_ord");
     }
@@ -245,6 +261,14 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	setObject("ti_gestione_figli", tiGestOggettiFigli);
     }
 
+    public String getTiContenuto() {
+	return getString("ti_contenuto");
+    }
+
+    public void setTiContenuto(String tiContenuto) {
+	setObject("ti_contenuto", tiContenuto);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
 	MonVLisObj entity = (MonVLisObj) obj;
@@ -268,6 +292,8 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
 	this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
 	this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
+	this.setAaFascicoloSacer(entity.getAaFascicoloSacer());
+	this.setCdKeyFascicoloSacer(entity.getCdKeyFascicoloSacer());
 	this.setDsKeyOrd(entity.getDsKeyOrd());
 	this.setDsInfoObject(entity.getDsInfoObject());
 	this.setTiStatoVerificaHash(entity.getTiStatoVerificaHash());
@@ -277,6 +303,7 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	this.setNote(entity.getNote());
 	this.setNiUdProdotte(entity.getNiUdProdotte());
 	this.setTiGestOggettiFigli(entity.getTiGestOggettiFigli());
+	this.setTiContenuto(entity.getTiContenuto());
     }
 
     @Override
@@ -306,6 +333,8 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
 	entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
 	entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
+	entity.setAaFascicoloSacer(this.getAaFascicoloSacer());
+	entity.setCdKeyFascicoloSacer(this.getCdKeyFascicoloSacer());
 	entity.setDsKeyOrd(this.getDsKeyOrd());
 	entity.setDsInfoObject(this.getDsInfoObject());
 	entity.setTiStatoVerificaHash(this.getTiStatoVerificaHash());
@@ -315,6 +344,7 @@ public class MonVLisObjRowBean extends BaseRow implements JEEBaseRowInterface {
 	entity.setNote(this.getNote());
 	entity.setNiUdProdotte(this.getNiUdProdotte());
 	entity.setTiGestOggettiFigli(this.getTiGestOggettiFigli());
+	entity.setTiContenuto(this.getTiContenuto());
 	return entity;
     }
 

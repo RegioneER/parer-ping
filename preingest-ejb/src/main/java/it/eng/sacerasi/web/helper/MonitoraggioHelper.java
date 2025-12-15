@@ -50,6 +50,9 @@ import it.eng.sacerasi.slite.gen.tablebean.PigObjectTableBean;
 import it.eng.sacerasi.slite.gen.tablebean.PigSessioneIngestRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.IamVLisOrganizDaReplicRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.IamVLisOrganizDaReplicTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVLisFascicoloObjectRowBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVLisFascicoloObjectTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVLisFascicoloObjectTableDescriptor;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisFileObjectTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisObjNonVersRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisObjNonVersTableBean;
@@ -79,6 +82,7 @@ import it.eng.sacerasi.slite.gen.viewbean.MonVRiepVersRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVRiepVersTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVSesRangeDtRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVSesRangeDtTableBean;
+import it.eng.sacerasi.slite.gen.viewbean.MonVVisFascicoloObjectRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisLastSchedJobRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisObjNonVersRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisObjRowBean;
@@ -86,6 +90,7 @@ import it.eng.sacerasi.slite.gen.viewbean.MonVVisSesErrataRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisUnitaDocObjectRowBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVVisVersFallitoRowBean;
 import it.eng.sacerasi.viewEntity.IamVLisOrganizDaReplic;
+import it.eng.sacerasi.viewEntity.MonVLisFascicoloObject;
 import it.eng.sacerasi.viewEntity.MonVLisFileObject;
 import it.eng.sacerasi.viewEntity.MonVLisObj;
 import it.eng.sacerasi.viewEntity.MonVLisObjNonVers;
@@ -98,6 +103,7 @@ import it.eng.sacerasi.viewEntity.MonVLisVersFalliti;
 import it.eng.sacerasi.viewEntity.MonVLisVersObj;
 import it.eng.sacerasi.viewEntity.MonVLisVersObjNonVers;
 import it.eng.sacerasi.viewEntity.MonVRiepVers;
+import it.eng.sacerasi.viewEntity.MonVVisFascicoloObject;
 import it.eng.sacerasi.viewEntity.MonVVisLastSchedJob;
 import it.eng.sacerasi.viewEntity.MonVVisObj;
 import it.eng.sacerasi.viewEntity.MonVVisObjNonVers;
@@ -116,7 +122,6 @@ import it.eng.spagoLite.db.base.sorting.SortingRule;
 import it.eng.spagoLite.db.base.table.BaseTable;
 
 /**
- *
  * @author Gilioli_P
  */
 @SuppressWarnings("unchecked")
@@ -133,12 +138,11 @@ public class MonitoraggioHelper extends GenericHelper {
      * Recupera il table bean con le info di Riepilogo per Versatore
      *
      * @param idVersList lista elementi di tipo Object
-     *
      * @return entity bean {@link MonVRiepVersTableBean}
      */
     public MonVRiepVersTableBean getMonVRiepVersViewBean(List<Object> idVersList) {
 	String queryStr = "SELECT u FROM MonVRiepVers u "// WHERE u.idUsoUserApplic =
-							 // :idusouserapplic "
+		// :idusouserapplic "
 		+ "WHERE u.idVers IN (:idVersList) AND u.flCessato != 1 "
 		+ "ORDER BY u.nmAmbienteVers, u.nmVers";
 
@@ -178,17 +182,17 @@ public class MonitoraggioHelper extends GenericHelper {
 	query.setParameter("idAmbienteVers", HibernateUtils.longFrom(idAmbienteVers));
 	query.setParameter("idVers", idVers);
 	query.setParameter("idTipoObject", 0L); // Questo viene fatto per suggerire il tipo se il
-						// valore è null, ci deve
-						// essere un modo migliore per farlo.
+	// valore è null, ci deve
+	// essere un modo migliore per farlo.
 	query.setParameter("idTipoObject", HibernateUtils.longFrom(idTipoObject));
 	query.setParameter("idObject", 0L); // Questo viene fatto per suggerire il tipo se il valore
-					    // è null, ci deve
-					    // essere un modo migliore per farlo.
+	// è null, ci deve
+	// essere un modo migliore per farlo.
 	query.setParameter("idObject", HibernateUtils.longFrom(idObject));
 	query.setParameter(CD_KEY_OBJECT, new String()); // Questo viene fatto per suggerire il tipo
-							 // se il valore è
-							 // null, ci deve essere un modo migliore
-							 // per farlo.
+	// se il valore è
+	// null, ci deve essere un modo migliore
+	// per farlo.
 	if (cdKeyObject != null) {
 	    query.setParameter(CD_KEY_OBJECT, "%" + cdKeyObject + "%");
 	} else {
@@ -331,7 +335,6 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param flVerificato l'unico filtro di ricerca utilizzato
      * @param maxResults   massimo risultati
-     *
      * @return entity bean {@link MonVLisSesErrateTableBean}
      */
     public MonVLisSesErrateTableBean getSessioniErrateListTB(String flVerificato, int maxResults) {
@@ -432,7 +435,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * Recupera il tablebean con i dati da visualizzare nella pagina Lista Documenti
      *
      * @param filtri i filtri di ricerca riportati dalla pagina precedente
-     *
      * @return entity bean {@link MonVLisObjTableBean}
      */
     public MonVLisObjTableBean getMonVLisObjViewBean(MonitoraggioFiltriListaOggettiBean filtri) {
@@ -441,7 +443,7 @@ public class MonitoraggioHelper extends GenericHelper {
 		"SELECT DISTINCT new it.eng.sacerasi.viewEntity.MonVLisObj "
 			+ "(vista.nmAmbienteVers, vista.nmVers, vista.idObject, vista.tiStatoObject, vista.tiStatoObjectVis, vista.tiStatoVerificaHash, "
 			+ "vista.cdKeyObject, vista.dtVers, vista.dsInfoObject, vista.dtStatoCor, vista.niSizeFileVers, vista.nmTipoObject, vista.note, "
-			+ "vista.trasformazioneUtilizzata, vista.niUdProdotte, vista.tiVersFile, vista.dsKeyOrd, vista.tiGestOggettiFigli) "
+			+ "vista.trasformazioneUtilizzata, vista.niUdProdotte, vista.tiVersFile, vista.dsKeyOrd, vista.tiGestOggettiFigli, vista.tiContenuto) "
 			+ "FROM MonVLisObj vista, IamAbilOrganiz abilOrganiz ");
 
 	// Inserimento nella query del filtro id ambiente versatore
@@ -517,12 +519,14 @@ public class MonitoraggioHelper extends GenericHelper {
 	}
 	BigDecimal anno = filtri.getAnno();
 	if (anno != null) {
-	    queryStr.append(whereWord).append("vista.aaUnitaDocSacer = :anno ");
+	    queryStr.append(whereWord)
+		    .append("(vista.aaUnitaDocSacer = :anno OR vista.aaFascicoloSacer = :anno) ");
 	    whereWord = "AND ";
 	}
 	String codice = filtri.getCodice();
 	if (codice != null) {
-	    queryStr.append(whereWord).append("UPPER(vista.cdKeyUnitaDocSacer) = :codice ");
+	    queryStr.append(whereWord).append(
+		    "(UPPER(vista.cdKeyUnitaDocSacer) = :codice OR UPPER(vista.cdKeyFascicoloSacer) = :codice) ");
 	    whereWord = "AND ";
 	}
 	String chiave = filtri.getChiave();
@@ -544,6 +548,13 @@ public class MonitoraggioHelper extends GenericHelper {
 	    } else {
 		queryStr.append(whereWord).append("vista.tiVersFile = :tiVersFile ");
 	    }
+	    whereWord = "AND ";
+	}
+
+	// MEV 39012
+	String tiContenuto = filtri.getTiContenuto();
+	if (tiContenuto != null && !tiContenuto.isEmpty()) {
+	    queryStr.append("and vista.tiContenuto = :tiContenuto ");
 	    whereWord = "AND ";
 	}
 
@@ -595,6 +606,11 @@ public class MonitoraggioHelper extends GenericHelper {
 	// MEV 26979
 	if (idObject != null) {
 	    query.setParameter("idObject", idObject);
+	}
+
+	// MEV 39012
+	if (tiContenuto != null && !tiContenuto.isEmpty()) {
+	    query.setParameter("tiContenuto", tiContenuto);
 	}
 
 	if (tiVersFile != null && !tiVersFile.isEmpty()) {
@@ -649,7 +665,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * @param idObject  id oggetto
      * @param idVers    id versamento
      * @param dsDcmHash descrizione hash
-     *
      * @return entity bean {@link MonVLisObjTableBean}
      */
     public MonVLisObjTableBean getMonVLisObjDCMHashViewBean(BigDecimal idObject, BigDecimal idVers,
@@ -659,7 +674,7 @@ public class MonitoraggioHelper extends GenericHelper {
 		"SELECT DISTINCT new it.eng.sacerasi.viewEntity.MonVLisObj "
 			+ "(vista.nmAmbienteVers, vista.nmVers, vista.idObject, vista.tiStatoObject,vista.tiStatoObjectVis,"
 			+ " vista.tiStatoVerificaHash, vista.cdKeyObject, vista.dtVers, vista.dsInfoObject, vista.dtStatoCor, vista.niSizeFileVers, "
-			+ " vista.nmTipoObject, vista.note, vista.trasformazioneUtilizzata, vista.niUdProdotte, vista.tiVersFile,vista.dsKeyOrd, vista.tiGestOggettiFigli) "
+			+ " vista.nmTipoObject, vista.note, vista.trasformazioneUtilizzata, vista.niUdProdotte, vista.tiVersFile,vista.dsKeyOrd, vista.tiGestOggettiFigli, vista.tiContenuto) "
 			+ "FROM MonVLisObj vista, PigInfoDicom pig ");
 
 	// Inserimento nella query del filtro id versatore
@@ -747,9 +762,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param filtriJS     filtri job schedulati {@link FiltriJobSchedulati}
      * @param dateValidate array con date da validare
-     *
      * @return entity bean {@link MonVLisSchedJobTableBean}
-     *
      * @throws EMFError errore generico
      */
     public MonVLisSchedJobTableBean getMonVLisSchedJobViewBean(FiltriJobSchedulati filtriJS,
@@ -763,7 +776,6 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param dateValidate le date
      * @param nomeJob      nome del job
-     *
      * @return {@link MonVLisSchedJobTableBean} table bean per la UI
      */
     public MonVLisSchedJobTableBean getMonVLisSchedJobViewBean(Date[] dateValidate,
@@ -825,7 +837,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * job
      *
      * @param nomeJob nome job
-     *
      * @return entity bean {@link MonVVisLastSchedJobRowBean}
      */
     public MonVVisLastSchedJobRowBean getMonVVisLastSchedJob(String nomeJob) {
@@ -968,6 +979,84 @@ public class MonitoraggioHelper extends GenericHelper {
 	return udObjectTableBean;
     }
 
+    // MEV32983
+    public MonVLisFascicoloObjectTableBean getMonVLisFascicoloObjectTableBean(BigDecimal idObject) {
+	Query query = getEntityManager()
+		.createQuery("SELECT u FROM MonVLisFascicoloObject u WHERE u.idObject = :idObject "
+			+ " ORDER BY u.aaFascicoloSacer, lpad(u.cdKeyFascicoloSacer, 13, '0')");
+	query.setParameter("idObject", idObject);
+	List<MonVLisFascicoloObject> udObjectList = query.getResultList();
+	return createMonVLisFascicoloObjectTableBean(udObjectList);
+    }
+
+    public MonVLisFascicoloObjectTableBean getMonVLisFascicoloObjectTableBean(BigDecimal idObject,
+	    BigDecimal aaKeyFascicoloSacer, String cdKeyFascicolo, String tiStatoFascicoloObject,
+	    String cdErr) {
+	StringBuilder queryStr = new StringBuilder(
+		"SELECT u FROM MonVLisFascicoloObject u WHERE u.idObject = :idObject ");
+
+	if (aaKeyFascicoloSacer != null) {
+	    queryStr.append("AND u.aaFascicoloSacer = :aaKeyFascicoloSacer ");
+	}
+	if (StringUtils.isNotBlank(cdKeyFascicolo)) {
+	    queryStr.append("AND UPPER(u.cdKeyFascicoloSacer) = :cdKeyFascicolo ");
+	}
+	if (StringUtils.isNotBlank(tiStatoFascicoloObject)) {
+	    queryStr.append("AND u.tiStatoFascicoloObject = :tiStatoUnitaDocObject ");
+	}
+	if (StringUtils.isNotBlank(cdErr)) {
+	    queryStr.append("AND u.cdErrSacer = :cdErr ");
+	}
+	queryStr.append("ORDER BY u.aaFascicoloSacer, lpad(u.cdKeyFascicoloSacer, 12, '0')");
+	Query query = getEntityManager().createQuery(queryStr.toString());
+	query.setParameter("idObject", idObject);
+
+	if (aaKeyFascicoloSacer != null) {
+	    query.setParameter("aaKeyFascicoloSacer", aaKeyFascicoloSacer);
+	}
+	if (StringUtils.isNotBlank(cdKeyFascicolo)) {
+	    query.setParameter("cdKeyFascicolo", cdKeyFascicolo.toUpperCase());
+	}
+	if (StringUtils.isNotBlank(tiStatoFascicoloObject)) {
+	    query.setParameter("tiStatoUnitaDocObject", tiStatoFascicoloObject);
+	}
+	if (StringUtils.isNotBlank(cdErr)) {
+	    query.setParameter("cdErr", cdErr);
+	}
+	List<MonVLisFascicoloObject> fascicoliObjectList = query.getResultList();
+	return createMonVLisFascicoloObjectTableBean(fascicoliObjectList);
+    }
+
+    private MonVLisFascicoloObjectTableBean createMonVLisFascicoloObjectTableBean(
+	    List<MonVLisFascicoloObject> udObjectList) {
+	MonVLisFascicoloObjectTableBean facicoloObjectTableBean = new MonVLisFascicoloObjectTableBean();
+	try {
+	    if (udObjectList != null && !udObjectList.isEmpty()) {
+		for (MonVLisFascicoloObject monVLisFascicoloObject : udObjectList) {
+		    MonVLisFascicoloObjectRowBean rb = (MonVLisFascicoloObjectRowBean) Transform
+			    .entity2RowBean(monVLisFascicoloObject);
+		    if (rb.getNiSizeFileByte() == null) {
+			rb.setNiSizeFileByte(BigDecimal.ZERO);
+		    }
+
+		    String chiaveUd = "";
+		    if (rb.getAaFascicoloSacer() != null) {
+			chiaveUd = rb.getAaFascicoloSacer().toString();
+			if (rb.getCdKeyFascicoloSacer() != null) {
+			    chiaveUd = chiaveUd + " - " + rb.getCdKeyFascicoloSacer();
+			}
+		    }
+		    rb.setString("chiave_fascicolo", chiaveUd);
+		    facicoloObjectTableBean.add(rb);
+		}
+	    }
+	} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+		| InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+	    throw new IllegalStateException(e);
+	}
+	return facicoloObjectTableBean;
+    }
+
     public <T> BaseTableInterface getDistinctColumnFromMonVLisUnitaDocObjectTableBean(
 	    BigDecimal idObject, Class<T> resultClass, String... columns) {
 	BaseTableInterface<?> tmpTableBean = new BaseTable();
@@ -1012,6 +1101,51 @@ public class MonitoraggioHelper extends GenericHelper {
 	return tmpTableBean;
     }
 
+    // MEV 32983
+    public <T> BaseTableInterface getDistinctColumnFromMonVLisFascicoloObjectTableBean(
+	    BigDecimal idObject, Class<T> resultClass, String... columns) {
+	BaseTableInterface<?> tmpTableBean = new BaseTable();
+	StringBuilder builder = new StringBuilder("SELECT DISTINCT ");
+	String concatenated = "";
+	int i = 0;
+	String firstColumn = "";
+	for (String column : columns) {
+	    String columnCamelCase = Utils.convertSnakeCaseToCamelCase(column);
+	    if (i > 0) {
+		builder.append(",");
+		concatenated += ",";
+	    } else {
+		firstColumn = "u." + columnCamelCase;
+	    }
+	    builder.append("u.").append(columnCamelCase);
+	    concatenated += "u." + columnCamelCase;
+	    i++;
+	}
+	builder.append(" FROM MonVLisFascicoloObject u WHERE u.idObject = :idObject AND ")
+		.append(firstColumn).append(" IS NOT NULL").append(" ORDER BY ")
+		.append(concatenated);
+	List<T> resultList = getEntityManager().createQuery(builder.toString(), resultClass)
+		.setParameter("idObject", idObject).getResultList();
+	for (T value : resultList) {
+	    BaseRow row = new BaseRow();
+	    if (value instanceof String) {
+		row.setObject(columns[0], value);
+	    } else if (value instanceof BigDecimal) {
+		row.setObject(columns[0], value);
+		row.setString(columns[0] + "_str", String.valueOf(value));
+	    } else if (value instanceof Object[]) {
+		for (int index = 0; index < columns.length; index++) {
+		    String column = columns[index];
+		    Object[] res = (Object[]) value;
+		    row.setObject(column, res[index]);
+		}
+	    }
+	    tmpTableBean.add(row);
+	}
+
+	return tmpTableBean;
+    }
+
     /*
      * METODO MODIFICATO PER LA GESTIONE DEGLI ERRORI
      */
@@ -1031,6 +1165,24 @@ public class MonitoraggioHelper extends GenericHelper {
 	return table;
     }
 
+    // MEV 32983
+    public BaseTableInterface getCdErrSacerFromMonVLisFascicoloObjectTableBean(
+	    BigDecimal idObject) {
+	BaseTableInterface table = new BaseTable();
+	Query q = getEntityManager().createNamedQuery("MonVLisFascicoloObject.findByPigObjectId");
+	q.setParameter("idObject", idObject);
+	List<Object[]> l = q.getResultList();
+	for (Object[] objects : l) {
+	    BaseRow row = new BaseRow();
+	    row.setObject(MonVLisFascicoloObjectTableDescriptor.COL_CD_ERR_SACER, objects[0]);
+	    row.setObject(MonVLisFascicoloObjectTableDescriptor.COL_DL_ERR_SACER, objects[1]);
+	    row.setObject(MonVLisFascicoloObjectTableDescriptor.COL_CD_CONCAT_DL_ERR_SACER,
+		    objects[2]);
+	    table.add(row);
+	}
+	return table;
+    }
+
     public MonVLisVersObjTableBean getMonVLisVersObjTableBean(BigDecimal idObject) {
 	String queryStr = "SELECT u FROM MonVLisVersObj u WHERE u.idObject = :idObject ORDER BY u.dtApertura DESC";
 	Query query = getEntityManager().createQuery(queryStr);
@@ -1044,7 +1196,8 @@ public class MonitoraggioHelper extends GenericHelper {
 		    MonVLisVersObjRowBean row = (MonVLisVersObjRowBean) Transform
 			    .entity2RowBean(lvo);
 
-		    if (row.getNmReportTrasfOS() != null) {
+		    if (row.getNmReportTrasfOS() != null
+			    && row.getNmReportTrasfOS().equals(Constants.DB_TRUE)) {
 			row.setString("scaricaReport", "Scarica report");
 		    }
 
@@ -1111,6 +1264,40 @@ public class MonitoraggioHelper extends GenericHelper {
 		: "";
 	udObjRB.setString("versatore", ambienteVers + vers);
 	udObjRB.setString("chiave_ud", registro + anno + numero);
+	// Formatto col "." e assegno il valore ad un campo stringa
+	if (udObjRB.getNiSizeFileByte() == null) {
+	    udObjRB.setNiSizeFileByte(BigDecimal.ZERO);
+	}
+	return udObjRB;
+    }
+
+    // MEV 32983
+    public MonVVisFascicoloObjectRowBean getMonVVisFascicoloObjectRowBean(BigDecimal idObject) {
+	MonVVisFascicoloObject monVVisFascicoloObject = getEntityManager()
+		.find(MonVVisFascicoloObject.class, idObject);
+	MonVVisFascicoloObjectRowBean udObjRB = new MonVVisFascicoloObjectRowBean();
+	try {
+	    if (monVVisFascicoloObject != null) {
+		udObjRB = (MonVVisFascicoloObjectRowBean) Transform
+			.entity2RowBean(monVVisFascicoloObject);
+	    }
+	} catch (Exception e) {
+	    log.error("Errore nel recupero del dettaglio dell'unita documentaria {}",
+		    e.getMessage(), e);
+	}
+
+	// Concateno alcuni campi per il front-end
+	String ambienteVers = udObjRB.getNmAmbienteVers() != null ? udObjRB.getNmAmbienteVers()
+		: "";
+	String vers = udObjRB.getNmVers() != null ? ", " + udObjRB.getNmVers() : "";
+	String anno = udObjRB.getAaFascicoloSacer() != null
+		? udObjRB.getAaFascicoloSacer().toString()
+		: "";
+	String numero = udObjRB.getCdKeyFascicoloSacer() != null
+		? " - " + udObjRB.getCdKeyFascicoloSacer()
+		: "";
+	udObjRB.setString("versatore", ambienteVers + vers);
+	udObjRB.setString("chiave_fascicolo", anno + numero);
 	// Formatto col "." e assegno il valore ad un campo stringa
 	if (udObjRB.getNiSizeFileByte() == null) {
 	    udObjRB.setNiSizeFileByte(BigDecimal.ZERO);
@@ -1540,7 +1727,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * Restituisce il table bean riferito alla lista degli oggetti derivanti da versamenti falliti
      *
      * @param filtriObj filtro {@link MonitoraggioFiltriListaOggDerVersFallitiBean}
-     *
      * @return entity bean {@link MonVLisObjNonVersTableBean}
      */
     public MonVLisObjNonVersTableBean getMonVLisObjNonVersViewBean(
@@ -1718,9 +1904,7 @@ public class MonitoraggioHelper extends GenericHelper {
      *
      * @param idVers      id versamento
      * @param cdKeyObject chiave oggetto
-     *
      * @return entity bean {@link MonVLisVersObjNonVersTableBean}
-     *
      * @throws EMFError errore generico
      */
     public MonVLisVersObjNonVersTableBean getMonVLisVersObjNonVersViewBean(BigDecimal idVers,
@@ -2072,7 +2256,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * 'NON_RISOLTO'
      *
      * @param idSessioneSet id sessione (set)
-     *
      * @return entity bean {@link PigObjectTableBean}
      */
     public PigObjectTableBean getPigObjectsFromSessions(Set<BigDecimal> idSessioneSet) {
@@ -2109,9 +2292,7 @@ public class MonitoraggioHelper extends GenericHelper {
      * Organizzazioni
      *
      * @param filtri i filtri di ricerca riportati dalla pagina precedente
-     *
      * @return entity bean {@link IamVLisOrganizDaReplicTableBean}
-     *
      * @throws EMFError errore generico
      */
     public IamVLisOrganizDaReplicTableBean getIamVLisOrganizDaReplicTableBean(
@@ -2129,7 +2310,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * @param idVers     versatore
      * @param tiOper     operazione
      * @param tiStato    stato
-     *
      * @return table bean per la UI {@link IamVLisOrganizDaReplicTableBean}
      */
     public IamVLisOrganizDaReplicTableBean getIamVLisOrganizDaReplicTableBean(BigDecimal idAmbiente,
@@ -2240,7 +2420,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * non risolubile settato
      *
      * @param ids lista id oggetti padre
-     *
      * @return lista oggetti
      */
     public List<PigObject> getPigObjectsPadri(List<BigDecimal> ids) {
@@ -2317,6 +2496,15 @@ public class MonitoraggioHelper extends GenericHelper {
 	return (Long) query.getSingleResult();
     }
 
+    // MEV 39009
+    public Long countPigFascicoloObjectDuplicati(BigDecimal idObject) {
+	String queryStr = "SELECT COUNT(pigFas) FROM PigFascicoloObject pigFas WHERE pigFas.pigObject.idObject = :idObject AND pigFas.tiStatoFascicoloObject = 'VERSATA_ERR'"
+		+ " AND pigFas.cdErrSacer = 'FASC-001-001'";
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	return (Long) query.getSingleResult();
+    }
+
     public Long countPigUnitaDocObject(BigDecimal idObject, String... statiUdObject) {
 	StringBuilder queryStr = new StringBuilder(
 		"SELECT COUNT(pigUd) FROM PigUnitaDocObject pigUd WHERE pigUd.pigObject.idObject = :idObject ");
@@ -2343,22 +2531,65 @@ public class MonitoraggioHelper extends GenericHelper {
 	return (Long) query.getSingleResult();
     }
 
+    // MEV 39009
+    public Long countPigFascicoloObject(BigDecimal idObject, String... statiFascicoloObject) {
+	StringBuilder queryStr = new StringBuilder(
+		"SELECT COUNT(pigFas) FROM PigFascicoloObject pigFas WHERE pigFas.pigObject.idObject = :idObject ");
+	List<String> statiFascicolo = new ArrayList<>();
+	if (statiFascicoloObject != null) {
+	    statiFascicolo = Arrays.asList(statiFascicoloObject);
+	}
+	if (!statiFascicolo.isEmpty()) {
+	    if (statiFascicolo.size() > 1) {
+		queryStr.append("AND pigFas.tiStatoFascicoloObject IN (:statiFascicoloObject)");
+	    } else {
+		queryStr.append("AND pigFas.tiStatoFascicoloObject = :statiFascicoloObject");
+	    }
+	}
+	Query query = getEntityManager().createQuery(queryStr.toString());
+	query.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	if (!statiFascicolo.isEmpty()) {
+	    if (statiFascicolo.size() > 1) {
+		query.setParameter("statiFascicoloObject", statiFascicolo);
+	    } else {
+		query.setParameter("statiFascicoloObject", statiFascicolo.get(0));
+	    }
+	}
+	return (Long) query.getSingleResult();
+    }
+
     /*
      * Nuovo metodo per la MEV#14652
      */
-    public boolean existsUDPerObjectVersataOkOrVersataErr(BigDecimal idObject, String cdErrSacer) {
-	StringBuilder queryStr = new StringBuilder(
-		"SELECT 1 FROM PigUnitaDocObject pigUd WHERE pigUd.pigObject.idObject = :idObject ");
-	queryStr.append("AND (pigUd.tiStatoUnitaDocObject = :statoOk ");
-	queryStr.append(
-		"OR (pigUd.tiStatoUnitaDocObject = :statoErr AND pigUd.cdErrSacer = :cdErrSacer))");
-	Query query = getEntityManager().createQuery(queryStr.toString());
+    public boolean existsUdPerObjectVersataOkOrVersataErr(BigDecimal idObject, String cdErrSacer) {
+	String queryStr = "SELECT 1 FROM PigUnitaDocObject pigUd WHERE pigUd.pigObject.idObject = :idObject "
+		+ "AND (pigUd.tiStatoUnitaDocObject = :statoOk "
+		+ "OR (pigUd.tiStatoUnitaDocObject = :statoErr AND pigUd.cdErrSacer = :cdErrSacer))";
+	Query query = getEntityManager().createQuery(queryStr);
 	query.setParameter("idObject", HibernateUtils.longFrom(idObject));
 	query.setParameter("statoOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
 	query.setParameter("statoErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
 	query.setParameter("cdErrSacer", cdErrSacer);
-	List<PigUnitaDocObject> l = query.getResultList();
-	return l != null && !l.isEmpty();
+	List<PigUnitaDocObject> uds = query.getResultList();
+
+	return (uds != null && !uds.isEmpty());
+    }
+
+    public boolean existsFascicoloPerObjectVersataOkOrVersataErr(BigDecimal idObject,
+	    String cdErrSacer) {
+	String queryStr = "SELECT 1 FROM PigFascicoloObject pigFas WHERE pigFas.pigObject.idObject = :idObject "
+		+ "AND (pigFas.tiStatoFascicoloObject = :statoOk "
+		+ "OR (pigFas.tiStatoFascicoloObject = :statoErr AND pigFas.cdErrSacer = :cdErrSacer))";
+
+	Query query = getEntityManager().createQuery(queryStr);
+	query.setParameter("idObject", HibernateUtils.longFrom(idObject));
+	query.setParameter("statoOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
+	query.setParameter("statoErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+	query.setParameter("cdErrSacer", cdErrSacer);
+
+	List<PigUnitaDocObject> fascicoli = query.getResultList();
+
+	return (fascicoli != null && !fascicoli.isEmpty());
     }
 
     /*
@@ -2369,13 +2600,13 @@ public class MonitoraggioHelper extends GenericHelper {
      * annullare i versamenti delle unitÃ  doc (bottone â€œAnnulla versamenti unitÃ 
      * documentarieâ€�)
      */
+
     /**
      * Ritorna gli oggetti figli del padre di id <code>idObjectPadre</code> il cui stato Ã¨ dato
      * come parametro
      *
      * @param idObjectPadre id padre
      * @param stati         lista stati (opzionale)
-     *
      * @return la lista di oggetti figli
      */
     public List<PigObject> getFigliWithStatus(long idObjectPadre, String... stati) {
@@ -2390,7 +2621,6 @@ public class MonitoraggioHelper extends GenericHelper {
      * Ritorna tutti gli oggetti figli del padre di id <code>idObjectPadre</code>
      *
      * @param idObjectPadre id oggetto padre
-     *
      * @return la lista di oggetti figli
      */
     public List<PigObject> getTuttiFigli(long idObjectPadre) {

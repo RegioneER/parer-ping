@@ -14,6 +14,7 @@
 package it.eng.sacerasi.job.preparaxml.ejb;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,8 +49,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.MarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationException;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 
+import it.eng.parer.ws.xml.versReq.UnitaDocumentaria;
+import it.eng.parer.ws.xml.versfascicoloV3.IndiceSIPFascicolo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -67,6 +71,7 @@ import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.TipiEncBinari;
 import it.eng.sacerasi.common.Constants.TipiHash;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
+import it.eng.sacerasi.entity.PigFascicoloObject;
 import it.eng.sacerasi.entity.PigFileObject;
 import it.eng.sacerasi.entity.PigFileObjectStorage;
 import it.eng.sacerasi.entity.PigInfoDicom;
@@ -75,6 +80,8 @@ import it.eng.sacerasi.entity.PigTipoFileObject;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigUnitaDocObject;
 import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.job.preparaxml.dto.DocObject;
+import it.eng.sacerasi.job.preparaxml.dto.FascicoloDocObject;
 import it.eng.sacerasi.job.preparaxml.dto.FileObjectExt;
 import it.eng.sacerasi.job.preparaxml.dto.FileUnitaDoc;
 import it.eng.sacerasi.job.preparaxml.dto.OggettoInCoda;
@@ -83,7 +90,6 @@ import it.eng.sacerasi.job.preparaxml.util.XmlUtils;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
 import it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer;
 import it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.ws.dto.IRispostaWS;
 import it.eng.sacerasi.ws.ejb.XmlContextCache;
 import it.eng.sacerasi.ws.xml.invioAsync.ChiaveType;
@@ -91,8 +97,6 @@ import it.eng.sacerasi.ws.xml.invioAsync.FileType;
 import it.eng.sacerasi.ws.xml.invioAsync.ListaUnitaDocumentarieType;
 import it.eng.sacerasi.ws.xml.invioAsync.UnitaDocumentariaType;
 import it.eng.sacerasixml.xsd.util.Utils;
-import java.util.logging.Level;
-import javax.xml.parsers.ParserConfigurationException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -111,9 +115,6 @@ public class PreparazioneXmlEjb {
     // EJB per corrispondenze dei versatori
     @EJB
     CorrispondenzeVersHelper corVersHelper;
-    //
-    @EJB
-    ConfigurationHelper configurationHelper;
     //
     @EJB
     SalvataggioBackendHelper salvataggioBackendHelper;
@@ -205,11 +206,8 @@ public class PreparazioneXmlEjb {
 				.unmarshal(Utils.getSaxSourceForUnmarshal(oggettoInCoda
 					.getRifPigObject().getPigXmlObjects().get(0).getBlXml()));
 			oggettoInCoda.setParsedListaUnitaDoc(elemento.getValue());
-		    } catch (JAXBException | SAXException e) {
+		    } catch (JAXBException | SAXException | ParserConfigurationException e) {
 			throw new ParerInternalError(e);
-		    } catch (ParserConfigurationException ex) {
-			java.util.logging.Logger.getLogger(PreparazioneXmlEjb.class.getName())
-				.log(Level.SEVERE, null, ex);
 		    }
 		}
 		log.debug("Parsing dell'XML di versamento asincrono - OK");
@@ -218,6 +216,8 @@ public class PreparazioneXmlEjb {
 	if (oggettoInCoda.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
 	    //
 	    oggettoInCoda.setListaUnitaDocObject(new ArrayList<>());
+	    // MEV 32983
+	    oggettoInCoda.setListaFascicoloDocObject(new ArrayList<>());
 	    //
 	    BigDecimal idOrganizIam = null;
 	    String nmUseridSacer = null;
@@ -404,34 +404,47 @@ public class PreparazioneXmlEjb {
 
     //
     private static final int CNST_DIRECTORY = 1;
-    private static final int CNST_KEY_REG = 2;
-    private static final int CNST_KEY_ANNO = 3;
-    private static final int CNST_KEY_NUM = 4;
-    private static final int CNST_FILE = 5;
+    private static final int CNST_UD_KEY_REG = 2;
+    private static final int CNST_UD_KEY_ANNO = 3;
+    private static final int CNST_FASCICOLO_KEY_ANNO = 2;
+    private static final int CNST_UD_KEY_NUM = 4;
+    private static final int CNST_FASCICOLO_KEY_NUM = 3;
+    private static final int CNST_UD_FILE = 5;
+    private static final int CNST_FASCICOLO_FILE = 4;
     //
 
     private void gestioneZip(BigDecimal idOrganizIam, String nmUseridSacer,
 	    OggettoInCoda oggettoInCoda, PigTipoObject pigTipoObject, PigObject pigObject)
 	    throws ParerInternalError {
-	/*
-	 * RegExp ^(([^/\^]+)\^([0-9]{4})\^([^/\^]+))/([^/]+)$
-	 *
-	 */
-
-	String regExp = "^(([^/\\^]+)\\^([0-9]{4})\\^([^/\\^]+))/([^/]+)$";
-	Pattern validEntryPattrn = Pattern.compile(regExp);
 	boolean prosegui = true;
 	if (oggettoInCoda.getListaFileObjectExt().size() == 1) {
 	    String zipRelativePath = oggettoInCoda.getListaFileObjectExt().get(0).getUrnFileRel();
 	    String objRelativePath = new File(zipRelativePath).getParent() + File.separator;
+
 	    // set di tutte le chiavi UD definite nello ZIP
 	    Set<List<String>> tmpInsiemeUd = new HashSet<>();
+
+	    // set di tutte le chiavi FASCICOLO definite nello ZI0P
+	    Set<List<String>> tmpInsiemeFascicoli = new HashSet<>();
+
 	    // mappa delle UD contenute nel file ZIP escluse perché già versate
-	    Map<String, UnitaDocObject> mappaUnitaDocObject = new HashMap<>();
+	    Map<String, DocObject> mappaUnitaDocObject = new HashMap<>();
 	    // mappa (sulle stesse UD di listaUnitaDocObject) per verificare rapidamente le UD già
 	    // inserite
 	    Map<String, Chiave> mappaUDEscluse = new HashMap<>();
-	    Chiave tmpChiaveUdDirectory = new Chiave();
+
+	    // mappa delle UD contenute nel file ZIP escluse perché già versate
+	    Map<String, DocObject> mappaFascicoliObject = new HashMap<>();
+	    // mappa (sulle stesse UD di listaUnitaDocObject) per verificare rapidamente le UD già
+	    // inserite
+	    Map<String, Chiave> mappaFascicoliEsclusi = new HashMap<>();
+
+	    Chiave tmpChiaveDirectory = null;
+	    DocObject tmpDocObject = null;
+
+	    Constants.TipoContenutoTipoOggetto tipoContenutoTipoObject = Constants.TipoContenutoTipoOggetto
+		    .valueOf(pigTipoObject.getTiContenuto());
+
 	    try (ZipFile zipFile = new ZipFile(
 		    oggettoInCoda.getListaFileObjectExt().get(0).getUrnFile())) {
 		// crea una directory temporanea con nome casuale nella stessa
@@ -491,65 +504,84 @@ public class PreparazioneXmlEjb {
 		    // ho trovato almeno un file...
 		    isZipEmpty = false;
 
-		    Matcher entryMatcher = validEntryPattrn.matcher(tmpArchiveEntry.getName());
-		    if (entryMatcher.find() && entryMatcher.groupCount() == 5) { // riga buona
-			//
-			if (log.isDebugEnabled()) {
-			    log.debug("Directory {}: Registro {}: Anno {}: Numero {}: File {}",
-				    entryMatcher.group(CNST_DIRECTORY),
-				    entryMatcher.group(CNST_KEY_REG),
-				    entryMatcher.group(CNST_KEY_ANNO),
-				    entryMatcher.group(CNST_KEY_NUM),
-				    entryMatcher.group(CNST_FILE));
-			}
-			// chiave
-			tmpChiaveUdDirectory = new Chiave();
-			tmpChiaveUdDirectory
-				.setAnno(Long.parseLong(entryMatcher.group(CNST_KEY_ANNO)));
-			tmpChiaveUdDirectory.setRegistro(entryMatcher.group(CNST_KEY_REG));
-			tmpChiaveUdDirectory.setNumero(entryMatcher.group(CNST_KEY_NUM));
+		    switch (tipoContenutoTipoObject) {
+		    case UD:
+			tmpChiaveDirectory = controllaChiaveUd(tmpArchiveEntry.getName());
+			break;
+		    case FASCICOLO:
+			tmpChiaveDirectory = controllaChiaveFascicolo(tmpArchiveEntry.getName());
+			break;
+		    }
+
+		    if (tmpChiaveDirectory != null) { // riga buona
 			//
 			// cerco l'UD identificata tra quelle già censite
 			prosegui = true;
-			UnitaDocObject tmpUnitaDocObject = mappaUnitaDocObject
-				.get(entryMatcher.group(CNST_DIRECTORY));
-			if (tmpUnitaDocObject == null) {
-			    // non ho trovato l'UD tra quelle già censite. La devo creare.
-			    if (log.isDebugEnabled()) {
-				log.debug("Creazione nuova UD {}",
-					entryMatcher.group(CNST_DIRECTORY));
+
+			if (tipoContenutoTipoObject.equals(Constants.TipoContenutoTipoOggetto.UD)) {
+			    tmpDocObject = mappaUnitaDocObject
+				    .get(tmpChiaveDirectory.getChiaveCompatta());
+			    if (tmpDocObject == null) {
+
+				String[] tmpArrP = new String[] {
+					"", "", "" };
+				tmpArrP[0] = tmpChiaveDirectory.getAnno().toString();
+				tmpArrP[1] = tmpChiaveDirectory.getRegistro();
+				tmpArrP[2] = tmpChiaveDirectory.getNumero();
+				tmpInsiemeUd.add(Arrays.asList(tmpArrP));
+
+				tmpDocObject = creaUnitaDocObject(tmpChiaveDirectory,
+					pigObject.getIdObject(), zipRelativePath);
+
+				if (tmpDocObject != null) {
+				    // memorizzo nella lista e nella mappa la nuova unità
+				    // documentaria creata
+				    mappaUnitaDocObject.put(tmpChiaveDirectory.getChiaveCompatta(),
+					    tmpDocObject);
+				    oggettoInCoda.getListaUnitaDocObject()
+					    .add((UnitaDocObject) tmpDocObject);
+				} else {
+				    // l'UD non deve essere creata perché già versata in Sacer,
+				    // quindi non proseguo oltre con la sua analisi
+				    // Nota che questo non costituisce errore,
+				    // perciò l'elaborazione deve comunque proseguire con l'UD
+				    // successiva
+				    prosegui = false;
+				    /*
+				     * memorizzo, se non già fatto, la chiave di questa UD, nella
+				     * lista delle UD escluse In seguito dovrà verificare se le UD
+				     * definite nell'XML asincrono sono memorizzate nella lista UD
+				     * principale oppure in questa
+				     */
+				    mappaUDEscluse.putIfAbsent(
+					    tmpChiaveDirectory.getChiaveCompatta(),
+					    tmpChiaveDirectory);
+				}
 			    }
-			    //
-			    String[] tmpArrP = new String[] {
-				    "", "", "" };
-			    tmpArrP[0] = tmpChiaveUdDirectory.getAnno().toString();
-			    tmpArrP[1] = tmpChiaveUdDirectory.getRegistro();
-			    tmpArrP[2] = tmpChiaveUdDirectory.getNumero();
-			    tmpInsiemeUd.add(Arrays.asList(tmpArrP));
-			    /*
-			     * non considerare l'UD se questa è già stata versata correttamente
-			     * oppure è in errore con codice UD-002 o UD-002-001 (chiave duplicata)
-			     */
-			    if (controlliPrepXml.verificaPUDocObjNonVersata(tmpChiaveUdDirectory,
-				    pigObject.getIdObject())) {
-				tmpUnitaDocObject = new UnitaDocObject();
-				tmpUnitaDocObject.setChiaveUd(tmpChiaveUdDirectory);
-				tmpUnitaDocObject
-					.setChiaveCompatta(entryMatcher.group(CNST_DIRECTORY));
-				tmpUnitaDocObject.setListaFileUnitaDoc(new ArrayList<>());
-				tmpUnitaDocObject.setUrnFileZip(zipRelativePath);
+			}
+
+			if (tipoContenutoTipoObject
+				.equals(Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+			    tmpDocObject = mappaFascicoliObject
+				    .get(tmpChiaveDirectory.getChiaveCompatta());
+			    if (tmpDocObject == null) {
+				String[] tmpArrP = new String[] {
+					"", "" };
+				tmpArrP[0] = tmpChiaveDirectory.getAnno().toString();
+				tmpArrP[1] = tmpChiaveDirectory.getNumero();
+				tmpInsiemeFascicoli.add(Arrays.asList(tmpArrP));
+
+				tmpDocObject = creaFascicoloDocObject(tmpChiaveDirectory,
+					pigObject.getIdObject(), zipRelativePath);
+			    }
+			    if (tmpDocObject != null) {
 				// memorizzo nella lista e nella mappa la nuova unità documentaria
 				// creata
-				mappaUnitaDocObject.put(entryMatcher.group(CNST_DIRECTORY),
-					tmpUnitaDocObject);
-				oggettoInCoda.getListaUnitaDocObject().add(tmpUnitaDocObject);
+				mappaFascicoliObject.put(tmpChiaveDirectory.getChiaveCompatta(),
+					tmpDocObject);
+				oggettoInCoda.getListaFascicoloDocObject()
+					.add((FascicoloDocObject) tmpDocObject);
 			    } else {
-				if (log.isDebugEnabled()) {
-				    log.debug(
-					    "Creazione nuova UD non possibile perché già versata in Sacer. "
-						    + "non analizzo il file. {}",
-					    entryMatcher.group(CNST_DIRECTORY));
-				}
 				// l'UD non deve essere creata perché già versata in Sacer,
 				// quindi non proseguo oltre con la sua analisi
 				// Nota che questo non costituisce errore,
@@ -562,11 +594,8 @@ public class PreparazioneXmlEjb {
 				 * nell'XML asincrono sono memorizzate nella lista UD principale
 				 * oppure in questa
 				 */
-				if (mappaUDEscluse
-					.get(entryMatcher.group(CNST_DIRECTORY)) == null) {
-				    mappaUDEscluse.put(entryMatcher.group(CNST_DIRECTORY),
-					    tmpChiaveUdDirectory);
-				}
+				mappaFascicoliEsclusi.putIfAbsent(
+					tmpChiaveDirectory.getChiaveCompatta(), tmpChiaveDirectory);
 			    }
 			}
 
@@ -578,57 +607,94 @@ public class PreparazioneXmlEjb {
 			     * Nel caso, lo inserisco.
 			     */
 			    FileUnitaDoc fudDaInviare = null;
+
+			    // caso ZIP CON XML SACER
+			    log.debug("caso ZIP CON XML SACER");
 			    if (oggettoInCoda
 				    .getTipoVersamento() == Constants.TipoVersamento.ZIP_CON_XML_SACER) {
-				// caso ZIP CON XML SACER
-				log.debug("caso ZIP CON XML SACER");
-				fudDaInviare = this.gestEntryZipConXml(tmpArchiveEntry,
-					tmpUnitaDocObject, entryMatcher);
-				if (tmpUnitaDocObject.getUrnUDXml() != null && tmpUnitaDocObject
-					.getUrnUDXml().equals(tmpArchiveEntry.getName())) {
+				fudDaInviare = this.gestEntryZipConXml(tmpChiaveDirectory,
+					tmpArchiveEntry, tmpDocObject);
+				if (tmpDocObject.getUrnUDXml() != null && tmpDocObject.getUrnUDXml()
+					.equals(tmpArchiveEntry.getName())) {
 				    log.debug("leggi il contenuto dell'XML");
 				    ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
 				    this.leggiDaZipFile(tmpOutputStream, zipFile, tmpArchiveEntry);
+
 				    // get xml declared encoding MAC #15042
 				    String encodingFromXMLDeclaration = XmlUtils
 					    .getXmlEcondingDeclaration(tmpOutputStream.toString())
 					    .name();
-				    tmpUnitaDocObject.setUnitaDocumentariaXml(
+				    tmpDocObject.setDocumentoXml(
 					    tmpOutputStream.toString(encodingFromXMLDeclaration));
-				    it.eng.parer.ws.xml.versReq.UnitaDocumentaria tmpUd = this
-					    .caricaStruttAbilDaXmlSIP(tmpUnitaDocObject);
-				    if (!this.verificaCoerenzaChiaveXmlSIP(tmpUd,
-					    tmpChiaveUdDirectory,
-					    entryMatcher.group(CNST_DIRECTORY), oggettoInCoda,
-					    pigObject)) {
-					// se questa verifica è fallita, annullo il riferimento al
-					// file da inviare
-					// così da evitare di estrarlo dallo ZIP (dovrebbe in ogni
-					// caso essere null,
-					// ma meglio non rischiare), dal momento che in ogni caso
-					// il versamento è condannato.
-					fudDaInviare = null;
+
+				    if (tipoContenutoTipoObject
+					    .equals(Constants.TipoContenutoTipoOggetto.UD)) {
+					UnitaDocumentaria tmpUd = this.caricaStruttAbilDaXmlSIP(
+						(UnitaDocObject) tmpDocObject);
+					if (!this.verificaCoerenzaChiaveXmlSIP(
+						tmpUd.getIntestazione().getChiave().getNumero(),
+						tmpUd.getIntestazione().getChiave()
+							.getTipoRegistro(),
+						tmpUd.getIntestazione().getChiave().getAnno(),
+						tmpChiaveDirectory,
+						tmpChiaveDirectory.getChiaveCompatta(),
+						oggettoInCoda, pigObject)) {
+					    // se questa verifica è fallita, annullo il riferimento
+					    // al file da inviare
+					    // così da evitare di estrarlo dallo ZIP (dovrebbe in
+					    // ogni caso essere null,
+					    // ma meglio non rischiare), dal momento che in ogni
+					    // caso
+					    // il versamento è condannato.
+					    fudDaInviare = null;
+					}
+				    } else if (tipoContenutoTipoObject
+					    .equals(Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+					IndiceSIPFascicolo tmpFascicolo = this
+						.caricaStruttAbilDaXmlSIPPerFascicolo(
+							(FascicoloDocObject) tmpDocObject);
+					if (!this.verificaCoerenzaChiaveXmlSIP(
+						tmpFascicolo
+							.getIntestazione().getChiave().getNumero(),
+						"",
+						tmpFascicolo.getIntestazione().getChiave()
+							.getAnno(),
+						tmpChiaveDirectory,
+						tmpChiaveDirectory.getChiaveCompatta(),
+						oggettoInCoda, pigObject)) {
+					    // se questa verifica è fallita, annullo il riferimento
+					    // al file da inviare
+					    // così da evitare di estrarlo dallo ZIP (dovrebbe in
+					    // ogni caso essere null,
+					    // ma meglio non rischiare), dal momento che in ogni
+					    // caso
+					    // il versamento è condannato.
+					    fudDaInviare = null;
+					}
 				    }
 				}
 			    } else {
 				// caso ZIP NO XML
 				log.debug("caso ZIP NO XML");
-				tmpUnitaDocObject.setIdOrganizSacer(idOrganizIam);
-				tmpUnitaDocObject.setNmUserIdSacer(nmUseridSacer);
-				if (idOrganizIam != null) {
-				    UsrVAbilStrutSacerXping strutturaAbilitata = corVersHelper
-					    .getStrutturaAbilitata(idOrganizIam, nmUseridSacer);
-				    tmpUnitaDocObject
-					    .setNmAmbienteSacer(strutturaAbilitata.getNmAmbiente());
-				    tmpUnitaDocObject
-					    .setNmEnteSacer(strutturaAbilitata.getNmEnte());
-				    tmpUnitaDocObject
-					    .setNmStrutSacer(strutturaAbilitata.getNmStrut());
+				if (tipoContenutoTipoObject
+					.equals(Constants.TipoContenutoTipoOggetto.UD)) {
+				    tmpDocObject.setIdOrganizSacer(idOrganizIam);
+				    tmpDocObject.setNmUserIdSacer(nmUseridSacer);
+				    if (idOrganizIam != null) {
+					UsrVAbilStrutSacerXping strutturaAbilitata = corVersHelper
+						.getStrutturaAbilitata(idOrganizIam, nmUseridSacer);
+					tmpDocObject.setNmAmbienteSacer(
+						strutturaAbilitata.getNmAmbiente());
+					tmpDocObject.setNmEnteSacer(strutturaAbilitata.getNmEnte());
+					tmpDocObject
+						.setNmStrutSacer(strutturaAbilitata.getNmStrut());
+				    }
+				    fudDaInviare = this.gestEntryZipNoXml(tmpArchiveEntry,
+					    (UnitaDocObject) tmpDocObject, oggettoInCoda,
+					    pigTipoObject, pigObject);
 				}
-				fudDaInviare = this.gestEntryZipNoXml(tmpArchiveEntry,
-					tmpUnitaDocObject, entryMatcher, oggettoInCoda,
-					pigTipoObject, pigObject);
 			    }
+
 			    // se nello zip ho individuato un file da inviare a SACER, lo estraggo
 			    // nella directory temporanea creata prima e ne memorizzo
 			    // il path relativo
@@ -673,12 +739,14 @@ public class PreparazioneXmlEjb {
 		log.info("PigObject {}", pigObject.getCdKeyObject());
 		log.info("In questo file ZIP sono state dichiarate {} Unità doc",
 			tmpInsiemeUd.size());
+		log.info("In questo file ZIP sono state dichiarati {} Fascicoli",
+			tmpInsiemeFascicoli.size());
 	    } catch (ValidationException | MarshalException | XMLStreamException e) {
 		log.error("Errore nell'unmarshalling dell'xml contenuto nello zip : {}",
 			ExceptionUtils.getRootCauseMessage(e), e);
 		this.setError(MessaggiWSBundle.PING_PREPXML_FILE_017,
 			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_017,
-				tmpChiaveUdDirectory.toString()),
+				tmpChiaveDirectory != null ? tmpChiaveDirectory.toString() : ""),
 			oggettoInCoda);
 	    } catch (IOException e) {
 		// il file ZIP è rotto -- l'oggetto deve essere distrutto.
@@ -693,7 +761,7 @@ public class PreparazioneXmlEjb {
 			+ ExceptionUtils.getRootCauseMessage(e), e);
 		this.setError(MessaggiWSBundle.PING_PREPXML_FILE_017,
 			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_017,
-				tmpChiaveUdDirectory.toString()),
+				tmpChiaveDirectory != null ? tmpChiaveDirectory.toString() : ""),
 			oggettoInCoda);
 	    }
 
@@ -702,8 +770,14 @@ public class PreparazioneXmlEjb {
 	     * coerenza. Ovviamente il loop è distinto per i 2 casi di ZIP con e senza XML
 	     */
 	    if (oggettoInCoda.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-		this.verificaCoerenzaUDVersZip(mappaUnitaDocObject, mappaUDEscluse, oggettoInCoda,
-			pigObject);
+		if (tipoContenutoTipoObject.equals(Constants.TipoContenutoTipoOggetto.UD)) {
+		    this.verificaCoerenzaUDVersZip(mappaUnitaDocObject, mappaUDEscluse,
+			    oggettoInCoda, pigObject);
+		} else if (tipoContenutoTipoObject
+			.equals(Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+		    // MEV 32983
+		    this.verificaCoerenzaFascicoliVersZip(oggettoInCoda, pigObject);
+		}
 	    }
 
 	    /*
@@ -720,7 +794,14 @@ public class PreparazioneXmlEjb {
 		 */
 		if (controlliPrepXml
 			.checkPigVChkSesPrecNotAnnul(new BigDecimal(pigObject.getIdObject()))) {
-		    this.verificaCoerenzaVersamentoPrec(tmpInsiemeUd, oggettoInCoda, pigObject);
+		    if (tipoContenutoTipoObject.equals(Constants.TipoContenutoTipoOggetto.UD)) {
+
+			this.verificaCoerenzaVersamentoPrec(tmpInsiemeUd, oggettoInCoda, pigObject);
+		    } else if (tipoContenutoTipoObject
+			    .equals(Constants.TipoContenutoTipoOggetto.FASCICOLO)) {
+			this.verificaCoerenzaVersamentoPrecFascicoli(tmpInsiemeFascicoli,
+				oggettoInCoda, pigObject);
+		    }
 		}
 	    }
 	    //
@@ -735,6 +816,19 @@ public class PreparazioneXmlEjb {
 				    pigObject.getCdKeyObject()),
 			    oggettoInCoda);
 		}
+
+		// MEV 32983 - TODO aggiungere un campo specifico al WS?
+		int sizeFascicoloObjects = tmpInsiemeFascicoli.size();
+		log.debug(
+			"Verifico che il numero di fascicoli calcolati corrisponda a quelle attese all'interno dell'oggetto");
+		if (pigObject.getNiUnitaDocAttese() != null
+			&& pigObject.getNiUnitaDocAttese().intValue() != sizeFascicoloObjects) {
+		    this.setError(MessaggiWSBundle.PING_PREPXML_FILE_013,
+			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_013,
+				    pigObject.getCdKeyObject()),
+			    oggettoInCoda);
+		}
+
 	    }
 	} else {
 	    throw new ParerInternalError(
@@ -764,9 +858,9 @@ public class PreparazioneXmlEjb {
 	return directoryBase + filePath.subpath(tmpCnt - 2, tmpCnt);
     }
 
-    private FileUnitaDoc gestEntryZipConXml(ZipEntry archiveEntry, UnitaDocObject unitaDocObject,
-	    Matcher matcher) {
-	if (matcher.group(CNST_FILE).equalsIgnoreCase(matcher.group(CNST_DIRECTORY) + ".xml")) {
+    private FileUnitaDoc gestEntryZipConXml(Chiave chiave, ZipEntry archiveEntry,
+	    DocObject unitaDocObject) {
+	if (chiave.getNomefileDerivato().equalsIgnoreCase(chiave.getChiaveCompatta() + ".xml")) {
 	    unitaDocObject.setUrnUDXml(archiveEntry.getName());
 	    // se il file si chiama come la directory più l'estensione .xml, devo leggerne il
 	    // contenuto.
@@ -781,16 +875,16 @@ public class PreparazioneXmlEjb {
 	    // Anche in questo caso caso risulta più comodo leggerlo nel ciclo principale
 	    if (log.isDebugEnabled()) {
 		log.debug("nome file != nome cartella: devo inviarlo a sacer. file: {}",
-			matcher.group(CNST_FILE));
+			unitaDocObject.getChiaveUd().getNomefileDerivato());
 	    }
 	    FileUnitaDoc tmpFileUnitaDoc = new FileUnitaDoc();
 	    // ID file = nome file, dovrò essere identico nell'xml di versamento
-	    tmpFileUnitaDoc.setIdFile(matcher.group(CNST_FILE));
+	    tmpFileUnitaDoc.setIdFile(chiave.getNomefileDerivato());
 	    // conservo l'URL originale del file nell'archivio, che manderò a titolo informativo a
 	    // SACER
 	    tmpFileUnitaDoc.setUrnFileInZip(archiveEntry.getName());
 	    // aggiungo il file appena individuato
-	    unitaDocObject.getListaFileUnitaDoc().add(tmpFileUnitaDoc);
+	    ((UnitaDocObject) unitaDocObject).getListaFileUnitaDoc().add(tmpFileUnitaDoc);
 	    // incrementa dimensione UD
 	    unitaDocObject.setSizeInByte(unitaDocObject.getSizeInByte() + archiveEntry.getSize());
 	    // restituisco l'istanza di FileUnitaDoc, su cui scrivere l'URN del file temporaneo
@@ -799,8 +893,7 @@ public class PreparazioneXmlEjb {
     }
 
     private FileUnitaDoc gestEntryZipNoXml(ZipEntry archiveEntry, UnitaDocObject unitaDocObject,
-	    Matcher matcher, OggettoInCoda oggettoInCoda, PigTipoObject pigTipoObject,
-	    PigObject pigObject) {
+	    OggettoInCoda oggettoInCoda, PigTipoObject pigTipoObject, PigObject pigObject) {
 	/*
 	 * RegExp ^([^/\^]+)\^([^/]+)$
 	 *
@@ -811,7 +904,8 @@ public class PreparazioneXmlEjb {
 
 	String regExp = "^([^/\\^]+)\\^([^/]+)$";
 	Pattern validEntryPattrn = Pattern.compile(regExp);
-	Matcher entryMatcher = validEntryPattrn.matcher(matcher.group(CNST_FILE));
+	Matcher entryMatcher = validEntryPattrn
+		.matcher(unitaDocObject.getChiaveUd().getNomefileDerivato());
 	if (entryMatcher.find() && entryMatcher.groupCount() == 2) { // riga buona
 	    String tmpNomeFile = entryMatcher.group(CNST_FILE_SUFFIX);
 	    if (log.isDebugEnabled()) {
@@ -854,8 +948,9 @@ public class PreparazioneXmlEjb {
 		// PING_PREPXML_FILE_005
 		this.setError(MessaggiWSBundle.PING_PREPXML_FILE_005,
 			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_005,
-				pigObject.getCdKeyObject(), matcher.group(CNST_DIRECTORY),
-				matcher.group(CNST_FILE)),
+				pigObject.getCdKeyObject(),
+				unitaDocObject.getChiaveUd().getChiaveCompatta(),
+				unitaDocObject.getChiaveUd().getNomefileDerivato()),
 			oggettoInCoda);
 	    }
 	} else {
@@ -865,13 +960,14 @@ public class PreparazioneXmlEjb {
 	    // con il pattern che consente di identificare il tipo di file
 	    this.setError(MessaggiWSBundle.PING_PREPXML_FILE_004,
 		    MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_004,
-			    pigObject.getCdKeyObject(), matcher.group(CNST_DIRECTORY)),
+			    pigObject.getCdKeyObject(),
+			    unitaDocObject.getChiaveUd().getChiaveCompatta()),
 		    oggettoInCoda);
 	}
 	return null;
     }
 
-    private void verificaCoerenzaUDVersZip(Map<String, UnitaDocObject> mappaUnitaDocObject,
+    private void verificaCoerenzaUDVersZip(Map<String, DocObject> mappaUnitaDocObject,
 	    Map<String, Chiave> mappaUDEscluse, OggettoInCoda oggettoInCoda, PigObject pigObject) {
 	if (oggettoInCoda.getTipoVersamento() == Constants.TipoVersamento.ZIP_CON_XML_SACER) {
 	    /*
@@ -879,8 +975,8 @@ public class PreparazioneXmlEjb {
 	     * effettuare i test di coerenza.
 	     */
 	    for (UnitaDocObject unitaDocObject : oggettoInCoda.getListaUnitaDocObject()) {
-		if (unitaDocObject.getUnitaDocumentariaXml() == null
-			|| unitaDocObject.getUnitaDocumentariaXml().isEmpty()) {
+		if (unitaDocObject.getDocumentoXml() == null
+			|| unitaDocObject.getDocumentoXml().isEmpty()) {
 		    // PING_PREPXML_FILE_002
 		    // Nel file .zip dell''oggetto {0}, per l''unità documentaria {1} non è presente
 		    // il file xml con cui effettuare il versamento a SACER
@@ -974,11 +1070,38 @@ public class PreparazioneXmlEjb {
 	}
     }
 
+    // MEV 32983
+    private void verificaCoerenzaFascicoliVersZip(OggettoInCoda oggettoInCoda,
+	    PigObject pigObject) {
+	if (oggettoInCoda.getTipoVersamento() == Constants.TipoVersamento.ZIP_CON_XML_SACER) {
+	    /*
+	     * caso ZIP CON XML SACER loop su tutte le UD create dal precedente passaggio per
+	     * effettuare i test di coerenza.
+	     */
+	    for (FascicoloDocObject fascicoloDocObject : oggettoInCoda
+		    .getListaFascicoloDocObject()) {
+		if (fascicoloDocObject.getDocumentoXml() == null
+			|| fascicoloDocObject.getDocumentoXml().isEmpty()) {
+		    // PING_PREPXML_FILE_002
+		    // Nel file .zip dell''oggetto {0}, per l''unità documentaria {1} non è presente
+		    // il file xml con cui effettuare il versamento a SACER
+		    this.setError(MessaggiWSBundle.PING_PREPXML_FILE_002,
+			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_002,
+				    pigObject.getCdKeyObject(),
+				    fascicoloDocObject.getChiaveCompatta()),
+			    oggettoInCoda);
+		    //
+		    break;
+		}
+	    }
+	}
+    }
+
     private void verificaCoerenzaVersamentoPrec(Set<List<String>> tmpInsiemeUd,
 	    OggettoInCoda oggettoInCoda, PigObject pigObject) {
 	long tmpQuantitaUd = pigObject.getPigUnitaDocObjects().size();
 	if (tmpQuantitaUd == 0) {
-	    log.info("Non esiste un versamento precedente prodotto da questo pigObject");
+	    log.info("Non esiste un versamento di ud precedente prodotto da questo pigObject");
 	    return;
 	}
 	//
@@ -997,6 +1120,39 @@ public class PreparazioneXmlEjb {
 	    tmpArrP[1] = tmpDocObject.getCdRegistroUnitaDocSacer();
 	    tmpArrP[2] = tmpDocObject.getCdKeyUnitaDocSacer();
 	    if (!tmpInsiemeUd.contains(Arrays.asList(tmpArrP))) {
+		this.setError(MessaggiWSBundle.PING_PREPXML_FILE_012,
+			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_012,
+				pigObject.getCdKeyObject()),
+			oggettoInCoda);
+		return;
+	    }
+	}
+
+    }
+
+    private void verificaCoerenzaVersamentoPrecFascicoli(Set<List<String>> tmpInsiemeFascicoli,
+	    OggettoInCoda oggettoInCoda, PigObject pigObject) {
+	long tmpQuantitaFascicoli = pigObject.getPigFascicoloObjects().size();
+	if (tmpQuantitaFascicoli == 0) {
+	    log.info(
+		    "Non esiste un versamento di fascicoli precedente prodotto da questo pigObject");
+	    return;
+	}
+	//
+	log.info("Esiste un versamento precedente, composto da {} Fascicoli", tmpQuantitaFascicoli);
+	if (tmpQuantitaFascicoli != tmpInsiemeFascicoli.size()) {
+	    this.setError(MessaggiWSBundle.PING_PREPXML_FILE_011, MessaggiWSBundle
+		    .getString(MessaggiWSBundle.PING_PREPXML_FILE_011, pigObject.getCdKeyObject()),
+		    oggettoInCoda);
+	    return;
+	}
+	//
+	for (PigFascicoloObject tmpFascicoloObject : pigObject.getPigFascicoloObjects()) {
+	    String[] tmpArrP = new String[] {
+		    "", "" };
+	    tmpArrP[0] = tmpFascicoloObject.getAaFascicoloSacer().toString();
+	    tmpArrP[1] = tmpFascicoloObject.getCdKeyFascicoloSacer();
+	    if (!tmpInsiemeFascicoli.contains(Arrays.asList(tmpArrP))) {
 		this.setError(MessaggiWSBundle.PING_PREPXML_FILE_012,
 			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_012,
 				pigObject.getCdKeyObject()),
@@ -1031,15 +1187,15 @@ public class PreparazioneXmlEjb {
 	return false;
     }
 
-    private String impostaTipoFileinZip(Map<String, UnitaDocObject> mappaUnitaDocObject,
+    private String impostaTipoFileinZip(Map<String, DocObject> mappaUnitaDocObject,
 	    UnitaDocumentariaType ud, String chiaveCompUD) {
 	if (ud.getFiles() != null && ud.getFiles().getFile() != null
 		&& !ud.getFiles().getFile().isEmpty()) {
 	    for (FileType fileType : ud.getFiles().getFile()) {
 		int conta = 0;
 
-		for (FileUnitaDoc file : mappaUnitaDocObject.get(chiaveCompUD)
-			.getListaFileUnitaDoc()) {
+		UnitaDocObject udo = (UnitaDocObject) mappaUnitaDocObject.get(chiaveCompUD);
+		for (FileUnitaDoc file : udo.getListaFileUnitaDoc()) {
 		    if (file.getRifPigTipoFileObject().getNmTipoFileObject()
 			    .equals(fileType.getTipoFile())) {
 			conta++;
@@ -1068,14 +1224,13 @@ public class PreparazioneXmlEjb {
      *
      * @throws JAXBException
      */
-    private it.eng.parer.ws.xml.versReq.UnitaDocumentaria caricaStruttAbilDaXmlSIP(
-	    UnitaDocObject tmpUnitaDocObject) throws JAXBException {
-	String unitaDocumentariaXml = tmpUnitaDocObject.getUnitaDocumentariaXml();
+    private UnitaDocumentaria caricaStruttAbilDaXmlSIP(UnitaDocObject tmpUnitaDocObject)
+	    throws JAXBException {
+	String unitaDocumentariaXml = tmpUnitaDocObject.getDocumentoXml();
 	StringReader reader = new StringReader(unitaDocumentariaXml);
 	Unmarshaller unmarshaller = xmlContextCache.getVersReqCtxforUD().createUnmarshaller();
 	unmarshaller.setSchema(xmlContextCache.getSchemaOfVersReq());
-	it.eng.parer.ws.xml.versReq.UnitaDocumentaria ud = (it.eng.parer.ws.xml.versReq.UnitaDocumentaria) unmarshaller
-		.unmarshal(reader);
+	UnitaDocumentaria ud = (UnitaDocumentaria) unmarshaller.unmarshal(reader);
 
 	BigDecimal idOrganizIam = corVersHelper.getStrutturaAbilitata(
 		ud.getIntestazione().getVersatore().getAmbiente(),
@@ -1098,15 +1253,51 @@ public class PreparazioneXmlEjb {
 	return ud;
     }
 
-    private boolean verificaCoerenzaChiaveXmlSIP(it.eng.parer.ws.xml.versReq.UnitaDocumentaria ud,
+    /*
+     * MEV Questo metodo viene invocato solo nel caso di ZIP_CON_XML ed effettua il parsing del SIP
+     * presente nel file ZIP per caricare la struttura dichiarata
+     *
+     * @param tmpUnitaDocObject
+     *
+     * @return istanza di UnitaDocumentaria corrispondente all'XML del SIP
+     *
+     * @throws JAXBException
+     */
+    // MEV 32983
+    private IndiceSIPFascicolo caricaStruttAbilDaXmlSIPPerFascicolo(
+	    FascicoloDocObject tmpFascicoloDocObject) throws JAXBException {
+	String fascicoloXml = tmpFascicoloDocObject.getDocumentoXml();
+	StringReader reader = new StringReader(fascicoloXml);
+	Unmarshaller unmarshaller = xmlContextCache.getVersReqCtx_Fascicolo().createUnmarshaller();
+	unmarshaller.setSchema(xmlContextCache.getSchemaOfVersReqFascicolo());
+	IndiceSIPFascicolo fascicolo = (IndiceSIPFascicolo) unmarshaller.unmarshal(reader);
+
+	BigDecimal idOrganizIam = corVersHelper.getStrutturaAbilitata(
+		fascicolo.getIntestazione().getVersatore().getAmbiente(),
+		fascicolo.getIntestazione().getVersatore().getEnte(),
+		fascicolo.getIntestazione().getVersatore().getStruttura(),
+		fascicolo.getIntestazione().getVersatore().getUserID());
+
+	tmpFascicoloDocObject.setIdOrganizSacer(idOrganizIam);
+	tmpFascicoloDocObject
+		.setNmAmbienteSacer(fascicolo.getIntestazione().getVersatore().getAmbiente());
+	tmpFascicoloDocObject.setNmEnteSacer(fascicolo.getIntestazione().getVersatore().getEnte());
+	tmpFascicoloDocObject
+		.setNmStrutSacer(fascicolo.getIntestazione().getVersatore().getStruttura());
+	tmpFascicoloDocObject
+		.setNmUserIdSacer(fascicolo.getIntestazione().getVersatore().getUserID());
+
+	return fascicolo;
+    }
+
+    private boolean verificaCoerenzaChiaveXmlSIP(String numero, String tipoRegistro, int anno,
 	    Chiave tmpChiave, String directory, OggettoInCoda oggettoInCoda, PigObject pigObject) {
 	// MEV#14555 - Prepara XML: nei controlli di coerenza considerare la presenza di caratteri
 	// non ammessi
-	String numeroChiaveCalcolato = it.eng.sacerasi.web.util.Utils
-		.normalizzaNomeFile(ud.getIntestazione().getChiave().getNumero());
+	String numeroChiaveCalcolato = it.eng.sacerasi.web.util.Utils.normalizzaNomeFile(numero);
 	String registroChiaveCalcolato = it.eng.sacerasi.web.util.Utils
-		.normalizzaNomeFile(ud.getIntestazione().getChiave().getTipoRegistro());
-	if ((ud.getIntestazione().getChiave().getAnno() != tmpChiave.getAnno())
+		.normalizzaNomeFile(tipoRegistro);
+	if ((anno != tmpChiave.getAnno())
 		// Confronta la chiave ricavata dal nome del file da quella ricalcolata con i dati
 		// nell'XML
 		|| (!numeroChiaveCalcolato.equals(tmpChiave.getNumero()))
@@ -1158,5 +1349,128 @@ public class PreparazioneXmlEjb {
 	    throw new ParerInternalError(
 		    "PIG_FILE_OBJECT non può essere vuota o avere più di un elemento in questo punto.");
 	}
+    }
+
+    // MEV 32983
+    private Chiave controllaChiaveUd(String chiave) {
+	/*
+	 * RegExp ^(([^/\^]+)\^([0-9]{4})\^([^/\^]+))/([^/]+)$
+	 *
+	 */
+	Chiave tmpChiaveUdDirectory = null;
+
+	String regExpUd = "^(([^/\\^]+)\\^([0-9]{4})\\^([^/\\^]+))/([^/]+)$";
+	Pattern validEntryPatternUd = Pattern.compile(regExpUd);
+
+	Matcher entryMatcher = validEntryPatternUd.matcher(chiave);
+	if (entryMatcher.find() && entryMatcher.groupCount() == 5) { // riga buona
+	    //
+	    if (log.isDebugEnabled()) {
+		log.debug("Directory {}: Registro {}: Anno {}: Numero {}: File {}",
+			entryMatcher.group(CNST_DIRECTORY), entryMatcher.group(CNST_UD_KEY_REG),
+			entryMatcher.group(CNST_UD_KEY_ANNO), entryMatcher.group(CNST_UD_KEY_NUM),
+			entryMatcher.group(CNST_UD_FILE));
+	    }
+	    // chiave
+	    tmpChiaveUdDirectory = new Chiave();
+	    tmpChiaveUdDirectory.setAnno(Long.parseLong(entryMatcher.group(CNST_UD_KEY_ANNO)));
+	    tmpChiaveUdDirectory.setRegistro(entryMatcher.group(CNST_UD_KEY_REG));
+	    tmpChiaveUdDirectory.setNumero(entryMatcher.group(CNST_UD_KEY_NUM));
+
+	    tmpChiaveUdDirectory.setChiaveCompatta(entryMatcher.group(CNST_DIRECTORY));
+	    tmpChiaveUdDirectory.setNomefileDerivato(entryMatcher.group(CNST_UD_FILE));
+	}
+
+	return tmpChiaveUdDirectory;
+    }
+
+    // MEV 32983
+    private Chiave controllaChiaveFascicolo(String chiave) {
+	Chiave tmpChiaveUdDirectory = null;
+
+	String regExpFascicoli = "^(([0-9]{4})\\^([^/\\^]+))/([^/]+)$";
+	Pattern validEntryPatternFascicoli = Pattern.compile(regExpFascicoli);
+	Matcher entryMatcher = validEntryPatternFascicoli.matcher(chiave);
+	if (entryMatcher.find() && entryMatcher.groupCount() == 4) { // riga buona
+	    //
+	    if (log.isDebugEnabled()) {
+		log.debug("Directory {}: Anno {}: Numero {}: File {}",
+			entryMatcher.group(CNST_DIRECTORY),
+			entryMatcher.group(CNST_FASCICOLO_KEY_ANNO),
+			entryMatcher.group(CNST_FASCICOLO_KEY_NUM),
+			entryMatcher.group(CNST_FASCICOLO_FILE));
+	    }
+	    // chiave
+	    tmpChiaveUdDirectory = new Chiave();
+	    tmpChiaveUdDirectory
+		    .setAnno(Long.parseLong(entryMatcher.group(CNST_FASCICOLO_KEY_ANNO)));
+	    tmpChiaveUdDirectory.setRegistro("");
+	    tmpChiaveUdDirectory.setNumero(entryMatcher.group(CNST_FASCICOLO_KEY_NUM));
+
+	    tmpChiaveUdDirectory.setChiaveCompatta(entryMatcher.group(CNST_DIRECTORY));
+	    tmpChiaveUdDirectory.setNomefileDerivato(entryMatcher.group(CNST_FASCICOLO_FILE));
+
+	}
+
+	return tmpChiaveUdDirectory;
+    }
+
+    // MEV 32983
+    private UnitaDocObject creaUnitaDocObject(Chiave chiaveUdDirecory, long idObject,
+	    String zipRelativePath) {
+	UnitaDocObject udo = null;
+
+	// non ho trovato l'UD tra quelle già censite. La devo creare.
+	if (log.isDebugEnabled()) {
+	    log.debug("Creazione nuova UD {}", chiaveUdDirecory.getChiaveCompatta());
+	}
+	/*
+	 * non considerare l'UD se questa è già stata versata correttamente oppure è in errore con
+	 * codice UD-002 o UD-002-001 (chiave duplicata)
+	 */
+	if (controlliPrepXml.verificaPUDocObjNonVersata(chiaveUdDirecory, idObject)) {
+	    udo = new UnitaDocObject();
+	    udo.setChiaveUd(chiaveUdDirecory);
+	    udo.setChiaveCompatta(chiaveUdDirecory.getChiaveCompatta());
+	    udo.setListaFileUnitaDoc(new ArrayList<>());
+	    udo.setUrnFileZip(zipRelativePath);
+	} else {
+	    if (log.isDebugEnabled()) {
+		log.debug("Creazione nuova UD non possibile perché già versata in Sacer. "
+			+ "non analizzo il file. {}", chiaveUdDirecory.getChiaveCompatta());
+	    }
+	}
+
+	return udo;
+    }
+
+    // MEV 32983
+    private FascicoloDocObject creaFascicoloDocObject(Chiave chiaveFascicoloDirecory, long idObject,
+	    String zipRelativePath) {
+	FascicoloDocObject fdo = null;
+
+	// non ho trovato l'UD tra quelle già censite. La devo creare.
+	if (log.isDebugEnabled()) {
+	    log.debug("Creazione nuova UD {}", chiaveFascicoloDirecory.getChiaveCompatta());
+	}
+	/*
+	 * non considerare l'UD se questa è già stata versata correttamente oppure è in errore con
+	 * codice UD-002 o UD-002-001 (chiave duplicata)
+	 */
+	if (controlliPrepXml.verificaPFascicoloObjNonVersato(chiaveFascicoloDirecory, idObject)) {
+	    fdo = new FascicoloDocObject();
+	    fdo.setChiaveUd(chiaveFascicoloDirecory);
+	    fdo.setChiaveCompatta(chiaveFascicoloDirecory.getChiaveCompatta());
+	    fdo.setUrnFileZip(zipRelativePath);
+	} else {
+	    if (log.isDebugEnabled()) {
+		log.debug(
+			"Creazione nuovo Fascicolo non possibile perché già versato in Sacer. "
+				+ "non analizzo il file. {}",
+			chiaveFascicoloDirecory.getChiaveCompatta());
+	    }
+	}
+
+	return fdo;
     }
 }

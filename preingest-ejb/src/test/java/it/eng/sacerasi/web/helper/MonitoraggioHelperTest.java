@@ -677,7 +677,7 @@ public class MonitoraggioHelperTest {
     void existsUDPerObjectVersataOkOrVersataErr_queryIsOk() {
 	BigDecimal idObject = aBigDecimal();
 	String cdErrSacer = aString();
-	helper.existsUDPerObjectVersataOkOrVersataErr(idObject, cdErrSacer);
+	helper.existsUdPerObjectVersataOkOrVersataErr(idObject, cdErrSacer);
 	assertTrue(true);
     }
 

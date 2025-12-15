@@ -59,6 +59,20 @@
         </session>
 
         <session>
+            <ejb-name>MessageSenderEjbVersFascicoli</ejb-name>
+            <ejb-class>it.eng.sacerasi.job.producerCodaVersFascicoli.ejb.MessageSenderEjbVersFascicoli</ejb-class>
+            <session-type>Stateless</session-type>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/ProducerConnectionFactory</resource-env-ref-name>
+                <jndi-name>java:/JmsXA</jndi-name>
+            </resource-env-ref>
+            <resource-env-ref>
+                <resource-env-ref-name>jms/queue/ProducerCodaVersFascicoliQueue</resource-env-ref-name>
+                <jndi-name>java:/jms/queue/ProducerCodaVersFascicoliQueue</jndi-name>
+            </resource-env-ref>
+        </session>
+
+        <session>
             <ejb-name>NotificaInAttesaPrelievoEjb</ejb-name>
             <ejb-class>it.eng.sacerasi.ws.notificaInAttesaPrelievo.ejb.NotificaInAttesaPrelievoEjb</ejb-class>
             <session-type>Stateless</session-type>

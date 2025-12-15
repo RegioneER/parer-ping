@@ -913,6 +913,14 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 		.setValue(tipoObjRowBean.getTiConservazione());
 	getForm().getTipoObject().getNm_vers().setValue(nmVers);
 
+	// MEV 32982
+	String tipoContenuto = tipoObjRowBean.getTiContenuto() != null
+		? tipoObjRowBean.getTiContenuto()
+		: "";
+	getForm().getTipoObject().getTi_contenuto()
+		.setValue(it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto
+			.getEnumByString(tipoContenuto));
+
 	hideFieldsTipoObj(false);
 	getForm().getTipoObject().setStatus(Status.view);
 	getForm().getTipoObjectList().setStatus(Status.view);
@@ -2798,7 +2806,9 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 	PigTipoObjectRowBean tipoObjRowBean = new PigTipoObjectRowBean();
 	tipoObj.copyToBean(tipoObjRowBean);
 
-	final String tiVersFile = tipoObj.getTi_vers_file().parse();
+	String tiVersFile = tipoObj.getTi_vers_file().parse() != null
+		? tipoObj.getTi_vers_file().parse()
+		: "";
 
 	if (tipoObj.getNm_tipo_object().parse() == null) {
 	    getMessageBox().addError("Errore di compilazione form: nome tipo non inserito<br/>");
@@ -2857,7 +2867,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 	// MEV#27321 - Introduzione della priorità di versamento di un oggetto ZIP_CON_XML_SACER e
 	// NO_ZIP
 	if ((tipoObj.getTi_priorita_versamento().parse() == null
-		|| tipoObj.getTi_priorita_versamento().parse().equals(""))
+		|| tipoObj.getTi_priorita_versamento().parse().isEmpty())
 		&& tiVersFile != null
 		&& (tiVersFile.equals(it.eng.sacerasi.common.Constants.TipoVersamento.NO_ZIP.name())
 			|| tiVersFile.equals(
@@ -2904,7 +2914,18 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 		|| tipoObj.getFl_contr_hash().parse().isEmpty()) {
 	    getMessageBox()
 		    .addError("Errore di compilazione form: Controllo Hash non inserito<br/>");
+	}
 
+	// MEV 32892
+	if (!getMessageBox().hasError() && (tiVersFile
+		.equals(it.eng.sacerasi.common.Constants.TipoVersamento.ZIP_CON_XML_SACER.name())
+		|| tiVersFile.equals(it.eng.sacerasi.common.Constants.TipoVersamento.NO_ZIP.name())
+		|| tiVersFile.equals(
+			it.eng.sacerasi.common.Constants.TipoVersamento.ZIP_NO_XML_SACER.name()))
+		&& (tipoObj.getTi_contenuto().parse() == null
+			|| tipoObj.getTi_contenuto().parse().isEmpty())) {
+	    getMessageBox()
+		    .addError("Errore di compilazione form: Tipo contenuto non inserito<br/>");
 	}
 
 	PigParamApplicTableBean parametriAmministrazione = (PigParamApplicTableBean) getForm()
@@ -4086,9 +4107,11 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 	BaseRow br = new BaseRow();
 	BaseRow br1 = new BaseRow();
 	BaseRow br2 = new BaseRow();
+	BaseRow br3 = new BaseRow();
 	DecodeMap map = new DecodeMap();
 	DecodeMap mapCalc = new DecodeMap();
 	DecodeMap mapCons = new DecodeMap();
+	DecodeMap mapTiContenuto = new DecodeMap();
 	for (Enum<?> row : Util
 		.sortEnum(it.eng.sacerasi.common.Constants.TipoVersamento.values())) {
 	    br.setString("ti_vers_file", row.name());
@@ -4115,6 +4138,17 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 
 	mapCons.populatedMap(bt, "ti_conservazione", "ti_conservazione");
 	getForm().getTipoObject().getTi_conservazione().setDecodeMap(mapCons);
+	bt.clear();
+
+	// MEV 32982
+	for (Enum<?> row : it.eng.sacerasi.common.Constants.TipoContenutoTipoOggetto.values()) {
+	    br3.setString("ti_contenuto", row.name());
+	    bt.add(br3);
+	}
+	mapTiContenuto.populatedMap(bt, "ti_contenuto", "ti_contenuto");
+	getForm().getTipoObject().getTi_contenuto().setDecodeMap(mapTiContenuto);
+	bt.clear();
+
 	DecodeMap siNoMap = Util.getFlagComboDecodeMap();
 	getForm().getTipoObject().getFl_contr_hash().setDecodeMap(siNoMap);
 	getForm().getTipoObject().getFl_forza_accettazione_sacer().setDecodeMap(siNoMap);
@@ -4130,6 +4164,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
 		    .setDecodeMap(ComboGetter.getMappaOrdinalGenericEnum("ti_priorita_versamento",
 			    Constants.ComboFlagPrioVersType.values()));
 	}
+
     }
 
     private void populateComboTipoFileObj() {

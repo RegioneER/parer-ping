@@ -80,6 +80,9 @@ public class MonVLisStatoVers implements Serializable {
     // MEV 30343
     private String note;
 
+    // MEV 39090
+    private String tiContenutoOggetto;
+
     private MonVLisStatoVersId monVLisStatoVersId;
 
     public MonVLisStatoVers() {
@@ -282,6 +285,15 @@ public class MonVLisStatoVers implements Serializable {
 
     public void setNote(String note) {
 	this.note = note;
+    }
+
+    @Column(name = "TI_CONTENUTO_OGGETTO")
+    public String getTiContenutoOggetto() {
+	return tiContenutoOggetto;
+    }
+
+    public void setTiContenutoOggetto(String tiContenutoOggetto) {
+	this.tiContenutoOggetto = tiContenutoOggetto;
     }
 
     @Column(name = "TI_STATO_CALCOLATO")

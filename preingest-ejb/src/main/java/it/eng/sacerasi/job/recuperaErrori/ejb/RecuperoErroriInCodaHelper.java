@@ -18,13 +18,8 @@ package it.eng.sacerasi.job.recuperaErrori.ejb;
 
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
-import it.eng.sacerasi.entity.PigStatoSessioneIngest;
-import it.eng.sacerasi.entity.PigUnitaDocObject;
-import it.eng.sacerasi.entity.PigUnitaDocSessione;
-import it.eng.sacerasi.entity.PigXmlSacerUnitaDocSes;
-import it.eng.sacerasi.entity.PigXmlSessioneIngest;
+import it.eng.sacerasi.entity.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,11 +32,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Bonora_L
  */
 @Stateless(mappedName = "RecuperoErroriInCodaHelper")
@@ -77,6 +72,17 @@ public class RecuperoErroriInCodaHelper {
 		me.creaUnitaDocSessione(udObj, sessione, oldSession);
 	    }
 	}
+
+	// MEV 39011
+	log.debug(
+		"JOB RecuperaErroriInCoda - per ogni fascicolo dell'oggetto creo una sessione fascicolo da associare alla sessione creata");
+	for (PigFascicoloObject fasObj : obj.getPigFascicoloObjects()) {
+	    if (fasObj.getTiStatoFascicoloObject()
+		    .equals(Constants.StatoUnitaDocObject.DA_VERSARE.name())) {
+		me.creaFascicoloSessione(fasObj, sessione, oldSession);
+	    }
+	}
+
 	log.debug("JOB RecuperaErroriInCoda - modifico lo stato dell'oggetto {} in IN_ATTESA_VERS",
 		obj.getCdKeyObject());
 	obj.setTiStatoObject(Constants.StatoOggetto.IN_ATTESA_VERS.name());
@@ -200,12 +206,58 @@ public class RecuperoErroriInCodaHelper {
 	}
     }
 
+    // MEV 39011
+    public void creaFascicoloSessione(PigFascicoloObject fasObj, PigSessioneIngest sessione,
+	    PigSessioneIngest oldSession) {
+	PigFascicoloSessione fasSessione = new PigFascicoloSessione();
+	fasSessione.setAaFascicoloSacer(fasObj.getAaFascicoloSacer());
+	fasSessione.setCdErrSacer(null);
+	fasSessione.setCdKeyFascicoloSacer(fasObj.getCdKeyFascicoloSacer());
+	fasSessione.setDlErrSacer(null);
+	fasSessione.setNiSizeFileByte(fasObj.getNiSizeFileByte());
+	fasSessione.setPigSessioneIngest(sessione);
+	fasSessione.setIdVers(sessione.getPigVer().getIdVers());
+	fasSessione.setTiStatoFascicoloSessione(Constants.StatoUnitaDocSessione.DA_VERSARE.name());
+	fasSessione.setDtStato(new Date());
+	// Aggiunti nuovi campi relativi alla trasformazione
+	fasSessione.setIdOrganizIam(fasObj.getIdOrganizIam());
+	fasSessione.setFlVersSimulato(fasObj.getFlVersSimulato());
+	sessione.getPigFascicoloSessiones().add(fasSessione);
+	/*
+	 * Copia nella Ud di sessione appena creata tutti gli xml della ud dell'oggetto della
+	 * vecchia sessione
+	 */
+	for (PigFascicoloSessione oldFasSessione : oldSession.getPigFascicoloSessiones()) {
+	    if (fasSessione.getAaFascicoloSacer().equals(oldFasSessione.getAaFascicoloSacer())
+		    && fasSessione.getCdKeyFascicoloSacer()
+			    .equals(oldFasSessione.getCdKeyFascicoloSacer())) {
+		for (PigXmlSacerFascicoloSes oldFasSessXml : oldFasSessione
+			.getPigXmlSacerFascicolosSes()) {
+		    PigXmlSacerFascicoloSes newFasSessXml = new PigXmlSacerFascicoloSes();
+		    newFasSessXml.setIdVers(sessione.getPigVer().getIdVers());
+		    newFasSessXml.setBlXmlSacer(oldFasSessXml.getBlXmlSacer());
+		    newFasSessXml.setTiXmlSacer(oldFasSessXml.getTiXmlSacer());
+		    newFasSessXml.setPigFascicoloSessione(fasSessione);
+		    // MAC#15916 - Copiatura XML vers a SACER quando creo sessione
+		    if (fasSessione.getPigXmlSacerFascicolosSes() == null) {
+			fasSessione.setPigXmlSacerFascicolosSes(new ArrayList<>());
+		    }
+		    fasSessione.addPigXmlSacerFascicoloSes(newFasSessXml);
+		}
+	    }
+	}
+    }
+
     @SuppressWarnings("unchecked")
     public List<PigObject> getListaObjects(List<Long> idVersatori, Constants.StatoOggetto stato) {
 	String queryStr = "SELECT obj FROM PigObject obj " + "WHERE obj.tiStatoObject = :tiStato "
 		+ "AND obj.pigVer.idVers IN (:idVers) " + "AND NOT EXISTS("
 		+ "SELECT ud FROM PigUnitaDocObject ud "
 		+ "WHERE ud.pigObject.idObject = obj.idObject " + "AND ud.tiStatoUnitaDocObject = '"
+		+ Constants.StatoUnitaDocObject.IN_CODA_VERS.name() + "' " + ") "
+		+ "AND NOT EXISTS(" + "SELECT fasc FROM PigFascicoloObject fasc "
+		+ "WHERE fasc.pigObject.idObject = obj.idObject "
+		+ "AND fasc.tiStatoUnitaDocObject = '"
 		+ Constants.StatoUnitaDocObject.IN_CODA_VERS.name() + "' " + ")";
 	javax.persistence.Query query = entityManager.createQuery(queryStr);
 	query.setParameter("tiStato", stato.name());

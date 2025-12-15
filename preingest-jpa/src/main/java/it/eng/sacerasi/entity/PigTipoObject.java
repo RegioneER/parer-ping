@@ -70,6 +70,7 @@ public class PigTipoObject implements Serializable {
     private List<PigDichVersSacerTipoObj> pigDichVersSacerTipoObjs = new ArrayList<>();
     private List<PigVersTipoObjectDaTrasf> pigVersTipoObjectDaTrasfs1 = new ArrayList<>();
     private List<PigVersTipoObjectDaTrasf> pigVersTipoObjectDaTrasfs2 = new ArrayList<>();
+    private String tiContenuto;
 
     public PigTipoObject() {
 	// for Hibernate
@@ -451,4 +452,13 @@ public class PigTipoObject implements Serializable {
 	return pigVersTipoObjectDaTrasfs2;
     }
 
+    // MEV 32982
+    @Column(name = "TI_CONTENUTO")
+    public String getTiContenuto() {
+	return this.tiContenuto;
+    }
+
+    public void setTiContenuto(String tiContenuto) {
+	this.tiContenuto = tiContenuto;
+    }
 }

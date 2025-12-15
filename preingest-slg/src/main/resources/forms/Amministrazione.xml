@@ -209,6 +209,7 @@
         <ComboBox Name="id_trasf" Description="Trasformazione" Type="INTEGER" Trigger="true" />
         <ComboBox Name="ti_priorita" Description="Priorità trasformazione" Type="STRING" />
         <ComboBox Name="ti_priorita_versamento" Description="Priorità versamento" Type="STRING" AddBlank="false" />
+        <ComboBox Name="ti_contenuto" Description="Tipo contenuto" Type="STRING" />
         <Input Name="ds_reg_exp_cd_vers" Description="Regular expression" Type="STRING"/>
         
         <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Trigger="true" WithSearchComp="true" />
@@ -348,6 +349,7 @@
         <Input Type="STRING" Description="Nome" Name="nm_tipo_object" />
         <Input Type="STRING" Description="Descrizione" Name="ds_tipo_object" />
         <Input Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
+        <Input Type="STRING" Description="Tipo Contenuto" Name="ti_contenuto" />
     </List>
    
     <!--    <List Name="CorrispondenzeSacerVersatoreList" Description="Corrispondenze in SACER per versatore"  >

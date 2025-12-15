@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Agati_D
  */
 @Stateless(mappedName = "PrioritaEjb")
@@ -107,8 +106,8 @@ public class ProducerCodaVersamentoEjb {
 		codaHelper.contaStudiDicomVersatiOggiEInCodaVers());
 	final Counter udProcessate = new Counter(0);
 	// MAC#31076 - ottengo la lista degli oggetti IN_ATTESA_VERS
-	try (Stream<PigObject> oggetti = codaHelper
-		.retrieveObjectsByState(StatoSessioneIngest.IN_ATTESA_VERS)) {
+	try (Stream<PigObject> oggetti = codaHelper.retrieveObjectsByStateAndContentType(
+		StatoSessioneIngest.IN_ATTESA_VERS, Constants.TipoContenutoTipoOggetto.UD)) {
 	    oggetti.forEach(object -> {
 		String infoLogObj = LOG_PREFIX + " idVers=" + object.getPigVer().getIdVers()
 			+ ", nmVers=" + object.getPigVer().getNmVers() + ", idObject="
@@ -198,11 +197,13 @@ public class ProducerCodaVersamentoEjb {
 		    LOG_PREFIX, numMaxUdDaAccodare);
 	} catch (RuntimeException e) {
 	    // c'è stato un errore, registro sul log la fine esecuzione del job segnalando l'errore
-	    jobLogger.writeAtomicLog(NomiJob.PRODUCER_CODA_VERS, TipiRegLogJob.ERRORE,
-		    e.getMessage());
+	    jobLogger.writeLog(NomiJob.PRODUCER_CODA_VERS, TipiRegLogJob.ERRORE, e.getMessage());
 	    log.debug("{} :: scrivo log fine job {} in {}", LOG_PREFIX, NomiJob.PRODUCER_CODA_VERS,
 		    TipiRegLogJob.ERRORE);
 	}
+	jobLogger.writeLog(NomiJob.PRODUCER_CODA_VERS, TipiRegLogJob.FINE_SCHEDULAZIONE, null);
+	log.debug("{} :: nessun errore - scrivo log fine job {}", LOG_PREFIX,
+		NomiJob.PRODUCER_CODA_VERS);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -313,8 +314,8 @@ public class ProducerCodaVersamentoEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciAging() {
-	Stream<PigObject> objects = codaHelper
-		.retrieveObjectsByState(StatoSessioneIngest.IN_ATTESA_VERS);
+	Stream<PigObject> objects = codaHelper.retrieveObjectsByStateAndContentType(
+		StatoSessioneIngest.IN_ATTESA_VERS, Constants.TipoContenutoTipoOggetto.UD);
 	objects.forEach(prioritaEjb::valutaEscalation);
     }
 }

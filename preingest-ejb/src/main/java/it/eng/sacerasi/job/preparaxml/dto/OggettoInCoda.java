@@ -17,7 +17,7 @@
 package it.eng.sacerasi.job.preparaxml.dto;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.List;
 
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.TipiOggetto;
@@ -87,9 +87,11 @@ public class OggettoInCoda implements IRispostaWS {
     private Constants.TipiOggetto tipoOggetto;
     private Constants.TipoCalcolo tipoCalcolo;
     private PigObject rifPigObject;
-    private ArrayList<FileObjectExt> listaFileObjectExt;
-    private ArrayList<UnitaDocObject> listaUnitaDocObject; // lista delle UnitaDoc che dovranno
-							   // essere gestite
+    private List<FileObjectExt> listaFileObjectExt;
+    private List<UnitaDocObject> listaUnitaDocObject; // lista delle UnitaDoc che dovranno
+						      // essere gestite
+    private List<FascicoloDocObject> listaFascicoloDocObject; // lista dei Fascicoli che
+							      // dovranno essere gestiti
 
     private String urnDirectoryOgg;
     //
@@ -176,20 +178,28 @@ public class OggettoInCoda implements IRispostaWS {
 	this.rifPigObject = rifPigObject;
     }
 
-    public ArrayList<FileObjectExt> getListaFileObjectExt() {
+    public List<FileObjectExt> getListaFileObjectExt() {
 	return listaFileObjectExt;
     }
 
-    public void setListaFileObjectExt(ArrayList<FileObjectExt> listaFileObjectExt) {
+    public void setListaFileObjectExt(List<FileObjectExt> listaFileObjectExt) {
 	this.listaFileObjectExt = listaFileObjectExt;
     }
 
-    public ArrayList<UnitaDocObject> getListaUnitaDocObject() {
+    public List<UnitaDocObject> getListaUnitaDocObject() {
 	return listaUnitaDocObject;
     }
 
-    public void setListaUnitaDocObject(ArrayList<UnitaDocObject> listaUnitaDocObject) {
+    public void setListaUnitaDocObject(List<UnitaDocObject> listaUnitaDocObject) {
 	this.listaUnitaDocObject = listaUnitaDocObject;
+    }
+
+    public List<FascicoloDocObject> getListaFascicoloDocObject() {
+	return listaFascicoloDocObject;
+    }
+
+    public void setListaFascicoloDocObject(List<FascicoloDocObject> listaFascicoloDocObject) {
+	this.listaFascicoloDocObject = listaFascicoloDocObject;
     }
 
     public String getUrnDirectoryOgg() {

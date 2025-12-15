@@ -502,7 +502,6 @@ public class InvioSUEjb {
 				    errore.getCdErrore(), errore.getDsErrore());
 			}
 		    }
-
 		    // Setta lo stato di PigStrumentiUrbanistici
 		    // MEV 31096
 		    strumentiUrbanisticiHelper.creaStatoStorico(strumentoUrbanisticoDaInviare,

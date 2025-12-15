@@ -90,6 +90,35 @@
             }
         });
 
+        //MEV39009
+        $('.confermaAnnullamentoFascicoli').dialog({
+            autoOpen: true,
+            width: 600,
+            modal: true,
+            closeOnEscape: true,
+            resizable: false,
+            dialogClass: "alertBox",
+            title: "Conferma annullamento Fascicoli",
+            buttons: {
+                "Conferma": function () {
+                    //MEV 26942 - nascondo i pulsanti di annullamento.
+                    $(this).dialog("close");
+                    var idObject = $("#Id_object_hidden").val();
+                    var tiAnnullamentoUD = $('input[name="ti_annullamento_ud"]:checked').val();
+                    var dsAnnullamentoUd = $('#ds_annullamento_ud').val();
+                    if (idObject) {
+                        $.post("Monitoraggio.html", {operation: "annullaVersamentiFascicoliDetailAction", Ti_annullamento_ud: tiAnnullamentoUD, ds_annullamento_ud: dsAnnullamentoUd}).done(function (data) {
+
+                            CAjaxDataFormWalk(data);
+                        });
+                    }
+                },
+                "Annulla": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
         //MEV26398
         $('.confermaAnnullamentoOggetto').dialog({
             autoOpen: true,
@@ -214,96 +243,155 @@
     </sl:head>
     <sl:body>
         <c:set value="${sessionScope['###_FORM_CONTAINER']}" var="form" />
+        
         <sl:header changeOrganizationBtnDescription="Cambia versatore"/>
         <sl:menu showChangePasswordBtn="true" />
         <sl:content>
             <slf:messageBox  />
             <c:if test="${!empty requestScope.confermaAnnullamentoUD}">
                 <c:if test="${requestScope.ni_unita_doc_vers_dup != 0}">
-<div class="messages confermaAnnullamentoUD">
-    <div class="message info ">
-        <p>
-            <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate, di cui <c:out value="${requestScope.ni_unita_doc_vers_dup}" /> UD in stato di errore per chiave già presente (potrebbero essere stati versati da altri oggetti).</span>
-            <br/>
-                                <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
-                            </c:if>
-        <span>Selezionare l'operazione da completare: </span>
-        </p>
-    </div>
-    <div class="message">
-        <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
-        <label for="ti_annullamento_ud_1">preservare queste <c:out value="${requestScope.ni_unita_doc_vers_dup}" />  UD e annullare le UD rimanenti.</label>
-    </div>
-    <div class="message">
-        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
-        <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
-    </div>
-    <div class="message">
-        <p>
-            <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
-        <div>
-            <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
-        </div>
-        </p>
-    </div>
-</div>
+                    <div class="messages confermaAnnullamentoUD">
+                        <div class="message info ">
+                            <p>
+                                <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate, di cui <c:out value="${requestScope.ni_unita_doc_vers_dup}" /> UD in stato di errore per chiave già presente (potrebbero essere stati versati da altri oggetti).</span>
+                                <br/>
+                                                    <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                                                </c:if>
+                            <span>Selezionare l'operazione da completare: </span>
+                            </p>
+                        </div>
+                        <div class="message">
+                            <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
+                            <label for="ti_annullamento_ud_1">preservare queste <c:out value="${requestScope.ni_unita_doc_vers_dup}" />  UD e annullare le UD rimanenti.</label>
+                        </div>
+                        <div class="message">
+                            <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
+                            <label for="ti_annullamento_ud_2">annullare tutte le <c:out value="${requestScope.ni_unita_doc_vers}" /> UD.</label>
+                        </div>
+                        <div class="message">
+                            <p>
+                                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                            <div>
+                                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
                 </c:if>
                 <c:if test="${requestScope.ni_unita_doc_vers_dup == 0}">
-<div class="messages confermaAnnullamentoUD">
-    <div class="message info ">
-        <p>
-            <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate.</span>
-            <br/>
-                                <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
-                                </c:if>
-        <div class="message">
-            <p>
-                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
-            <div>
-                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
-            </div>
-            </p>
-        </div>
-        <span>Procedere con l'annullamento?</span>
+                    <div class="messages confermaAnnullamentoUD">
+                        <div class="message info ">
+                            <p>
+                                <span>Risultano <c:out value="${requestScope.ni_unita_doc_vers}" /> UD versate.</span>
+                                <br/>
+                                                    <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                                                    </c:if>
+                            <div class="message">
+                                <p>
+                                    <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                                <div>
+                                    <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                                </div>
+                                </p>
+                            </div>
+                            <span>Procedere con l'annullamento?</span>
 
-        </p>
-    </div>
-    <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="0" checked style="display: none"/>
-</div>
+                            </p>
+                        </div>
+                        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="0" checked style="display: none"/>
+                    </div>
                 </c:if>
             </c:if>
+
+            <c:if test="${!empty requestScope.confermaAnnullamentoFascicoli}">
+                <c:if test="${requestScope.ni_fascicoli_vers_dup != 0}">
+                    <div class="messages confermaAnnullamentoFascicoli">
+                        <div class="message info ">
+                            <p>
+                                <span>Risultano <c:out value="${requestScope.ni_fascicoli_vers}" /> fascicoli versati, di cui <c:out value="${requestScope.ni_fascicoli_vers_dup}" /> fascicoli in stato di errore per chiave già presente (potrebbero essere stati versati da altri oggetti).</span>
+                                <br/>
+                                                    <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                                                </c:if>
+                            <span>Selezionare l'operazione da completare: </span>
+                            </p>
+                        </div>
+                        <div class="message">
+                            <input type="radio" id="ti_annullamento_ud_1" name="ti_annullamento_ud" value="0" checked>
+                            <label for="ti_annullamento_ud_1">preservare questi <c:out value="${requestScope.ni_fascicoli_vers_dup}" />  fascicoli e annullare i fascicoli rimanenti.</label>
+                        </div>
+                        <div class="message">
+                            <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="1">
+                            <label for="ti_annullamento_ud_2">annullare tutti i <c:out value="${requestScope.ni_fascicoli_vers}" /> fascicoli.</label>
+                        </div>
+                        <div class="message">
+                            <p>
+                                <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                            <div>
+                                <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </c:if>
+                <c:if test="${requestScope.ni_fascicoli_vers_dup == 0}">
+                    <div class="messages confermaAnnullamentoFascicoli">
+                        <div class="message info ">
+                            <p>
+                                <span>Risultano <c:out value="${requestScope.ni_fascicoli_vers}" /> fascicoli versati.</span>
+                                <br/>
+                                                    <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                                                    </c:if>
+                            <div class="message">
+                                <p>
+                                    <label for="ds_annullamento_ud">Scrivere una motivazione per questo annullamento (opzionale, max 2000 caratteri)</label>
+                                <div>
+                                    <textarea id="ds_annullamento_ud" name="ds_annullamento_ud" style="width: 100%"></textarea>
+                                </div>
+                                </p>
+                            </div>
+                            <span>Procedere con l'annullamento?</span>
+
+                            </p>
+                        </div>
+                        <input type="radio" id="ti_annullamento_ud_2" name="ti_annullamento_ud" value="0" checked style="display: none"/>
+                    </div>
+                </c:if>
+            </c:if>
+
             <c:if test="${!empty requestScope.confermaAnnullamentoOggetto}">
-<div class="messages confermaAnnullamentoOggetto">
-    <div class="message info ">
-                        <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
-                            <c:choose>
-                                <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
-        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
-                                </c:when>
-                                <c:otherwise>
-        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
-                        <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
-                        </c:if>
-    </div>
-</div>
+                <div class="messages confermaAnnullamentoOggetto">
+                    <div class="message info ">
+                                        <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
+                                            <c:choose>
+                                                <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
+                        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
+                                                </c:when>
+                                                <c:otherwise>
+                        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:if>
+                                        <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                                        </c:if>
+                    </div>
+                </div>
             </c:if>
             <c:if test="${!empty requestScope.confermaRecuperoErrore}">
-<div class="messages confermaRecuperoErrore ">
-    <ul>
-        <li class="message info ">
-            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
-                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_STATO_POPUP%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.ID_TIPO_OBJECT%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_RECUPERO%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
-        </li>
-    </ul>
-</div>
+                <div class="messages confermaRecuperoErrore ">
+                    <ul>
+                        <li class="message info ">
+                            <p>Seleziona lo stato da assegnare per il recupero</p><br/>
+                                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_STATO_POPUP%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
+                                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.ID_TIPO_OBJECT%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
+                                            <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_RECUPERO%>" width="w100" controlWidth="w60" labelWidth="w20" /><sl:newLine />
+                        </li>
+                    </ul>
+                </div>
             </c:if>
             <c:if test="${!empty requestScope.setAnnullatoInDaTrasformare}">
 <div class="messages setAnnullatoInDaTrasformare ">
@@ -368,6 +456,8 @@
                     <sl:newLine />
                     <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NM_TIPO_OBJECT%>" colSpan="4"/>
                     <sl:newLine />
+                    <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_CONTENUTO_TIPO_OGGETTO%>" colSpan="4"/>
+                    <sl:newLine />
                     <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_VERS_FILE%>" colSpan="4"/>
                     <sl:newLine />
                     <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.DS_INFO_OBJECT%>" colSpan="4"/>
@@ -397,13 +487,27 @@
                     <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.TI_GEST_OGGETTI_FIGLI%>" colSpan="4"/>
                     <sl:newLine />
                     <slf:section name="<%=MonitoraggioForm.NumUdSection.NAME%>" styleClass="noborder">
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_ATTESE%>" colSpan="2"/>
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_DA_VERS%>" colSpan="1"/>
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS%>" colSpan="1"/>
-                        <sl:newLine />
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS__OK%>" colSpan="2"/>
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS_ERR%>" colSpan="1"/>
-                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS_TIMEOUT%>" colSpan="1"/>
+                        <c:choose>
+                            <c:when test="${(form.oggettoDetail.ti_contenuto_tipo_oggetto.value != null) && (form.oggettoDetail.ti_contenuto_tipo_oggetto.value eq 'FASCICOLO')}">
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_ATTESI%>" colSpan="2"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_DA_VERS%>" colSpan="1"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_VERS%>" colSpan="1"/>
+                                <sl:newLine />
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_VERS__OK%>" colSpan="2"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_VERS_ERR%>" colSpan="1"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_FASCICOLI_VERS_TIMEOUT%>" colSpan="1"/>
+                            </c:when>
+                            <c:otherwise>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_ATTESE%>" colSpan="2"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_DA_VERS%>" colSpan="1"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS%>" colSpan="1"/>
+                                <sl:newLine />
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS__OK%>" colSpan="2"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS_ERR%>" colSpan="1"/>
+                                <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.NI_UNITA_DOC_VERS_TIMEOUT%>" colSpan="1"/>
+                            </c:otherwise>
+                        </c:choose>
+                        
                     </slf:section>
                     <slf:lblField name="<%=MonitoraggioForm.OggettoDetail.PG_OGGETTO_TRASF%>" colSpan="2"/>
                     <sl:newLine skipLine="true"/>
@@ -528,6 +632,17 @@
                     <slf:lblField name="<%=MonitoraggioForm.XmlAnnulRisp.BL_XML_ANNUL%>" colSpan="4" controlWidth="w100"/>
                 </slf:fieldSet>
             </slf:tab>
+            <slf:tab name="<%= MonitoraggioForm.OggettoTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoTabs.filtri_fascicoli_obj%>">
+                <slf:fieldSet  borderHidden="false">
+                    <slf:lblField name="<%=MonitoraggioForm.FiltriFascicoliObj.AA_FASCICOLO_SACER%>" colSpan="2" /><sl:newLine />
+                    <slf:lblField name="<%=MonitoraggioForm.FiltriFascicoliObj.CD_KEY_FASCICOLO_SACER%>" colSpan="2" /><sl:newLine />
+                    <slf:lblField name="<%=MonitoraggioForm.FiltriFascicoliObj.TI_STATO_FASCICOLO_OBJECT%>" colSpan="2" /><sl:newLine />
+                    <slf:lblField name="<%=MonitoraggioForm.FiltriFascicoliObj.CD_CONCAT_DL_ERR_SACER%>" colSpan="2" />
+                    <sl:pulsantiera>
+                        <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.FILTRA_FASCICOLI_OBJ%>"/>
+                    </sl:pulsantiera>
+                </slf:fieldSet>
+            </slf:tab>
             <slf:tab name="<%= MonitoraggioForm.OggettoTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoTabs.filtri_unita_doc_obj%>">
                 <slf:fieldSet  borderHidden="false">
                     <slf:lblField name="<%=MonitoraggioForm.FiltriUnitaDocObj.CD_REGISTRO_UNITA_DOC_SACER%>" colSpan="2"/><sl:newLine />              
@@ -551,6 +666,7 @@
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.RECUPERO_CHIUS_ERR_VERS%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.MODIFICA_TIPO_OGGETTO%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ANNULLA_OGGETTO_DETAIL%>"/>
+                <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ANNULLA_VERSAMENTI_FASCICOLI_DETAIL%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ANNULLA_VERSAMENTI_UDDETAIL%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.SETTA_DA_TRASFORMARE_DETAIL%>"/>
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.SETTA_ERRORE_TRASFORMAZIONE_DETAIL%>"/>
@@ -559,9 +675,14 @@
                 <slf:lblField name="<%=MonitoraggioForm.OggettoDetailButtonList.ACCETTA_ANNULLAMENTO_FALLITO%>"/>
             </sl:pulsantiera>
             <sl:newLine skipLine="true"/>
+        
             <slf:tab name="<%= MonitoraggioForm.OggettoSubTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoSubTabs.lista_unita_doc%>">
                 <slf:list   name="<%= MonitoraggioForm.OggettoDetailUnitaDocList.NAME%>" />
                 <slf:listNavBar  name="<%= MonitoraggioForm.OggettoDetailUnitaDocList.NAME%>" />
+            </slf:tab>
+            <slf:tab name="<%= MonitoraggioForm.OggettoSubTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoSubTabs.lista_fascicoli%>">
+                <slf:list   name="<%= MonitoraggioForm.OggettoDetailFascicoliList.NAME%>" />
+                <slf:listNavBar  name="<%= MonitoraggioForm.OggettoDetailFascicoliList.NAME%>" />
             </slf:tab>
             <slf:tab name="<%= MonitoraggioForm.OggettoSubTabs.NAME%>" tabElement="<%= MonitoraggioForm.OggettoSubTabs.lista_file%>">
                 <slf:list   name="<%= MonitoraggioForm.FileList.NAME%>" />

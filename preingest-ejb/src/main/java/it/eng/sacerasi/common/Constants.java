@@ -30,6 +30,7 @@ public class Constants {
     public static final String VERSIONE_XML_MM = "1.0";
     public static final String NUM_UNITA_DOC_CODA_VERS = "NUM_UNITA_DOC_CODA_VERS";
     public static final String NUM_MAX_DICOM_XGIORNO = "NUM_MAX_DICOM_XGIORNO";
+    public static final String NUM_FASCICOLI_CODA_VERS = "NUM_FASCICOLI_CODA_VERS";
 
     public static final String ID_VERSATORE_AGENZIA = "ID_VERSATORE_AGENZIA";
     public static final String URL_ALLINEA_ENTE_CONVENZ = "URL_ALLINEA_ENTE_CONVENZ";
@@ -77,6 +78,7 @@ public class Constants {
 										 // attivo dalla
 										 // seconda metà del
 										 // 2013
+    public static final String COD_VERS_ERR_CHIAVE_DUPLICATA_FASCICOLO = "FASC-001-001";
 
     // Costanti Gestione Job
     public static final String DATE_FORMAT_JOB = "dd/MM/yyyy HH:mm:ss";
@@ -214,6 +216,30 @@ public class Constants {
 	}
     }
 
+    // MEV 32982
+    public enum TipoContenutoTipoOggetto {
+	UD("UD"), FASCICOLO("FASCICOLO");
+
+	private final String value;
+
+	private TipoContenutoTipoOggetto(String value) {
+	    this.value = value;
+	}
+
+	public String getValue() {
+	    return value;
+	}
+
+	public static String getEnumByString(String code) {
+	    for (TipoContenutoTipoOggetto e : TipoContenutoTipoOggetto.values()) {
+		if (code.equals(e.getValue())) {
+		    return e.name();
+		}
+	    }
+	    return null;
+	}
+    }
+
     public enum TipoGestioneOggettiFigli {
 	AUTOMATICA, MANUALE;
 
@@ -338,8 +364,9 @@ public class Constants {
 
     public enum NomiJob {
 	PREPARA_XML, PRODUCER_CODA_VERIFICA_H, PRODUCER_CODA_VERS, RECUPERA_ERRORI_IN_CODA,
-	RECUPERA_VERS_ERR, RECUPERO_SACER, ALLINEAMENTO_ORGANIZZAZIONI, WS_MONITORAGGIO_STATUS,
-	ESEGUI_TRASFORMAZIONE, ALLINEA_ENTI_CONVENZIONATI, VERIFICA_DOCUMENTI_STRUMENTI_URBANISTICI,
+	RECUPERA_VERS_ERR, PRODUCER_CODA_VERS_FASCICOLI, RECUPERO_SACER,
+	ALLINEAMENTO_ORGANIZZAZIONI, WS_MONITORAGGIO_STATUS, ESEGUI_TRASFORMAZIONE,
+	ALLINEA_ENTI_CONVENZIONATI, VERIFICA_DOCUMENTI_STRUMENTI_URBANISTICI,
 	INVIO_STRUMENTI_URBANISTICI, VERIFICA_DOCUMENTI_SISMA, INVIO_SISMA,
 	INVIA_OGGETTI_GENERATI_A_PING, ALLINEAMENTO_LOG, INIZIALIZZAZIONE_LOG;
 
@@ -349,8 +376,8 @@ public class Constants {
 
 	public static NomiJob[] getComboSchedulazioniJob() {
 	    return getEnums(PREPARA_XML, PRODUCER_CODA_VERIFICA_H, PRODUCER_CODA_VERS,
-		    RECUPERA_ERRORI_IN_CODA, RECUPERA_VERS_ERR, RECUPERO_SACER,
-		    ALLINEAMENTO_ORGANIZZAZIONI, ESEGUI_TRASFORMAZIONE,
+		    RECUPERA_ERRORI_IN_CODA, PRODUCER_CODA_VERS_FASCICOLI, RECUPERA_VERS_ERR,
+		    RECUPERO_SACER, ALLINEAMENTO_ORGANIZZAZIONI, ESEGUI_TRASFORMAZIONE,
 		    INVIA_OGGETTI_GENERATI_A_PING, VERIFICA_DOCUMENTI_STRUMENTI_URBANISTICI,
 		    INVIO_STRUMENTI_URBANISTICI, INVIO_SISMA, ALLINEAMENTO_LOG,
 		    INIZIALIZZAZIONE_LOG);

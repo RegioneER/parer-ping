@@ -38,7 +38,6 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 /**
  * The persistent class for the PIG_OBJECT database table.
- *
  */
 @Entity
 @Table(name = "PIG_OBJECT")
@@ -75,6 +74,7 @@ public class PigObject implements Serializable {
     private List<PigSessioneIngest> pigSessioneIngests = new ArrayList<>();
     private List<PigSessioneRecup> pigSessioneRecups = new ArrayList<>();
     private List<PigUnitaDocObject> pigUnitaDocObjects = new ArrayList<>();
+    private List<PigFascicoloObject> pigFascicoloObjects = new ArrayList<>();
     private List<PigXmlObject> pigXmlObjects = new ArrayList<>();
     private List<PigPrioritaObject> pigPrioritaObjects = new ArrayList<>();
 
@@ -447,6 +447,17 @@ public class PigObject implements Serializable {
 	pigUnitaDocObject.setPigObject(null);
 
 	return pigUnitaDocObject;
+    }
+
+    // bi-directional many-to-one association to PigFascicoloObject
+    @OneToMany(mappedBy = "pigObject", cascade = {
+	    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    public List<PigFascicoloObject> getPigFascicoloObjects() {
+	return this.pigFascicoloObjects;
+    }
+
+    public void setPigFascicoloObjects(List<PigFascicoloObject> pigFascicoloObjects) {
+	this.pigFascicoloObjects = pigFascicoloObjects;
     }
 
     // bi-directional many-to-one association to PigXmlObject

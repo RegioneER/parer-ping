@@ -36,6 +36,8 @@
                 <sl:newLine />
                 <slf:lblField name="<%=MonitoraggioForm.FiltriOggetti.TI_VERS_FILE%>" colSpan="2" />
                 <sl:newLine />
+                <slf:lblField name="<%=MonitoraggioForm.FiltriOggetti.TI_CONTENUTO%>" colSpan="2" />
+                <sl:newLine />
                 <slf:section name="<%=MonitoraggioForm.ChiaveUDListaOggettiSection.NAME%>" styleClass="importantContainer">
                     <slf:lblField name="<%=MonitoraggioForm.FiltriOggetti.CD_REGISTRO_UNITA_DOC_SACER%>" colSpan="3" />                
                     <slf:lblField name="<%=MonitoraggioForm.FiltriOggetti.AA_UNITA_DOC_SACER%>" colSpan="3" />

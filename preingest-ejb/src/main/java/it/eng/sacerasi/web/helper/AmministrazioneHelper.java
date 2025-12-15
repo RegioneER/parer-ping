@@ -1095,6 +1095,8 @@ public class AmministrazioneHelper extends GenericHelper {
 	    tipoObj.setTiConservazione(tipoObjRowBean.getTiConservazione());
 	    tipoObj.setDsRegExpCdVers(tipoObjRowBean.getDsRegExpCdVers());
 	    tipoObj.setFlNoVisibVersOgg(tipoObjRowBean.getFlNoVisibVersOgg());
+	    tipoObj.setTiContenuto(tipoObjRowBean.getTiContenuto());
+
 	    if (tipoObjRowBean.getIdTrasf() != null) {
 		XfoTrasf xfoTrasf = findById(XfoTrasf.class, tipoObjRowBean.getIdTrasf());
 		tipoObj.setXfoTrasf(xfoTrasf);

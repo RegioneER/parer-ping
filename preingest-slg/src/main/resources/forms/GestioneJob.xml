@@ -20,7 +20,17 @@
         <Button Name="startOnceProducerCodaVersamento" Description="Esecuzione singola" Type="STRING"/>
         <Button Name="stopProducerCodaVersamento" Description="Stop" Type="STRING"/>
     </Fields>
-    
+
+    <Fields Name="ProducerCodaVersamentoFascicoli" Description="Elenco campi creazione indici" >
+        <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
+        <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />
+        <Input  Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione" />
+        <Input  Type="STRING" Description="Nota" Name="fl_data_accurata" />
+        <Button Name="startProducerCodaVersamentoFascicoli" Description="Start" Type="STRING"/>
+        <Button Name="startOnceProducerCodaVersamentoFascicoli" Description="Esecuzione singola" Type="STRING"/>
+        <Button Name="stopProducerCodaVersamentoFascicoli" Description="Stop" Type="STRING"/>
+    </Fields>
+
     <Fields Name="RecuperaErroriCoda" Description="Elenco campi verifica firme" >
         <CheckBox  Type="STRING" Description="In esecuzione" Name="attivo" />
         <Input  Type="DATETIME" Description="Da" Name="dt_reg_log_job_ini" />        

@@ -59,11 +59,13 @@ public class XmlContextCache {
 
     // Versameto
     JAXBContext versReqCtx_UD = null;
+    JAXBContext versReqCtx_Fascicolo = null;
     JAXBContext versRespCtx_EsitoVersamento = null;
     JAXBContext versRespStatoCtx_StatoConservazione = null;
     JAXBContext versReqStatoCtx_Recupero = null;
 
     Schema versReqSchema = null;
+    Schema versReqFascicoloSchema = null;
     Schema versReqStatoSchema = null;
     Schema versRespSchema = null;
 
@@ -186,6 +188,12 @@ public class XmlContextCache {
 		    it.eng.parer.ws.xml.versReq.ObjectFactory.class);
 	    versReqSchema = schemaFctry.newSchema(FileXSDUtil.getURLFileXSD(FileXSD.VERS_REQ_XSD));
 
+	    versReqCtx_Fascicolo = JAXBContext.newInstance(
+		    it.eng.parer.ws.xml.versfascicoloV3.IndiceSIPFascicolo.class,
+		    it.eng.parer.ws.xml.versReq.ObjectFactory.class);
+	    versReqFascicoloSchema = schemaFctry
+		    .newSchema(FileXSDUtil.getURLFileXSD(FileXSD.VERS_REQ_FASC_XSD_V3)); // MEV32983
+
 	    versReqStatoCtx_Recupero = JAXBContext.newInstance(
 		    it.eng.parer.ws.xml.versReqStato.Recupero.class,
 		    it.eng.parer.ws.xml.versReqStato.ObjectFactory.class);
@@ -256,6 +264,11 @@ public class XmlContextCache {
     @Lock(LockType.READ)
     public Schema getSchemaOfVersReq() {
 	return versReqSchema;
+    }
+
+    @Lock(LockType.READ)
+    public Schema getSchemaOfVersReqFascicolo() {
+	return versReqFascicoloSchema;
     }
 
     @Lock(LockType.READ)
@@ -371,5 +384,10 @@ public class XmlContextCache {
     @Lock(LockType.READ)
     public JAXBContext getUnitaDocumentariaCtx_UnitaDocumentaria() {
 	return unitaDocumentariaCtx_UnitaDocumentaria;
+    }
+
+    @Lock(LockType.READ)
+    public JAXBContext getVersReqCtx_Fascicolo() {
+	return versReqCtx_Fascicolo;
     }
 }

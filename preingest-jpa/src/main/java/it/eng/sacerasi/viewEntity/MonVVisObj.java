@@ -83,6 +83,12 @@ public class MonVVisObj implements Serializable {
     private String tiVersFile;
     private String tiPriorita;
     private String tiPrioritaVersamento;
+    private String tiContenutoTipoOggetto;
+    private BigDecimal niFascicoliDaVers;
+    private BigDecimal niFascicoliVers;
+    private BigDecimal niFascicoliVersErr;
+    private BigDecimal niFascicoliVersOk;
+    private BigDecimal niFascicoliVersTimeout;
     private String nmUseridVers;
 
     public MonVVisObj() {
@@ -532,6 +538,60 @@ public class MonVVisObj implements Serializable {
 
     public void setTiPrioritaVersamento(String tiPrioritaVersamento) {
 	this.tiPrioritaVersamento = tiPrioritaVersamento;
+    }
+
+    @Column(name = "TI_CONTENUTO_TIPO_OGGETTO")
+    public String getTiContenutoTipoOggetto() {
+	return tiContenutoTipoOggetto;
+    }
+
+    public void setTiContenutoTipoOggetto(String tiContenutoTipoOggetto) {
+	this.tiContenutoTipoOggetto = tiContenutoTipoOggetto;
+    }
+
+    @Column(name = "NI_FASCICOLI_DA_VERS")
+    public BigDecimal getNiFascicoliDaVers() {
+	return niFascicoliDaVers;
+    }
+
+    public void setNiFascicoliDaVers(BigDecimal niFascicoliDaVers) {
+	this.niFascicoliDaVers = niFascicoliDaVers;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS")
+    public BigDecimal getNiFascicoliVers() {
+	return niFascicoliVers;
+    }
+
+    public void setNiFascicoliVers(BigDecimal niFascicoliVers) {
+	this.niFascicoliVers = niFascicoliVers;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_ERR")
+    public BigDecimal getNiFascicoliVersErr() {
+	return niFascicoliVersErr;
+    }
+
+    public void setNiFascicoliVersErr(BigDecimal niFascicoliVersErr) {
+	this.niFascicoliVersErr = niFascicoliVersErr;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_OK")
+    public BigDecimal getNiFascicoliVersOk() {
+	return niFascicoliVersOk;
+    }
+
+    public void setNiFascicoliVersOk(BigDecimal niFascicoliVersOk) {
+	this.niFascicoliVersOk = niFascicoliVersOk;
+    }
+
+    @Column(name = "NI_FASCICOLI_VERS_TIMEOUT")
+    public BigDecimal getNiFascicoliVersTimeout() {
+	return niFascicoliVersTimeout;
+    }
+
+    public void setNiFascicoliVersTimeout(BigDecimal niFascicoliVersTimeout) {
+	this.niFascicoliVersTimeout = niFascicoliVersTimeout;
     }
 
     @Column(name = "NM_USERID_VERS")

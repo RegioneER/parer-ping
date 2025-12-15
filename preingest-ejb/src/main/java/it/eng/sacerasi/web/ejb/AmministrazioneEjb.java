@@ -178,6 +178,7 @@ import it.eng.spagoLite.db.base.sorting.SortingRule;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.message.MessageBox;
 import it.eng.xformer.helper.TrasformazioniHelper;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.transform.OutputKeys;
@@ -188,6 +189,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
@@ -1080,7 +1082,6 @@ public class AmministrazioneEjb {
      * Rimuove la riga di parametri definita nel rowBean
      *
      * @param idValoreParamApplic id valore parametro applicativio
-     *
      * @return true se eliminato con successo
      */
     public boolean deleteParametroAmbiente(BigDecimal idValoreParamApplic) {
@@ -1104,7 +1105,6 @@ public class AmministrazioneEjb {
      *
      * @param param               parametri per il logging
      * @param idValoreParamApplic id valore parametro applicativo
-     *
      * @return true se eliminato con successo
      */
     public boolean deleteParametroVersatore(LogParam param, BigDecimal idValoreParamApplic) {
@@ -1133,7 +1133,6 @@ public class AmministrazioneEjb {
      *
      * @param param               parametri per il logging
      * @param idValoreParamApplic id valore parametro applicativo
-     *
      * @return true se eliminato con successo
      */
     public boolean deleteParametroTipoOggetto(LogParam param, BigDecimal idValoreParamApplic) {
@@ -2239,9 +2238,7 @@ public class AmministrazioneEjb {
      * @param idVersGen           id versione
      * @param idTipoObjectGen     id tipo oggettto
      * @param cdVersGen           codice versione
-     *
      * @return pk
-     *
      * @throws ParerUserError errore generico
      */
     @Interceptors({
@@ -2287,7 +2284,6 @@ public class AmministrazioneEjb {
      * @param idTipoObjectGen         id tipo oggetto generato
      * @param cdVersGen               versione generata
      * @param idTipoObjectDaTrasf     id tipo oggetto da trasferire
-     *
      * @throws ParerUserError errore generico
      */
     @Interceptors({
@@ -2659,7 +2655,6 @@ public class AmministrazioneEjb {
      * @param idValoreSetParamTrasf   id valore (set) parametro
      * @param idValoreParamTrasf      id valore parametro
      * @param dsValoreParam           descrizione valore
-     *
      * @throws ParerUserError errore generico
      */
     @Interceptors({
@@ -2693,7 +2688,7 @@ public class AmministrazioneEjb {
 		    valoreSetParamTrasf.setPigVersTipoObjectDaTrasf(versTipoObjectDaTrasf);
 		    valoreSetParamTrasf.setXfoSetParamTrasf(amministrazioneHelper
 			    .findById(XfoSetParamTrasf.class, idSetParamTrasf));
-		    amministrazioneHelper.insertEntity(valoreSetParamTrasf, true);
+		    amministrazioneHelper.insertEntity(valoreSetParamTrasf, false);
 		} else {
 		    valoreSetParamTrasf = amministrazioneHelper
 			    .findById(PigValoreSetParamTrasf.class, idValoreSetParamTrasf);
@@ -2711,7 +2706,7 @@ public class AmministrazioneEjb {
 		    valoreParamTrasf.setDsValoreParam(dsValoreParam);
 		    valoreParamTrasf.setPigValoreSetParamTrasf(valoreSetParamTrasf);
 		    valoreParamTrasf.setXfoParamTrasf(paramTrasf);
-		    amministrazioneHelper.insertEntity(valoreParamTrasf, true);
+		    amministrazioneHelper.insertEntity(valoreParamTrasf, false);
 		}
 		sacerLogEjb.log(param.getTransactionLogContext(), param.getNomeApplicazione(),
 			param.getNomeUtente(), param.getNomeAzione(),
@@ -2974,7 +2969,6 @@ public class AmministrazioneEjb {
      *
      * @param <T>             oggetto generico da replicare
      * @param organizDaReplic array di record da replicare
-     *
      * @throws IncoherenceException Eccezione con rollback in caso di entity diversa dalle suddette
      *                              o di errore imprevisto da parte dell'allineamento
      */
@@ -3023,9 +3017,7 @@ public class AmministrazioneEjb {
      *
      * @param idAmbienteVers id ambiente versamento
      * @param idVers         id versamento
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigVersTableBean getPigVersTrasfComboTableBean(BigDecimal idAmbienteVers,
@@ -3051,7 +3043,6 @@ public class AmministrazioneEjb {
      * Ritorna il tableBean delle trasformazioni per generare oggetti
      *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public XfoTrasfTableBean getXfoTrasfTableBean() throws ParerUserError {
@@ -3807,7 +3798,6 @@ public class AmministrazioneEjb {
      * Esegue il salvataggio del rowBean del parametro di configurazione
      *
      * @param row il rowBean da salvare su DB
-     *
      * @return true in mancanza di eccezioni
      */
     public boolean saveConfiguration(PigParamApplicRowBean row) {
@@ -3932,9 +3922,7 @@ public class AmministrazioneEjb {
      * @param idAmbienteVers id ambiente di versamento
      * @param idVers         id versamento
      * @param funzione       lista funzioni
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public Object[] getPigParamApplicVers(BigDecimal idAmbienteVers, BigDecimal idVers,
@@ -4029,9 +4017,7 @@ public class AmministrazioneEjb {
      *
      * @param idAmbienteVers id ambiente di versamento
      * @param funzione       lista funzioni
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public Object[] getPigParamApplicAmbiente(BigDecimal idAmbienteVers, List<String> funzione)
@@ -4117,9 +4103,7 @@ public class AmministrazioneEjb {
      * @param idVers         id versamento
      * @param idTipoObject   id tipo oggetto
      * @param funzione       lista funzioni
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public Object[] getPigParamApplicTipoOggetto(BigDecimal idAmbienteVers, BigDecimal idVers,
@@ -4225,7 +4209,6 @@ public class AmministrazioneEjb {
      * Rimuove la riga di parametri definita nel rowBean
      *
      * @param row il parametro da eliminare
-     *
      * @return true se eliminato con successo
      */
     public boolean deletePigParamApplicRowBean(PigParamApplicRowBean row) {
@@ -4355,7 +4338,6 @@ public class AmministrazioneEjb {
      * l'ente convenzionato dato in input
      *
      * @param idEnteConvenz l'id dell'accordo da recuperare su DB
-     *
      * @return le date di interesse
      */
     public Date[] getDatePerEnteProduttore(BigDecimal idEnteConvenz) {
@@ -4378,7 +4360,6 @@ public class AmministrazioneEjb {
      * l'ente siam dato in input
      *
      * @param idEnteSiam l'id dell'accordo da recuperare su DB
-     *
      * @return le date di interesse
      */
     public Date[] getDatePerEnteFornitore(BigDecimal idEnteSiam) {
@@ -4460,7 +4441,6 @@ public class AmministrazioneEjb {
      *
      * @param idUserIam        id user Iam
      * @param tiEnteNonConvenz tipo ente convenzionato
-     *
      * @return entity {@link OrgVRicEnteNonConvenzTableBean}
      */
     public OrgVRicEnteNonConvenzTableBean getOrgVRicEnteNonConvenzAbilTableBean(
@@ -4484,7 +4464,6 @@ public class AmministrazioneEjb {
      *
      * @param idUserIamCor          id user Iam
      * @param idAmbienteEnteConvenz id ambiente convenzionato
-     *
      * @return entity bean {@link OrgVRicEnteConvenzByEsternoTableBean}
      */
     public OrgVRicEnteConvenzByEsternoTableBean getOrgVRicEnteConvenzAbilTableBean(
@@ -4626,9 +4605,7 @@ public class AmministrazioneEjb {
      * @param idEnteConvenz id ente convenzionato
      * @param dtIniVal      data inizio validita
      * @param dtFineVal     data fine validita
-     *
      * @return pk
-     *
      * @throws ParerUserError errore generico
      */
     public BigDecimal insertEnteConvenzOrg(LogParam param, BigDecimal idVers,
@@ -4658,9 +4635,7 @@ public class AmministrazioneEjb {
      * @param idEnteConvenz id dell'ente convenzionato
      * @param dtIniVal      data inizio validità
      * @param dtFineVal     data fine validità
-     *
      * @return entity {@link IamEnteSiamDaAllinea}
-     *
      * @throws ParerUserError errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -4758,7 +4733,6 @@ public class AmministrazioneEjb {
      *
      * @param <T>                   tipo generico
      * @param enteSiamDaAllineaList lista elementi di tipo {@link IamEnteSiamDaAllinea}
-     *
      * @throws ParerUserError errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -4787,9 +4761,7 @@ public class AmministrazioneEjb {
      * @param idVers           id versamento
      * @param dtIniVal         data inizio validita
      * @param dtFineVal        data fine validita
-     *
      * @return pk
-     *
      * @throws ParerUserError errore generico
      */
     public BigDecimal updateEnteConvenzOrg(LogParam param, BigDecimal idEnteConvenzOrg,
@@ -4819,9 +4791,7 @@ public class AmministrazioneEjb {
      * @param idVers           id versamento
      * @param dtIniVal         data inizio validità
      * @param dtFineVal        data fine validità
-     *
      * @return L'oggetto IamOrganizDaReplic con cui eseguire la replica a SacerIam
-     *
      * @throws ParerUserError errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -4958,7 +4928,6 @@ public class AmministrazioneEjb {
      *
      * @param idUserUamCor          is user Iam
      * @param idAmbienteEnteConvenz id ambiente convenzionato
-     *
      * @return bean {@link BaseTable}
      */
     public BaseTable getSIOrgEnteConvenzAccordoValidoTableBean(long idUserUamCor,
@@ -4995,7 +4964,6 @@ public class AmministrazioneEjb {
      *                         essendo stato un creato un nuovo contesto transazionale
      *                         (REQUIRES_NEW) la rollback avrebbe effetto solo sulla replica (non
      *                         voglio rollbackare tutto...)
-     *
      * @throws ParerUserError errore generico
      */
     public void deleteEnteConvenzOrg(LogParam param, BigDecimal idEnteConvenzOrg)
@@ -5309,11 +5277,8 @@ public class AmministrazioneEjb {
     }
 
     /**
-     *
-     *
      * @param idVers          id versamento
      * @param idEnteSiamNuovo id ente
-     *
      * @return array con elementi di tipi {@link Date}
      */
     public Date[] getDatePerAssociazioneEnteVersatore(BigDecimal idVers,
@@ -5455,6 +5420,7 @@ public class AmministrazioneEjb {
 
     //
     // MEV 32650
+
     /**
      * Restituisce un array di object con i tablebean dei parametri di amministrazione dell'ambiente
      * versatore
@@ -5462,9 +5428,7 @@ public class AmministrazioneEjb {
      * @param idAmbienteVers id ambiente versatore
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicAmministrazioneAmbiente(
@@ -5507,9 +5471,7 @@ public class AmministrazioneEjb {
      * @param idAmbienteVers id ambiente versatore
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getAplParamApplicGestioneAmbiente(BigDecimal idAmbienteVers,
@@ -5551,9 +5513,7 @@ public class AmministrazioneEjb {
      * @param idAmbienteVers id ambiente versatore
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getAplParamApplicConservazioneAmbiente(BigDecimal idAmbienteVers,
@@ -5595,9 +5555,7 @@ public class AmministrazioneEjb {
      * @param idVers         id versatore
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicAmministrazioneVersatore(
@@ -5641,9 +5599,7 @@ public class AmministrazioneEjb {
      * @param idVers         id versatore
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicGestioneVersatore(BigDecimal idAmbienteVers,
@@ -5684,9 +5640,7 @@ public class AmministrazioneEjb {
      * @param idVers         id vers
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicConservazioneVersatore(
@@ -5730,9 +5684,7 @@ public class AmministrazioneEjb {
      * @param idTipoObject   id tipo oggetto
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicAmministrazioneTipoOggetto(
@@ -5778,9 +5730,7 @@ public class AmministrazioneEjb {
      * @param idTipoObject   id tipo oggetto
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicGestioneTipoOggetto(BigDecimal idAmbienteVers,
@@ -5825,9 +5775,7 @@ public class AmministrazioneEjb {
      * @param idTipoObject   id tipo oggetto
      * @param funzione       lista funzioni
      * @param filterValid    visualizzare o meno i record parametri cessati
-     *
      * @return il tablebean
-     *
      * @throws ParerUserError errore generico
      */
     public PigParamApplicTableBean getPigParamApplicConservazioneTipoOggetto(

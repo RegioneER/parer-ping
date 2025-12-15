@@ -79,19 +79,20 @@ public class VersamentoOggettoEjb {
      * Ritorna il tableBean MonVLisStatoVersTableBean contenente la lista di record in base ai
      * parametri passati
      *
-     * @param idUtente       id utente
-     * @param idAmbiente     id ambiente
-     * @param idVers         id versamento
-     * @param idTipoOggetto  id tipo oggetto
-     * @param idObject       id oggetto
-     * @param cdKeyObject    numero
-     * @param dsObject       descrizione
-     * @param dataDa         data da
-     * @param dataA          da a
-     * @param tiStatoEsterno tipo stato
-     * @param tiStatoObject  tipo stato oggetto
-     * @param tiVersFile     tipo versamento file
-     * @param note           campo note dell'oggetto
+     * @param idUtente           id utente
+     * @param idAmbiente         id ambiente
+     * @param idVers             id versamento
+     * @param idTipoOggetto      id tipo oggetto
+     * @param idObject           id oggetto
+     * @param cdKeyObject        numero
+     * @param dsObject           descrizione
+     * @param dataDa             data da
+     * @param dataA              da a
+     * @param tiStatoEsterno     tipo stato
+     * @param tiStatoObject      tipo stato oggetto
+     * @param tiVersFile         tipo versamento file
+     * @param note               campo note dell'oggetto
+     * @param tiContenutoOggetto tipo contenuto oggetto
      *
      * @return entity bean {@link MonVLisStatoVersTableBean}
      *
@@ -100,11 +101,11 @@ public class VersamentoOggettoEjb {
     public MonVLisStatoVersTableBean getMonVLisStatoVersTableBean(long idUtente,
 	    BigDecimal idAmbiente, BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject,
 	    String cdKeyObject, String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
-	    List<String> tiStatoObject, List<String> tiVersFile, String note)
-	    throws ParerUserError {
+	    List<String> tiStatoObject, List<String> tiVersFile, String note,
+	    String tiContenutoOggetto) throws ParerUserError {
 	List<MonVLisStatoVers> listObjects = helper.getMonVLisStatoVers(idUtente, idAmbiente,
 		idVers, idTipoOggetto, idObject, cdKeyObject, dsObject, dataDa, dataA,
-		tiStatoEsterno, tiStatoObject, tiVersFile, note);
+		tiStatoEsterno, tiStatoObject, tiVersFile, note, tiContenutoOggetto);
 	MonVLisStatoVersTableBean table = new MonVLisStatoVersTableBean();
 	if (!listObjects.isEmpty()) {
 	    try {

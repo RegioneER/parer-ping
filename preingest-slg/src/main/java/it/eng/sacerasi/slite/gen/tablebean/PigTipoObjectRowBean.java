@@ -190,6 +190,14 @@ public class PigTipoObjectRowBean extends BaseRow implements JEEBaseRowInterface
 	setObject("fl_no_visib_vers_ogg", flNoVisibVersOgg);
     }
 
+    public String getTiContenuto() {
+	return getString("ti_contenuto");
+    }
+
+    public void setTiContenuto(String tiConteuto) {
+	setObject("ti_contenuto", tiConteuto);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
 	PigTipoObject entity = (PigTipoObject) obj;
@@ -219,6 +227,7 @@ public class PigTipoObjectRowBean extends BaseRow implements JEEBaseRowInterface
 	}
 	this.setDsRegExpCdVers(entity.getDsRegExpCdVers());
 	this.setFlNoVisibVersOgg(entity.getFlNoVisibVersOgg());
+	this.setTiContenuto(entity.getTiContenuto());
     }
 
     @Override

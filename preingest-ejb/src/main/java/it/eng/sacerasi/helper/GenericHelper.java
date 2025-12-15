@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Bonora_L
  */
 @Stateless
@@ -95,7 +94,7 @@ public class GenericHelper implements HelperInterface {
 
     @Override
     public <T> T findByIdWithLock(Class<T> entityClass, Serializable id) {
-	logger.debug("Getting instance of class {0} with id: {1}, with exclusive lock",
+	logger.debug("Getting instance of class {} with id: {}, with exclusive lock",
 		entityClass.getSimpleName(), id);
 	T instance = null;
 	try {

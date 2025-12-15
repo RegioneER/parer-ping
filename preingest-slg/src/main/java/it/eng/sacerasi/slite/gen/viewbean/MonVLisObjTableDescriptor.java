@@ -52,10 +52,13 @@ public class MonVLisObjTableDescriptor extends TableDescriptor {
     public static final String COL_CD_REGISTRO_UNITA_DOC_SACER = "cd_registro_unita_doc_sacer";
     public static final String COL_AA_UNITA_DOC_SACER = "aa_unita_doc_sacer";
     public static final String COL_CD_KEY_UNITA_DOC_SACER = "cd_key_unita_doc_sacer";
+    public static final String COL_AA_FASCICOLO_SACER = "aa_fascicolo_sacer";
+    public static final String COL_CD_KEY_FASCICOLO_SACER = "cd_key_fascicolo_sacer";
     public static final String COL_DS_KEY_ORD = "ds_key_ord";
     public static final String COL_DS_INFO_OBJECT = "ds_info_object";
     public static final String COL_TI_STATO_VERIFICA_HASH = "ti_stato_verifica_hash";
     public static final String COL_TI_VERS_FILE = "ti_vers_file";
+    public static final String COL_TI_CONTENUTO = "ti_contenuto";
 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
@@ -90,12 +93,17 @@ public class MonVLisObjTableDescriptor extends TableDescriptor {
 		new ColumnDescriptor(COL_AA_UNITA_DOC_SACER, Types.DECIMAL, 22, true));
 	map.put(COL_CD_KEY_UNITA_DOC_SACER,
 		new ColumnDescriptor(COL_CD_KEY_UNITA_DOC_SACER, Types.VARCHAR, 100, true));
+	map.put(COL_AA_FASCICOLO_SACER,
+		new ColumnDescriptor(COL_AA_FASCICOLO_SACER, Types.DECIMAL, 22, true));
+	map.put(COL_CD_KEY_FASCICOLO_SACER,
+		new ColumnDescriptor(COL_CD_KEY_FASCICOLO_SACER, Types.VARCHAR, 100, true));
 	map.put(COL_DS_KEY_ORD, new ColumnDescriptor(COL_DS_KEY_ORD, Types.VARCHAR, 200, true));
 	map.put(COL_DS_INFO_OBJECT,
 		new ColumnDescriptor(COL_DS_INFO_OBJECT, Types.VARCHAR, 1024, true));
 	map.put(COL_TI_STATO_VERIFICA_HASH,
 		new ColumnDescriptor(COL_TI_STATO_VERIFICA_HASH, Types.VARCHAR, 20, true));
 	map.put(COL_TI_VERS_FILE, new ColumnDescriptor(COL_TI_VERS_FILE, Types.VARCHAR, 20, true));
+	map.put(COL_TI_CONTENUTO, new ColumnDescriptor(COL_TI_CONTENUTO, Types.VARCHAR, 20, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {

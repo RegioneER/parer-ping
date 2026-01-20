@@ -24,33 +24,33 @@ public class RecuperoStatoOggettoInput {
     private String cdKeyObject;
 
     public RecuperoStatoOggettoInput(String nmAmbiente, String nmVersatore, String cdKeyObject) {
-	this.nmAmbiente = nmAmbiente;
-	this.nmVersatore = nmVersatore;
-	this.cdKeyObject = cdKeyObject;
+        this.nmAmbiente = nmAmbiente;
+        this.nmVersatore = nmVersatore;
+        this.cdKeyObject = cdKeyObject;
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
 }

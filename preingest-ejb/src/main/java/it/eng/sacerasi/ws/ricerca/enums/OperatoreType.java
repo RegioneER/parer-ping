@@ -71,14 +71,14 @@ public enum OperatoreType {
     private static final java.util.Map<java.lang.String, OperatoreType> enumConstants = new java.util.HashMap<java.lang.String, OperatoreType>();
 
     static {
-	for (OperatoreType c : OperatoreType.values()) {
-	    OperatoreType.enumConstants.put(c.value, c);
-	}
+        for (OperatoreType c : OperatoreType.values()) {
+            OperatoreType.enumConstants.put(c.value, c);
+        }
 
     };
 
     private OperatoreType(final java.lang.String value) {
-	this.value = value;
+        this.value = value;
     }
 
     /**
@@ -89,11 +89,11 @@ public enum OperatoreType {
      * @return the constant for this value
      */
     public static OperatoreType fromValue(final java.lang.String value) {
-	OperatoreType c = OperatoreType.enumConstants.get(value);
-	if (c != null) {
-	    return c;
-	}
-	throw new IllegalArgumentException(value);
+        OperatoreType c = OperatoreType.enumConstants.get(value);
+        if (c != null) {
+            return c;
+        }
+        throw new IllegalArgumentException(value);
     }
 
     /**
@@ -110,7 +110,7 @@ public enum OperatoreType {
      * @return the value of this constant
      */
     public java.lang.String toString() {
-	return this.value;
+        return this.value;
     }
 
     /**
@@ -119,7 +119,7 @@ public enum OperatoreType {
      * @return the value of this constant
      */
     public java.lang.String value() {
-	return this.value;
+        return this.value;
     }
 
 }

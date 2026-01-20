@@ -36,98 +36,98 @@ public class PigDichVersSacerTipoObjRowBean extends BaseRow implements JEEBaseRo
     public static PigDichVersSacerTipoObjTableDescriptor TABLE_DESCRIPTOR = new PigDichVersSacerTipoObjTableDescriptor();
 
     public PigDichVersSacerTipoObjRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdDichVersSacerTipoObj() {
-	return getBigDecimal("id_dich_vers_sacer_tipo_obj");
+        return getBigDecimal("id_dich_vers_sacer_tipo_obj");
     }
 
     public void setIdDichVersSacerTipoObj(BigDecimal idDichVersSacerTipoObj) {
-	setObject("id_dich_vers_sacer_tipo_obj", idDichVersSacerTipoObj);
+        setObject("id_dich_vers_sacer_tipo_obj", idDichVersSacerTipoObj);
     }
 
     public BigDecimal getIdTipoObject() {
-	return getBigDecimal("id_tipo_object");
+        return getBigDecimal("id_tipo_object");
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	setObject("id_tipo_object", idTipoObject);
+        setObject("id_tipo_object", idTipoObject);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getTiDichVers() {
-	return getString("ti_dich_vers");
+        return getString("ti_dich_vers");
     }
 
     public void setTiDichVers(String tiDichVers) {
-	setObject("ti_dich_vers", tiDichVers);
+        setObject("ti_dich_vers", tiDichVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigDichVersSacerTipoObj entity = (PigDichVersSacerTipoObj) obj;
+        PigDichVersSacerTipoObj entity = (PigDichVersSacerTipoObj) obj;
 
-	this.setIdDichVersSacerTipoObj(new BigDecimal(entity.getIdDichVersSacerTipoObj()));
-	if (entity.getPigTipoObject() != null) {
-	    this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
-	}
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setTiDichVers(entity.getTiDichVers());
+        this.setIdDichVersSacerTipoObj(new BigDecimal(entity.getIdDichVersSacerTipoObj()));
+        if (entity.getPigTipoObject() != null) {
+            this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
+        }
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setTiDichVers(entity.getTiDichVers());
     }
 
     @Override
     public PigDichVersSacerTipoObj rowBeanToEntity() {
-	PigDichVersSacerTipoObj entity = new PigDichVersSacerTipoObj();
-	if (this.getIdDichVersSacerTipoObj() != null) {
-	    entity.setIdDichVersSacerTipoObj(this.getIdDichVersSacerTipoObj().longValue());
-	}
-	if (this.getIdTipoObject() != null) {
-	    if (entity.getPigTipoObject() == null) {
-		entity.setPigTipoObject(new PigTipoObject());
-	    }
-	    entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
-	}
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setTiDichVers(this.getTiDichVers());
-	return entity;
+        PigDichVersSacerTipoObj entity = new PigDichVersSacerTipoObj();
+        if (this.getIdDichVersSacerTipoObj() != null) {
+            entity.setIdDichVersSacerTipoObj(this.getIdDichVersSacerTipoObj().longValue());
+        }
+        if (this.getIdTipoObject() != null) {
+            if (entity.getPigTipoObject() == null) {
+                entity.setPigTipoObject(new PigTipoObject());
+            }
+            entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
+        }
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setTiDichVers(this.getTiDichVers());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

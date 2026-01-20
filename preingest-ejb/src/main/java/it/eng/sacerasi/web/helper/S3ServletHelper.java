@@ -31,20 +31,20 @@ import javax.persistence.Query;
 public class S3ServletHelper {
 
     public S3ServletHelper() {
-	/*
-	 * per sonar
-	 *
-	 */
+        /*
+         * per sonar
+         *
+         */
     }
 
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
 
     public BigDecimal getIdAmbienteVersatore(BigDecimal idVers) {
-	String queryStr = "SELECT u.pigAmbienteVer.idAmbienteVers FROM PigVers u WHERE u.idVers = :idVers ";
-	Query query = entityManager.createQuery(queryStr);
-	query.setParameter("idVers", HibernateUtils.longFrom(idVers));
-	Long res = (Long) query.getSingleResult();
-	return new BigDecimal(res);
+        String queryStr = "SELECT u.pigAmbienteVer.idAmbienteVers FROM PigVers u WHERE u.idVers = :idVers ";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        Long res = (Long) query.getSingleResult();
+        return new BigDecimal(res);
     }
 }

@@ -32,10 +32,10 @@ public class Utils {
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {
-	SortedMap<String, T> map = new TreeMap<String, T>();
-	for (T l : enumValues) {
-	    map.put(l.name(), l);
-	}
-	return map.values();
+        SortedMap<String, T> map = new TreeMap<String, T>();
+        for (T l : enumValues) {
+            map.put(l.name(), l);
+        }
+        return map.values();
     }
 }

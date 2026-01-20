@@ -63,161 +63,161 @@ public class PigFascicoloSessione implements Serializable {
     private Date dtStato;
 
     public PigFascicoloSessione() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_FASCICOLO_SESSIONE_IDFASCICOLOSESSIONE_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_FASCICOLO_SESSIONE"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_FASCICOLO_SESSIONE"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_FASCICOLO_SESSIONE_IDFASCICOLOSESSIONE_GENERATOR")
     @Column(name = "ID_FASCICOLO_SESSIONE")
     public Long getIdFascicoloSessione() {
-	return this.idFascicoloSessione;
+        return this.idFascicoloSessione;
     }
 
     public void setIdFascicoloSessione(Long idFascicoloSessione) {
-	this.idFascicoloSessione = idFascicoloSessione;
+        this.idFascicoloSessione = idFascicoloSessione;
     }
 
     @Column(name = "AA_FASCICOLO_SACER")
     public BigDecimal getAaFascicoloSacer() {
-	return this.aaFascicoloSacer;
+        return this.aaFascicoloSacer;
     }
 
     public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
-	this.aaFascicoloSacer = aaFascicoloSacer;
+        this.aaFascicoloSacer = aaFascicoloSacer;
     }
 
     @Column(name = "CD_ERR_SACER")
     public String getCdErrSacer() {
-	return this.cdErrSacer;
+        return this.cdErrSacer;
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	this.cdErrSacer = cdErrSacer;
+        this.cdErrSacer = cdErrSacer;
     }
 
     @Column(name = "CD_KEY_FASCICOLO_SACER")
     public String getCdKeyFascicoloSacer() {
-	return this.cdKeyFascicoloSacer;
+        return this.cdKeyFascicoloSacer;
     }
 
     public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
-	this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
+        this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
     }
 
     @Column(name = "CD_VER_WS_SACER")
     public String getCdVerWsSacer() {
-	return cdVerWsSacer;
+        return cdVerWsSacer;
     }
 
     public void setCdVerWsSacer(String cdVerWsSacer) {
-	this.cdVerWsSacer = cdVerWsSacer;
+        this.cdVerWsSacer = cdVerWsSacer;
     }
 
     @Column(name = "DL_ERR_SACER")
     public String getDlErrSacer() {
-	return this.dlErrSacer;
+        return this.dlErrSacer;
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	this.dlErrSacer = dlErrSacer;
+        this.dlErrSacer = dlErrSacer;
     }
 
     @Column(name = "FL_VERS_SIMULATO", columnDefinition = "char")
     public String getFlVersSimulato() {
-	return this.flVersSimulato;
+        return this.flVersSimulato;
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	this.flVersSimulato = flVersSimulato;
+        this.flVersSimulato = flVersSimulato;
     }
 
     @Column(name = "ID_ORGANIZ_IAM")
     public BigDecimal getIdOrganizIam() {
-	return this.idOrganizIam;
+        return this.idOrganizIam;
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @Column(name = "NI_SIZE_FILE_BYTE")
     public BigDecimal getNiSizeFileByte() {
-	return this.niSizeFileByte;
+        return this.niSizeFileByte;
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	this.niSizeFileByte = niSizeFileByte;
+        this.niSizeFileByte = niSizeFileByte;
     }
 
     @Column(name = "TI_STATO_FASCICOLO_SESSIONE")
     public String getTiStatoFascicoloSessione() {
-	return this.tiStatoFascicoloSessione;
+        return this.tiStatoFascicoloSessione;
     }
 
     public void setTiStatoFascicoloSessione(String tiStatoFascicoloSessione) {
-	this.tiStatoFascicoloSessione = tiStatoFascicoloSessione;
+        this.tiStatoFascicoloSessione = tiStatoFascicoloSessione;
     }
 
     // bi-directional many-to-one association to PigSessioneIngest
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SESSIONE_INGEST")
     public PigSessioneIngest getPigSessioneIngest() {
-	return this.pigSessioneIngest;
+        return this.pigSessioneIngest;
     }
 
     public void setPigSessioneIngest(PigSessioneIngest pigSessioneIngest) {
-	this.pigSessioneIngest = pigSessioneIngest;
+        this.pigSessioneIngest = pigSessioneIngest;
     }
 
     // bi-directional many-to-one association to PigXmlSacerUnitaDoc
     @OneToMany(mappedBy = "pigFascicoloSessione", cascade = {
-	    CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+            CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     public List<PigXmlSacerFascicoloSes> getPigXmlSacerFascicolosSes() {
-	return this.pigXmlSacerFascicolosSes;
+        return this.pigXmlSacerFascicolosSes;
     }
 
     public void setPigXmlSacerFascicolosSes(
-	    List<PigXmlSacerFascicoloSes> pigXmlSacerFascicolosSes) {
-	this.pigXmlSacerFascicolosSes = pigXmlSacerFascicolosSes;
+            List<PigXmlSacerFascicoloSes> pigXmlSacerFascicolosSes) {
+        this.pigXmlSacerFascicolosSes = pigXmlSacerFascicolosSes;
     }
 
     public PigXmlSacerFascicoloSes addPigXmlSacerFascicoloSes(
-	    PigXmlSacerFascicoloSes pigXmlSacerFascicolosSes) {
-	getPigXmlSacerFascicolosSes().add(pigXmlSacerFascicolosSes);
-	pigXmlSacerFascicolosSes.setPigFascicoloSessione(this);
+            PigXmlSacerFascicoloSes pigXmlSacerFascicolosSes) {
+        getPigXmlSacerFascicolosSes().add(pigXmlSacerFascicolosSes);
+        pigXmlSacerFascicolosSes.setPigFascicoloSessione(this);
 
-	return pigXmlSacerFascicolosSes;
+        return pigXmlSacerFascicolosSes;
     }
 
     public PigXmlSacerFascicoloSes removePigXmlSacerUnitaDocS(
-	    PigXmlSacerFascicoloSes pigXmlSacerFascicoloSes) {
-	getPigXmlSacerFascicolosSes().remove(pigXmlSacerFascicoloSes);
-	pigXmlSacerFascicoloSes.setPigFascicoloSessione(null);
+            PigXmlSacerFascicoloSes pigXmlSacerFascicoloSes) {
+        getPigXmlSacerFascicolosSes().remove(pigXmlSacerFascicoloSes);
+        pigXmlSacerFascicoloSes.setPigFascicoloSessione(null);
 
-	return pigXmlSacerFascicoloSes;
+        return pigXmlSacerFascicoloSes;
     }
 
     // usata solo come chiave di partizionamento, non voglio la join con PigVers
     @Column(name = "ID_VERS")
     public Long getIdVers() {
-	return this.idVers;
+        return this.idVers;
     }
 
     public void setIdVers(Long idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     // MEV 27407
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_STATO")
     public Date getDtStato() {
-	return dtStato;
+        return dtStato;
     }
 
     public void setDtStato(Date dtStato) {
-	this.dtStato = dtStato;
+        this.dtStato = dtStato;
     }
 }

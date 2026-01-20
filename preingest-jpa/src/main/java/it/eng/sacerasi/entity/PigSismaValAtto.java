@@ -37,7 +37,7 @@ public class PigSismaValAtto implements Serializable {
     private String tiTipoAtto;
 
     public PigSismaValAtto() {
-	// hibernate
+        // hibernate
     }
 
     @Id
@@ -45,29 +45,29 @@ public class PigSismaValAtto implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_VAL_ATTO_IDSISMAVALATTO_GENERATOR")
     @Column(name = "ID_SISMA_VAL_ATTO")
     public Long getIdSismaValAtto() {
-	return idSismaValAtto;
+        return idSismaValAtto;
     }
 
     public void setIdSismaValAtto(Long idSismaValAtto) {
-	this.idSismaValAtto = idSismaValAtto;
+        this.idSismaValAtto = idSismaValAtto;
     }
 
     @Column(name = "NM_TIPO_ATTO")
     public String getNmTipoAtto() {
-	return nmTipoAtto;
+        return nmTipoAtto;
     }
 
     public void setNmTipoAtto(String nmTipoAtto) {
-	this.nmTipoAtto = nmTipoAtto;
+        this.nmTipoAtto = nmTipoAtto;
     }
 
     @Column(name = "TI_TIPO_ATTO")
     public String getTiTipoAtto() {
-	return tiTipoAtto;
+        return tiTipoAtto;
     }
 
     public void setTiTipoAtto(String tiTipoAtto) {
-	this.tiTipoAtto = tiTipoAtto;
+        this.tiTipoAtto = tiTipoAtto;
     }
 
 }

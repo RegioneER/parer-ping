@@ -41,19 +41,19 @@ public class LoginLogHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(LoginLogHelper.class)
-		.addClass("it.eng.parer.sacerlog.ejb.helper.SacerLogHelper").addPackages(true,
-			"it.eng.parer.sacerlog.ejb.common", "it.eng.parer.sacerlog.common");
+        return ArquillianUtils.createPingJar(LoginLogHelper.class)
+                .addClass("it.eng.parer.sacerlog.ejb.helper.SacerLogHelper").addPackages(true,
+                        "it.eng.parer.sacerlog.ejb.common", "it.eng.parer.sacerlog.common");
     }
 
     @Test
     void writeLogEvento_queryIsOk() {
-	IUser user = new BaseUser("test", "arquillian");
-	user.setUsername("arquillian_test");
-	user.setUserType(IUser.UserType.SPID_FEDERA);
-	String indIpClient = "127.0.0.1";
-	helper.writeLogEvento(user, indIpClient, LoginLogHelper.TipiEvento.LOGIN);
-	helper.writeLogEvento(user, indIpClient, LoginLogHelper.TipiEvento.LOGOUT);
-	assertTrue(true);
+        IUser user = new BaseUser("test", "arquillian");
+        user.setUsername("arquillian_test");
+        user.setUserType(IUser.UserType.SPID_FEDERA);
+        String indIpClient = "127.0.0.1";
+        helper.writeLogEvento(user, indIpClient, LoginLogHelper.TipiEvento.LOGIN);
+        helper.writeLogEvento(user, indIpClient, LoginLogHelper.TipiEvento.LOGOUT);
+        assertTrue(true);
     }
 }

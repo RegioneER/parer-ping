@@ -44,52 +44,52 @@ public class PigXmlSessioneIngest implements Serializable {
     private Long idVers;
 
     public PigXmlSessioneIngest() {
-	// hibernate
+        // hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_SESSIONE_INGEST_IDXMLSESSIONEINGEST_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SESSIONE_INGEST"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SESSIONE_INGEST"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_SESSIONE_INGEST_IDXMLSESSIONEINGEST_GENERATOR")
     @Column(name = "ID_XML_SESSIONE_INGEST")
     public Long getIdXmlSessioneIngest() {
-	return this.idXmlSessioneIngest;
+        return this.idXmlSessioneIngest;
     }
 
     public void setIdXmlSessioneIngest(Long idXmlSessioneIngest) {
-	this.idXmlSessioneIngest = idXmlSessioneIngest;
+        this.idXmlSessioneIngest = idXmlSessioneIngest;
     }
 
     @Lob()
     @Column(name = "BL_XML")
     public String getBlXml() {
-	return this.blXml;
+        return this.blXml;
     }
 
     public void setBlXml(String blXml) {
-	this.blXml = blXml;
+        this.blXml = blXml;
     }
 
     // bi-directional many-to-one association to PigSessioneIngest
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SESSIONE_INGEST")
     public PigSessioneIngest getPigSessioneIngest() {
-	return this.pigSessioneIngest;
+        return this.pigSessioneIngest;
     }
 
     public void setPigSessioneIngest(PigSessioneIngest pigSessioneIngest) {
-	this.pigSessioneIngest = pigSessioneIngest;
+        this.pigSessioneIngest = pigSessioneIngest;
     }
 
     // usata solo come chiave di partizionamento, non voglio la join con PigVers
     @Column(name = "ID_VERS")
     public Long getIdVers() {
-	return this.idVers;
+        return this.idVers;
     }
 
     public void setIdVers(Long idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
 }

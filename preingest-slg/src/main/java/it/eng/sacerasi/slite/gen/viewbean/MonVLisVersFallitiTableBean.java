@@ -38,19 +38,19 @@ public class MonVLisVersFallitiTableBean extends AbstractBaseTable<MonVLisVersFa
     public static MonVLisVersFallitiTableDescriptor TABLE_DESCRIPTOR = new MonVLisVersFallitiTableDescriptor();
 
     public MonVLisVersFallitiTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisVersFallitiRowBean createRow() {
-	return new MonVLisVersFallitiRowBean();
+        return new MonVLisVersFallitiRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisVersFallitiRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -35,10 +35,10 @@ public class PigVSuLisDocDaVerif implements Serializable {
 
     @EmbeddedId()
     public PigVSuLisDocDaVerifId getPigVSuLisDocDaVerifId() {
-	return pigVSuLisDocDaVerifId;
+        return pigVSuLisDocDaVerifId;
     }
 
     public void setPigVSuLisDocDaVerifId(PigVSuLisDocDaVerifId pigVSuLisDocDaVerifId) {
-	this.pigVSuLisDocDaVerifId = pigVSuLisDocDaVerifId;
+        this.pigVSuLisDocDaVerifId = pigVSuLisDocDaVerifId;
     }
 }

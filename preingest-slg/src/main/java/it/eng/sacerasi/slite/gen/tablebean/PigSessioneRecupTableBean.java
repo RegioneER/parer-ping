@@ -34,19 +34,19 @@ public class PigSessioneRecupTableBean extends AbstractBaseTable<PigSessioneRecu
     public static PigSessioneRecupTableDescriptor TABLE_DESCRIPTOR = new PigSessioneRecupTableDescriptor();
 
     public PigSessioneRecupTableBean() {
-	super();
+        super();
     }
 
     protected PigSessioneRecupRowBean createRow() {
-	return new PigSessioneRecupRowBean();
+        return new PigSessioneRecupRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigSessioneRecupRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -45,21 +45,21 @@ public class NotificaPrelievo {
 
     @WebMethod(operationName = "notificaPrelievo")
     public NotificaPrelievoRisposta notificaPrelievo(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject) {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "cdKeyObject") String cdKeyObject) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	NotificaPrelievoRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.notificaPrelievo(nmAmbiente, nmVersatore, cdKeyObject);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        NotificaPrelievoRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.notificaPrelievo(nmAmbiente, nmVersatore, cdKeyObject);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

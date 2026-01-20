@@ -39,22 +39,22 @@ public class VersCache {
 
     @PostConstruct
     protected void initSingleton() {
-	versMap = new HashMap<UUID, PigVers>();
+        versMap = new HashMap<UUID, PigVers>();
     }
 
     public PigVers getPigVers(UUID key) {
-	/*
-	 * OrgStrut toRemove = struts.get(key); struts.remove(key); return toRemove;
-	 */
-	return versMap.get(key);
+        /*
+         * OrgStrut toRemove = struts.get(key); struts.remove(key); return toRemove;
+         */
+        return versMap.get(key);
     }
 
     public PigVers setPigVers(UUID key, PigVers vers) {
-	return versMap.put(key, vers);
+        return versMap.put(key, vers);
     }
 
     public void removePigVers(UUID key) {
-	versMap.remove(key);
+        versMap.remove(key);
     }
 
 }

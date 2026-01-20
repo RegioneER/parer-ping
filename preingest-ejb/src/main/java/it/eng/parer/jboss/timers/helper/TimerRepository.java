@@ -94,27 +94,27 @@ public class TimerRepository {
 
     @PostConstruct
     public void initialize() {
-	map = new HashMap<>();
-	map.put(Constants.NomiJob.PREPARA_XML.name(), preparaXml);
-	map.put(Constants.NomiJob.PRODUCER_CODA_VERIFICA_H.name(), producerCodaVerificaH);
-	map.put(Constants.NomiJob.PRODUCER_CODA_VERS.name(), producerCodaVersamento);
-	map.put(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
-		producerCodaVersamentoFascicoli);
-	map.put(Constants.NomiJob.RECUPERA_ERRORI_IN_CODA.name(), recuperaErroriInCoda);
-	map.put(Constants.NomiJob.RECUPERA_VERS_ERR.name(), recuperaVersErr);
-	map.put(Constants.NomiJob.RECUPERO_SACER.name(), recuperoSacer);
-	map.put(Constants.NomiJob.ALLINEAMENTO_ORGANIZZAZIONI.name(), allineamentoOrganizzazioni);
-	map.put(it.eng.parer.sacerlog.job.Constants.NomiJob.INIZIALIZZAZIONE_LOG.name(),
-		sacerLogTimer);
-	map.put(it.eng.parer.sacerlog.job.Constants.NomiJob.ALLINEAMENTO_LOG.name(),
-		sacerLogAllineamentoTimer);
-	map.put(Constants.NomiJob.INVIO_STRUMENTI_URBANISTICI.name(), invioSU);
-	map.put(Constants.NomiJob.INVIO_SISMA.name(), invioSisma);
+        map = new HashMap<>();
+        map.put(Constants.NomiJob.PREPARA_XML.name(), preparaXml);
+        map.put(Constants.NomiJob.PRODUCER_CODA_VERIFICA_H.name(), producerCodaVerificaH);
+        map.put(Constants.NomiJob.PRODUCER_CODA_VERS.name(), producerCodaVersamento);
+        map.put(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI.name(),
+                producerCodaVersamentoFascicoli);
+        map.put(Constants.NomiJob.RECUPERA_ERRORI_IN_CODA.name(), recuperaErroriInCoda);
+        map.put(Constants.NomiJob.RECUPERA_VERS_ERR.name(), recuperaVersErr);
+        map.put(Constants.NomiJob.RECUPERO_SACER.name(), recuperoSacer);
+        map.put(Constants.NomiJob.ALLINEAMENTO_ORGANIZZAZIONI.name(), allineamentoOrganizzazioni);
+        map.put(it.eng.parer.sacerlog.job.Constants.NomiJob.INIZIALIZZAZIONE_LOG.name(),
+                sacerLogTimer);
+        map.put(it.eng.parer.sacerlog.job.Constants.NomiJob.ALLINEAMENTO_LOG.name(),
+                sacerLogAllineamentoTimer);
+        map.put(Constants.NomiJob.INVIO_STRUMENTI_URBANISTICI.name(), invioSU);
+        map.put(Constants.NomiJob.INVIO_SISMA.name(), invioSisma);
 
-	// xFormer job timers
-	map.put(Constants.NomiJob.ESEGUI_TRASFORMAZIONE.name(), eseguiTrasformazioneTimer);
-	map.put(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING.name(),
-		inviaOggettiGeneratiAPingTimer);
+        // xFormer job timers
+        map.put(Constants.NomiJob.ESEGUI_TRASFORMAZIONE.name(), eseguiTrasformazioneTimer);
+        map.put(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING.name(),
+                inviaOggettiGeneratiAPingTimer);
     }
 
     /**
@@ -124,7 +124,7 @@ public class TimerRepository {
      */
     @Lock(LockType.READ)
     public Set<String> getConfiguredTimersName() {
-	return map.keySet();
+        return map.keySet();
     }
 
     /**
@@ -136,6 +136,6 @@ public class TimerRepository {
      */
     @Lock(LockType.READ)
     public JbossJobTimer getConfiguredTimer(String jobName) {
-	return map.get(jobName);
+        return map.get(jobName);
     }
 }

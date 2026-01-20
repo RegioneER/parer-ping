@@ -36,89 +36,89 @@ public class IamAutorServRowBean extends BaseRow implements JEEBaseRowInterface 
     public static IamAutorServTableDescriptor TABLE_DESCRIPTOR = new IamAutorServTableDescriptor();
 
     public IamAutorServRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdAutorServ() {
-	return getBigDecimal("id_autor_serv");
+        return getBigDecimal("id_autor_serv");
     }
 
     public void setIdAutorServ(BigDecimal idAutorServ) {
-	setObject("id_autor_serv", idAutorServ);
+        setObject("id_autor_serv", idAutorServ);
     }
 
     public BigDecimal getIdAbilOrganiz() {
-	return getBigDecimal("id_abil_organiz");
+        return getBigDecimal("id_abil_organiz");
     }
 
     public void setIdAbilOrganiz(BigDecimal idAbilOrganiz) {
-	setObject("id_abil_organiz", idAbilOrganiz);
+        setObject("id_abil_organiz", idAbilOrganiz);
     }
 
     public String getNmServizioWeb() {
-	return getString("nm_servizio_web");
+        return getString("nm_servizio_web");
     }
 
     public void setNmServizioWeb(String nmServizioWeb) {
-	setObject("nm_servizio_web", nmServizioWeb);
+        setObject("nm_servizio_web", nmServizioWeb);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	IamAutorServ entity = (IamAutorServ) obj;
+        IamAutorServ entity = (IamAutorServ) obj;
 
-	this.setIdAutorServ(new BigDecimal(entity.getIdAutorServ()));
-	if (entity.getIamAbilOrganiz() != null) {
-	    this.setIdAbilOrganiz(new BigDecimal(entity.getIamAbilOrganiz().getIdAbilOrganiz()));
-	}
+        this.setIdAutorServ(new BigDecimal(entity.getIdAutorServ()));
+        if (entity.getIamAbilOrganiz() != null) {
+            this.setIdAbilOrganiz(new BigDecimal(entity.getIamAbilOrganiz().getIdAbilOrganiz()));
+        }
 
-	this.setNmServizioWeb(entity.getNmServizioWeb());
+        this.setNmServizioWeb(entity.getNmServizioWeb());
     }
 
     @Override
     public IamAutorServ rowBeanToEntity() {
-	IamAutorServ entity = new IamAutorServ();
-	if (this.getIdAutorServ() != null) {
-	    entity.setIdAutorServ(this.getIdAutorServ().longValue());
-	}
-	if (this.getIdAbilOrganiz() != null) {
-	    if (entity.getIamAbilOrganiz() == null) {
-		entity.setIamAbilOrganiz(new IamAbilOrganiz());
-	    }
-	    entity.getIamAbilOrganiz().setIdAbilOrganiz(this.getIdAbilOrganiz().longValue());
-	}
-	entity.setNmServizioWeb(this.getNmServizioWeb());
-	return entity;
+        IamAutorServ entity = new IamAutorServ();
+        if (this.getIdAutorServ() != null) {
+            entity.setIdAutorServ(this.getIdAutorServ().longValue());
+        }
+        if (this.getIdAbilOrganiz() != null) {
+            if (entity.getIamAbilOrganiz() == null) {
+                entity.setIamAbilOrganiz(new IamAbilOrganiz());
+            }
+            entity.getIamAbilOrganiz().setIdAbilOrganiz(this.getIdAbilOrganiz().longValue());
+        }
+        entity.setNmServizioWeb(this.getNmServizioWeb());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

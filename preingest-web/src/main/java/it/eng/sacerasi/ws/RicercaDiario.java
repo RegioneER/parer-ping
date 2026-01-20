@@ -45,31 +45,31 @@ public class RicercaDiario {
 
     @WebMethod(operationName = "ricercaDiario")
     public RicercaDiarioRisposta ricercaDiario(@WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "nmTipoObject") String nmTipoObject,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject,
-	    @WebParam(name = "idSessione") Long idSessione,
-	    @WebParam(name = "tiStatoObject") String tiStatoObject,
-	    @WebParam(name = "flTutteSessioni") boolean flTutteSessioni,
-	    @WebParam(name = "niRecordInizio") Integer niRecordInizio,
-	    @WebParam(name = "niRecordResultSet") Integer niRecordResultSet,
-	    @WebParam(name = "xmlDatiSpecOutput") String xmlDatiSpecOutput,
-	    @WebParam(name = "xmlDatiSpecFiltri") String xmlDatiSpecFiltri,
-	    @WebParam(name = "xmlDatiSpecOrder") String xmlDatiSpecOrder) {
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "nmTipoObject") String nmTipoObject,
+            @WebParam(name = "cdKeyObject") String cdKeyObject,
+            @WebParam(name = "idSessione") Long idSessione,
+            @WebParam(name = "tiStatoObject") String tiStatoObject,
+            @WebParam(name = "flTutteSessioni") boolean flTutteSessioni,
+            @WebParam(name = "niRecordInizio") Integer niRecordInizio,
+            @WebParam(name = "niRecordResultSet") Integer niRecordResultSet,
+            @WebParam(name = "xmlDatiSpecOutput") String xmlDatiSpecOutput,
+            @WebParam(name = "xmlDatiSpecFiltri") String xmlDatiSpecFiltri,
+            @WebParam(name = "xmlDatiSpecOrder") String xmlDatiSpecOrder) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	RicercaDiarioRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.ricercaDiario(nmAmbiente, nmVersatore, nmTipoObject, cdKeyObject,
-		    idSessione, tiStatoObject, flTutteSessioni, niRecordInizio, niRecordResultSet,
-		    xmlDatiSpecOutput, xmlDatiSpecFiltri, xmlDatiSpecOrder);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        RicercaDiarioRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.ricercaDiario(nmAmbiente, nmVersatore, nmTipoObject, cdKeyObject,
+                    idSessione, tiStatoObject, flTutteSessioni, niRecordInizio, niRecordResultSet,
+                    xmlDatiSpecOutput, xmlDatiSpecFiltri, xmlDatiSpecOrder);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

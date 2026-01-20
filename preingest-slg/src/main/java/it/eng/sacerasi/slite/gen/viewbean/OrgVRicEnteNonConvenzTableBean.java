@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class OrgVRicEnteNonConvenzTableBean
-	extends AbstractBaseTable<OrgVRicEnteNonConvenzRowBean> {
+        extends AbstractBaseTable<OrgVRicEnteNonConvenzRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class OrgVRicEnteNonConvenzTableBean
     public static OrgVRicEnteNonConvenzTableDescriptor TABLE_DESCRIPTOR = new OrgVRicEnteNonConvenzTableDescriptor();
 
     public OrgVRicEnteNonConvenzTableBean() {
-	super();
+        super();
     }
 
     protected OrgVRicEnteNonConvenzRowBean createRow() {
-	return new OrgVRicEnteNonConvenzRowBean();
+        return new OrgVRicEnteNonConvenzRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<OrgVRicEnteNonConvenzRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

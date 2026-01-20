@@ -34,19 +34,19 @@ public class PigXsdDatiSpecTableBean extends AbstractBaseTable<PigXsdDatiSpecRow
     public static PigXsdDatiSpecTableDescriptor TABLE_DESCRIPTOR = new PigXsdDatiSpecTableDescriptor();
 
     public PigXsdDatiSpecTableBean() {
-	super();
+        super();
     }
 
     protected PigXsdDatiSpecRowBean createRow() {
-	return new PigXsdDatiSpecRowBean();
+        return new PigXsdDatiSpecRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigXsdDatiSpecRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

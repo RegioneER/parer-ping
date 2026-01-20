@@ -34,36 +34,36 @@ public class CancellaUtenteCheckHelper {
     private ControlliReplicaUtente controlliRU;
 
     public void checkSessione(CancellaUtenteExt cancellaUtenteExt,
-	    RispostaWSCancellaUtente rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	// Verifica Utente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliRU
-		    .verificaEsistenzaUtente(cancellaUtenteExt.getIdUserIam());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_004);
-		    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
-			    MessaggiWSBundle.SERVIZI_USR_004, cancellaUtenteExt.getIdUserIam()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    }
-	}
+            RispostaWSCancellaUtente rispostaWs) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        // Verifica Utente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliRU
+                    .verificaEsistenzaUtente(cancellaUtenteExt.getIdUserIam());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_004);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                            MessaggiWSBundle.SERVIZI_USR_004, cancellaUtenteExt.getIdUserIam()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            }
+        }
     }
 
     private void setRispostaWsError(RispostaWSCancellaUtente rispostaWs, SeverityEnum sev,
-	    EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getCancellaUtenteRisposta().setCdEsito(esito);
-	rispostaWs.getCancellaUtenteRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getCancellaUtenteRisposta().setDsErr(rispostaControlli.getDsErr());
+            EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getCancellaUtenteRisposta().setCdEsito(esito);
+        rispostaWs.getCancellaUtenteRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getCancellaUtenteRisposta().setDsErr(rispostaControlli.getDsErr());
     }
 }

@@ -33,66 +33,66 @@ public class NotificaTrasferimentoInput {
      * @param fileDepositati la lista di file depositati
      */
     public NotificaTrasferimentoInput(String nmAmbiente, String nmVersatore, String cdKeyObject,
-	    ListaFileDepositatoType fileDepositati) {
-	this.nmAmbiente = nmAmbiente;
-	this.nmVersatore = nmVersatore;
-	this.cdKeyObject = cdKeyObject;
-	this.fileDepositati = fileDepositati;
+            ListaFileDepositatoType fileDepositati) {
+        this.nmAmbiente = nmAmbiente;
+        this.nmVersatore = nmVersatore;
+        this.cdKeyObject = cdKeyObject;
+        this.fileDepositati = fileDepositati;
     }
 
     /**
      * @return the nmAmbiente
      */
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     /**
      * @param nmAmbiente the nmAmbiente to set
      */
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     /**
      * @return the nmVersatore
      */
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     /**
      * @param nmVersatore the nmVersatore to set
      */
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     /**
      * @return the cdKeyObject
      */
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     /**
      * @param cdKeyObject the cdKeyObject to set
      */
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     /**
      * @return the fileDepositati
      */
     public ListaFileDepositatoType getFileDepositati() {
-	return fileDepositati;
+        return fileDepositati;
     }
 
     /**
      * @param fileDepositati the listaFileDepositati to set
      */
     public void setFileDepositati(ListaFileDepositatoType fileDepositati) {
-	this.fileDepositati = fileDepositati;
+        this.fileDepositati = fileDepositati;
     }
 }

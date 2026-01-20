@@ -27,18 +27,18 @@ public class RicercaRecuperatiInput {
     // String cdPassword) {
     public RicercaRecuperatiInput(String nmAmbiente, String nmVersatore) {
 
-	this.nmAmbiente = nmAmbiente;
-	this.nmVersatore = nmVersatore;
-	// this.cdPassword = cdPassword;
+        this.nmAmbiente = nmAmbiente;
+        this.nmVersatore = nmVersatore;
+        // this.cdPassword = cdPassword;
 
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     // public String getCdPassword() {
@@ -46,11 +46,11 @@ public class RicercaRecuperatiInput {
     // }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     // public void setCdPassword(String cdPassword) {

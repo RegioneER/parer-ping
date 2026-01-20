@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class MonVLisFascicoloObjectTableBean
-	extends AbstractBaseTable<MonVLisFascicoloObjectRowBean> {
+        extends AbstractBaseTable<MonVLisFascicoloObjectRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class MonVLisFascicoloObjectTableBean
     public static MonVLisUnitaDocObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisUnitaDocObjectTableDescriptor();
 
     public MonVLisFascicoloObjectTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisFascicoloObjectRowBean createRow() {
-	return new MonVLisFascicoloObjectRowBean();
+        return new MonVLisFascicoloObjectRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisFascicoloObjectRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

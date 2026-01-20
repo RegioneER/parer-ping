@@ -41,48 +41,48 @@ public class PigVLisChkUdObjErr implements Serializable {
 
     @Column(name = "CD_ERR", columnDefinition = "char")
     public String getCdErr() {
-	return this.cdErr;
+        return this.cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     @Column(name = "DS_ERR")
     public String getDsErr() {
-	return this.dsErr;
+        return this.dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     @Column(name = "FL_UNITA_DOC_ERR", columnDefinition = "char")
     public String getFlUnitaDocErr() {
-	return this.flUnitaDocErr;
+        return this.flUnitaDocErr;
     }
 
     public void setFlUnitaDocErr(String flUnitaDocErr) {
-	this.flUnitaDocErr = flUnitaDocErr;
+        this.flUnitaDocErr = flUnitaDocErr;
     }
 
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return this.idObject;
+        return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     @Id
     @Column(name = "ID_UNITA_DOC_OBJECT")
     public BigDecimal getIdUnitaDocObject() {
-	return this.idUnitaDocObject;
+        return this.idUnitaDocObject;
     }
 
     public void setIdUnitaDocObject(BigDecimal idUnitaDocObject) {
-	this.idUnitaDocObject = idUnitaDocObject;
+        this.idUnitaDocObject = idUnitaDocObject;
     }
 
 }

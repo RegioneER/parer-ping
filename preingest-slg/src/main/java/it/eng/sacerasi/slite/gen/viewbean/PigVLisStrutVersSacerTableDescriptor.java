@@ -50,38 +50,38 @@ public class PigVLisStrutVersSacerTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_TI_DICH_VERS_TI_OBJ,
-		new ColumnDescriptor(COL_TI_DICH_VERS_TI_OBJ, Types.VARCHAR, 6, true));
-	map.put(COL_ID_DICH_VERS_SACER,
-		new ColumnDescriptor(COL_ID_DICH_VERS_SACER, Types.DECIMAL, 22, true));
-	map.put(COL_ID_ORGANIZ_IAM_DICH,
-		new ColumnDescriptor(COL_ID_ORGANIZ_IAM_DICH, Types.DECIMAL, 22, true));
-	map.put(COL_TI_DICH_VERS, new ColumnDescriptor(COL_TI_DICH_VERS, Types.VARCHAR, 20, true));
-	map.put(COL_NM_USERID_SACER,
-		new ColumnDescriptor(COL_NM_USERID_SACER, Types.VARCHAR, 100, true));
-	map.put(COL_CD_PASSWORD_SACER,
-		new ColumnDescriptor(COL_CD_PASSWORD_SACER, Types.VARCHAR, 100, true));
-	map.put(COL_ID_ORGANIZ_IAM_STRUT,
-		new ColumnDescriptor(COL_ID_ORGANIZ_IAM_STRUT, Types.DECIMAL, 22, true));
-	map.put(COL_NM_ORGANIZ_IAM_STRUT,
-		new ColumnDescriptor(COL_NM_ORGANIZ_IAM_STRUT, Types.VARCHAR, 100, true));
-	map.put(COL_DL_COMPOSITO_ORGANIZ_STRUT,
-		new ColumnDescriptor(COL_DL_COMPOSITO_ORGANIZ_STRUT, Types.VARCHAR, 4000, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_TI_DICH_VERS_TI_OBJ,
+                new ColumnDescriptor(COL_TI_DICH_VERS_TI_OBJ, Types.VARCHAR, 6, true));
+        map.put(COL_ID_DICH_VERS_SACER,
+                new ColumnDescriptor(COL_ID_DICH_VERS_SACER, Types.DECIMAL, 22, true));
+        map.put(COL_ID_ORGANIZ_IAM_DICH,
+                new ColumnDescriptor(COL_ID_ORGANIZ_IAM_DICH, Types.DECIMAL, 22, true));
+        map.put(COL_TI_DICH_VERS, new ColumnDescriptor(COL_TI_DICH_VERS, Types.VARCHAR, 20, true));
+        map.put(COL_NM_USERID_SACER,
+                new ColumnDescriptor(COL_NM_USERID_SACER, Types.VARCHAR, 100, true));
+        map.put(COL_CD_PASSWORD_SACER,
+                new ColumnDescriptor(COL_CD_PASSWORD_SACER, Types.VARCHAR, 100, true));
+        map.put(COL_ID_ORGANIZ_IAM_STRUT,
+                new ColumnDescriptor(COL_ID_ORGANIZ_IAM_STRUT, Types.DECIMAL, 22, true));
+        map.put(COL_NM_ORGANIZ_IAM_STRUT,
+                new ColumnDescriptor(COL_NM_ORGANIZ_IAM_STRUT, Types.VARCHAR, 100, true));
+        map.put(COL_DL_COMPOSITO_ORGANIZ_STRUT,
+                new ColumnDescriptor(COL_DL_COMPOSITO_ORGANIZ_STRUT, Types.VARCHAR, 4000, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

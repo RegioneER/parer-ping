@@ -36,81 +36,81 @@ public class PigSopClassDicomRowBean extends BaseRow implements JEEBaseRowInterf
     public static PigSopClassDicomTableDescriptor TABLE_DESCRIPTOR = new PigSopClassDicomTableDescriptor();
 
     public PigSopClassDicomRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdSopClassDicom() {
-	return getBigDecimal("id_sop_class_dicom");
+        return getBigDecimal("id_sop_class_dicom");
     }
 
     public void setIdSopClassDicom(BigDecimal idSopClassDicom) {
-	setObject("id_sop_class_dicom", idSopClassDicom);
+        setObject("id_sop_class_dicom", idSopClassDicom);
     }
 
     public String getCdSopClassDicom() {
-	return getString("cd_sop_class_dicom");
+        return getString("cd_sop_class_dicom");
     }
 
     public void setCdSopClassDicom(String cdSopClassDicom) {
-	setObject("cd_sop_class_dicom", cdSopClassDicom);
+        setObject("cd_sop_class_dicom", cdSopClassDicom);
     }
 
     public String getDsSopClassDicom() {
-	return getString("ds_sop_class_dicom");
+        return getString("ds_sop_class_dicom");
     }
 
     public void setDsSopClassDicom(String dsSopClassDicom) {
-	setObject("ds_sop_class_dicom", dsSopClassDicom);
+        setObject("ds_sop_class_dicom", dsSopClassDicom);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigSopClassDicom entity = (PigSopClassDicom) obj;
+        PigSopClassDicom entity = (PigSopClassDicom) obj;
 
-	this.setIdSopClassDicom(new BigDecimal(entity.getIdSopClassDicom()));
-	this.setCdSopClassDicom(entity.getCdSopClassDicom());
-	this.setDsSopClassDicom(entity.getDsSopClassDicom());
+        this.setIdSopClassDicom(new BigDecimal(entity.getIdSopClassDicom()));
+        this.setCdSopClassDicom(entity.getCdSopClassDicom());
+        this.setDsSopClassDicom(entity.getDsSopClassDicom());
     }
 
     @Override
     public PigSopClassDicom rowBeanToEntity() {
-	PigSopClassDicom entity = new PigSopClassDicom();
-	if (this.getIdSopClassDicom() != null) {
-	    entity.setIdSopClassDicom(this.getIdSopClassDicom().longValue());
-	}
-	entity.setCdSopClassDicom(this.getCdSopClassDicom());
-	entity.setDsSopClassDicom(this.getDsSopClassDicom());
-	return entity;
+        PigSopClassDicom entity = new PigSopClassDicom();
+        if (this.getIdSopClassDicom() != null) {
+            entity.setIdSopClassDicom(this.getIdSopClassDicom().longValue());
+        }
+        entity.setCdSopClassDicom(this.getCdSopClassDicom());
+        entity.setDsSopClassDicom(this.getDsSopClassDicom());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

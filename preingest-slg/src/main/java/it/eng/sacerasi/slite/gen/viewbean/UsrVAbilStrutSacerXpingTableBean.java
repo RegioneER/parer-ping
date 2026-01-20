@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class UsrVAbilStrutSacerXpingTableBean
-	extends AbstractBaseTable<UsrVAbilStrutSacerXpingRowBean> {
+        extends AbstractBaseTable<UsrVAbilStrutSacerXpingRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class UsrVAbilStrutSacerXpingTableBean
     public static UsrVAbilStrutSacerXpingTableDescriptor TABLE_DESCRIPTOR = new UsrVAbilStrutSacerXpingTableDescriptor();
 
     public UsrVAbilStrutSacerXpingTableBean() {
-	super();
+        super();
     }
 
     protected UsrVAbilStrutSacerXpingRowBean createRow() {
-	return new UsrVAbilStrutSacerXpingRowBean();
+        return new UsrVAbilStrutSacerXpingRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<UsrVAbilStrutSacerXpingRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

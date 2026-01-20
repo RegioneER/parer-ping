@@ -38,112 +38,112 @@ public class PigXmlSacerUnitaDocRowBean extends BaseRow implements JEEBaseRowInt
     public static PigXmlSacerUnitaDocTableDescriptor TABLE_DESCRIPTOR = new PigXmlSacerUnitaDocTableDescriptor();
 
     public PigXmlSacerUnitaDocRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdXmlSacerUnitaDoc() {
-	return getBigDecimal("id_xml_sacer_unita_doc");
+        return getBigDecimal("id_xml_sacer_unita_doc");
     }
 
     public void setIdXmlSacerUnitaDoc(BigDecimal idXmlSacerUnitaDoc) {
-	setObject("id_xml_sacer_unita_doc", idXmlSacerUnitaDoc);
+        setObject("id_xml_sacer_unita_doc", idXmlSacerUnitaDoc);
     }
 
     public BigDecimal getIdUnitaDocObject() {
-	return getBigDecimal("id_unita_doc_object");
+        return getBigDecimal("id_unita_doc_object");
     }
 
     public void setIdUnitaDocObject(BigDecimal idUnitaDocObject) {
-	setObject("id_unita_doc_object", idUnitaDocObject);
+        setObject("id_unita_doc_object", idUnitaDocObject);
     }
 
     public String getTiXmlSacer() {
-	return getString("ti_xml_sacer");
+        return getString("ti_xml_sacer");
     }
 
     public void setTiXmlSacer(String tiXmlSacer) {
-	setObject("ti_xml_sacer", tiXmlSacer);
+        setObject("ti_xml_sacer", tiXmlSacer);
     }
 
     public String getBlXmlSacer() {
-	return getString("bl_xml_sacer");
+        return getString("bl_xml_sacer");
     }
 
     public void setBlXmlSacer(String blXmlSacer) {
-	setObject("bl_xml_sacer", blXmlSacer);
+        setObject("bl_xml_sacer", blXmlSacer);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigXmlSacerUnitaDoc entity = (PigXmlSacerUnitaDoc) obj;
+        PigXmlSacerUnitaDoc entity = (PigXmlSacerUnitaDoc) obj;
 
-	this.setIdXmlSacerUnitaDoc(new BigDecimal(entity.getIdXmlSacerUnitaDoc()));
-	if (entity.getPigUnitaDocObject() != null) {
-	    this.setIdUnitaDocObject(
-		    new BigDecimal(entity.getPigUnitaDocObject().getIdUnitaDocObject()));
+        this.setIdXmlSacerUnitaDoc(new BigDecimal(entity.getIdXmlSacerUnitaDoc()));
+        if (entity.getPigUnitaDocObject() != null) {
+            this.setIdUnitaDocObject(
+                    new BigDecimal(entity.getPigUnitaDocObject().getIdUnitaDocObject()));
 
-	}
-	this.setTiXmlSacer(entity.getTiXmlSacer());
-	this.setBlXmlSacer(entity.getBlXmlSacer());
-	this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
-		: null);
+        }
+        this.setTiXmlSacer(entity.getTiXmlSacer());
+        this.setBlXmlSacer(entity.getBlXmlSacer());
+        this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
+                : null);
     }
 
     @Override
     public PigXmlSacerUnitaDoc rowBeanToEntity() {
-	PigXmlSacerUnitaDoc entity = new PigXmlSacerUnitaDoc();
-	if (this.getIdXmlSacerUnitaDoc() != null) {
-	    entity.setIdXmlSacerUnitaDoc(this.getIdXmlSacerUnitaDoc().longValue());
-	}
-	if (this.getIdUnitaDocObject() != null) {
-	    if (entity.getPigUnitaDocObject() == null) {
-		entity.setPigUnitaDocObject(new PigUnitaDocObject());
-	    }
-	    entity.getPigUnitaDocObject()
-		    .setIdUnitaDocObject(this.getIdUnitaDocObject().longValue());
-	}
-	entity.setTiXmlSacer(this.getTiXmlSacer());
-	entity.setBlXmlSacer(this.getBlXmlSacer());
-	entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
-	return entity;
+        PigXmlSacerUnitaDoc entity = new PigXmlSacerUnitaDoc();
+        if (this.getIdXmlSacerUnitaDoc() != null) {
+            entity.setIdXmlSacerUnitaDoc(this.getIdXmlSacerUnitaDoc().longValue());
+        }
+        if (this.getIdUnitaDocObject() != null) {
+            if (entity.getPigUnitaDocObject() == null) {
+                entity.setPigUnitaDocObject(new PigUnitaDocObject());
+            }
+            entity.getPigUnitaDocObject()
+                    .setIdUnitaDocObject(this.getIdUnitaDocObject().longValue());
+        }
+        entity.setTiXmlSacer(this.getTiXmlSacer());
+        entity.setBlXmlSacer(this.getBlXmlSacer());
+        entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

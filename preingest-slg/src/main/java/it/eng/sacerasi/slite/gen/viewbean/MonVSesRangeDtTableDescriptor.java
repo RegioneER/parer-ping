@@ -47,31 +47,31 @@ public class MonVSesRangeDtTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, true));
-	map.put(COL_NM_TIPO_OBJECT,
-		new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
-	map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, true));
-	map.put(COL_TI_STATO_RISOLUZ,
-		new ColumnDescriptor(COL_TI_STATO_RISOLUZ, Types.VARCHAR, 14, true));
-	map.put(COL_FL_VERIF, new ColumnDescriptor(COL_FL_VERIF, Types.VARCHAR, 1, true));
-	map.put(COL_FL_NON_RISOLUB,
-		new ColumnDescriptor(COL_FL_NON_RISOLUB, Types.VARCHAR, 1, true));
-	map.put(COL_TI_DT_CREAZIONE,
-		new ColumnDescriptor(COL_TI_DT_CREAZIONE, Types.VARCHAR, 19, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, true));
+        map.put(COL_NM_TIPO_OBJECT,
+                new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
+        map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, true));
+        map.put(COL_TI_STATO_RISOLUZ,
+                new ColumnDescriptor(COL_TI_STATO_RISOLUZ, Types.VARCHAR, 14, true));
+        map.put(COL_FL_VERIF, new ColumnDescriptor(COL_FL_VERIF, Types.VARCHAR, 1, true));
+        map.put(COL_FL_NON_RISOLUB,
+                new ColumnDescriptor(COL_FL_NON_RISOLUB, Types.VARCHAR, 1, true));
+        map.put(COL_TI_DT_CREAZIONE,
+                new ColumnDescriptor(COL_TI_DT_CREAZIONE, Types.VARCHAR, 19, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

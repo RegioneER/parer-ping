@@ -24,10 +24,10 @@ public class PigPrioritaObjectTableBean extends AbstractBaseTable<PigPrioritaObj
     private static final long serialVersionUID = 1L;
 
     public PigPrioritaObjectTableBean() {
-	super();
+        super();
     }
 
     protected PigPrioritaObjectRowBean createRow() {
-	return new PigPrioritaObjectRowBean();
+        return new PigPrioritaObjectRowBean();
     }
 }

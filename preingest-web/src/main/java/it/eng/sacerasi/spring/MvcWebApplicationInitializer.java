@@ -21,29 +21,29 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  * @author Marco Iacolucci
  */
 public class MvcWebApplicationInitializer
-	extends AbstractAnnotationConfigDispatcherServletInitializer {
+        extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-	return null;
+        return null;
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-	return new Class[] {
-		ApplicationConfiguration.class, SecurityConfiguration.class };
+        return new Class[] {
+                ApplicationConfiguration.class, SecurityConfiguration.class };
     }
 
     @Override
     protected String[] getServletMappings() {
-	return new String[] {
-		"/" };
+        return new String[] {
+                "/" };
     }
 
     @Override
     protected Filter[] getServletFilters() {
 
-	return null;
+        return null;
     }
 
 }

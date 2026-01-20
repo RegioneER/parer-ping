@@ -40,7 +40,7 @@ import it.eng.sacerasi.ws.dto.RispostaControlli;
  * @author Bonora_L
  */
 @WebServlet(urlPatterns = {
-	"/CheckFTPDirServlet" }, asyncSupported = true)
+        "/CheckFTPDirServlet" }, asyncSupported = true)
 public class CheckFTPDirTesterServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -54,81 +54,81 @@ public class CheckFTPDirTesterServlet extends HttpServlet {
     ConfigurationHelper configurationHelper;
 
     public CheckFTPDirTesterServlet() {
-	super();
+        super();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
-	this.doPost(request, response);
+            throws ServletException, IOException {
+        this.doPost(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
-	response.setContentType("text/html;charset=UTF-8");
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
 
-	StringBuilder tableBuilder = new StringBuilder();
-	buildResponse(tableBuilder, checkEjb.getPigVersList());
+        StringBuilder tableBuilder = new StringBuilder();
+        buildResponse(tableBuilder, checkEjb.getPigVersList());
 
-	request.setAttribute("tablerows", tableBuilder.toString());
-	request.getRequestDispatcher("checkFTPDir.jsp").forward(request, response);
+        request.setAttribute("tablerows", tableBuilder.toString());
+        request.getRequestDispatcher("checkFTPDir.jsp").forward(request, response);
     }
 
     private void buildResponse(StringBuilder builder, PigVersTableBean versatori) {
-	String rootFtp = "";
-	try {
-	    rootFtp = commonDb.getRootFtpParam();
-	} catch (Exception ex) {
-	    log.error(ex.getMessage());
-	}
-	for (PigVersRowBean row : versatori) {
-	    String error = null;
-	    builder.append("<tr>");
-	    // VERSATORE
-	    builder.append("<td>");
-	    builder.append(row.getNmVers());
-	    builder.append("</td>");
-	    // Directory di Input
-	    builder.append("<td>");
-	    // BigDecimal idAmbienteVers = row.getIdAmbienteVers();
-	    String dsPathInputFtp = row.getDsPathInputFtp();
-	    // String dsPathInputFtp = configurationHelper.getValoreParamApplic("DS_PATH_INPUT_FTP",
-	    // idAmbienteVers,
-	    // row.getIdVers(), null, Constants.TipoPigVGetValAppart.VERS);
-	    builder.append(dsPathInputFtp);
-	    builder.append("</td>");
-	    // Check
-	    builder.append("<td>");
-	    // RispostaControlli risp = checkEjb.doCheck(rootFtp, row.getDsPathInputFtp());
-	    RispostaControlli risp = checkEjb.doCheck(rootFtp, dsPathInputFtp);
-	    builder.append(risp.isrBoolean());
-	    if (!risp.isrBoolean()) {
-		error = risp.getDsErr() + "<br/>";
-	    }
+        String rootFtp = "";
+        try {
+            rootFtp = commonDb.getRootFtpParam();
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+        for (PigVersRowBean row : versatori) {
+            String error = null;
+            builder.append("<tr>");
+            // VERSATORE
+            builder.append("<td>");
+            builder.append(row.getNmVers());
+            builder.append("</td>");
+            // Directory di Input
+            builder.append("<td>");
+            // BigDecimal idAmbienteVers = row.getIdAmbienteVers();
+            String dsPathInputFtp = row.getDsPathInputFtp();
+            // String dsPathInputFtp = configurationHelper.getValoreParamApplic("DS_PATH_INPUT_FTP",
+            // idAmbienteVers,
+            // row.getIdVers(), null, Constants.TipoPigVGetValAppart.VERS);
+            builder.append(dsPathInputFtp);
+            builder.append("</td>");
+            // Check
+            builder.append("<td>");
+            // RispostaControlli risp = checkEjb.doCheck(rootFtp, row.getDsPathInputFtp());
+            RispostaControlli risp = checkEjb.doCheck(rootFtp, dsPathInputFtp);
+            builder.append(risp.isrBoolean());
+            if (!risp.isrBoolean()) {
+                error = risp.getDsErr() + "<br/>";
+            }
 
-	    builder.append("</td>");
-	    // Directory di output
-	    builder.append("<td>");
-	    // builder.append(row.getDsPathOutputFtp());
-	    builder.append(dsPathInputFtp);
-	    builder.append("</td>");
-	    // Check
-	    risp.reset();
-	    builder.append("<td>");
-	    // risp = checkEjb.doCheck(rootFtp, row.getDsPathOutputFtp());
-	    risp = checkEjb.doCheck(rootFtp, dsPathInputFtp);
-	    builder.append(risp.isrBoolean());
-	    if (!risp.isrBoolean()) {
-		error = (error != null ? error.concat(risp.getDsErr()) : risp.getDsErr());
-	    }
-	    builder.append("</td>");
-	    // Error
-	    builder.append("<td>");
-	    builder.append(error != null ? error : "N/A");
-	    builder.append("</td>");
+            builder.append("</td>");
+            // Directory di output
+            builder.append("<td>");
+            // builder.append(row.getDsPathOutputFtp());
+            builder.append(dsPathInputFtp);
+            builder.append("</td>");
+            // Check
+            risp.reset();
+            builder.append("<td>");
+            // risp = checkEjb.doCheck(rootFtp, row.getDsPathOutputFtp());
+            risp = checkEjb.doCheck(rootFtp, dsPathInputFtp);
+            builder.append(risp.isrBoolean());
+            if (!risp.isrBoolean()) {
+                error = (error != null ? error.concat(risp.getDsErr()) : risp.getDsErr());
+            }
+            builder.append("</td>");
+            // Error
+            builder.append("<td>");
+            builder.append(error != null ? error : "N/A");
+            builder.append("</td>");
 
-	    builder.append("</tr>");
-	}
+            builder.append("</tr>");
+        }
     }
 }

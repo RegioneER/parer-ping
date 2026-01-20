@@ -45,47 +45,47 @@ public class PigSismaFinanziamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_FINANZIAMENTO_IDSISMAFINANZIAMENTO_GENERATOR")
     @Column(name = "ID_SISMA_FINANZIAMENTO")
     public Long getIdSismaFinanziamento() {
-	return this.idSismaFinanziamento;
+        return this.idSismaFinanziamento;
     }
 
     public void setIdSismaFinanziamento(Long idSismaFinanziamento) {
-	this.idSismaFinanziamento = idSismaFinanziamento;
+        this.idSismaFinanziamento = idSismaFinanziamento;
     }
 
     @Column(name = "CD_TIPO_FINANZIAMENTO")
     public String getCdTipoFinanziamento() {
-	return this.cdTipoFinanziamento;
+        return this.cdTipoFinanziamento;
     }
 
     public void setCdTipoFinanziamento(String cdTipoFinanziamento) {
-	this.cdTipoFinanziamento = cdTipoFinanziamento;
+        this.cdTipoFinanziamento = cdTipoFinanziamento;
     }
 
     @Column(name = "DS_TIPO_FINANZIAMENTO")
     public String getDsTipoFinanziamento() {
-	return this.dsTipoFinanziamento;
+        return this.dsTipoFinanziamento;
     }
 
     public void setDsTipoFinanziamento(String dsTipoFinanziamento) {
-	this.dsTipoFinanziamento = dsTipoFinanziamento;
+        this.dsTipoFinanziamento = dsTipoFinanziamento;
     }
 
     @Column(name = "DS_TIPO_REGISTRO_SA_PUBBLICO")
     public String getDsTipoRegistroSaPubblico() {
-	return dsTipoRegistroSaPubblico;
+        return dsTipoRegistroSaPubblico;
     }
 
     public void setDsTipoRegistroSaPubblico(String dsTipoRegistroSaPubblico) {
-	this.dsTipoRegistroSaPubblico = dsTipoRegistroSaPubblico;
+        this.dsTipoRegistroSaPubblico = dsTipoRegistroSaPubblico;
     }
 
     @Column(name = "DS_TIPO_REGISTRO_AGENZIA")
     public String getDsTipoRegistroAgenzia() {
-	return dsTipoRegistroAgenzia;
+        return dsTipoRegistroAgenzia;
     }
 
     public void setDsTipoRegistroAgenzia(String dsTipoRegistroAgenzia) {
-	this.dsTipoRegistroAgenzia = dsTipoRegistroAgenzia;
+        this.dsTipoRegistroAgenzia = dsTipoRegistroAgenzia;
     }
 
 }

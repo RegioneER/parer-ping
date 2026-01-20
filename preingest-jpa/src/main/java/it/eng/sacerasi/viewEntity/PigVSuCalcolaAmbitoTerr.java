@@ -32,7 +32,7 @@ import javax.persistence.Table;
 public class PigVSuCalcolaAmbitoTerr implements Serializable {
 
     public enum Tipologia {
-	COMUNE, UNIONE
+        COMUNE, UNIONE
     }
 
     private static final long serialVersionUID = 1L;
@@ -49,48 +49,48 @@ public class PigVSuCalcolaAmbitoTerr implements Serializable {
     @Id
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-	return idVers;
+        return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     @Column(name = "DENOMINAZIONE")
     public String getDenominazione() {
-	return denominazione;
+        return denominazione;
     }
 
     public void setDenominazione(String denominazione) {
-	this.denominazione = denominazione;
+        this.denominazione = denominazione;
     }
 
     @Column(name = "UNIONE")
     public String getUnione() {
-	return unione;
+        return unione;
     }
 
     public void setUnione(String unione) {
-	this.unione = unione;
+        this.unione = unione;
     }
 
     @Column(name = "TIPOLOGIA", columnDefinition = "char")
     @Enumerated(EnumType.STRING)
     public Tipologia getTipologia() {
-	return tipologia;
+        return tipologia;
     }
 
     public void setTipologia(Tipologia tipologia) {
-	this.tipologia = tipologia;
+        this.tipologia = tipologia;
     }
 
     @Column(name = "PROVINCIA")
     public String getProvincia() {
-	return provincia;
+        return provincia;
     }
 
     public void setProvincia(String provincia) {
-	this.provincia = provincia;
+        this.provincia = provincia;
     }
 
 }

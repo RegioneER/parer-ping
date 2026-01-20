@@ -42,102 +42,102 @@ public class InvioSUHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(InvioSUHelper.class);
+        return ArquillianUtils.createPingJar(InvioSUHelper.class);
     }
 
     @Test
     void entityManagerIsNotNull() {
-	assertNotNull(helper.getEntityManager());
+        assertNotNull(helper.getEntityManager());
     }
 
     @Test
     void getIdStrumentiUrbanisticiDaInviare_queryIsOk() {
-	helper.getIdStrumentiUrbanisticiDaInviare();
-	assertTrue(true);
+        helper.getIdStrumentiUrbanisticiDaInviare();
+        assertTrue(true);
     }
 
     @Test
     @Disabled("could not resolve property: nmDocumento ")
     void getTipoDocumentoPrincipale_queryIsOk() {
-	long idStrumentiUrbanistici = aLong();
-	helper.getTipoDocumentoPrincipale(idStrumentiUrbanistici);
-	assertTrue(true);
+        long idStrumentiUrbanistici = aLong();
+        helper.getTipoDocumentoPrincipale(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void getDocumenti_queryIsOk() {
-	long idStrumentiUrbanistici = aLong();
-	helper.getDocumenti(idStrumentiUrbanistici);
-	assertTrue(true);
+        long idStrumentiUrbanistici = aLong();
+        helper.getDocumenti(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void getCollegamenti_queryIsOk() {
-	long idStrumentiUrbanistici = aLong();
-	helper.getCollegamenti(idStrumentiUrbanistici);
-	assertTrue(true);
+        long idStrumentiUrbanistici = aLong();
+        helper.getCollegamenti(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     @Disabled("PigVDettStrumentoUrbanistico is not mapped")
     void getDettaglioStrumentoUrbanistico_queryIsOk() {
-	long idStrumentiUrbanistici = aLong();
-	helper.getDettaglioStrumentoUrbanistico(idStrumentiUrbanistici);
-	assertTrue(true);
+        long idStrumentiUrbanistici = aLong();
+        helper.getDettaglioStrumentoUrbanistico(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiDaInviare_queryIsOk() {
-	long idStrumentiUrbanistici = aLong();
-	helper.getDocumentiDaInviare(idStrumentiUrbanistici);
-	assertTrue(true);
+        long idStrumentiUrbanistici = aLong();
+        helper.getDocumentiDaInviare(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatore_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.existsPigObjectPerVersatore(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.existsPigObjectPerVersatore(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreStrumUrbInAttesaFile_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.existsPigObjectPerVersatoreStrumUrbInAttesaFile(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.existsPigObjectPerVersatoreStrumUrbInAttesaFile(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreStrumUrbAnnullato_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.existsPigObjectPerVersatoreStrumUrbAnnullato(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.existsPigObjectPerVersatoreStrumUrbAnnullato(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreNoStrumUrb_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.existsPigObjectPerVersatoreNoStrumUrb(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.existsPigObjectPerVersatoreNoStrumUrb(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void getPigObjectPerVersatoreStrumUrbInNewTx_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.getPigObjectPerVersatoreStrumUrbInNewTx(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.getPigObjectPerVersatoreStrumUrbInNewTx(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void getPigObjectPerVersatoreStrumUrb_queryIsOk() {
-	long idVers = aLong();
-	String cdKeyObject = aString();
-	helper.getPigObjectPerVersatoreStrumUrb(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = aLong();
+        String cdKeyObject = aString();
+        helper.getPigObjectPerVersatoreStrumUrb(idVers, cdKeyObject);
+        assertTrue(true);
     }
 }

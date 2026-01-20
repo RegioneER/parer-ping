@@ -33,19 +33,19 @@ public class IamAutorServTableBean extends AbstractBaseTable<IamAutorServRowBean
     public static IamAutorServTableDescriptor TABLE_DESCRIPTOR = new IamAutorServTableDescriptor();
 
     public IamAutorServTableBean() {
-	super();
+        super();
     }
 
     protected IamAutorServRowBean createRow() {
-	return new IamAutorServRowBean();
+        return new IamAutorServRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamAutorServRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

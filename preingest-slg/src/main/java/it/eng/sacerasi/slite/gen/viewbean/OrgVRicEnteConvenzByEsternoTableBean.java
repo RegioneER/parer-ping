@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class OrgVRicEnteConvenzByEsternoTableBean
-	extends AbstractBaseTable<OrgVRicEnteConvenzByEsternoRowBean> {
+        extends AbstractBaseTable<OrgVRicEnteConvenzByEsternoRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class OrgVRicEnteConvenzByEsternoTableBean
     public static OrgVRicEnteConvenzByEsternoTableDescriptor TABLE_DESCRIPTOR = new OrgVRicEnteConvenzByEsternoTableDescriptor();
 
     public OrgVRicEnteConvenzByEsternoTableBean() {
-	super();
+        super();
     }
 
     protected OrgVRicEnteConvenzByEsternoRowBean createRow() {
-	return new OrgVRicEnteConvenzByEsternoRowBean();
+        return new OrgVRicEnteConvenzByEsternoRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<OrgVRicEnteConvenzByEsternoRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

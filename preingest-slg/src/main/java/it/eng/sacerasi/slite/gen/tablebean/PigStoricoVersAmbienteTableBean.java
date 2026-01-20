@@ -23,7 +23,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class PigStoricoVersAmbienteTableBean
-	extends AbstractBaseTable<PigStoricoVersAmbienteRowBean> {
+        extends AbstractBaseTable<PigStoricoVersAmbienteRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,19 +35,19 @@ public class PigStoricoVersAmbienteTableBean
     public static PigStoricoVersAmbienteTableDescriptor TABLE_DESCRIPTOR = new PigStoricoVersAmbienteTableDescriptor();
 
     public PigStoricoVersAmbienteTableBean() {
-	super();
+        super();
     }
 
     protected PigStoricoVersAmbienteRowBean createRow() {
-	return new PigStoricoVersAmbienteRowBean();
+        return new PigStoricoVersAmbienteRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigStoricoVersAmbienteRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

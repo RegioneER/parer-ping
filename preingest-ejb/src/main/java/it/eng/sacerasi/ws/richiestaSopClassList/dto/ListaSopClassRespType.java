@@ -25,20 +25,20 @@ public class ListaSopClassRespType {
     private List<SopClassRespType> sopClass;
 
     public ListaSopClassRespType() {
-	sopClass = new ArrayList<SopClassRespType>();
+        sopClass = new ArrayList<SopClassRespType>();
     }
 
     /**
      * @return the sopClass
      */
     public List<SopClassRespType> getSopClass() {
-	return sopClass;
+        return sopClass;
     }
 
     /**
      * @param sopClass the sopClass to set
      */
     public void setSopClass(List<SopClassRespType> sopClass) {
-	this.sopClass = sopClass;
+        this.sopClass = sopClass;
     }
 }

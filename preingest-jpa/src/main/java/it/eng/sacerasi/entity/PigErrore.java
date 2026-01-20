@@ -44,59 +44,59 @@ public class PigErrore implements Serializable {
     private PigClasseErrore pigClasseErrore;
 
     public PigErrore() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_ERRORE_IDERRORE_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_ERRORE"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_ERRORE"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_ERRORE_IDERRORE_GENERATOR")
     @Column(name = "ID_ERRORE")
     public Long getIdErrore() {
-	return this.idErrore;
+        return this.idErrore;
     }
 
     public void setIdErrore(Long idErrore) {
-	this.idErrore = idErrore;
+        this.idErrore = idErrore;
     }
 
     @Column(name = "CD_ERRORE")
     public String getCdErrore() {
-	return this.cdErrore;
+        return this.cdErrore;
     }
 
     public void setCdErrore(String cdErrore) {
-	this.cdErrore = cdErrore;
+        this.cdErrore = cdErrore;
     }
 
     @Column(name = "DS_ERRORE")
     public String getDsErrore() {
-	return this.dsErrore;
+        return this.dsErrore;
     }
 
     public void setDsErrore(String dsErrore) {
-	this.dsErrore = dsErrore;
+        this.dsErrore = dsErrore;
     }
 
     @Column(name = "DS_ERRORE_FILTRO")
     public String getDsErroreFiltro() {
-	return this.dsErroreFiltro;
+        return this.dsErroreFiltro;
     }
 
     public void setDsErroreFiltro(String dsErroreFiltro) {
-	this.dsErroreFiltro = dsErroreFiltro;
+        this.dsErroreFiltro = dsErroreFiltro;
     }
 
     // bi-directional many-to-one association to PigClasseErrore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CLASSE_ERRORE")
     public PigClasseErrore getPigClasseErrore() {
-	return this.pigClasseErrore;
+        return this.pigClasseErrore;
     }
 
     public void setPigClasseErrore(PigClasseErrore pigClasseErrore) {
-	this.pigClasseErrore = pigClasseErrore;
+        this.pigClasseErrore = pigClasseErrore;
     }
 
 }

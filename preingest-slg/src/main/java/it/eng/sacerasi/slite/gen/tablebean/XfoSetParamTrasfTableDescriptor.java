@@ -44,27 +44,27 @@ public class XfoSetParamTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, false));
-	map.put(COL_NM_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_NM_SET_PARAM_TRASF, Types.VARCHAR, 100, false));
-	map.put(COL_DS_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_DS_SET_PARAM_TRASF, Types.VARCHAR, 254, false));
-	map.put(COL_FL_SET_PARAM_ARK,
-		new ColumnDescriptor(COL_FL_SET_PARAM_ARK, Types.VARCHAR, 1, false));
+        map.put(COL_ID_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, false));
+        map.put(COL_NM_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_NM_SET_PARAM_TRASF, Types.VARCHAR, 100, false));
+        map.put(COL_DS_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_DS_SET_PARAM_TRASF, Types.VARCHAR, 254, false));
+        map.put(COL_FL_SET_PARAM_ARK,
+                new ColumnDescriptor(COL_FL_SET_PARAM_ARK, Types.VARCHAR, 1, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

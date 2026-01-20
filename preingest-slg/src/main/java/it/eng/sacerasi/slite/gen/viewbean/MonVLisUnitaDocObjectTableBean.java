@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class MonVLisUnitaDocObjectTableBean
-	extends AbstractBaseTable<MonVLisUnitaDocObjectRowBean> {
+        extends AbstractBaseTable<MonVLisUnitaDocObjectRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class MonVLisUnitaDocObjectTableBean
     public static MonVLisUnitaDocObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisUnitaDocObjectTableDescriptor();
 
     public MonVLisUnitaDocObjectTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisUnitaDocObjectRowBean createRow() {
-	return new MonVLisUnitaDocObjectRowBean();
+        return new MonVLisUnitaDocObjectRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisUnitaDocObjectRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

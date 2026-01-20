@@ -57,47 +57,47 @@ public class MonVVisObjNonVersTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_NM_TIPO_OBJECT,
-		new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
-	map.put(COL_CD_KEY_OBJECT,
-		new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, true));
-	map.put(COL_DS_OBJECT, new ColumnDescriptor(COL_DS_OBJECT, Types.VARCHAR, 1024, true));
-	map.put(COL_FL_VERIF, new ColumnDescriptor(COL_FL_VERIF, Types.VARCHAR, 1, true));
-	map.put(COL_FL_NON_RISOLUB,
-		new ColumnDescriptor(COL_FL_NON_RISOLUB, Types.VARCHAR, 1, true));
-	map.put(COL_DT_FIRST_SES_ERR,
-		new ColumnDescriptor(COL_DT_FIRST_SES_ERR, Types.TIMESTAMP, 7, true));
-	map.put(COL_DT_LAST_SES_ERR,
-		new ColumnDescriptor(COL_DT_LAST_SES_ERR, Types.TIMESTAMP, 7, true));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_FL_VERS_SACER_DA_RECUP,
-		new ColumnDescriptor(COL_FL_VERS_SACER_DA_RECUP, Types.VARCHAR, 1, true));
-	map.put(COL_ID_OBJECT_NON_VERS,
-		new ColumnDescriptor(COL_ID_OBJECT_NON_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_CD_VERS_GEN, new ColumnDescriptor(COL_CD_VERS_GEN, Types.VARCHAR, 100, true));
-	map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_CD_VERSIONE_TRASF,
-		new ColumnDescriptor(COL_CD_VERSIONE_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_TI_GEST_OGGETTI_FIGLI,
-		new ColumnDescriptor(COL_TI_GEST_OGGETTI_FIGLI, Types.VARCHAR, 20, true));
+        map.put(COL_ID_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_NM_TIPO_OBJECT,
+                new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
+        map.put(COL_CD_KEY_OBJECT,
+                new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, true));
+        map.put(COL_DS_OBJECT, new ColumnDescriptor(COL_DS_OBJECT, Types.VARCHAR, 1024, true));
+        map.put(COL_FL_VERIF, new ColumnDescriptor(COL_FL_VERIF, Types.VARCHAR, 1, true));
+        map.put(COL_FL_NON_RISOLUB,
+                new ColumnDescriptor(COL_FL_NON_RISOLUB, Types.VARCHAR, 1, true));
+        map.put(COL_DT_FIRST_SES_ERR,
+                new ColumnDescriptor(COL_DT_FIRST_SES_ERR, Types.TIMESTAMP, 7, true));
+        map.put(COL_DT_LAST_SES_ERR,
+                new ColumnDescriptor(COL_DT_LAST_SES_ERR, Types.TIMESTAMP, 7, true));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_FL_VERS_SACER_DA_RECUP,
+                new ColumnDescriptor(COL_FL_VERS_SACER_DA_RECUP, Types.VARCHAR, 1, true));
+        map.put(COL_ID_OBJECT_NON_VERS,
+                new ColumnDescriptor(COL_ID_OBJECT_NON_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_CD_VERS_GEN, new ColumnDescriptor(COL_CD_VERS_GEN, Types.VARCHAR, 100, true));
+        map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_CD_VERSIONE_TRASF,
+                new ColumnDescriptor(COL_CD_VERSIONE_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_TI_GEST_OGGETTI_FIGLI,
+                new ColumnDescriptor(COL_TI_GEST_OGGETTI_FIGLI, Types.VARCHAR, 20, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

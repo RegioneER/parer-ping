@@ -11,7 +11,7 @@
  * see <https://www.gnu.org/licenses/>.
  */
 
-package it.eng.sacerasi.exception;
+package it.eng.sacerasi.exception.error;
 
 /**
  * Questa classe gestisce le possibili severity utilizzabili all'atto della costruzione di un
@@ -19,7 +19,7 @@ package it.eng.sacerasi.exception;
  *
  * @author Luigi Bellio
  */
-public class ParerErrorSeverity {
+public class ErrorSeverity {
     /**
      * Ritorna un <code>boolean</code> con il seguente significato: <em>true</em> il parametro
      * severity in input è valido. <em>false</em> il parametro severity in input non è valido.
@@ -29,13 +29,12 @@ public class ParerErrorSeverity {
      * @return <code>boolean</code> la validità della severity passata in input.
      */
     public static boolean isSeverityValid(String severity) {
-	if ((severity == null) || (!severity.equals(ParerErrorSeverity.INFORMATION)
-		&& !severity.equals(ParerErrorSeverity.WARNING)
-		&& !severity.equals(ParerErrorSeverity.ERROR)
-		&& !severity.equals(ParerErrorSeverity.BLOCKING)))
-	    return false;
+        if ((severity == null) || (!severity.equals(ErrorSeverity.INFORMATION)
+                && !severity.equals(ErrorSeverity.WARNING) && !severity.equals(ErrorSeverity.ERROR)
+                && !severity.equals(ErrorSeverity.BLOCKING)))
+            return false;
 
-	return true;
+        return true;
     } // public static boolean isSeverityValid(String severity)
 
     public static final String INFORMATION = "INFORMATION";

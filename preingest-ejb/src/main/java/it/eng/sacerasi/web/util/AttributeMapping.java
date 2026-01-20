@@ -35,29 +35,29 @@ public class AttributeMapping {
 
     // list of attribute not to be copied
     static {
-	list.add("pigObjects");
-	list.add("pigSessioneIngests");
-	list.add("pigSessioneRecups");
-	list.add("pigContUnitaDocSacers");
-	list.add("pigObjects");
-	list.add("pigFileObjects");
-	list.add("pigInfoDicoms");
-	list.add("cdSopClassDicom");
-	list.add("dsSopClassDicom");
-	list.add("pigAmbienteVer");
-	// list.add("pigUsrAppartUserVers");
+        list.add("pigObjects");
+        list.add("pigSessioneIngests");
+        list.add("pigSessioneRecups");
+        list.add("pigContUnitaDocSacers");
+        list.add("pigObjects");
+        list.add("pigFileObjects");
+        list.add("pigInfoDicoms");
+        list.add("cdSopClassDicom");
+        list.add("dsSopClassDicom");
+        list.add("pigAmbienteVer");
+        // list.add("pigUsrAppartUserVers");
 
     }
     // id list to be copied
     static {
-	idList.add("idSopClassDicom");
+        idList.add("idSopClassDicom");
     }
 
     public static boolean contains(String s) {
-	return list.contains(s);
+        return list.contains(s);
     }
 
     public static boolean idListContains(String s) {
-	return idList.contains(s);
+        return idList.contains(s);
     }
 }

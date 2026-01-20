@@ -33,19 +33,19 @@ public class PigAttribDatiSpecTableBean extends AbstractBaseTable<PigAttribDatiS
     public static PigAttribDatiSpecTableDescriptor TABLE_DESCRIPTOR = new PigAttribDatiSpecTableDescriptor();
 
     public PigAttribDatiSpecTableBean() {
-	super();
+        super();
     }
 
     protected PigAttribDatiSpecRowBean createRow() {
-	return new PigAttribDatiSpecRowBean();
+        return new PigAttribDatiSpecRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigAttribDatiSpecRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

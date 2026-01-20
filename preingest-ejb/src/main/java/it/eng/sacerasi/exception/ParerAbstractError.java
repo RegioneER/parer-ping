@@ -13,6 +13,8 @@
 
 package it.eng.sacerasi.exception;
 
+import it.eng.sacerasi.exception.error.ErrorSeverity;
+
 /**
  * La classe astratta <code>EMFAbstractError</code> dev'essere estesa da tutte quelle classi che
  * rappresentano un errore gestito da <code>EMFErrorHandler</code>.
@@ -36,10 +38,10 @@ public abstract class ParerAbstractError extends Exception {
      * In questo costruttore vengono definiti alcuni attributi di classe.
      */
     protected ParerAbstractError() {
-	super();
-	_severity = ParerErrorSeverity.ERROR;
-	_description = "NOT DEFINED";
-	_additionalInfo = null;
+        super();
+        _severity = ErrorSeverity.ERROR;
+        _description = "NOT DEFINED";
+        _additionalInfo = null;
     }
 
     /**
@@ -48,8 +50,8 @@ public abstract class ParerAbstractError extends Exception {
      * @return <code>String</code> composta da severity e descrizione dell'errore.
      */
     public String getMessage() {
-	String message = "severity [" + _severity + "] description [" + _description + "]";
-	return message;
+        String message = "severity [" + _severity + "] description [" + _description + "]";
+        return message;
     } // public String getMessage()
 
     /**
@@ -58,7 +60,7 @@ public abstract class ParerAbstractError extends Exception {
      * @return <code>String</code> il severity dell'errore.
      */
     public String getSeverity() {
-	return _severity;
+        return _severity;
     } // public String getSeverity()
 
     /**
@@ -67,10 +69,10 @@ public abstract class ParerAbstractError extends Exception {
      * @param severity l'attributo di severity.
      */
     protected void setSeverity(String severity) {
-	if (!ParerErrorSeverity.isSeverityValid(severity))
-	    _severity = ParerErrorSeverity.ERROR;
-	else
-	    _severity = severity;
+        if (!ErrorSeverity.isSeverityValid(severity))
+            _severity = ErrorSeverity.ERROR;
+        else
+            _severity = severity;
     } // protected void setSeverity(String severity)
 
     /**
@@ -79,7 +81,7 @@ public abstract class ParerAbstractError extends Exception {
      * @return <code>String</code> la descrizione dell'errore.
      */
     public String getDescription() {
-	return _description;
+        return _description;
     } // public String getDescription()
 
     /**
@@ -88,10 +90,10 @@ public abstract class ParerAbstractError extends Exception {
      * @param description l'attributo descrizione.
      */
     protected void setDescription(String description) {
-	if (description == null)
-	    _description = "NOT DEFINED";
-	else
-	    _description = description;
+        if (description == null)
+            _description = "NOT DEFINED";
+        else
+            _description = description;
     } // protected void setDescription(String description)
 
     /**
@@ -100,7 +102,7 @@ public abstract class ParerAbstractError extends Exception {
      * @return <code>Object</code> un 'informazione aggiuntiva dell'errore.
      */
     public Object getAdditionalInfo() {
-	return _additionalInfo;
+        return _additionalInfo;
     } // public Object getAdditionalInfo()
 
     /**
@@ -109,7 +111,7 @@ public abstract class ParerAbstractError extends Exception {
      * @param additionalInfo l'iformazione aggiuntiva.
      */
     protected void setAdditionalInfo(Object additionalInfo) {
-	_additionalInfo = additionalInfo;
+        _additionalInfo = additionalInfo;
     } // protected void setAdditionalInfo(Object additionalInfo)
 
     /**

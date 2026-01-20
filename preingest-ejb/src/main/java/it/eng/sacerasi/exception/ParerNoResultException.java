@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.sacerasi.exception.error.ErrorCategory;
+import it.eng.sacerasi.exception.error.ErrorSeverity;
+
 /**
  *
  * @author Agati_D
@@ -38,21 +41,21 @@ public class ParerNoResultException extends ParerAbstractError {
     private String _code = null;
     private static final Logger logger = LoggerFactory.getLogger(ParerNoResultException.class);
     private ResourceBundle _bundle = ResourceBundle.getBundle("it.eng.parer.exception.errors",
-	    Locale.ITALIAN);
+            Locale.ITALIAN);
 
     public ParerNoResultException(String severity, String code, List<?> params) {
-	super();
-	init(severity, code, params);
+        super();
+        init(severity, code, params);
     }
 
     public ParerNoResultException(String message) {
-	super();
-	init(ParerErrorSeverity.ERROR, message);
+        super();
+        init(ErrorSeverity.ERROR, message);
     }
 
     public ParerNoResultException() {
-	super();
-	init(ParerErrorSeverity.ERROR, null, null);
+        super();
+        init(ErrorSeverity.ERROR, null, null);
     }
 
     /**
@@ -60,47 +63,47 @@ public class ParerNoResultException extends ParerAbstractError {
      * costruttori di <code>ParerUserError</code>.
      */
     private void init(String severity, String code, List<?> params) {
-	logger.debug("ParerNoResultException::init: invocato");
-	setSeverity(severity);
-	logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
-	_code = code;
-	logger.debug("ParerNoResultException::init: code [{}]", code);
-	String text = getText(code, params);
-	setDescription(text);
-	logger.debug("ParerNoResultException::init: description [{}]", getDescription());
+        logger.debug("ParerNoResultException::init: invocato");
+        setSeverity(severity);
+        logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
+        _code = code;
+        logger.debug("ParerNoResultException::init: code [{}]", code);
+        String text = getText(code, params);
+        setDescription(text);
+        logger.debug("ParerNoResultException::init: description [{}]", getDescription());
     }
 
     private void init(String severity, String message) {
-	logger.debug("ParerNoResultException::init: invocato");
-	setSeverity(severity);
-	logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
-	_code = null;
-	logger.debug("ParerNoResultException::init: code [{}]", _code);
-	setDescription(message);
-	logger.debug("ParerNoResultException::init: description [{}]", getDescription());
+        logger.debug("ParerNoResultException::init: invocato");
+        setSeverity(severity);
+        logger.debug("ParerNoResultException::init: severity [{}]", getSeverity());
+        _code = null;
+        logger.debug("ParerNoResultException::init: code [{}]", _code);
+        setDescription(message);
+        logger.debug("ParerNoResultException::init: description [{}]", getDescription());
     }
 
     public String getCategory() {
-	return ParerErrorCategory.USER_ERROR;
+        return ErrorCategory.PingErrorCategory.USER_ERROR.getValue();
     }
 
     private String getText(String code, List<?> params) {
-	if (code == null)
-	    return "";
+        if (code == null)
+            return "";
 
-	String text;
-	try {
-	    text = _bundle.getString(code);
-	} catch (MissingResourceException e) {
-	    text = "?? key " + code + " not found ??";
-	}
+        String text;
+        try {
+            text = _bundle.getString(code);
+        } catch (MissingResourceException e) {
+            text = "?? key " + code + " not found ??";
+        }
 
-	if (params != null) {
-	    Object[] strParams = params.toArray(stringArray);
-	    MessageFormat mf = new MessageFormat(text);
-	    text = mf.format(strParams, new StringBuffer(), null).toString();
-	}
-	return text;
+        if (params != null) {
+            Object[] strParams = params.toArray(stringArray);
+            MessageFormat mf = new MessageFormat(text);
+            text = mf.format(strParams, new StringBuffer(), null).toString();
+        }
+        return text;
     }
 
 }

@@ -52,19 +52,19 @@ public class TestEjbDB {
     @SuppressWarnings("unchecked")
     public void leggiVolumiDocumento(long idDoc) {
 
-	List<PigAmbienteVers> lstVolumi = null;
+        List<PigAmbienteVers> lstVolumi = null;
 
-	try {
-	    String queryStr = "select t from PigAmbienteVer t";
+        try {
+            String queryStr = "select t from PigAmbienteVer t";
 
-	    javax.persistence.Query query = entityManager.createQuery(queryStr);
-	    lstVolumi = query.getResultList();
-	    log.info("letti record " + lstVolumi.size());
+            javax.persistence.Query query = entityManager.createQuery(queryStr);
+            lstVolumi = query.getResultList();
+            log.info("letti record " + lstVolumi.size());
 
-	} catch (Exception e) {
+        } catch (Exception e) {
 
-	    log.error("Eccezione nella lettura  della tabella AsiAmbienteVer" + e);
-	}
+            log.error("Eccezione nella lettura  della tabella AsiAmbienteVer" + e);
+        }
 
     }
 }

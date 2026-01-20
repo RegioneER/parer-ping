@@ -35,14 +35,14 @@ public enum OperatoreNulloType {
     private static final java.util.Map<java.lang.String, OperatoreNulloType> enumConstants = new java.util.HashMap<java.lang.String, OperatoreNulloType>();
 
     static {
-	for (OperatoreNulloType c : OperatoreNulloType.values()) {
-	    OperatoreNulloType.enumConstants.put(c.value, c);
-	}
+        for (OperatoreNulloType c : OperatoreNulloType.values()) {
+            OperatoreNulloType.enumConstants.put(c.value, c);
+        }
 
     };
 
     private OperatoreNulloType(final java.lang.String value) {
-	this.value = value;
+        this.value = value;
     }
 
     /**
@@ -53,11 +53,11 @@ public enum OperatoreNulloType {
      * @return the constant for this value
      */
     public static OperatoreNulloType fromValue(final java.lang.String value) {
-	OperatoreNulloType c = OperatoreNulloType.enumConstants.get(value);
-	if (c != null) {
-	    return c;
-	}
-	throw new IllegalArgumentException(value);
+        OperatoreNulloType c = OperatoreNulloType.enumConstants.get(value);
+        if (c != null) {
+            return c;
+        }
+        throw new IllegalArgumentException(value);
     }
 
     /**
@@ -74,7 +74,7 @@ public enum OperatoreNulloType {
      * @return the value of this constant
      */
     public java.lang.String toString() {
-	return this.value;
+        return this.value;
     }
 
     /**
@@ -83,7 +83,7 @@ public enum OperatoreNulloType {
      * @return the value of this constant
      */
     public java.lang.String value() {
-	return this.value;
+        return this.value;
     }
 
 }

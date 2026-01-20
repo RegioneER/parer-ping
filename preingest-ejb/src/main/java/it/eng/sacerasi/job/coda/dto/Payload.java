@@ -39,110 +39,110 @@ public class Payload implements Serializable {
     private String passwordSacer;
 
     public BigDecimal getSessionId() {
-	return sessionId;
+        return sessionId;
     }
 
     public void setSessionId(BigDecimal sessionId) {
-	this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     public long getObjectId() {
-	return objectId;
+        return objectId;
     }
 
     public void setObjectId(long objectId) {
-	this.objectId = objectId;
+        this.objectId = objectId;
     }
 
     public long getUnitaDocId() {
-	return unitaDocId;
+        return unitaDocId;
     }
 
     public void setUnitaDocId(long unitaDocId) {
-	this.unitaDocId = unitaDocId;
+        this.unitaDocId = unitaDocId;
     }
 
     public String getCdRegistroUnitaDocSacer() {
-	return cdRegistroUnitaDocSacer;
+        return cdRegistroUnitaDocSacer;
     }
 
     public void setCdRegistroUnitaDocSacer(String cdRegistroUnitaDocSacer) {
-	this.cdRegistroUnitaDocSacer = cdRegistroUnitaDocSacer;
+        this.cdRegistroUnitaDocSacer = cdRegistroUnitaDocSacer;
     }
 
     public BigDecimal getAaUnitaDocSacer() {
-	return aaUnitaDocSacer;
+        return aaUnitaDocSacer;
     }
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
-	this.aaUnitaDocSacer = aaUnitaDocSacer;
+        this.aaUnitaDocSacer = aaUnitaDocSacer;
     }
 
     public String getCdKeyUnitaDocSacer() {
-	return cdKeyUnitaDocSacer;
+        return cdKeyUnitaDocSacer;
     }
 
     public void setCdKeyUnitaDocSacer(String cdKeyUnitaDocSacer) {
-	this.cdKeyUnitaDocSacer = cdKeyUnitaDocSacer;
+        this.cdKeyUnitaDocSacer = cdKeyUnitaDocSacer;
     }
 
     public String getUrlServVersamento() {
-	return urlServVersamento;
+        return urlServVersamento;
     }
 
     public void setUrlServVersamento(String urlServVersamento) {
-	this.urlServVersamento = urlServVersamento;
+        this.urlServVersamento = urlServVersamento;
     }
 
     public long getXmlVersamentoSacerId() {
-	return xmlVersamentoSacerId;
+        return xmlVersamentoSacerId;
     }
 
     public void setXmlVersamentoSacerId(long xmlVersamentoSacerId) {
-	this.xmlVersamentoSacerId = xmlVersamentoSacerId;
+        this.xmlVersamentoSacerId = xmlVersamentoSacerId;
     }
 
     public long getXmlIndiceId() {
-	return xmlIndiceId;
+        return xmlIndiceId;
     }
 
     public void setXmlIndiceId(long xmlIndiceId) {
-	this.xmlIndiceId = xmlIndiceId;
+        this.xmlIndiceId = xmlIndiceId;
     }
 
     public String getUserIdSacer() {
-	return userIdSacer;
+        return userIdSacer;
     }
 
     public void setUserIdSacer(String userIdSacer) {
-	this.userIdSacer = userIdSacer;
+        this.userIdSacer = userIdSacer;
     }
 
     public String getPasswordSacer() {
-	return passwordSacer;
+        return passwordSacer;
     }
 
     public void setPasswordSacer(String passwordSacer) {
-	this.passwordSacer = passwordSacer;
+        this.passwordSacer = passwordSacer;
     }
 
     public long getUnitaDocSessionId() {
-	return unitaDocSessionId;
+        return unitaDocSessionId;
     }
 
     public void setUnitaDocSessionId(long unitaDocSessionId) {
-	this.unitaDocSessionId = unitaDocSessionId;
+        this.unitaDocSessionId = unitaDocSessionId;
     }
 
     @Override
     public String toString() {
-	return "Payload{" + "sessionId=" + sessionId + "\n objectId=" + objectId + "\n unitaDocId="
-		+ unitaDocId + "\n unitaDocSessionId=" + unitaDocSessionId
-		+ "\n cdRegistroUnitaDocSacer=" + cdRegistroUnitaDocSacer + "\n aaUnitaDocSacer="
-		+ aaUnitaDocSacer + "\n cdKeyUnitaDocSacer=" + cdKeyUnitaDocSacer
-		+ "\n urlServVersamento=" + urlServVersamento + "\n xmlVersamentoSacerId="
-		+ xmlVersamentoSacerId + "\n xmlIndiceId=" + xmlIndiceId + "\n userIdSacer="
-		+ userIdSacer + "\n passwordSacer=" + passwordSacer + '}';
+        return "Payload{" + "sessionId=" + sessionId + "\n objectId=" + objectId + "\n unitaDocId="
+                + unitaDocId + "\n unitaDocSessionId=" + unitaDocSessionId
+                + "\n cdRegistroUnitaDocSacer=" + cdRegistroUnitaDocSacer + "\n aaUnitaDocSacer="
+                + aaUnitaDocSacer + "\n cdKeyUnitaDocSacer=" + cdKeyUnitaDocSacer
+                + "\n urlServVersamento=" + urlServVersamento + "\n xmlVersamentoSacerId="
+                + xmlVersamentoSacerId + "\n xmlIndiceId=" + xmlIndiceId + "\n userIdSacer="
+                + userIdSacer + "\n passwordSacer=" + passwordSacer + '}';
     }
 
 }

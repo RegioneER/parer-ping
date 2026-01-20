@@ -40,153 +40,153 @@ public class PigValoreParamApplicRowBean extends BaseRow implements JEEBaseRowIn
     public static PigValoreParamApplicTableDescriptor TABLE_DESCRIPTOR = new PigValoreParamApplicTableDescriptor();
 
     public PigValoreParamApplicRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdValoreParamApplic() {
-	return getBigDecimal("id_valore_param_applic");
+        return getBigDecimal("id_valore_param_applic");
     }
 
     public void setIdValoreParamApplic(BigDecimal idValoreParamApplic) {
-	setObject("id_valore_param_applic", idValoreParamApplic);
+        setObject("id_valore_param_applic", idValoreParamApplic);
     }
 
     public BigDecimal getIdParamApplic() {
-	return getBigDecimal("id_param_applic");
+        return getBigDecimal("id_param_applic");
     }
 
     public void setIdParamApplic(BigDecimal idParamApplic) {
-	setObject("id_param_applic", idParamApplic);
+        setObject("id_param_applic", idParamApplic);
     }
 
     public String getTiAppart() {
-	return getString("ti_appart");
+        return getString("ti_appart");
     }
 
     public void setTiAppart(String tiAppart) {
-	setObject("ti_appart", tiAppart);
+        setObject("ti_appart", tiAppart);
     }
 
     public String getDsValoreParamApplic() {
-	return getString("ds_valore_param_applic");
+        return getString("ds_valore_param_applic");
     }
 
     public void setDsValoreParamApplic(String dsValoreParamApplic) {
-	setObject("ds_valore_param_applic", dsValoreParamApplic);
+        setObject("ds_valore_param_applic", dsValoreParamApplic);
     }
 
     public BigDecimal getIdAmbienteVers() {
-	return getBigDecimal("id_ambiente_vers");
+        return getBigDecimal("id_ambiente_vers");
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	setObject("id_ambiente_vers", idAmbienteVers);
+        setObject("id_ambiente_vers", idAmbienteVers);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public BigDecimal getIdTipoObject() {
-	return getBigDecimal("id_tipo_object");
+        return getBigDecimal("id_tipo_object");
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	setObject("id_tipo_object", idTipoObject);
+        setObject("id_tipo_object", idTipoObject);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigValoreParamApplic entity = (PigValoreParamApplic) obj;
+        PigValoreParamApplic entity = (PigValoreParamApplic) obj;
 
-	this.setIdValoreParamApplic(new BigDecimal(entity.getIdValoreParamApplic()));
-	if (entity.getPigParamApplic() != null) {
-	    this.setIdParamApplic(new BigDecimal(entity.getPigParamApplic().getIdParamApplic()));
+        this.setIdValoreParamApplic(new BigDecimal(entity.getIdValoreParamApplic()));
+        if (entity.getPigParamApplic() != null) {
+            this.setIdParamApplic(new BigDecimal(entity.getPigParamApplic().getIdParamApplic()));
 
-	}
-	this.setTiAppart(entity.getTiAppart());
-	this.setDsValoreParamApplic(entity.getDsValoreParamApplic());
-	if (entity.getPigAmbienteVer() != null) {
-	    this.setIdAmbienteVers(new BigDecimal(entity.getPigAmbienteVer().getIdAmbienteVers()));
+        }
+        this.setTiAppart(entity.getTiAppart());
+        this.setDsValoreParamApplic(entity.getDsValoreParamApplic());
+        if (entity.getPigAmbienteVer() != null) {
+            this.setIdAmbienteVers(new BigDecimal(entity.getPigAmbienteVer().getIdAmbienteVers()));
 
-	}
-	if (entity.getPigVer() != null) {
-	    this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
-	}
+        }
+        if (entity.getPigVer() != null) {
+            this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
+        }
 
-	if (entity.getPigTipoObject() != null) {
-	    this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
+        if (entity.getPigTipoObject() != null) {
+            this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
 
-	}
+        }
     }
 
     @Override
     public PigValoreParamApplic rowBeanToEntity() {
-	PigValoreParamApplic entity = new PigValoreParamApplic();
-	if (this.getIdValoreParamApplic() != null) {
-	    entity.setIdValoreParamApplic(this.getIdValoreParamApplic().longValue());
-	}
-	if (this.getIdParamApplic() != null) {
-	    if (entity.getPigParamApplic() == null) {
-		entity.setPigParamApplic(new PigParamApplic());
-	    }
-	    entity.getPigParamApplic().setIdParamApplic(this.getIdParamApplic().longValue());
-	}
-	entity.setTiAppart(this.getTiAppart());
-	entity.setDsValoreParamApplic(this.getDsValoreParamApplic());
-	if (this.getIdAmbienteVers() != null) {
-	    if (entity.getPigAmbienteVer() == null) {
-		entity.setPigAmbienteVer(new PigAmbienteVers());
-	    }
-	    entity.getPigAmbienteVer().setIdAmbienteVers(this.getIdAmbienteVers().longValue());
-	}
-	if (this.getIdVers() != null) {
-	    if (entity.getPigVer() == null) {
-		entity.setPigVer(new PigVers());
-	    }
-	    entity.getPigVer().setIdVers(this.getIdVers().longValue());
-	}
-	if (this.getIdTipoObject() != null) {
-	    if (entity.getPigTipoObject() == null) {
-		entity.setPigTipoObject(new PigTipoObject());
-	    }
-	    entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
-	}
-	return entity;
+        PigValoreParamApplic entity = new PigValoreParamApplic();
+        if (this.getIdValoreParamApplic() != null) {
+            entity.setIdValoreParamApplic(this.getIdValoreParamApplic().longValue());
+        }
+        if (this.getIdParamApplic() != null) {
+            if (entity.getPigParamApplic() == null) {
+                entity.setPigParamApplic(new PigParamApplic());
+            }
+            entity.getPigParamApplic().setIdParamApplic(this.getIdParamApplic().longValue());
+        }
+        entity.setTiAppart(this.getTiAppart());
+        entity.setDsValoreParamApplic(this.getDsValoreParamApplic());
+        if (this.getIdAmbienteVers() != null) {
+            if (entity.getPigAmbienteVer() == null) {
+                entity.setPigAmbienteVer(new PigAmbienteVers());
+            }
+            entity.getPigAmbienteVer().setIdAmbienteVers(this.getIdAmbienteVers().longValue());
+        }
+        if (this.getIdVers() != null) {
+            if (entity.getPigVer() == null) {
+                entity.setPigVer(new PigVers());
+            }
+            entity.getPigVer().setIdVers(this.getIdVers().longValue());
+        }
+        if (this.getIdTipoObject() != null) {
+            if (entity.getPigTipoObject() == null) {
+                entity.setPigTipoObject(new PigTipoObject());
+            }
+            entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
+        }
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -41,39 +41,39 @@ public class PigVValoreSetParamTrasf implements Serializable {
 
     @Column(name = "DS_LISTA_VALORE_PARAM")
     public String getDsListaValoreParam() {
-	return this.dsListaValoreParam;
+        return this.dsListaValoreParam;
     }
 
     public void setDsListaValoreParam(String dsListaValoreParam) {
-	this.dsListaValoreParam = dsListaValoreParam;
+        this.dsListaValoreParam = dsListaValoreParam;
     }
 
     @Column(name = "ID_VALORE_SET_PARAM_TRASF")
     public BigDecimal getIdValoreSetParamTrasf() {
-	return this.idValoreSetParamTrasf;
+        return this.idValoreSetParamTrasf;
     }
 
     public void setIdValoreSetParamTrasf(BigDecimal idValoreSetParamTrasf) {
-	this.idValoreSetParamTrasf = idValoreSetParamTrasf;
+        this.idValoreSetParamTrasf = idValoreSetParamTrasf;
     }
 
     @Column(name = "NM_SET_PARAM_TRASF")
     public String getNmSetParamTrasf() {
-	return this.nmSetParamTrasf;
+        return this.nmSetParamTrasf;
     }
 
     public void setNmSetParamTrasf(String nmSetParamTrasf) {
-	this.nmSetParamTrasf = nmSetParamTrasf;
+        this.nmSetParamTrasf = nmSetParamTrasf;
     }
 
     private PigVValoreSetParamTrasfId pigVValoreSetParamTrasfId;
 
     @EmbeddedId()
     public PigVValoreSetParamTrasfId getPigVValoreSetParamTrasfId() {
-	return pigVValoreSetParamTrasfId;
+        return pigVValoreSetParamTrasfId;
     }
 
     public void setPigVValoreSetParamTrasfId(PigVValoreSetParamTrasfId pigVValoreSetParamTrasfId) {
-	this.pigVValoreSetParamTrasfId = pigVValoreSetParamTrasfId;
+        this.pigVValoreSetParamTrasfId = pigVValoreSetParamTrasfId;
     }
 }

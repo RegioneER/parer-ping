@@ -48,34 +48,34 @@ public class PigAttribDatiSpecTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_ATTRIB_DATI_SPEC,
-		new ColumnDescriptor(COL_ID_ATTRIB_DATI_SPEC, Types.DECIMAL, 22, true));
-	map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, false));
-	map.put(COL_NM_ATTRIB_DATI_SPEC,
-		new ColumnDescriptor(COL_NM_ATTRIB_DATI_SPEC, Types.VARCHAR, 100, false));
-	map.put(COL_NI_ORD, new ColumnDescriptor(COL_NI_ORD, Types.DECIMAL, 22, false));
-	map.put(COL_FL_FILTRO_DIARIO,
-		new ColumnDescriptor(COL_FL_FILTRO_DIARIO, Types.VARCHAR, 1, false));
-	map.put(COL_FL_VERS_SACER,
-		new ColumnDescriptor(COL_FL_VERS_SACER, Types.VARCHAR, 1, false));
-	map.put(COL_NM_COL_DATI_SPEC,
-		new ColumnDescriptor(COL_NM_COL_DATI_SPEC, Types.VARCHAR, 100, false));
-	map.put(COL_CD_DATATYPE_XSD,
-		new ColumnDescriptor(COL_CD_DATATYPE_XSD, Types.VARCHAR, 100, false));
-	map.put(COL_TI_DATATYPE_COL,
-		new ColumnDescriptor(COL_TI_DATATYPE_COL, Types.VARCHAR, 20, false));
+        map.put(COL_ID_ATTRIB_DATI_SPEC,
+                new ColumnDescriptor(COL_ID_ATTRIB_DATI_SPEC, Types.DECIMAL, 22, true));
+        map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, false));
+        map.put(COL_NM_ATTRIB_DATI_SPEC,
+                new ColumnDescriptor(COL_NM_ATTRIB_DATI_SPEC, Types.VARCHAR, 100, false));
+        map.put(COL_NI_ORD, new ColumnDescriptor(COL_NI_ORD, Types.DECIMAL, 22, false));
+        map.put(COL_FL_FILTRO_DIARIO,
+                new ColumnDescriptor(COL_FL_FILTRO_DIARIO, Types.VARCHAR, 1, false));
+        map.put(COL_FL_VERS_SACER,
+                new ColumnDescriptor(COL_FL_VERS_SACER, Types.VARCHAR, 1, false));
+        map.put(COL_NM_COL_DATI_SPEC,
+                new ColumnDescriptor(COL_NM_COL_DATI_SPEC, Types.VARCHAR, 100, false));
+        map.put(COL_CD_DATATYPE_XSD,
+                new ColumnDescriptor(COL_CD_DATATYPE_XSD, Types.VARCHAR, 100, false));
+        map.put(COL_TI_DATATYPE_COL,
+                new ColumnDescriptor(COL_TI_DATATYPE_COL, Types.VARCHAR, 20, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

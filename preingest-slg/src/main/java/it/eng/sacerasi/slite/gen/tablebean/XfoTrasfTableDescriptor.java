@@ -43,22 +43,22 @@ public class XfoTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, false));
-	map.put(COL_DS_TRASF, new ColumnDescriptor(COL_DS_TRASF, Types.VARCHAR, 254, false));
-	map.put(COL_FL_ATTIVA, new ColumnDescriptor(COL_FL_ATTIVA, Types.VARCHAR, 1, false));
+        map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, false));
+        map.put(COL_DS_TRASF, new ColumnDescriptor(COL_DS_TRASF, Types.VARCHAR, 254, false));
+        map.put(COL_FL_ATTIVA, new ColumnDescriptor(COL_FL_ATTIVA, Types.VARCHAR, 1, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

@@ -45,50 +45,50 @@ public class PigDichVersSacer implements Serializable {
     private PigVers pigVer;
 
     public PigDichVersSacer() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_DICH_VERS_SACER_IDDICHVERSSACER_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_DICH_VERS_SACER"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_DICH_VERS_SACER"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_DICH_VERS_SACER_IDDICHVERSSACER_GENERATOR")
     @Column(name = "ID_DICH_VERS_SACER")
     public Long getIdDichVersSacer() {
-	return this.idDichVersSacer;
+        return this.idDichVersSacer;
     }
 
     public void setIdDichVersSacer(Long idDichVersSacer) {
-	this.idDichVersSacer = idDichVersSacer;
+        this.idDichVersSacer = idDichVersSacer;
     }
 
     @Column(name = "ID_ORGANIZ_IAM")
     public java.math.BigDecimal getIdOrganizIam() {
-	return this.idOrganizIam;
+        return this.idOrganizIam;
     }
 
     public void setIdOrganizIam(java.math.BigDecimal idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @Column(name = "TI_DICH_VERS")
     public String getTiDichVers() {
-	return this.tiDichVers;
+        return this.tiDichVers;
     }
 
     public void setTiDichVers(String tiDichVers) {
-	this.tiDichVers = tiDichVers;
+        this.tiDichVers = tiDichVers;
     }
 
     // bi-directional many-to-one association to PigVers
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VERS")
     public PigVers getPigVer() {
-	return this.pigVer;
+        return this.pigVer;
     }
 
     public void setPigVer(PigVers pigVer) {
-	this.pigVer = pigVer;
+        this.pigVer = pigVer;
     }
 
 }

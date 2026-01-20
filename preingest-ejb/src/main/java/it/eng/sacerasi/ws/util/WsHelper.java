@@ -34,24 +34,24 @@ public class WsHelper {
     private EntityManager em;
 
     public void checkAuthorizations(String nmAmbiente, String nmVersatore, String username,
-	    String servizioWeb) throws AuthWSException {
-	Integer idOrganiz = retrieveIdOrgFromNmAmbienteAndNmVersatore(nmAmbiente, nmVersatore);
-	if (idOrganiz != null) {
-	    WSLoginHandler.checkAuthz(username, idOrganiz, servizioWeb, em);
-	}
+            String servizioWeb) throws AuthWSException {
+        Integer idOrganiz = retrieveIdOrgFromNmAmbienteAndNmVersatore(nmAmbiente, nmVersatore);
+        if (idOrganiz != null) {
+            WSLoginHandler.checkAuthz(username, idOrganiz, servizioWeb, em);
+        }
     }
 
     @SuppressWarnings("unchecked")
     private Integer retrieveIdOrgFromNmAmbienteAndNmVersatore(String nmAmbiente,
-	    String nmVersatore) {
-	Query q = em.createQuery("SELECT pigVers.idVers "
-		+ "FROM PigVers pigVers JOIN pigVers.pigAmbienteVer ambienteVers "
-		+ "where pigVers.nmVers = :nmVersatore "
-		+ "and ambienteVers.nmAmbienteVers = :nmAmbiente");
-	q.setParameter("nmAmbiente", nmAmbiente);
-	q.setParameter("nmVersatore", nmVersatore);
-	List<Long> queueId = q.getResultList();
-	return (queueId.isEmpty()) ? null : queueId.get(0).intValue();
+            String nmVersatore) {
+        Query q = em.createQuery("SELECT pigVers.idVers "
+                + "FROM PigVers pigVers JOIN pigVers.pigAmbienteVer ambienteVers "
+                + "where pigVers.nmVers = :nmVersatore "
+                + "and ambienteVers.nmAmbienteVers = :nmAmbiente");
+        q.setParameter("nmAmbiente", nmAmbiente);
+        q.setParameter("nmVersatore", nmVersatore);
+        List<Long> queueId = q.getResultList();
+        return (queueId.isEmpty()) ? null : queueId.get(0).intValue();
     }
 
 }

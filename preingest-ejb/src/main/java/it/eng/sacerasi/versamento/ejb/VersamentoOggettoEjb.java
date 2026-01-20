@@ -54,13 +54,13 @@ import org.slf4j.LoggerFactory;
 @Stateless
 @LocalBean
 @Interceptors({
-	it.eng.sacerasi.aop.TransactionInterceptor.class })
+        it.eng.sacerasi.aop.TransactionInterceptor.class })
 public class VersamentoOggettoEjb {
 
     private static final Logger logger = LoggerFactory.getLogger(VersamentoOggettoEjb.class);
 
     public enum OS_KEY_POSTFIX {
-	PIGOBJECT, SISMA, SU
+        PIGOBJECT, SISMA, SU
     }
 
     @Resource
@@ -72,7 +72,7 @@ public class VersamentoOggettoEjb {
     private VersamentoOggettoHelper helper;
 
     public EntityManager getEntityManager() {
-	return entityManager;
+        return entityManager;
     }
 
     /**
@@ -99,121 +99,121 @@ public class VersamentoOggettoEjb {
      * @throws ParerUserError errore generico
      */
     public MonVLisStatoVersTableBean getMonVLisStatoVersTableBean(long idUtente,
-	    BigDecimal idAmbiente, BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject,
-	    String cdKeyObject, String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
-	    List<String> tiStatoObject, List<String> tiVersFile, String note,
-	    String tiContenutoOggetto) throws ParerUserError {
-	List<MonVLisStatoVers> listObjects = helper.getMonVLisStatoVers(idUtente, idAmbiente,
-		idVers, idTipoOggetto, idObject, cdKeyObject, dsObject, dataDa, dataA,
-		tiStatoEsterno, tiStatoObject, tiVersFile, note, tiContenutoOggetto);
-	MonVLisStatoVersTableBean table = new MonVLisStatoVersTableBean();
-	if (!listObjects.isEmpty()) {
-	    try {
-		for (MonVLisStatoVers mvlsv : listObjects) {
-		    MonVLisStatoVersRowBean row = (MonVLisStatoVersRowBean) Transform
-			    .entity2RowBean(mvlsv);
-		    row.setString("nm_versatore",
-			    mvlsv.getNmAmbienteVers() + ", " + mvlsv.getNmVers());
+            BigDecimal idAmbiente, BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject,
+            String cdKeyObject, String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
+            List<String> tiStatoObject, List<String> tiVersFile, String note,
+            String tiContenutoOggetto) throws ParerUserError {
+        List<MonVLisStatoVers> listObjects = helper.getMonVLisStatoVers(idUtente, idAmbiente,
+                idVers, idTipoOggetto, idObject, cdKeyObject, dsObject, dataDa, dataA,
+                tiStatoEsterno, tiStatoObject, tiVersFile, note, tiContenutoOggetto);
+        MonVLisStatoVersTableBean table = new MonVLisStatoVersTableBean();
+        if (!listObjects.isEmpty()) {
+            try {
+                for (MonVLisStatoVers mvlsv : listObjects) {
+                    MonVLisStatoVersRowBean row = (MonVLisStatoVersRowBean) Transform
+                            .entity2RowBean(mvlsv);
+                    row.setString("nm_versatore",
+                            mvlsv.getNmAmbienteVers() + ", " + mvlsv.getNmVers());
 
-		    if (row.getTiVersFile()
-			    .equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
-			row.setBigDecimal("ni_ud_prodotte", row.getNiUdProdotte());
-			// MEV 26891
-			row.setString("ti_gestione_figli", "--");
-		    } else {
-			row.setBigDecimal("ni_ud_prodotte", new BigDecimal(0));
-			row.setString("ti_gestione_figli", row.getTiGestOggettiFigli());
-		    }
+                    if (row.getTiVersFile()
+                            .equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
+                        row.setBigDecimal("ni_ud_prodotte", row.getNiUdProdotte());
+                        // MEV 26891
+                        row.setString("ti_gestione_figli", "--");
+                    } else {
+                        row.setBigDecimal("ni_ud_prodotte", new BigDecimal(0));
+                        row.setString("ti_gestione_figli", row.getTiGestOggettiFigli());
+                    }
 
-		    table.add(row);
-		}
-	    } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		    | IllegalAccessException | IllegalArgumentException
-		    | InvocationTargetException ex) {
-		logger.error("Errore durante il recupero dei versamenti "
-			+ ExceptionUtils.getRootCauseMessage(ex), ex);
-		throw new ParerUserError("Errore durante il recupero dei versamenti");
-	    }
-	}
-	return table;
+                    table.add(row);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                    | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException ex) {
+                logger.error("Errore durante il recupero dei versamenti "
+                        + ExceptionUtils.getRootCauseMessage(ex), ex);
+                throw new ParerUserError("Errore durante il recupero dei versamenti");
+            }
+        }
+        return table;
     }
 
     public <T> BaseTableInterface getColumnFromPigObjectTableBean(BigDecimal idTipoObject,
-	    Class<T> resultClass, String... columns) {
-	BaseTableInterface<?> tmpTableBean = new BaseTable();
-	List<Object[]> resultList = helper.getColumnFromPigObject(idTipoObject, columns);
-	for (Object[] value : resultList) {
-	    BaseRow row = new BaseRow();
-	    if (value instanceof Object[]) {
-		for (int index = 0; index < columns.length; index++) {
-		    String column = columns[index];
-		    Object[] res = value;
-		    Object val;
-		    if (res[index] instanceof Long) {
-			val = new BigDecimal((Long) res[index]);
-		    } else {
-			val = res[index];
-		    }
-		    row.setObject(column, val);
-		}
-	    }
-	    tmpTableBean.add(row);
-	}
+            Class<T> resultClass, String... columns) {
+        BaseTableInterface<?> tmpTableBean = new BaseTable();
+        List<Object[]> resultList = helper.getColumnFromPigObject(idTipoObject, columns);
+        for (Object[] value : resultList) {
+            BaseRow row = new BaseRow();
+            if (value instanceof Object[]) {
+                for (int index = 0; index < columns.length; index++) {
+                    String column = columns[index];
+                    Object[] res = value;
+                    Object val;
+                    if (res[index] instanceof Long) {
+                        val = new BigDecimal((Long) res[index]);
+                    } else {
+                        val = res[index];
+                    }
+                    row.setObject(column, val);
+                }
+            }
+            tmpTableBean.add(row);
+        }
 
-	return tmpTableBean;
+        return tmpTableBean;
     }
 
     public PigObjectRowBean getPigObjectRowBean(BigDecimal idObject) throws ParerUserError {
-	PigObject obj = helper.findById(PigObject.class, idObject);
-	PigObjectRowBean row = null;
-	try {
-	    row = (PigObjectRowBean) Transform.entity2RowBean(obj);
-	} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		| IllegalAccessException | IllegalArgumentException
-		| InvocationTargetException ex) {
-	    logger.error("Errore durante il recupero dell'oggetto "
-		    + ExceptionUtils.getRootCauseMessage(ex), ex);
-	    throw new ParerUserError("Errore durante il recupero dell'oggetto");
-	}
-	return row;
+        PigObject obj = helper.findById(PigObject.class, idObject);
+        PigObjectRowBean row = null;
+        try {
+            row = (PigObjectRowBean) Transform.entity2RowBean(obj);
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException ex) {
+            logger.error("Errore durante il recupero dell'oggetto "
+                    + ExceptionUtils.getRootCauseMessage(ex), ex);
+            throw new ParerUserError("Errore durante il recupero dell'oggetto");
+        }
+        return row;
     }
 
     // MEV#21995 computa il path dove stoccare su object storage per questo versatore
     public String getFileOsPathByVers(BigDecimal idVers) {
-	PigVers vers = helper.findById(PigVers.class, idVers);
-	return String.format("%s/%s/", vers.getPigAmbienteVer().getNmAmbienteVers(),
-		vers.getNmVers());
+        PigVers vers = helper.findById(PigVers.class, idVers);
+        return String.format("%s/%s/", vers.getPigAmbienteVer().getNmAmbienteVers(),
+                vers.getNmVers());
     }
 
     // MEV 34843
     public String computeOsFileKey(BigDecimal idVers, String nomeFile, String postFix) {
-	StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-	LocalDateTime date = LocalDateTime.now();
-	sb.append(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-	sb.append(File.separator);
+        LocalDateTime date = LocalDateTime.now();
+        sb.append(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        sb.append(File.separator);
 
-	sb.append(date.format(DateTimeFormatter.ofPattern("HH")));
-	sb.append(File.separator);
+        sb.append(date.format(DateTimeFormatter.ofPattern("HH")));
+        sb.append(File.separator);
 
-	sb.append(date.format(DateTimeFormatter.ofPattern("mm")));
-	sb.append(File.separator);
+        sb.append(date.format(DateTimeFormatter.ofPattern("mm")));
+        sb.append(File.separator);
 
-	sb.append(getFileOsPathByVers(idVers));
+        sb.append(getFileOsPathByVers(idVers));
 
-	String normalizedFileName = Utils.convertiLettereAccentate(nomeFile);
-	normalizedFileName = Utils.eliminaPunteggiatureSpaziNomeFile(normalizedFileName);
-	normalizedFileName = Utils.normalizzaNomeFile(normalizedFileName);
+        String normalizedFileName = Utils.convertiLettereAccentate(nomeFile);
+        normalizedFileName = Utils.eliminaPunteggiatureSpaziNomeFile(normalizedFileName);
+        normalizedFileName = Utils.normalizzaNomeFile(normalizedFileName);
 
-	sb.append(normalizedFileName);
-	sb.append("_");
-	sb.append(postFix);
-	sb.append(File.separator);
+        sb.append(normalizedFileName);
+        sb.append("_");
+        sb.append(postFix);
+        sb.append(File.separator);
 
-	sb.append(UUID.randomUUID());
-	sb.append(it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION);
+        sb.append(UUID.randomUUID());
+        sb.append(it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION);
 
-	return sb.toString();
+        return sb.toString();
     }
 
     // MEV27034
@@ -222,14 +222,14 @@ public class VersamentoOggettoEjb {
      * venga trovato.
      */
     public boolean isVersatoreCessato(BigDecimal idOrganizApplic) {
-	boolean ret = false;
-	PigVers vers = helper.findById(PigVers.class, idOrganizApplic);
-	if (vers != null && vers.getFlCessato() != null) {
-	    ret = vers.getFlCessato().equals("1");
-	} else {
-	    ret = false;
-	}
-	return ret;
+        boolean ret = false;
+        PigVers vers = helper.findById(PigVers.class, idOrganizApplic);
+        if (vers != null && vers.getFlCessato() != null) {
+            ret = vers.getFlCessato().equals("1");
+        } else {
+            ret = false;
+        }
+        return ret;
     }
 
     /**
@@ -240,10 +240,10 @@ public class VersamentoOggettoEjb {
      * @return true se sono presenti versamenti in Ping effettuati dall'utente
      */
     public boolean checkExistsVersamentiPing(long idUserIam) {
-	Query query = entityManager.createQuery("SELECT oggetto FROM PigObject oggetto "
-		+ "WHERE oggetto.iamUser.idUserIam = :idUserIam ");
-	query.setParameter("idUserIam", idUserIam);
-	query.setMaxResults(1);
-	return !query.getResultList().isEmpty();
+        Query query = entityManager.createQuery("SELECT oggetto FROM PigObject oggetto "
+                + "WHERE oggetto.iamUser.idUserIam = :idUserIam ");
+        query.setParameter("idUserIam", idUserIam);
+        query.setMaxResults(1);
+        return !query.getResultList().isEmpty();
     }
 }

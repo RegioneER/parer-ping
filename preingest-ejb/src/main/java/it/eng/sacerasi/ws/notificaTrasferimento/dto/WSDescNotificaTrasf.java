@@ -27,17 +27,17 @@ public class WSDescNotificaTrasf implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_NOTIFICA_TRASF_ASYNC;
+        return Costanti.WS_NOTIFICA_TRASF_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_NOTIFICA_TRASF_VRSN;
+        return Costanti.WS_NOTIFICA_TRASF_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_NOTIFICA_TRASF_COMP;
+        return Costanti.WS_NOTIFICA_TRASF_COMP;
     }
 
 }

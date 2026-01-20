@@ -45,28 +45,28 @@ public class PigXmlAnnulSessioneIngestTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_XML_ANNUL_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_XML_ANNUL_SESSIONE_INGEST, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
-	map.put(COL_TI_XML_ANNUL, new ColumnDescriptor(COL_TI_XML_ANNUL, Types.VARCHAR, 20, false));
-	map.put(COL_CD_VERSIONE_XML_ANNUL,
-		new ColumnDescriptor(COL_CD_VERSIONE_XML_ANNUL, Types.VARCHAR, 100, false));
-	map.put(COL_DT_REG_XML_ANNUL,
-		new ColumnDescriptor(COL_DT_REG_XML_ANNUL, Types.TIMESTAMP, 7, false));
-	map.put(COL_BL_XML_ANNUL, new ColumnDescriptor(COL_BL_XML_ANNUL, Types.CLOB, 4000, false));
+        map.put(COL_ID_XML_ANNUL_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_XML_ANNUL_SESSIONE_INGEST, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
+        map.put(COL_TI_XML_ANNUL, new ColumnDescriptor(COL_TI_XML_ANNUL, Types.VARCHAR, 20, false));
+        map.put(COL_CD_VERSIONE_XML_ANNUL,
+                new ColumnDescriptor(COL_CD_VERSIONE_XML_ANNUL, Types.VARCHAR, 100, false));
+        map.put(COL_DT_REG_XML_ANNUL,
+                new ColumnDescriptor(COL_DT_REG_XML_ANNUL, Types.TIMESTAMP, 7, false));
+        map.put(COL_BL_XML_ANNUL, new ColumnDescriptor(COL_BL_XML_ANNUL, Types.CLOB, 4000, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

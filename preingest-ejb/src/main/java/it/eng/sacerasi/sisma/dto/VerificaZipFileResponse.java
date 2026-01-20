@@ -30,30 +30,30 @@ public class VerificaZipFileResponse implements Serializable {
     String report;
 
     public VerificaZipFileResponse() {
-	super();
+        super();
     }
 
     public PigErrore getErrore() {
-	return errore;
+        return errore;
     }
 
     public void setErrore(PigErrore errore) {
-	this.errore = errore;
+        this.errore = errore;
     }
 
     public Integer getFilesCount() {
-	return filesCount;
+        return filesCount;
     }
 
     public void setFilesCount(Integer filesCount) {
-	this.filesCount = filesCount;
+        this.filesCount = filesCount;
     }
 
     public String getReport() {
-	return report;
+        return report;
     }
 
     public void setReport(String report) {
-	this.report = report;
+        this.report = report;
     }
 }

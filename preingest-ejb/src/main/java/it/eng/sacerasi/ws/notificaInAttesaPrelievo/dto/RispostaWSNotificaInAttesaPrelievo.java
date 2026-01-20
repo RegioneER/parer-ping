@@ -33,7 +33,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public IRispostaWS.SeverityEnum getSeverity() {
-	return severity;
+        return severity;
     }
 
     /**
@@ -41,7 +41,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public void setSeverity(IRispostaWS.SeverityEnum severity) {
-	this.severity = severity;
+        this.severity = severity;
     }
 
     /**
@@ -49,7 +49,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public IRispostaWS.ErrorTypeEnum getErrorType() {
-	return errorType;
+        return errorType;
     }
 
     /**
@@ -57,7 +57,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorType(IRispostaWS.ErrorTypeEnum errorType) {
-	this.errorType = errorType;
+        this.errorType = errorType;
     }
 
     /**
@@ -65,7 +65,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     /**
@@ -73,7 +73,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorMessage(String errorMessage) {
-	this.errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     /**
@@ -81,7 +81,7 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public String getErrorCode() {
-	return errorCode;
+        return errorCode;
     }
 
     /**
@@ -89,15 +89,15 @@ public class RispostaWSNotificaInAttesaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorCode(String errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     public NotificaInAttesaPrelievoRisposta getNotificaInAttesaPrelievoRisposta() {
-	return notificaInAttesaPrelievoRisposta;
+        return notificaInAttesaPrelievoRisposta;
     }
 
     public void setNotificaInAttesaPrelievoRisposta(
-	    NotificaInAttesaPrelievoRisposta notificaInAttesaPrelievoRisposta) {
-	this.notificaInAttesaPrelievoRisposta = notificaInAttesaPrelievoRisposta;
+            NotificaInAttesaPrelievoRisposta notificaInAttesaPrelievoRisposta) {
+        this.notificaInAttesaPrelievoRisposta = notificaInAttesaPrelievoRisposta;
     }
 }

@@ -21,22 +21,22 @@ public class NotificaOggettoTrasformatoRisposta {
     private String dettagli;
 
     public NotificaOggettoTrasformatoRisposta() {
-	this.dettagli = "";
+        this.dettagli = "";
     }
 
     public String getEsito() {
-	return esito;
+        return esito;
     }
 
     public void setEsito(String esito) {
-	this.esito = esito;
+        this.esito = esito;
     }
 
     public String getDettagli() {
-	return dettagli;
+        return dettagli;
     }
 
     public void setDettagli(String dettagli) {
-	this.dettagli = dettagli;
+        this.dettagli = dettagli;
     }
 }

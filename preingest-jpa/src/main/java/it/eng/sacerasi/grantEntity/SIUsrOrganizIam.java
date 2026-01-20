@@ -53,95 +53,95 @@ public class SIUsrOrganizIam implements Serializable {
     }
 
     public SIUsrOrganizIam(long idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ID_APPLIC", nullable = false)
     public SIAplApplic getsIAplApplic() {
-	return sIAplApplic;
+        return sIAplApplic;
     }
 
     public void setsIAplApplic(SIAplApplic sIAplApplic) {
-	this.sIAplApplic = sIAplApplic;
+        this.sIAplApplic = sIAplApplic;
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ID_TIPO_ORGANIZ", nullable = false)
     public SIAplTipoOrganiz getSiAplTipoOrganiz() {
-	return siAplTipoOrganiz;
+        return siAplTipoOrganiz;
     }
 
     public void setSiAplTipoOrganiz(SIAplTipoOrganiz siAplTipoOrganiz) {
-	this.siAplTipoOrganiz = siAplTipoOrganiz;
+        this.siAplTipoOrganiz = siAplTipoOrganiz;
     }
 
     @Basic
     @Column(name = "DS_ORGANIZ", nullable = false, length = 254)
     public String getDsOrganiz() {
-	return dsOrganiz;
+        return dsOrganiz;
     }
 
     public void setDsOrganiz(String dsOrganiz) {
-	this.dsOrganiz = dsOrganiz;
+        this.dsOrganiz = dsOrganiz;
     }
 
     @Basic
     @Column(name = "ID_ORGANIZ_APPLIC")
     public Long getIdOrganizApplic() {
-	return idOrganizApplic;
+        return idOrganizApplic;
     }
 
     public void setIdOrganizApplic(Long idOrganizApplic) {
-	this.idOrganizApplic = idOrganizApplic;
+        this.idOrganizApplic = idOrganizApplic;
     }
 
     @Id
     @Column(name = "ID_ORGANIZ_IAM")
     public Long getIdOrganizIam() {
-	return idOrganizIam;
+        return idOrganizIam;
     }
 
     public void setIdOrganizIam(Long idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @Basic
     @Column(name = "NM_ORGANIZ", nullable = false, length = 100)
     public String getNmOrganiz() {
-	return nmOrganiz;
+        return nmOrganiz;
     }
 
     public void setNmOrganiz(String nmOrganiz) {
-	this.nmOrganiz = nmOrganiz;
+        this.nmOrganiz = nmOrganiz;
     }
 
     @OneToMany(mappedBy = "siUsrOrganizIam", cascade = CascadeType.MERGE)
     public List<SIOrgEnteConvenzOrg> getOrgEnteConvenzOrgs() {
-	return orgEnteConvenzOrgs;
+        return orgEnteConvenzOrgs;
     }
 
     public void setOrgEnteConvenzOrgs(List<SIOrgEnteConvenzOrg> orgEnteConvenzOrgs) {
-	this.orgEnteConvenzOrgs = orgEnteConvenzOrgs;
+        this.orgEnteConvenzOrgs = orgEnteConvenzOrgs;
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ID_ORGANIZ_IAM_PADRE")
     public SIUsrOrganizIam getSiUsrOrganizIam() {
-	return siUsrOrganizIam;
+        return siUsrOrganizIam;
     }
 
     public void setSiUsrOrganizIam(SIUsrOrganizIam siUsrOrganizIam) {
-	this.siUsrOrganizIam = siUsrOrganizIam;
+        this.siUsrOrganizIam = siUsrOrganizIam;
     }
 
     @OneToMany(mappedBy = "siUsrOrganizIam", cascade = CascadeType.MERGE)
     public List<SIUsrOrganizIam> getUsrOrganizIams() {
-	return usrOrganizIams;
+        return usrOrganizIams;
     }
 
     public void setUsrOrganizIams(List<SIUsrOrganizIam> usrOrganizIams) {
-	this.usrOrganizIams = usrOrganizIams;
+        this.usrOrganizIams = usrOrganizIams;
     }
 
 }

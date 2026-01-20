@@ -23,7 +23,7 @@ import java.util.Iterator;
  *
  */
 public class PigStrumUrbStoricoStatiTableBean
-	extends AbstractBaseTable<PigStrumUrbStoricoStatiRowBean> {
+        extends AbstractBaseTable<PigStrumUrbStoricoStatiRowBean> {
 
     /*
      * @Generated( value = "it.eg.dbtool.db.oracle.beangen.Oracle4JPAClientBeanGen$TableBeanWriter",
@@ -33,19 +33,19 @@ public class PigStrumUrbStoricoStatiTableBean
     public static PigStrumUrbStoricoStatiTableDescriptor TABLE_DESCRIPTOR = new PigStrumUrbStoricoStatiTableDescriptor();
 
     public PigStrumUrbStoricoStatiTableBean() {
-	super();
+        super();
     }
 
     protected PigStrumUrbStoricoStatiRowBean createRow() {
-	return new PigStrumUrbStoricoStatiRowBean();
+        return new PigStrumUrbStoricoStatiRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigStrumUrbStoricoStatiRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

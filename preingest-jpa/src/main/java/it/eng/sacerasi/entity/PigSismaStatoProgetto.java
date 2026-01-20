@@ -34,35 +34,35 @@ public class PigSismaStatoProgetto implements Serializable {
     private String dsStatoProgetto;
 
     public PigSismaStatoProgetto() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @Column(name = "ID_SISMA_STATO_PROGETTO")
     public Long getIdSismaStatoProgetto() {
-	return idSismaStatoProgetto;
+        return idSismaStatoProgetto;
     }
 
     public void setIdSismaStatoProgetto(Long idSismaStatoProgetto) {
-	this.idSismaStatoProgetto = idSismaStatoProgetto;
+        this.idSismaStatoProgetto = idSismaStatoProgetto;
     }
 
     @Column(name = "TI_STATO_PROGETTO")
     public String getTiStatoProgetto() {
-	return tiStatoProgetto;
+        return tiStatoProgetto;
     }
 
     public void setTiStatoProgetto(String tiStatoProgetto) {
-	this.tiStatoProgetto = tiStatoProgetto;
+        this.tiStatoProgetto = tiStatoProgetto;
     }
 
     @Column(name = "DS_STATO_PROGETTO")
     public String getDsStatoProgetto() {
-	return dsStatoProgetto;
+        return dsStatoProgetto;
     }
 
     public void setDsStatoProgetto(String dsStatoProgetto) {
-	this.dsStatoProgetto = dsStatoProgetto;
+        this.dsStatoProgetto = dsStatoProgetto;
     }
 
 }

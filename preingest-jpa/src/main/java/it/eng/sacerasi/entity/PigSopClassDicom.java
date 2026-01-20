@@ -44,50 +44,50 @@ public class PigSopClassDicom implements Serializable {
     private List<PigSopClassDicomVers> pigSopClassDicomVers = new ArrayList<>();
 
     public PigSopClassDicom() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_SOP_CLASS_DICOM_IDSOPCLASSDICOM_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_SOP_CLASS_DICOM"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_SOP_CLASS_DICOM"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SOP_CLASS_DICOM_IDSOPCLASSDICOM_GENERATOR")
     @Column(name = "ID_SOP_CLASS_DICOM")
     public Long getIdSopClassDicom() {
-	return this.idSopClassDicom;
+        return this.idSopClassDicom;
     }
 
     public void setIdSopClassDicom(Long idSopClassDicom) {
-	this.idSopClassDicom = idSopClassDicom;
+        this.idSopClassDicom = idSopClassDicom;
     }
 
     @Column(name = "CD_SOP_CLASS_DICOM")
     public String getCdSopClassDicom() {
-	return this.cdSopClassDicom;
+        return this.cdSopClassDicom;
     }
 
     public void setCdSopClassDicom(String cdSopClassDicom) {
-	this.cdSopClassDicom = cdSopClassDicom;
+        this.cdSopClassDicom = cdSopClassDicom;
     }
 
     @Column(name = "DS_SOP_CLASS_DICOM")
     public String getDsSopClassDicom() {
-	return this.dsSopClassDicom;
+        return this.dsSopClassDicom;
     }
 
     public void setDsSopClassDicom(String dsSopClassDicom) {
-	this.dsSopClassDicom = dsSopClassDicom;
+        this.dsSopClassDicom = dsSopClassDicom;
     }
 
     // bi-directional many-to-one association to PigSopClassDicomVers
     @OneToMany(mappedBy = "pigSopClassDicom")
     @XmlInverseReference(mappedBy = "pigSopClassDicom")
     public List<PigSopClassDicomVers> getPigSopClassDicomVers() {
-	return this.pigSopClassDicomVers;
+        return this.pigSopClassDicomVers;
     }
 
     public void setPigSopClassDicomVers(List<PigSopClassDicomVers> pigSopClassDicomVers) {
-	this.pigSopClassDicomVers = pigSopClassDicomVers;
+        this.pigSopClassDicomVers = pigSopClassDicomVers;
     }
 
 }

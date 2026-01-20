@@ -13,8 +13,8 @@
 
 package it.eng.sacerasi.ws.recuperoStatoOggetto.helper;
 
-import it.eng.sacerasi.exception.ParerErrorSeverity;
 import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.exception.error.ErrorSeverity;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
 import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 import it.eng.sacerasi.ws.recuperoStatoOggetto.dto.RecuperoStatoOggettoExt;
@@ -46,34 +46,32 @@ public class RecuperoStatoOggettoHelper {
     @SuppressWarnings("unchecked")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Object[] getStatoOggetto(RecuperoStatoOggettoExt rsoExt,
-	    RispostaWSRecuperoStatoOggetto rispostaWs) throws ParerInternalError {
-	Object[] result = null;
-	try {
-	    Query q = entityManager
-		    .createQuery("SELECT obj.tiStatoObject, statoObj.dsTiStatoObject "
-			    + "FROM PigObject obj, PigStatoObject statoObj "
-			    + "WHERE obj.tiStatoObject = statoObj.tiStatoObject "
-			    + "AND obj.idObject = :idObject ");
-	    q.setParameter("idObject", rsoExt.getIdObject());
-	    List<Object[]> resultList = q.getResultList();
-	    if (!resultList.isEmpty()) {
-		result = resultList.get(0);
-	    } else {
-		throw new Exception(
-			"Impossibile trovare PigObject con idObject " + rsoExt.getIdObject());
-	    }
-	} catch (Exception e) {
-	    log.error("Eccezione nel recupero dell'oggetto :", e);
-	    rispostaWs.setSeverity(SeverityEnum.ERROR);
-	    rispostaWs.setErrorCode(MessaggiWSBundle.ERR_666);
-	    rispostaWs.setErrorMessage("Eccezione nel recupero dell'oggetto "
-		    + String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
-	    throw new ParerInternalError(ParerErrorSeverity.ERROR,
-		    "Eccezione nel recupero dell'oggetto "
-			    + String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)),
-		    e);
-	}
-	return result;
+            RispostaWSRecuperoStatoOggetto rispostaWs) throws ParerInternalError {
+        Object[] result = null;
+        try {
+            Query q = entityManager
+                    .createQuery("SELECT obj.tiStatoObject, statoObj.dsTiStatoObject "
+                            + "FROM PigObject obj, PigStatoObject statoObj "
+                            + "WHERE obj.tiStatoObject = statoObj.tiStatoObject "
+                            + "AND obj.idObject = :idObject ");
+            q.setParameter("idObject", rsoExt.getIdObject());
+            List<Object[]> resultList = q.getResultList();
+            if (!resultList.isEmpty()) {
+                result = resultList.get(0);
+            } else {
+                throw new Exception(
+                        "Impossibile trovare PigObject con idObject " + rsoExt.getIdObject());
+            }
+        } catch (Exception e) {
+            log.error("Eccezione nel recupero dell'oggetto :", e);
+            rispostaWs.setSeverity(SeverityEnum.ERROR);
+            rispostaWs.setErrorCode(MessaggiWSBundle.ERR_666);
+            rispostaWs.setErrorMessage("Eccezione nel recupero dell'oggetto "
+                    + String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
+            throw new ParerInternalError(ErrorSeverity.ERROR, "Eccezione nel recupero dell'oggetto "
+                    + String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)), e);
+        }
+        return result;
     }
 
 }

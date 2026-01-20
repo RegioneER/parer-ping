@@ -32,54 +32,54 @@ public class MessaggiWSBundle {
      * della classe originale: un normalissimo Bundle con un file di properties
      */
     public static String getString(String key) {
-	switch (key) {
-	case MessaggiWSBundle.ERR_666:
-	    return getDefaultErrorMessage(key);
-	case MessaggiWSBundle.ERR_PERSISTENCE:
-	    return getDefaultErrorMessage(key);
-	case MessaggiWSBundle.ERR_UPDATE:
-	    return getDefaultErrorMessage(key);
-	case MessaggiWSBundle.ERR_XML_MALFORMED:
-	    return getDefaultErrorMessage(key);
-	default:
-	    // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
-	    return lookupCacheRef().getString(key);
-	}
+        switch (key) {
+        case MessaggiWSBundle.ERR_666:
+            return getDefaultErrorMessage(key);
+        case MessaggiWSBundle.ERR_PERSISTENCE:
+            return getDefaultErrorMessage(key);
+        case MessaggiWSBundle.ERR_UPDATE:
+            return getDefaultErrorMessage(key);
+        case MessaggiWSBundle.ERR_XML_MALFORMED:
+            return getDefaultErrorMessage(key);
+        default:
+            // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
+            return lookupCacheRef().getString(key);
+        }
     }
 
     public static String getString(String key, Object... params) {
-	switch (key) {
-	case MessaggiWSBundle.ERR_666:
-	    return getDefaultErrorMessage(key, params);
-	case MessaggiWSBundle.ERR_PERSISTENCE:
-	    return getDefaultErrorMessage(key, params);
-	case MessaggiWSBundle.ERR_UPDATE:
-	    return getDefaultErrorMessage(key, params);
-	case MessaggiWSBundle.ERR_XML_MALFORMED:
-	    return getDefaultErrorMessage(key, params);
-	default:
-	    // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
-	    return lookupCacheRef().getString(key, params);
-	}
+        switch (key) {
+        case MessaggiWSBundle.ERR_666:
+            return getDefaultErrorMessage(key, params);
+        case MessaggiWSBundle.ERR_PERSISTENCE:
+            return getDefaultErrorMessage(key, params);
+        case MessaggiWSBundle.ERR_UPDATE:
+            return getDefaultErrorMessage(key, params);
+        case MessaggiWSBundle.ERR_XML_MALFORMED:
+            return getDefaultErrorMessage(key, params);
+        default:
+            // l'operazione di StringEscapeUtils.unescapeJava viene svolta nel singleton
+            return lookupCacheRef().getString(key, params);
+        }
     }
 
     private static MessaggiWSCache lookupCacheRef() {
-	try {
-	    return (MessaggiWSCache) new InitialContext()
-		    .lookup("java:app/SacerAsync-ejb/MessaggiWSCache");
-	} catch (NamingException ex) {
-	    log.error("Errore lookup dei messaggi " + ExceptionUtils.getRootCauseMessage(ex), ex);
-	    throw new MessageBundleNotFoundException("Errore lookup singleton dei messaggi "
-		    + ExceptionUtils.getRootCauseMessage(ex));
-	}
+        try {
+            return (MessaggiWSCache) new InitialContext()
+                    .lookup("java:app/SacerAsync-ejb/MessaggiWSCache");
+        } catch (NamingException ex) {
+            log.error("Errore lookup dei messaggi " + ExceptionUtils.getRootCauseMessage(ex), ex);
+            throw new MessageBundleNotFoundException("Errore lookup singleton dei messaggi "
+                    + ExceptionUtils.getRootCauseMessage(ex));
+        }
     }
 
     private static String getDefaultErrorMessage(String key, Object... params) {
-	// get or generate uuid
-	final String uuid = UUIDMdcLogUtil.getUuid();
-	// log original message
-	log.error("Risposta originale : " + lookupCacheRef().getString(key, params));
-	return lookupCacheRef().getString(MessaggiWSBundle.WS_GENERIC_ERROR_UUID, uuid);
+        // get or generate uuid
+        final String uuid = UUIDMdcLogUtil.getUuid();
+        // log original message
+        log.error("Risposta originale : " + lookupCacheRef().getString(key, params));
+        return lookupCacheRef().getString(MessaggiWSBundle.WS_GENERIC_ERROR_UUID, uuid);
     }
 
     // Le righe che seguono verranno mostrate raggruppate in Netbeans

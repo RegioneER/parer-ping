@@ -55,10 +55,10 @@ public class XmlFragmentValidator {
      * @param invioOggettoAsincronoExt dto versamento oggetto
      */
     public XmlFragmentValidator(RispostaWSInvioOggettoAsincrono rispostaWs,
-	    InvioOggettoAsincronoExt invioOggettoAsincronoExt) {
-	this.rispostaWs = rispostaWs;
-	this.invioOggettoAsincronoExt = invioOggettoAsincronoExt;
-	this.rispostaControlli = new RispostaControlli();
+            InvioOggettoAsincronoExt invioOggettoAsincronoExt) {
+        this.rispostaWs = rispostaWs;
+        this.invioOggettoAsincronoExt = invioOggettoAsincronoExt;
+        this.rispostaControlli = new RispostaControlli();
     }
 
     /**
@@ -70,86 +70,86 @@ public class XmlFragmentValidator {
      * @param params    parametri (opzionali)
      */
     public void validateXmlFragment(String xsdString, String xmlString, String codErr,
-	    String... params) {
-	Schema xsdSchema;
-	SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-	try {
-	    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-	    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-	    xsdSchema = schemaFactory.newSchema(new Source[] {
-		    new StreamSource(new StringReader(xsdString)) });
-	    Validator validator = xsdSchema.newValidator();
-	    validator.setErrorHandler(new SimpleErrorHandler(codErr, params));
-	    validator.validate(new StreamSource(new StringReader(xmlString)));
-	} catch (SAXException | IOException ex) {
-	    rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	    rispostaWs.setErrorCode(MessaggiWSBundle.ERR_XML_MALFORMED);
-	    String msg = MessaggiWSBundle.getString(MessaggiWSBundle.ERR_XML_MALFORMED)
-		    + " L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.";
-	    rispostaWs.setErrorMessage(msg);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
-	    rispostaWs.getInvioOggettoAsincronoRisposta()
-		    .setCdErr(MessaggiWSBundle.ERR_XML_MALFORMED);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(msg);
-	    invioOggettoAsincronoExt.setFlRegistraObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
-	    log.error(msg + String.join("\n", ExceptionUtils.getMessage(ex)));
-	}
+            String... params) {
+        Schema xsdSchema;
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            xsdSchema = schemaFactory.newSchema(new Source[] {
+                    new StreamSource(new StringReader(xsdString)) });
+            Validator validator = xsdSchema.newValidator();
+            validator.setErrorHandler(new SimpleErrorHandler(codErr, params));
+            validator.validate(new StreamSource(new StringReader(xmlString)));
+        } catch (SAXException | IOException ex) {
+            rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+            rispostaWs.setErrorCode(MessaggiWSBundle.ERR_XML_MALFORMED);
+            String msg = MessaggiWSBundle.getString(MessaggiWSBundle.ERR_XML_MALFORMED)
+                    + " L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.";
+            rispostaWs.setErrorMessage(msg);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
+            rispostaWs.getInvioOggettoAsincronoRisposta()
+                    .setCdErr(MessaggiWSBundle.ERR_XML_MALFORMED);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(msg);
+            invioOggettoAsincronoExt.setFlRegistraObject(false);
+            invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
+            invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
+            log.error(msg + String.join("\n", ExceptionUtils.getMessage(ex)));
+        }
     }
 
     public class SimpleErrorHandler implements ErrorHandler {
 
-	String codErr = "";
-	String[] params;
+        String codErr = "";
+        String[] params;
 
-	public SimpleErrorHandler(String codErr, String[] params) {
-	    this.codErr = codErr;
-	    this.params = params;
-	}
+        public SimpleErrorHandler(String codErr, String[] params) {
+            this.codErr = codErr;
+            this.params = params;
+        }
 
-	@Override
-	public void warning(SAXParseException e) throws SAXException {
-	    log.error("Eccezione", e);
-	}
+        @Override
+        public void warning(SAXParseException e) throws SAXException {
+            log.error("Eccezione", e);
+        }
 
-	@Override
-	public void error(SAXParseException e) throws SAXException {
-	    rispostaControlli.setCodErr(this.codErr);
+        @Override
+        public void error(SAXParseException e) throws SAXException {
+            rispostaControlli.setCodErr(this.codErr);
 
-	    List<String> list = new ArrayList<>(Arrays.asList(this.params));
-	    list.add(String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
+            List<String> list = new ArrayList<>(Arrays.asList(this.params));
+            list.add(String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
 
-	    rispostaControlli.setDsErr(MessaggiWSBundle.getString(this.codErr, list.toArray()));
-	    rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	    rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	    rispostaWs.setErrorMessage(
-		    "L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.");
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setCdErr(rispostaControlli.getCodErr());
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(
-		    "L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.");
-	    invioOggettoAsincronoExt.setFlRegistraObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
-	    log.error(String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
-	}
+            rispostaControlli.setDsErr(MessaggiWSBundle.getString(this.codErr, list.toArray()));
+            rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+            rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+            rispostaWs.setErrorMessage(
+                    "L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.");
+            rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setCdErr(rispostaControlli.getCodErr());
+            rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(
+                    "L'Indice Oggetto versato non è conforme alla versione Indice Oggetto selezionato.");
+            invioOggettoAsincronoExt.setFlRegistraObject(false);
+            invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
+            invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
+            log.error(String.join("\n", ExceptionUtils.getRootCauseStackTrace(e)));
+        }
 
-	@Override
-	public void fatalError(SAXParseException e) throws SAXException {
-	    rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	    rispostaWs.setErrorCode(MessaggiWSBundle.ERR_666);
-	    String msg = MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
-		    String.join("\n", ExceptionUtils.getMessage(e)));
-	    rispostaWs.setErrorMessage(msg);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setCdErr(MessaggiWSBundle.ERR_666);
-	    rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(msg);
-	    invioOggettoAsincronoExt.setFlRegistraObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
-	    invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
-	    log.error(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
-		    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
-	}
+        @Override
+        public void fatalError(SAXParseException e) throws SAXException {
+            rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+            rispostaWs.setErrorCode(MessaggiWSBundle.ERR_666);
+            String msg = MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                    String.join("\n", ExceptionUtils.getMessage(e)));
+            rispostaWs.setErrorMessage(msg);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setCdEsito(Constants.EsitoServizio.KO);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setCdErr(MessaggiWSBundle.ERR_666);
+            rispostaWs.getInvioOggettoAsincronoRisposta().setDsErr(msg);
+            invioOggettoAsincronoExt.setFlRegistraObject(false);
+            invioOggettoAsincronoExt.setFlRegistraXMLObject(false);
+            invioOggettoAsincronoExt.setFlRegistraDatiSpecDicom(false);
+            log.error(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
+        }
     }
 }

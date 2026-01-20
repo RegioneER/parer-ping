@@ -38,30 +38,30 @@ public class MonVChkOkObj implements Serializable {
 
     @Column(name = "FL_OBJECT_CHIUSO_OK", columnDefinition = "char")
     public String getFlObjectChiusoOk() {
-	return this.flObjectChiusoOk;
+        return this.flObjectChiusoOk;
     }
 
     public void setFlObjectChiusoOk(String flObjectChiusoOk) {
-	this.flObjectChiusoOk = flObjectChiusoOk;
+        this.flObjectChiusoOk = flObjectChiusoOk;
     }
 
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return this.idObject;
+        return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     @Column(name = "ID_OBJECT_PADRE")
     public BigDecimal getIdObjectPadre() {
-	return this.idObjectPadre;
+        return this.idObjectPadre;
     }
 
     public void setIdObjectPadre(BigDecimal idObjectPadre) {
-	this.idObjectPadre = idObjectPadre;
+        this.idObjectPadre = idObjectPadre;
     }
 
 }

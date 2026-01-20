@@ -32,51 +32,51 @@ public class RicercaRecuperatiRisposta {
     private ListaOggRicRecuperatiType listaOggetti;
 
     public ListaOggRicRecuperatiType getListaOggetti() {
-	return listaOggetti;
+        return listaOggetti;
     }
 
     public void setListaOggetti(ListaOggRicRecuperatiType listaOggetti) {
-	this.listaOggetti = listaOggetti;
+        this.listaOggetti = listaOggetti;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     public Constants.EsitoServizio getCdEsito() {
-	return cdEsito;
+        return cdEsito;
     }
 
     public void setCdEsito(Constants.EsitoServizio cdEsito) {
-	this.cdEsito = cdEsito;
+        this.cdEsito = cdEsito;
     }
 
 }

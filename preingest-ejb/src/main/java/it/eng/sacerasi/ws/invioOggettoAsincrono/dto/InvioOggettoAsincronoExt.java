@@ -56,303 +56,303 @@ public class InvioOggettoAsincronoExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * @return the invioOggettoAsincronoInput
      */
     public InvioOggettoAsincronoInput getInvioOggettoAsincronoInput() {
-	return invioOggettoAsincronoInput;
+        return invioOggettoAsincronoInput;
     }
 
     /**
      * @param invioOggettoAsincronoInput the invioOggettoAsincronoInput to set
      */
     public void setInvioOggettoAsincronoInput(
-	    InvioOggettoAsincronoInput invioOggettoAsincronoInput) {
-	this.invioOggettoAsincronoInput = invioOggettoAsincronoInput;
+            InvioOggettoAsincronoInput invioOggettoAsincronoInput) {
+        this.invioOggettoAsincronoInput = invioOggettoAsincronoInput;
     }
 
     /**
      * @return the flRegistraObject
      */
     public boolean isFlRegistraObject() {
-	return flRegistraObject;
+        return flRegistraObject;
     }
 
     /**
      * @param flRegistraObject the flRegistraObject to set
      */
     public void setFlRegistraObject(boolean flRegistraObject) {
-	this.flRegistraObject = flRegistraObject;
+        this.flRegistraObject = flRegistraObject;
     }
 
     /**
      * @return the flRegistraXMLObject
      */
     public boolean isFlRegistraXMLObject() {
-	return flRegistraXMLObject;
+        return flRegistraXMLObject;
     }
 
     /**
      * @param flRegistraXMLObject the flRegistraXMLObject to set
      */
     public void setFlRegistraXMLObject(boolean flRegistraXMLObject) {
-	this.flRegistraXMLObject = flRegistraXMLObject;
+        this.flRegistraXMLObject = flRegistraXMLObject;
     }
 
     /**
      * @return the flRegistraDatiSpecDicom
      */
     public boolean isFlRegistraDatiSpecDicom() {
-	return flRegistraDatiSpecDicom;
+        return flRegistraDatiSpecDicom;
     }
 
     /**
      * @param flRegistraDatiSpecDicom the flRegistraDatiSpecDicom to set
      */
     public void setFlRegistraDatiSpecDicom(boolean flRegistraDatiSpecDicom) {
-	this.flRegistraDatiSpecDicom = flRegistraDatiSpecDicom;
+        this.flRegistraDatiSpecDicom = flRegistraDatiSpecDicom;
     }
 
     /**
      * @return the idVersatore
      */
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     /**
      * @param idVersatore the idVersatore to set
      */
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     /**
      * @return the idTipoObject
      */
     public Long getIdTipoObject() {
-	return idTipoObject;
+        return idTipoObject;
     }
 
     /**
      * @param idTipoObject the idTipoObject to set
      */
     public void setIdTipoObject(Long idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     /**
      * @return the nmTipoObject
      */
     public String getNmTipoObject() {
-	return nmTipoObject;
+        return nmTipoObject;
     }
 
     /**
      * @param nmTipoObject the nmTipoObject to set
      */
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     /**
      * @return the datiSpecDicom
      */
     public String getDatiSpecDicom() {
-	return datiSpecDicom;
+        return datiSpecDicom;
     }
 
     /**
      * @param datiSpecDicom the datiSpecDicom to set
      */
     public void setDatiSpecDicom(String datiSpecDicom) {
-	this.datiSpecDicom = datiSpecDicom;
+        this.datiSpecDicom = datiSpecDicom;
     }
 
     /**
      * @return the dcmHashDicom
      */
     public String getDcmHashDicom() {
-	return dcmHashDicom;
+        return dcmHashDicom;
     }
 
     /**
      * @param dcmHashDicom the dcmHashDicom to set
      */
     public void setDcmHashDicom(String dcmHashDicom) {
-	this.dcmHashDicom = dcmHashDicom;
+        this.dcmHashDicom = dcmHashDicom;
     }
 
     /**
      * @return the dtApertura
      */
     public Date getDtApertura() {
-	return dtApertura;
+        return dtApertura;
     }
 
     /**
      * @param dtApertura the dtApertura to set
      */
     public void setDtApertura(Date dtApertura) {
-	this.dtApertura = dtApertura;
+        this.dtApertura = dtApertura;
     }
 
     /**
      * @return the dtChiusura
      */
     public Date getDtChiusura() {
-	return dtChiusura;
+        return dtChiusura;
     }
 
     /**
      * @param dtChiusura the dtChiusura to set
      */
     public void setDtChiusura(Date dtChiusura) {
-	this.dtChiusura = dtChiusura;
+        this.dtChiusura = dtChiusura;
     }
 
     /**
      * @return the statoSessione
      */
     public Constants.StatoSessioneIngest getStatoSessione() {
-	return statoSessione;
+        return statoSessione;
     }
 
     /**
      * @param statoSessione the statoSessione to set
      */
     public void setStatoSessione(Constants.StatoSessioneIngest statoSessione) {
-	this.statoSessione = statoSessione;
+        this.statoSessione = statoSessione;
     }
 
     /**
      * @return the dcmDatiSpecifici
      */
     public DatiSpecificiType getDcmDatiSpecifici() {
-	return dcmDatiSpecifici;
+        return dcmDatiSpecifici;
     }
 
     /**
      * @param dcmDatiSpecifici the dcmDatiSpecifici to set
      */
     public void setDcmDatiSpecifici(DatiSpecificiType dcmDatiSpecifici) {
-	this.dcmDatiSpecifici = dcmDatiSpecifici;
+        this.dcmDatiSpecifici = dcmDatiSpecifici;
     }
 
     /**
      * @return the versioneDatiSpecifici
      */
     public String getVersioneDatiSpecifici() {
-	return versioneDatiSpecifici;
+        return versioneDatiSpecifici;
     }
 
     /**
      * @param versioneDatiSpecifici the versioneDatiSpecifici to set
      */
     public void setVersioneDatiSpecifici(String versioneDatiSpecifici) {
-	this.versioneDatiSpecifici = versioneDatiSpecifici;
+        this.versioneDatiSpecifici = versioneDatiSpecifici;
     }
 
     /**
      * @return the idXsdDatiSpec
      */
     public Long getIdXsdDatiSpec() {
-	return idXsdDatiSpec;
+        return idXsdDatiSpec;
     }
 
     /**
      * @param idXsdDatiSpec the idXsdDatiSpec to set
      */
     public void setIdXsdDatiSpec(Long idXsdDatiSpec) {
-	this.idXsdDatiSpec = idXsdDatiSpec;
+        this.idXsdDatiSpec = idXsdDatiSpec;
     }
 
     /**
      * @return the ftpPath
      */
     public String getFtpPath() {
-	return ftpPath;
+        return ftpPath;
     }
 
     /**
      * @param ftpPath the ftpPath to set
      */
     public void setFtpPath(String ftpPath) {
-	this.ftpPath = ftpPath;
+        this.ftpPath = ftpPath;
     }
 
     /**
      * @return the tiVersFile
      */
     public String getTiVersFile() {
-	return tiVersFile;
+        return tiVersFile;
     }
 
     /**
      * @param tiVersFile the tiVersFile to set
      */
     public void setTiVersFile(String tiVersFile) {
-	this.tiVersFile = tiVersFile;
+        this.tiVersFile = tiVersFile;
     }
 
     /**
      * @return the idOggettoPadre
      */
     public Long getIdOggettoPadre() {
-	return idOggettoPadre;
+        return idOggettoPadre;
     }
 
     /**
      * @param idOggettoPadre the idOggettoPadre to set
      */
     public void setIdOggettoPadre(Long idOggettoPadre) {
-	this.idOggettoPadre = idOggettoPadre;
+        this.idOggettoPadre = idOggettoPadre;
     }
 
     public String getDsRegExpCdVers() {
-	return dsRegExpCdVers;
+        return dsRegExpCdVers;
     }
 
     public void setDsRegExpCdVers(String dsRegExpCdVers) {
-	this.dsRegExpCdVers = dsRegExpCdVers;
+        this.dsRegExpCdVers = dsRegExpCdVers;
     }
 
     public String getCdVersGen() {
-	return cdVersGen;
+        return cdVersGen;
     }
 
     public void setCdVersGen(String cdVersGen) {
-	this.cdVersGen = cdVersGen;
+        this.cdVersGen = cdVersGen;
     }
 
     public String getTiGestOggettiFigli() {
-	return tiGestOggettiFigli;
+        return tiGestOggettiFigli;
     }
 
     public void setTiGestOggettiFigli(String tiGestOggettiFigli) {
-	this.tiGestOggettiFigli = tiGestOggettiFigli;
+        this.tiGestOggettiFigli = tiGestOggettiFigli;
     }
 }

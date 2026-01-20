@@ -49,132 +49,132 @@ public class AnnullamentoHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(AnnullamentoHelper.class);
+        return ArquillianUtils.createPingJar(AnnullamentoHelper.class);
     }
 
     @Test
     void retrievePigXmlAnnulSessioneIngests_queryIsOk() {
-	BigDecimal idSessioneIngest = aBigDecimal();
-	String tiXmlAnnul = aString();
-	helper.retrievePigXmlAnnulSessioneIngests(idSessioneIngest, tiXmlAnnul);
-	assertTrue(true);
+        BigDecimal idSessioneIngest = aBigDecimal();
+        String tiXmlAnnul = aString();
+        helper.retrievePigXmlAnnulSessioneIngests(idSessioneIngest, tiXmlAnnul);
+        assertTrue(true);
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocSessione_queryIsOk() {
-	BigDecimal idSessioneIngest = BigDecimal.valueOf(2916);
-	String oldState = "VERSATA_ERR";
-	String newState = "VERSATA_TIMEOUT";
+        BigDecimal idSessioneIngest = BigDecimal.valueOf(2916);
+        String oldState = "VERSATA_ERR";
+        String newState = "VERSATA_TIMEOUT";
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocSessione(idSessioneIngest, oldState, newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocSessione(idSessioneIngest, oldState, newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocSessioneNoError_queryIsOk() {
-	BigDecimal idSessioneIngest = aBigDecimal();
-	String oldState = aString();
-	String newState = aString();
+        BigDecimal idSessioneIngest = aBigDecimal();
+        String oldState = aString();
+        String newState = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocSessioneNoError(idSessioneIngest, oldState, newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocSessioneNoError(idSessioneIngest, oldState, newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocSessioneWithError_queryIsOk() {
-	BigDecimal idSessioneIngest = aBigDecimal();
-	String oldState = aString();
-	String cdErrSacer = aString();
-	String newState = aString();
+        BigDecimal idSessioneIngest = aBigDecimal();
+        String oldState = aString();
+        String cdErrSacer = aString();
+        String newState = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocSessioneWithError(idSessioneIngest, oldState, cdErrSacer,
-		    newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocSessioneWithError(idSessioneIngest, oldState, cdErrSacer,
+                    newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocObject_queryIsOk() {
-	BigDecimal idObject = aBigDecimal();
-	String oldState = aString();
-	String newState = aString();
+        BigDecimal idObject = aBigDecimal();
+        String oldState = aString();
+        String newState = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocObject(idObject, oldState, newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocObject(idObject, oldState, newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocObjectNoError_queryIsOk() {
-	BigDecimal idObject = aBigDecimal();
-	String oldState = aString();
-	String newState = aString();
+        BigDecimal idObject = aBigDecimal();
+        String oldState = aString();
+        String newState = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocObjectNoError(idObject, oldState, newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocObjectNoError(idObject, oldState, newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void updateUnitaDocObjectWithError_queryIsOk() {
-	BigDecimal idObject = aBigDecimal();
-	String oldState = aString();
-	String cdErrSacer = aString();
-	String newState = aString();
+        BigDecimal idObject = aBigDecimal();
+        String oldState = aString();
+        String cdErrSacer = aString();
+        String newState = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.updateUnitaDocObjectWithError(idObject, oldState, cdErrSacer, newState);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.updateUnitaDocObjectWithError(idObject, oldState, cdErrSacer, newState);
+            throw new RollbackException();
+        });
     }
 
     @Test
     void retrievePigUnitaDocObject_queryIsOk() {
-	long idObject = aLong();
-	String state = aString();
-	helper.retrievePigUnitaDocObject(idObject, state);
-	assertTrue(true);
+        long idObject = aLong();
+        String state = aString();
+        helper.retrievePigUnitaDocObject(idObject, state);
+        assertTrue(true);
     }
 
     @Test
     void countFigliNonAnnullati_queryIsOk() {
-	long idObjectPadre = aLong();
-	BigDecimal idObjectFiglio = aBigDecimal();
-	helper.countFigliNonAnnullati(idObjectPadre, idObjectFiglio);
-	assertTrue(true);
+        long idObjectPadre = aLong();
+        BigDecimal idObjectFiglio = aBigDecimal();
+        helper.countFigliNonAnnullati(idObjectPadre, idObjectFiglio);
+        assertTrue(true);
     }
 
     @Test
     void countFigliNonAnnullatiOCorretti_queryIsOk() {
-	long idObjectPadre = aLong();
-	BigDecimal idObjectFiglio = aBigDecimal();
-	helper.countFigliNonAnnullatiOCorretti(idObjectPadre, idObjectFiglio);
-	assertTrue(true);
+        long idObjectPadre = aLong();
+        BigDecimal idObjectFiglio = aBigDecimal();
+        helper.countFigliNonAnnullatiOCorretti(idObjectPadre, idObjectFiglio);
+        assertTrue(true);
     }
 
     @Test
     void getIdOrganizIamFromMonVLisUnitaDocObject_queryIsOk() {
-	long idObject = aLong();
+        long idObject = aLong();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getIdOrganizIamFromMonVLisUnitaDocObject(idObject);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getIdOrganizIamFromMonVLisUnitaDocObject(idObject);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 }

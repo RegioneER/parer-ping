@@ -34,11 +34,11 @@ import java.util.List;
 public class InvioSUHelper extends GenericHelper {
 
     public List<Long> getIdStrumentiUrbanisticiDaInviare() {
-	Query q = getEntityManager().createQuery(
-		"SELECT strumentiUrbanistici.idStrumentiUrbanistici FROM PigStrumentiUrbanistici strumentiUrbanistici "
-			+ "WHERE strumentiUrbanistici.tiStato = :tiStato ");
-	q.setParameter("tiStato", PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT strumentiUrbanistici.idStrumentiUrbanistici FROM PigStrumentiUrbanistici strumentiUrbanistici "
+                        + "WHERE strumentiUrbanistici.tiStato = :tiStato ");
+        q.setParameter("tiStato", PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
+        return q.getResultList();
     }
 
     /**
@@ -50,41 +50,41 @@ public class InvioSUHelper extends GenericHelper {
      */
     @Deprecated
     public String getTipoDocumentoPrincipale(long idStrumentiUrbanistici) {
-	Query q = getEntityManager().createQuery(
-		"SELECT strumUrbValDoc.nmDocumento FROM PigStrumUrbDocumenti strumUrbDocumenti "
-			+ "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
-			+ "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
-			+ "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
-			+ "AND strumUrbValDoc.flDocPrincipale = '1' ");
+        Query q = getEntityManager().createQuery(
+                "SELECT strumUrbValDoc.nmDocumento FROM PigStrumUrbDocumenti strumUrbDocumenti "
+                        + "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
+                        + "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
+                        + "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
+                        + "AND strumUrbValDoc.flDocPrincipale = '1' ");
 
-	List<String> lista = q.getResultList();
-	if (lista.size() == 1) {
-	    return lista.get(0);
-	} else {
-	    return null;
-	}
+        List<String> lista = q.getResultList();
+        if (lista.size() == 1) {
+            return lista.get(0);
+        } else {
+            return null;
+        }
     }
 
     public List<Object[]> getDocumenti(long idStrumentiUrbanistici) {
-	Query q = getEntityManager().createQuery(
-		"SELECT strumUrbValDoc.nmTipoDocumento, strumUrbDocumenti.nmFileOrig, strumUrbValDoc.flDocPrincipale "
-			+ "FROM PigStrumUrbDocumenti strumUrbDocumenti "
-			+ "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
-			+ "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
-			+ "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
-			+ "AND strumUrbDocumenti.flDeleted = '0' "
-			+ "ORDER BY strumUrbValDoc.idStrumUrbValDoc ASC ");
-	q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT strumUrbValDoc.nmTipoDocumento, strumUrbDocumenti.nmFileOrig, strumUrbValDoc.flDocPrincipale "
+                        + "FROM PigStrumUrbDocumenti strumUrbDocumenti "
+                        + "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
+                        + "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
+                        + "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
+                        + "AND strumUrbDocumenti.flDeleted = '0' "
+                        + "ORDER BY strumUrbValDoc.idStrumUrbValDoc ASC ");
+        q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
+        return q.getResultList();
     }
 
     public List<PigStrumUrbCollegamenti> getCollegamenti(long idStrumentiUrbanistici) {
-	Query q = getEntityManager().createQuery(
-		"SELECT strumUrbCollegamenti FROM PigStrumUrbCollegamenti strumUrbCollegamenti "
-			+ "JOIN strumUrbCollegamenti.pigStrumentiUrbanistici strumentiUrbanistici "
-			+ "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici ");
-	q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT strumUrbCollegamenti FROM PigStrumUrbCollegamenti strumUrbCollegamenti "
+                        + "JOIN strumUrbCollegamenti.pigStrumentiUrbanistici strumentiUrbanistici "
+                        + "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici ");
+        q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
+        return q.getResultList();
     }
 
     /**
@@ -96,81 +96,81 @@ public class InvioSUHelper extends GenericHelper {
      */
     @Deprecated
     public List<PigVDettStrumUrb> getDettaglioStrumentoUrbanistico(long idStrumentiUrbanistici) {
-	Query q = getEntityManager().createQuery(
-		"SELECT dettStrumentoUrbanistico FROM PigVDettStrumentoUrbanistico dettStrumentoUrbanistico "
-			+ "WHERE dettStrumentoUrbanistico.idStrumentiUrbanistici = :idStrumentiUrbanistici "
-			+ "AND dettStrumentoUrbanistico.flEsitoVerifica = '0' "
-			+ "AND dettStrumentoUrbanistico.flDeleted = '0' ");
-	q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT dettStrumentoUrbanistico FROM PigVDettStrumentoUrbanistico dettStrumentoUrbanistico "
+                        + "WHERE dettStrumentoUrbanistico.idStrumentiUrbanistici = :idStrumentiUrbanistici "
+                        + "AND dettStrumentoUrbanistico.flEsitoVerifica = '0' "
+                        + "AND dettStrumentoUrbanistico.flDeleted = '0' ");
+        q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
+        return q.getResultList();
     }
 
     public List<PigStrumUrbDocumenti> getDocumentiDaInviare(long idStrumentiUrbanistici) {
-	Query q = getEntityManager().createQuery("SELECT strumUrbDocumenti "
-		+ "FROM PigStrumUrbDocumenti strumUrbDocumenti "
-		+ "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
-		+ "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
-		+ "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
-		+ "AND strumUrbDocumenti.flDeleted = '0' "
-		+ "ORDER BY strumUrbValDoc.idStrumUrbValDoc ASC ");
-	q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery("SELECT strumUrbDocumenti "
+                + "FROM PigStrumUrbDocumenti strumUrbDocumenti "
+                + "JOIN strumUrbDocumenti.pigStrumUrbValDoc strumUrbValDoc "
+                + "JOIN strumUrbDocumenti.pigStrumentiUrbanistici strumentiUrbanistici "
+                + "WHERE strumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici "
+                + "AND strumUrbDocumenti.flDeleted = '0' "
+                + "ORDER BY strumUrbValDoc.idStrumUrbValDoc ASC ");
+        q.setParameter("idStrumentiUrbanistici", idStrumentiUrbanistici);
+        return q.getResultList();
     }
 
     public boolean existsPigObjectPerVersatore(long idVers, String cdKeyObject) {
-	Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
-		+ "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject ");
-	q.setParameter("idVers", idVers);
-	q.setParameter("cdKeyObject", cdKeyObject);
-	return !q.getResultList().isEmpty();
+        Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
+                + "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject ");
+        q.setParameter("idVers", idVers);
+        q.setParameter("cdKeyObject", cdKeyObject);
+        return !q.getResultList().isEmpty();
     }
 
     public boolean existsPigObjectPerVersatoreStrumUrbInAttesaFile(long idVers,
-	    String cdKeyObject) {
-	Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
-		+ "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
-		+ "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' "
-		+ "AND obj.tiStatoObject = 'IN_ATTESA_FILE' ");
-	q.setParameter("idVers", idVers);
-	q.setParameter("cdKeyObject", cdKeyObject);
-	return !q.getResultList().isEmpty();
+            String cdKeyObject) {
+        Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
+                + "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
+                + "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' "
+                + "AND obj.tiStatoObject = 'IN_ATTESA_FILE' ");
+        q.setParameter("idVers", idVers);
+        q.setParameter("cdKeyObject", cdKeyObject);
+        return !q.getResultList().isEmpty();
     }
 
     public boolean existsPigObjectPerVersatoreStrumUrbAnnullato(long idVers, String cdKeyObject) {
-	Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
-		+ "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
-		+ "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' "
-		+ "AND obj.tiStatoObject = 'ANNULLATO' ");
-	q.setParameter("idVers", idVers);
-	q.setParameter("cdKeyObject", cdKeyObject);
-	return !q.getResultList().isEmpty();
+        Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
+                + "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
+                + "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' "
+                + "AND obj.tiStatoObject = 'ANNULLATO' ");
+        q.setParameter("idVers", idVers);
+        q.setParameter("cdKeyObject", cdKeyObject);
+        return !q.getResultList().isEmpty();
     }
 
     public boolean existsPigObjectPerVersatoreNoStrumUrb(long idVers, String cdKeyObject) {
-	Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
-		+ "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
-		+ "AND obj.pigTipoObject.nmTipoObject != 'StrumentoUrbanistico' ");
-	q.setParameter("idVers", idVers);
-	q.setParameter("cdKeyObject", cdKeyObject);
-	return !q.getResultList().isEmpty();
+        Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
+                + "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
+                + "AND obj.pigTipoObject.nmTipoObject != 'StrumentoUrbanistico' ");
+        q.setParameter("idVers", idVers);
+        q.setParameter("cdKeyObject", cdKeyObject);
+        return !q.getResultList().isEmpty();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public PigObject getPigObjectPerVersatoreStrumUrbInNewTx(long idVers, String cdKeyObject) {
-	return getPigObjectPerVersatoreStrumUrb(idVers, cdKeyObject);
+        return getPigObjectPerVersatoreStrumUrb(idVers, cdKeyObject);
     }
 
     public PigObject getPigObjectPerVersatoreStrumUrb(long idVers, String cdKeyObject) {
-	Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
-		+ "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
-		+ "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' ");
-	q.setParameter("idVers", idVers);
-	q.setParameter("cdKeyObject", cdKeyObject);
-	List<PigObject> listaOggetti = q.getResultList();
-	if (!listaOggetti.isEmpty()) {
-	    return listaOggetti.get(0);
-	}
-	return null;
+        Query q = getEntityManager().createQuery("SELECT obj " + "FROM PigObject obj "
+                + "WHERE obj.pigVer.idVers = :idVers " + "AND obj.cdKeyObject = :cdKeyObject "
+                + "AND obj.pigTipoObject.nmTipoObject = 'StrumentoUrbanistico' ");
+        q.setParameter("idVers", idVers);
+        q.setParameter("cdKeyObject", cdKeyObject);
+        List<PigObject> listaOggetti = q.getResultList();
+        if (!listaOggetti.isEmpty()) {
+            return listaOggetti.get(0);
+        }
+        return null;
     }
 
 }

@@ -42,30 +42,30 @@ public class JobHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(JobHelper.class);
+        return ArquillianUtils.createPingJar(JobHelper.class);
     }
 
     @Test
     void getListaVersatori_queryIsOk() {
-	helper.getListaVersatori();
-	assertTrue(true);
+        helper.getListaVersatori();
+        assertTrue(true);
     }
 
     @Test
     void getListaSessioni_queryIsOk() {
-	List<Long> idVersatori = aListOfLong(2);
-	for (Constants.StatoSessioneRecup stato : Constants.StatoSessioneRecup.values()) {
-	    helper.getListaSessioni(idVersatori, stato);
-	    assertTrue(true);
-	}
+        List<Long> idVersatori = aListOfLong(2);
+        for (Constants.StatoSessioneRecup stato : Constants.StatoSessioneRecup.values()) {
+            helper.getListaSessioni(idVersatori, stato);
+            assertTrue(true);
+        }
     }
 
     @Test
     void getListaObjects_queryIsOk() {
-	List<Long> idVersatori = aListOfLong(2);
-	for (Constants.StatoOggetto stato : Constants.StatoOggetto.values()) {
-	    helper.getListaObjects(idVersatori, stato);
-	    assertTrue(true);
-	}
+        List<Long> idVersatori = aListOfLong(2);
+        for (Constants.StatoOggetto stato : Constants.StatoOggetto.values()) {
+            helper.getListaObjects(idVersatori, stato);
+            assertTrue(true);
+        }
     }
 }

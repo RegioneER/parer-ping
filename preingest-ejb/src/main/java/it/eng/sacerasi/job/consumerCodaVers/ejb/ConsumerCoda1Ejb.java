@@ -38,11 +38,11 @@ import it.eng.sacerasi.job.coda.ejb.PayloadManagerEjb;
  * @author Agati_D
  */
 @MessageDriven(name = "ConsumerCoda1", activationConfig = {
-	@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-	@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-	@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "queueType = 'CODA1'"),
-	@ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue"),
-	@ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "900") })
+        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "queueType = 'CODA1'"),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue"),
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "900") })
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ConsumerCoda1Ejb implements MessageListener {
@@ -59,25 +59,25 @@ public class ConsumerCoda1Ejb implements MessageListener {
     @Override
     public void onMessage(Message message) {
 
-	try {
-	    log.debug(DESC_CONSUMER + " :: inizio a processare il messaggio ");
-	    payloadManagerHelper.manageMessagePayload(message, DESC_CONSUMER);
-	    log.debug(DESC_CONSUMER + " :: il consumer ha terminato e committato");
+        try {
+            log.debug(DESC_CONSUMER + " :: inizio a processare il messaggio ");
+            payloadManagerHelper.manageMessagePayload(message, DESC_CONSUMER);
+            log.debug(DESC_CONSUMER + " :: il consumer ha terminato e committato");
 
-	} catch (ParerInternalError ex) {
-	    log.error(DESC_CONSUMER
-		    + " :: errore nel consumer, rollback transazione: ParerInternalError "
-		    + ExceptionUtils.getRootCauseMessage(ex), ex);
-	    mdc.setRollbackOnly();
-	} catch (SecurityException | IllegalStateException ex) {
-	    log.error(DESC_CONSUMER + " :: errore nel consumer: problemi nella transazione"
-		    + ExceptionUtils.getRootCauseMessage(ex), ex);
-	    throw new EJBException();
-	} catch (JMSException ex) {
-	    log.error(DESC_CONSUMER + " :: errore nel consumer: JMSException "
-		    + ExceptionUtils.getRootCauseMessage(ex), ex);
-	    mdc.setRollbackOnly();
-	}
+        } catch (ParerInternalError ex) {
+            log.error(DESC_CONSUMER
+                    + " :: errore nel consumer, rollback transazione: ParerInternalError "
+                    + ExceptionUtils.getRootCauseMessage(ex), ex);
+            mdc.setRollbackOnly();
+        } catch (SecurityException | IllegalStateException ex) {
+            log.error(DESC_CONSUMER + " :: errore nel consumer: problemi nella transazione"
+                    + ExceptionUtils.getRootCauseMessage(ex), ex);
+            throw new EJBException();
+        } catch (JMSException ex) {
+            log.error(DESC_CONSUMER + " :: errore nel consumer: JMSException "
+                    + ExceptionUtils.getRootCauseMessage(ex), ex);
+            mdc.setRollbackOnly();
+        }
     }
 
 }

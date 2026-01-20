@@ -38,123 +38,123 @@ public class PigXmlAnnulSessioneIngestRowBean extends BaseRow implements JEEBase
     public static PigXmlAnnulSessioneIngestTableDescriptor TABLE_DESCRIPTOR = new PigXmlAnnulSessioneIngestTableDescriptor();
 
     public PigXmlAnnulSessioneIngestRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdXmlAnnulSessioneIngest() {
-	return getBigDecimal("id_xml_annul_sessione_ingest");
+        return getBigDecimal("id_xml_annul_sessione_ingest");
     }
 
     public void setIdXmlAnnulSessioneIngest(BigDecimal idXmlAnnulSessioneIngest) {
-	setObject("id_xml_annul_sessione_ingest", idXmlAnnulSessioneIngest);
+        setObject("id_xml_annul_sessione_ingest", idXmlAnnulSessioneIngest);
     }
 
     public BigDecimal getIdSessioneIngest() {
-	return getBigDecimal("id_sessione_ingest");
+        return getBigDecimal("id_sessione_ingest");
     }
 
     public void setIdSessioneIngest(BigDecimal idSessioneIngest) {
-	setObject("id_sessione_ingest", idSessioneIngest);
+        setObject("id_sessione_ingest", idSessioneIngest);
     }
 
     public String getTiXmlAnnul() {
-	return getString("ti_xml_annul");
+        return getString("ti_xml_annul");
     }
 
     public void setTiXmlAnnul(String tiXmlAnnul) {
-	setObject("ti_xml_annul", tiXmlAnnul);
+        setObject("ti_xml_annul", tiXmlAnnul);
     }
 
     public String getCdVersioneXmlAnnul() {
-	return getString("cd_versione_xml_annul");
+        return getString("cd_versione_xml_annul");
     }
 
     public void setCdVersioneXmlAnnul(String cdVersioneXmlAnnul) {
-	setObject("cd_versione_xml_annul", cdVersioneXmlAnnul);
+        setObject("cd_versione_xml_annul", cdVersioneXmlAnnul);
     }
 
     public Timestamp getDtRegXmlAnnul() {
-	return getTimestamp("dt_reg_xml_annul");
+        return getTimestamp("dt_reg_xml_annul");
     }
 
     public void setDtRegXmlAnnul(Timestamp dtRegXmlAnnul) {
-	setObject("dt_reg_xml_annul", dtRegXmlAnnul);
+        setObject("dt_reg_xml_annul", dtRegXmlAnnul);
     }
 
     public String getBlXmlAnnul() {
-	return getString("bl_xml_annul");
+        return getString("bl_xml_annul");
     }
 
     public void setBlXmlAnnul(String blXmlAnnul) {
-	setObject("bl_xml_annul", blXmlAnnul);
+        setObject("bl_xml_annul", blXmlAnnul);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigXmlAnnulSessioneIngest entity = (PigXmlAnnulSessioneIngest) obj;
+        PigXmlAnnulSessioneIngest entity = (PigXmlAnnulSessioneIngest) obj;
 
-	this.setIdXmlAnnulSessioneIngest(new BigDecimal(entity.getIdXmlAnnulSessioneIngest()));
-	if (entity.getPigSessioneIngest() != null) {
-	    this.setIdSessioneIngest(
-		    new BigDecimal(entity.getPigSessioneIngest().getIdSessioneIngest()));
+        this.setIdXmlAnnulSessioneIngest(new BigDecimal(entity.getIdXmlAnnulSessioneIngest()));
+        if (entity.getPigSessioneIngest() != null) {
+            this.setIdSessioneIngest(
+                    new BigDecimal(entity.getPigSessioneIngest().getIdSessioneIngest()));
 
-	}
-	this.setTiXmlAnnul(entity.getTiXmlAnnul());
-	this.setCdVersioneXmlAnnul(entity.getCdVersioneXmlAnnul());
-	if (entity.getDtRegXmlAnnul() != null) {
-	    this.setDtRegXmlAnnul(new Timestamp(entity.getDtRegXmlAnnul().getTime()));
-	}
-	this.setBlXmlAnnul(entity.getBlXmlAnnul());
+        }
+        this.setTiXmlAnnul(entity.getTiXmlAnnul());
+        this.setCdVersioneXmlAnnul(entity.getCdVersioneXmlAnnul());
+        if (entity.getDtRegXmlAnnul() != null) {
+            this.setDtRegXmlAnnul(new Timestamp(entity.getDtRegXmlAnnul().getTime()));
+        }
+        this.setBlXmlAnnul(entity.getBlXmlAnnul());
     }
 
     @Override
     public PigXmlAnnulSessioneIngest rowBeanToEntity() {
-	PigXmlAnnulSessioneIngest entity = new PigXmlAnnulSessioneIngest();
-	if (this.getIdXmlAnnulSessioneIngest() != null) {
-	    entity.setIdXmlAnnulSessioneIngest(this.getIdXmlAnnulSessioneIngest().longValue());
-	}
-	if (this.getIdSessioneIngest() != null) {
-	    if (entity.getPigSessioneIngest() == null) {
-		entity.setPigSessioneIngest(new PigSessioneIngest());
-	    }
-	    entity.getPigSessioneIngest()
-		    .setIdSessioneIngest(this.getIdSessioneIngest().longValue());
-	}
-	entity.setTiXmlAnnul(this.getTiXmlAnnul());
-	entity.setCdVersioneXmlAnnul(this.getCdVersioneXmlAnnul());
-	entity.setDtRegXmlAnnul(this.getDtRegXmlAnnul());
-	entity.setBlXmlAnnul(this.getBlXmlAnnul());
-	return entity;
+        PigXmlAnnulSessioneIngest entity = new PigXmlAnnulSessioneIngest();
+        if (this.getIdXmlAnnulSessioneIngest() != null) {
+            entity.setIdXmlAnnulSessioneIngest(this.getIdXmlAnnulSessioneIngest().longValue());
+        }
+        if (this.getIdSessioneIngest() != null) {
+            if (entity.getPigSessioneIngest() == null) {
+                entity.setPigSessioneIngest(new PigSessioneIngest());
+            }
+            entity.getPigSessioneIngest()
+                    .setIdSessioneIngest(this.getIdSessioneIngest().longValue());
+        }
+        entity.setTiXmlAnnul(this.getTiXmlAnnul());
+        entity.setCdVersioneXmlAnnul(this.getCdVersioneXmlAnnul());
+        entity.setDtRegXmlAnnul(this.getDtRegXmlAnnul());
+        entity.setBlXmlAnnul(this.getBlXmlAnnul());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -23,7 +23,7 @@ public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplic
 
     @Override
     protected boolean enableHttpSessionEventPublisher() {
-	return true;
+        return true;
     }
 
 }

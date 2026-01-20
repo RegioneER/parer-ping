@@ -39,13 +39,13 @@ public class GenericJobQueryHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(GenericJobQueryHelper.class);
+        return ArquillianUtils.createPingJar(GenericJobQueryHelper.class);
     }
 
     @Test
     void selectPOIDFromQueueQueryIsOk() {
-	String stato = aString();
-	helper.selectPOIDFromQueue(stato);
-	assertTrue(true);
+        String stato = aString();
+        helper.selectPOIDFromQueue(stato);
+        assertTrue(true);
     }
 }

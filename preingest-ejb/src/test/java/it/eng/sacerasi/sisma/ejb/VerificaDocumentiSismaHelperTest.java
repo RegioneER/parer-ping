@@ -42,48 +42,48 @@ public class VerificaDocumentiSismaHelperTest {
 
     @Deployment
     public static Archive<?> createArchive() {
-	return ArquillianUtils.createPingJar(VerificaDocumentiSismaHelper.class);
+        return ArquillianUtils.createPingJar(VerificaDocumentiSismaHelper.class);
     }
 
     @Test
     void getDocumentiDaVerificareQueryIsOk() {
-	BigDecimal idSisma = BigDecimal.ZERO;
-	helper.getDocumentiDaVerificare(idSisma);
-	assertTrue(true);
+        BigDecimal idSisma = BigDecimal.ZERO;
+        helper.getDocumentiDaVerificare(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void isVerificaTerminataQueryIsOk() {
-	BigDecimal idSisma = BigDecimal.ZERO;
-	helper.isVerificaTerminata(idSisma);
-	assertTrue(true);
+        BigDecimal idSisma = BigDecimal.ZERO;
+        helper.isVerificaTerminata(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void verificaInCorsoQueryIsOk() {
-	BigDecimal idSisma = BigDecimal.ZERO;
-	helper.verificaInCorso(idSisma);
-	assertTrue(true);
+        BigDecimal idSisma = BigDecimal.ZERO;
+        helper.verificaInCorso(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiDaVerificareSenzaErrorePerSismaQueryIsOk() {
-	BigDecimal idSisma = BigDecimal.ZERO;
-	helper.existsDocumentiDaVerificareSenzaErrorePerSisma(idSisma);
-	assertTrue(true);
+        BigDecimal idSisma = BigDecimal.ZERO;
+        helper.existsDocumentiDaVerificareSenzaErrorePerSisma(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiVerificatiConErrorePerSismaQueryIsOk() {
-	BigDecimal idSisma = BigDecimal.ZERO;
-	helper.existsDocumentiVerificatiConErrorePerSisma(idSisma);
-	assertTrue(true);
+        BigDecimal idSisma = BigDecimal.ZERO;
+        helper.existsDocumentiVerificatiConErrorePerSisma(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiVerificatiConErrorePerSismaQueryIsOk() {
-	BigDecimal idSimsa = BigDecimal.ZERO;
-	helper.getDocumentiVerificatiConErrorePerSisma(idSimsa);
-	assertTrue(true);
+        BigDecimal idSimsa = BigDecimal.ZERO;
+        helper.getDocumentiVerificatiConErrorePerSisma(idSimsa);
+        assertTrue(true);
     }
 }

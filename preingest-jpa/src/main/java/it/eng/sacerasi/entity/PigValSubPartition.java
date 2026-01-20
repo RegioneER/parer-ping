@@ -42,52 +42,52 @@ public class PigValSubPartition implements Serializable {
     private PigSubPartition pigSubPartition;
 
     public PigValSubPartition() {
-	// hibernate
+        // hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_VAL_SUB_PARTITION_IDVALSUBPARTITION_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_VAL_SUB_PARTITION"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_VAL_SUB_PARTITION"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_VAL_SUB_PARTITION_IDVALSUBPARTITION_GENERATOR")
     @Column(name = "ID_VAL_SUB_PARTITION")
     public Long getIdValSubPartition() {
-	return this.idValSubPartition;
+        return this.idValSubPartition;
     }
 
     public void setIdValSubPartition(Long idValSubPartition) {
-	this.idValSubPartition = idValSubPartition;
+        this.idValSubPartition = idValSubPartition;
     }
 
     @Column(name = "CD_VAL_SUB_PARTITION")
     public String getCdValSubPartition() {
-	return this.cdValSubPartition;
+        return this.cdValSubPartition;
     }
 
     public void setCdValSubPartition(String cdValSubPartition) {
-	this.cdValSubPartition = cdValSubPartition;
+        this.cdValSubPartition = cdValSubPartition;
     }
 
     // bi-directional many-to-one association to PigPartition
     @ManyToOne
     @JoinColumn(name = "ID_PARTITION")
     public PigPartition getPigPartition() {
-	return this.pigPartition;
+        return this.pigPartition;
     }
 
     public void setPigPartition(PigPartition pigPartition) {
-	this.pigPartition = pigPartition;
+        this.pigPartition = pigPartition;
     }
 
     // bi-directional many-to-one association to PigSubPartition
     @ManyToOne
     @JoinColumn(name = "ID_SUB_PARTITION")
     public PigSubPartition getPigSubPartition() {
-	return this.pigSubPartition;
+        return this.pigSubPartition;
     }
 
     public void setPigSubPartition(PigSubPartition pigSubPartition) {
-	this.pigSubPartition = pigSubPartition;
+        this.pigSubPartition = pigSubPartition;
     }
 
 }

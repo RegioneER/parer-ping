@@ -53,38 +53,38 @@ public class IamVLisOrganizDaReplicTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_ORGANIZ_DA_REPLIC,
-		new ColumnDescriptor(COL_ID_ORGANIZ_DA_REPLIC, Types.DECIMAL, 22, true));
-	map.put(COL_ID_ORGANIZ_APPLIC,
-		new ColumnDescriptor(COL_ID_ORGANIZ_APPLIC, Types.DECIMAL, 22, true));
-	map.put(COL_NM_ORGANIZ, new ColumnDescriptor(COL_NM_ORGANIZ, Types.VARCHAR, 100, true));
-	map.put(COL_TI_OPER_REPLIC,
-		new ColumnDescriptor(COL_TI_OPER_REPLIC, Types.VARCHAR, 20, true));
-	map.put(COL_TI_STATO_REPLIC,
-		new ColumnDescriptor(COL_TI_STATO_REPLIC, Types.VARCHAR, 30, true));
-	map.put(COL_DT_LOG_ORGANIZ_DA_REPLIC,
-		new ColumnDescriptor(COL_DT_LOG_ORGANIZ_DA_REPLIC, Types.TIMESTAMP, 7, true));
-	map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, true));
-	map.put(COL_DS_MSG_ERR, new ColumnDescriptor(COL_DS_MSG_ERR, Types.VARCHAR, 254, true));
-	map.put(COL_DT_ERR, new ColumnDescriptor(COL_DT_ERR, Types.TIMESTAMP, 7, true));
-	map.put(COL_DS_ORD_ORGANIZ,
-		new ColumnDescriptor(COL_DS_ORD_ORGANIZ, Types.VARCHAR, 203, true));
-	map.put(COL_ID_AMBIENTE, new ColumnDescriptor(COL_ID_AMBIENTE, Types.DECIMAL, 22, true));
-	map.put(COL_NM_AMBIENTE, new ColumnDescriptor(COL_NM_AMBIENTE, Types.VARCHAR, 100, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_ID_ORGANIZ_DA_REPLIC,
+                new ColumnDescriptor(COL_ID_ORGANIZ_DA_REPLIC, Types.DECIMAL, 22, true));
+        map.put(COL_ID_ORGANIZ_APPLIC,
+                new ColumnDescriptor(COL_ID_ORGANIZ_APPLIC, Types.DECIMAL, 22, true));
+        map.put(COL_NM_ORGANIZ, new ColumnDescriptor(COL_NM_ORGANIZ, Types.VARCHAR, 100, true));
+        map.put(COL_TI_OPER_REPLIC,
+                new ColumnDescriptor(COL_TI_OPER_REPLIC, Types.VARCHAR, 20, true));
+        map.put(COL_TI_STATO_REPLIC,
+                new ColumnDescriptor(COL_TI_STATO_REPLIC, Types.VARCHAR, 30, true));
+        map.put(COL_DT_LOG_ORGANIZ_DA_REPLIC,
+                new ColumnDescriptor(COL_DT_LOG_ORGANIZ_DA_REPLIC, Types.TIMESTAMP, 7, true));
+        map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, true));
+        map.put(COL_DS_MSG_ERR, new ColumnDescriptor(COL_DS_MSG_ERR, Types.VARCHAR, 254, true));
+        map.put(COL_DT_ERR, new ColumnDescriptor(COL_DT_ERR, Types.TIMESTAMP, 7, true));
+        map.put(COL_DS_ORD_ORGANIZ,
+                new ColumnDescriptor(COL_DS_ORD_ORGANIZ, Types.VARCHAR, 203, true));
+        map.put(COL_ID_AMBIENTE, new ColumnDescriptor(COL_ID_AMBIENTE, Types.DECIMAL, 22, true));
+        map.put(COL_NM_AMBIENTE, new ColumnDescriptor(COL_NM_AMBIENTE, Types.VARCHAR, 100, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

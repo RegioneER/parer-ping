@@ -46,48 +46,48 @@ public class MonVVisLastSchedJob implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REG_LOG_JOB_INI")
     public Date getDtRegLogJobIni() {
-	return this.dtRegLogJobIni;
+        return this.dtRegLogJobIni;
     }
 
     public void setDtRegLogJobIni(Date dtRegLogJobIni) {
-	this.dtRegLogJobIni = dtRegLogJobIni;
+        this.dtRegLogJobIni = dtRegLogJobIni;
     }
 
     @Column(name = "FL_JOB_ATTIVO", columnDefinition = "char")
     public String getFlJobAttivo() {
-	return this.flJobAttivo;
+        return this.flJobAttivo;
     }
 
     public void setFlJobAttivo(String flJobAttivo) {
-	this.flJobAttivo = flJobAttivo;
+        this.flJobAttivo = flJobAttivo;
     }
 
     @Id
     @Column(name = "ID_LOG_JOB")
     public BigDecimal getIdLogJob() {
-	return this.idLogJob;
+        return this.idLogJob;
     }
 
     public void setIdLogJob(BigDecimal idLogJob) {
-	this.idLogJob = idLogJob;
+        this.idLogJob = idLogJob;
     }
 
     @Column(name = "LAST_EXEC_OK", columnDefinition = "char")
     public String getLastExecOk() {
-	return this.lastExecOk;
+        return this.lastExecOk;
     }
 
     public void setLastExecOk(String lastExecOk) {
-	this.lastExecOk = lastExecOk;
+        this.lastExecOk = lastExecOk;
     }
 
     @Column(name = "NM_JOB")
     public String getNmJob() {
-	return this.nmJob;
+        return this.nmJob;
     }
 
     public void setNmJob(String nmJob) {
-	this.nmJob = nmJob;
+        this.nmJob = nmJob;
     }
 
 }

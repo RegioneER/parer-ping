@@ -38,19 +38,19 @@ public class MonVObjAnnulRangeDtTableBean extends AbstractBaseTable<MonVObjAnnul
     public static MonVObjAnnulRangeDtTableDescriptor TABLE_DESCRIPTOR = new MonVObjAnnulRangeDtTableDescriptor();
 
     public MonVObjAnnulRangeDtTableBean() {
-	super();
+        super();
     }
 
     protected MonVObjAnnulRangeDtRowBean createRow() {
-	return new MonVObjAnnulRangeDtRowBean();
+        return new MonVObjAnnulRangeDtRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVObjAnnulRangeDtRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

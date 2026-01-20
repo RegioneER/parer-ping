@@ -52,57 +52,57 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
     private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
 
     private static final Logger log = LoggerFactory
-	    .getLogger(DownloadStrumentiUrbanisticiServlet.class);
+            .getLogger(DownloadStrumentiUrbanisticiServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
+            throws ServletException, IOException {
 
-	String chiave = request.getParameter("chiave");
-	String fileType = "application/zip";
-	response.setContentType(fileType);
-	response.setHeader("Content-disposition", "attachment; filename=" + chiave);
-	StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) request.getSession()
-		.getAttribute("###_FORM_CONTAINER");
-	BigDecimal idStrumento = null;
-	try {
-	    idStrumento = form.getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse();
-	} catch (EMFError ex) {
-	}
+        String chiave = request.getParameter("chiave");
+        String fileType = "application/zip";
+        response.setContentType(fileType);
+        response.setHeader("Content-disposition", "attachment; filename=" + chiave);
+        StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) request.getSession()
+                .getAttribute("###_FORM_CONTAINER");
+        BigDecimal idStrumento = null;
+        try {
+            idStrumento = form.getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse();
+        } catch (EMFError ex) {
+        }
 
-	try {
+        try {
 
-	    PigStrumUrbDocumenti pigStrumUrbDocumenti = strumentiUrbanisticiHelper
-		    .getPigStrumUrbDocumentiByName(chiave, idStrumento);
-	    if (pigStrumUrbDocumenti != null) {
-		// MEV 34843
-		PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
-			.getPigStrumUrbDocumentiStorage();
-		BackendStorage backend = salvataggioBackendHelper
-			.getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-		ObjectStorageBackend config = salvataggioBackendHelper
-			.getObjectStorageConfigurationForStrumentiUrbanistici(
-				backend.getBackendName(),
-				pigStrumUrbDocumentiStorage.getNmBucket());
+            PigStrumUrbDocumenti pigStrumUrbDocumenti = strumentiUrbanisticiHelper
+                    .getPigStrumUrbDocumentiByName(chiave, idStrumento);
+            if (pigStrumUrbDocumenti != null) {
+                // MEV 34843
+                PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
+                        .getPigStrumUrbDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForStrumentiUrbanistici(
+                                backend.getBackendName(),
+                                pigStrumUrbDocumentiStorage.getNmBucket());
 
-		ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper
-			.getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
+                ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper
+                        .getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
 
-		byte[] buf = new byte[1024];
-		int count = 0;
-		// This should send the file to browser
-		OutputStream out = response.getOutputStream();
-		while ((count = ogg.read(buf)) != -1) {
-		    out.write(buf, 0, count);
-		}
-		out.flush();
-		ogg.close();
-	    }
-	} catch (ObjectStorageException e) {
-	    log.error(
-		    "DownloadStrumentiUrbanisticiServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
-		    e);
-	}
+                byte[] buf = new byte[1024];
+                int count = 0;
+                // This should send the file to browser
+                OutputStream out = response.getOutputStream();
+                while ((count = ogg.read(buf)) != -1) {
+                    out.write(buf, 0, count);
+                }
+                out.flush();
+                ogg.close();
+            }
+        } catch (ObjectStorageException e) {
+            log.error(
+                    "DownloadStrumentiUrbanisticiServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
+                    e);
+        }
     }
 
 }

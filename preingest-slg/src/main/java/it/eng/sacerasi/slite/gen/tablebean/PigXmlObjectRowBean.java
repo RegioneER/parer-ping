@@ -38,112 +38,112 @@ public class PigXmlObjectRowBean extends BaseRow implements JEEBaseRowInterface 
     public static PigXmlObjectTableDescriptor TABLE_DESCRIPTOR = new PigXmlObjectTableDescriptor();
 
     public PigXmlObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdXmlObject() {
-	return getBigDecimal("id_xml_object");
+        return getBigDecimal("id_xml_object");
     }
 
     public void setIdXmlObject(BigDecimal idXmlObject) {
-	setObject("id_xml_object", idXmlObject);
+        setObject("id_xml_object", idXmlObject);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public String getCdVersioneXmlVers() {
-	return getString("cd_versione_xml_vers");
+        return getString("cd_versione_xml_vers");
     }
 
     public void setCdVersioneXmlVers(String cdVersioneXmlVers) {
-	setObject("cd_versione_xml_vers", cdVersioneXmlVers);
+        setObject("cd_versione_xml_vers", cdVersioneXmlVers);
     }
 
     public String getBlXml() {
-	return getString("bl_xml");
+        return getString("bl_xml");
     }
 
     public void setBlXml(String blXml) {
-	setObject("bl_xml", blXml);
+        setObject("bl_xml", blXml);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigXmlObject entity = (PigXmlObject) obj;
+        PigXmlObject entity = (PigXmlObject) obj;
 
-	this.setIdXmlObject(new BigDecimal(entity.getIdXmlObject()));
+        this.setIdXmlObject(new BigDecimal(entity.getIdXmlObject()));
 
-	if (entity.getPigObject() != null) {
-	    this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
-	}
+        if (entity.getPigObject() != null) {
+            this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
+        }
 
-	this.setCdVersioneXmlVers(entity.getCdVersioneXmlVers());
-	this.setBlXml(entity.getBlXml());
-	this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
-		: null);
+        this.setCdVersioneXmlVers(entity.getCdVersioneXmlVers());
+        this.setBlXml(entity.getBlXml());
+        this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
+                : null);
 
     }
 
     @Override
     public PigXmlObject rowBeanToEntity() {
-	PigXmlObject entity = new PigXmlObject();
-	if (this.getIdXmlObject() != null) {
-	    entity.setIdXmlObject(this.getIdXmlObject().longValue());
-	}
-	if (this.getIdObject() != null) {
-	    if (entity.getPigObject() == null) {
-		entity.setPigObject(new PigObject());
-	    }
-	    entity.getPigObject().setIdObject(this.getIdObject().longValue());
-	}
-	entity.setCdVersioneXmlVers(this.getCdVersioneXmlVers());
-	entity.setBlXml(this.getBlXml());
-	entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
-	return entity;
+        PigXmlObject entity = new PigXmlObject();
+        if (this.getIdXmlObject() != null) {
+            entity.setIdXmlObject(this.getIdXmlObject().longValue());
+        }
+        if (this.getIdObject() != null) {
+            if (entity.getPigObject() == null) {
+                entity.setPigObject(new PigObject());
+            }
+            entity.getPigObject().setIdObject(this.getIdObject().longValue());
+        }
+        entity.setCdVersioneXmlVers(this.getCdVersioneXmlVers());
+        entity.setBlXml(this.getBlXml());
+        entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -32,7 +32,7 @@ import javax.annotation.Generated;
  *
  */
 public class PigStrumUrbStoricoStatiRowBean extends BaseRow
-	implements BaseRowInterface, JEEBaseRowInterface {
+        implements BaseRowInterface, JEEBaseRowInterface {
 
     /*
      * @Generated( value = "it.eg.dbtool.db.oracle.beangen.Oracle4JPAClientBeanGen$TableBeanWriter",
@@ -42,112 +42,112 @@ public class PigStrumUrbStoricoStatiRowBean extends BaseRow
     public static PigStrumUrbStoricoStatiTableDescriptor TABLE_DESCRIPTOR = new PigStrumUrbStoricoStatiTableDescriptor();
 
     public PigStrumUrbStoricoStatiRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdStato() {
-	return getBigDecimal("id_stato");
+        return getBigDecimal("id_stato");
     }
 
     public void setIdStato(BigDecimal idStato) {
-	setObject("id_stato", idStato);
+        setObject("id_stato", idStato);
     }
 
     public BigDecimal getIdStrumentiUrbanistici() {
-	return getBigDecimal("id_strumenti_urbanistici");
+        return getBigDecimal("id_strumenti_urbanistici");
     }
 
     public void setIdStrumentiUrbanistici(BigDecimal idStrumentiUrbanistici) {
-	setObject("id_strumenti_urbanistici", idStrumentiUrbanistici);
+        setObject("id_strumenti_urbanistici", idStrumentiUrbanistici);
     }
 
     public String getTiStato() {
-	return getString("ti_stato");
+        return getString("ti_stato");
     }
 
     public void setTiStato(String tiStato) {
-	setObject("ti_stato", tiStato);
+        setObject("ti_stato", tiStato);
     }
 
     public Timestamp getTsRegStato() {
-	return getTimestamp("ts_reg_stato");
+        return getTimestamp("ts_reg_stato");
     }
 
     public void setTsRegStato(Timestamp tsRegStato) {
-	setObject("ts_reg_stato", tsRegStato);
+        setObject("ts_reg_stato", tsRegStato);
     }
 
     public String getCdDesc() {
-	return getString("cd_desc");
+        return getString("cd_desc");
     }
 
     public void setCdDesc(String cdDesc) {
-	setObject("cd_desc", cdDesc);
+        setObject("cd_desc", cdDesc);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigStrumUrbStoricoStati entity = (PigStrumUrbStoricoStati) obj;
-	this.setIdStato(
-		entity.getIdStato() == null ? null : BigDecimal.valueOf(entity.getIdStato()));
-	if (entity.getPigStrumentiUrbanistici() != null) {
-	    this.setIdStrumentiUrbanistici(
-		    entity.getPigStrumentiUrbanistici().getIdStrumentiUrbanistici() == null ? null
-			    : BigDecimal.valueOf(entity.getPigStrumentiUrbanistici()
-				    .getIdStrumentiUrbanistici()));
-	}
-	this.setTiStato(entity.getTiStato());
-	this.setTsRegStato(new Timestamp(entity.getTsRegStato().getTime()));
-	this.setCdDesc(entity.getDescrizione());
+        PigStrumUrbStoricoStati entity = (PigStrumUrbStoricoStati) obj;
+        this.setIdStato(
+                entity.getIdStato() == null ? null : BigDecimal.valueOf(entity.getIdStato()));
+        if (entity.getPigStrumentiUrbanistici() != null) {
+            this.setIdStrumentiUrbanistici(
+                    entity.getPigStrumentiUrbanistici().getIdStrumentiUrbanistici() == null ? null
+                            : BigDecimal.valueOf(entity.getPigStrumentiUrbanistici()
+                                    .getIdStrumentiUrbanistici()));
+        }
+        this.setTiStato(entity.getTiStato());
+        this.setTsRegStato(new Timestamp(entity.getTsRegStato().getTime()));
+        this.setCdDesc(entity.getDescrizione());
     }
 
     @Override
     public PigStrumUrbStoricoStati rowBeanToEntity() {
-	PigStrumUrbStoricoStati entity = new PigStrumUrbStoricoStati();
-	if (this.getIdStato() != null) {
-	    entity.setIdStato(this.getIdStato().longValue());
-	}
-	if (this.getIdStrumentiUrbanistici() != null) {
-	    if (entity.getPigStrumentiUrbanistici() == null) {
-		entity.setPigStrumentiUrbanistici(new PigStrumentiUrbanistici());
-	    }
-	    entity.getPigStrumentiUrbanistici()
-		    .setIdStrumentiUrbanistici(this.getIdStrumentiUrbanistici().longValue());
-	}
-	entity.setTiStato(this.getTiStato());
-	entity.setTsRegStato(this.getTsRegStato());
-	entity.setDescrizione(this.getCdDesc());
-	return entity;
+        PigStrumUrbStoricoStati entity = new PigStrumUrbStoricoStati();
+        if (this.getIdStato() != null) {
+            entity.setIdStato(this.getIdStato().longValue());
+        }
+        if (this.getIdStrumentiUrbanistici() != null) {
+            if (entity.getPigStrumentiUrbanistici() == null) {
+                entity.setPigStrumentiUrbanistici(new PigStrumentiUrbanistici());
+            }
+            entity.getPigStrumentiUrbanistici()
+                    .setIdStrumentiUrbanistici(this.getIdStrumentiUrbanistici().longValue());
+        }
+        entity.setTiStato(this.getTiStato());
+        entity.setTsRegStato(this.getTsRegStato());
+        entity.setDescrizione(this.getCdDesc());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.valueOf(getObject("rownum").toString());
+        return Integer.valueOf(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.valueOf(getObject("rnum").toString());
+        return Integer.valueOf(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.valueOf(getObject("numrecords").toString());
+        return Integer.valueOf(getObject("numrecords").toString());
     }
 
 }

@@ -33,57 +33,57 @@ public class SimplReqPrsr extends AbsRequestPrsr {
 
     public class ReqPrsrConfig {
 
-	MonFakeSessn sessioneFinta;
-	private HttpServletRequest request;
+        MonFakeSessn sessioneFinta;
+        private HttpServletRequest request;
 
-	public MonFakeSessn getSessioneFinta() {
-	    return sessioneFinta;
-	}
+        public MonFakeSessn getSessioneFinta() {
+            return sessioneFinta;
+        }
 
-	public void setSessioneFinta(MonFakeSessn sessioneFinta) {
-	    this.sessioneFinta = sessioneFinta;
-	}
+        public void setSessioneFinta(MonFakeSessn sessioneFinta) {
+            this.sessioneFinta = sessioneFinta;
+        }
 
-	public HttpServletRequest getRequest() {
-	    return request;
-	}
+        public HttpServletRequest getRequest() {
+            return request;
+        }
 
-	public void setRequest(HttpServletRequest request) {
-	    this.request = request;
-	}
+        public void setRequest(HttpServletRequest request) {
+            this.request = request;
+        }
 
     }
 
     public void parse(IRispostaWS rispostaWs, ReqPrsrConfig configurazione) {
-	// verifica della struttura: è un form e devo verificare che
-	// i campi attesi ci siano e siano validi
+        // verifica della struttura: è un form e devo verificare che
+        // i campi attesi ci siano e siano validi
 
-	MonFakeSessn sessioneFinta = configurazione.getSessioneFinta();
-	HttpServletRequest request = configurazione.getRequest();
+        MonFakeSessn sessioneFinta = configurazione.getSessioneFinta();
+        HttpServletRequest request = configurazione.getRequest();
 
-	if (request.getParameter(LOGINAME_FLD) != null
-		&& !request.getParameter(LOGINAME_FLD).isEmpty()) {
-	    sessioneFinta.setLoginName(request.getParameter(LOGINAME_FLD));
-	} else {
-	    rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	    rispostaWs.setErrorType(IRispostaWS.ErrorTypeEnum.WS_SIGNATURE);
-	    rispostaWs.setErrorMessage(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_WS_CHECK,
-		    "Manca il campo username"));
-	    rispostaWs.setErrorCode(MessaggiWSBundle.ERR_WS_CHECK);
-	}
+        if (request.getParameter(LOGINAME_FLD) != null
+                && !request.getParameter(LOGINAME_FLD).isEmpty()) {
+            sessioneFinta.setLoginName(request.getParameter(LOGINAME_FLD));
+        } else {
+            rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+            rispostaWs.setErrorType(IRispostaWS.ErrorTypeEnum.WS_SIGNATURE);
+            rispostaWs.setErrorMessage(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_WS_CHECK,
+                    "Manca il campo username"));
+            rispostaWs.setErrorCode(MessaggiWSBundle.ERR_WS_CHECK);
+        }
 
-	if (rispostaWs.getSeverity() == IRispostaWS.SeverityEnum.OK) {
-	    if (request.getParameter(PASSWORD_FLD) != null
-		    && !request.getParameter(PASSWORD_FLD).isEmpty()) {
-		sessioneFinta.setPassword(request.getParameter(PASSWORD_FLD));
-	    } else {
-		rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-		rispostaWs.setErrorType(IRispostaWS.ErrorTypeEnum.WS_SIGNATURE);
-		rispostaWs.setErrorMessage(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_WS_CHECK,
-			"Manca il campo password"));
-		rispostaWs.setErrorCode(MessaggiWSBundle.ERR_WS_CHECK);
-	    }
-	}
+        if (rispostaWs.getSeverity() == IRispostaWS.SeverityEnum.OK) {
+            if (request.getParameter(PASSWORD_FLD) != null
+                    && !request.getParameter(PASSWORD_FLD).isEmpty()) {
+                sessioneFinta.setPassword(request.getParameter(PASSWORD_FLD));
+            } else {
+                rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+                rispostaWs.setErrorType(IRispostaWS.ErrorTypeEnum.WS_SIGNATURE);
+                rispostaWs.setErrorMessage(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_WS_CHECK,
+                        "Manca il campo password"));
+                rispostaWs.setErrorCode(MessaggiWSBundle.ERR_WS_CHECK);
+            }
+        }
     }
 
 }

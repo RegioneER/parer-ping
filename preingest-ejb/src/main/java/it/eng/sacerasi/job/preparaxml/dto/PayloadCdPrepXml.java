@@ -30,33 +30,33 @@ public class PayloadCdPrepXml implements Serializable {
     private long idLastSessioneIngest;
 
     public String getRootDirectory() {
-	return rootDirectory;
+        return rootDirectory;
     }
 
     public void setRootDirectory(String rootDirectory) {
-	this.rootDirectory = rootDirectory;
+        this.rootDirectory = rootDirectory;
     }
 
     public long getIdPigObject() {
-	return idPigObject;
+        return idPigObject;
     }
 
     public void setIdPigObject(long idPigObject) {
-	this.idPigObject = idPigObject;
+        this.idPigObject = idPigObject;
     }
 
     public long getIdLastSessioneIngest() {
-	return idLastSessioneIngest;
+        return idLastSessioneIngest;
     }
 
     public void setIdLastSessioneIngest(long idLastSessioneIngest) {
-	this.idLastSessioneIngest = idLastSessioneIngest;
+        this.idLastSessioneIngest = idLastSessioneIngest;
     }
 
     @Override
     public String toString() {
-	return "PayloadCdPrepXml{" + "rootDirectory=" + rootDirectory + "\n idPigObject="
-		+ idPigObject + '}';
+        return "PayloadCdPrepXml{" + "rootDirectory=" + rootDirectory + "\n idPigObject="
+                + idPigObject + '}';
     }
 
 }

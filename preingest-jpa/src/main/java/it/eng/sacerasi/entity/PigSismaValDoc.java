@@ -42,7 +42,7 @@ public class PigSismaValDoc implements Serializable {
     private List<PigSismaPianoDocReq> pigSismaPianoDocReqs = new ArrayList<>();
 
     public PigSismaValDoc() {
-	// non usato
+        // non usato
     }
 
     @Id
@@ -50,77 +50,77 @@ public class PigSismaValDoc implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_VAL_DOC_IDSISMAVALDOC_GENERATOR")
     @Column(name = "ID_SISMA_VAL_DOC")
     public Long getIdSismaValDoc() {
-	return this.idSismaValDoc;
+        return this.idSismaValDoc;
     }
 
     public void setIdSismaValDoc(Long idSismaValDoc) {
-	this.idSismaValDoc = idSismaValDoc;
+        this.idSismaValDoc = idSismaValDoc;
     }
 
     @Column(name = "FL_DOC_PRINCIPALE", columnDefinition = "CHAR")
     public String getFlDocPrincipale() {
-	return this.flDocPrincipale;
+        return this.flDocPrincipale;
     }
 
     public void setFlDocPrincipale(String flDocPrincipale) {
-	this.flDocPrincipale = flDocPrincipale;
+        this.flDocPrincipale = flDocPrincipale;
     }
 
     @Column(name = "NM_TIPO_DOCUMENTO")
     public String getNmTipoDocumento() {
-	return this.nmTipoDocumento;
+        return this.nmTipoDocumento;
     }
 
     public void setNmTipoDocumento(String nmTipoDocumento) {
-	this.nmTipoDocumento = nmTipoDocumento;
+        this.nmTipoDocumento = nmTipoDocumento;
     }
 
     // bi-directional many-to-one association to PigSismaDocumenti
     @OneToMany(mappedBy = "pigSismaValDoc")
     public List<PigSismaDocumenti> getPigSismaDocumentis() {
-	return this.pigSismaDocumentis;
+        return this.pigSismaDocumentis;
     }
 
     public void setPigSismaDocumentis(List<PigSismaDocumenti> pigSismaDocumentis) {
-	this.pigSismaDocumentis = pigSismaDocumentis;
+        this.pigSismaDocumentis = pigSismaDocumentis;
     }
 
     public PigSismaDocumenti addPigSismaDocumenti(PigSismaDocumenti pigSismaDocumenti) {
-	getPigSismaDocumentis().add(pigSismaDocumenti);
-	pigSismaDocumenti.setPigSismaValDoc(this);
+        getPigSismaDocumentis().add(pigSismaDocumenti);
+        pigSismaDocumenti.setPigSismaValDoc(this);
 
-	return pigSismaDocumenti;
+        return pigSismaDocumenti;
     }
 
     public PigSismaDocumenti removePigSismaDocumenti(PigSismaDocumenti pigSismaDocumenti) {
-	getPigSismaDocumentis().remove(pigSismaDocumenti);
-	pigSismaDocumenti.setPigSismaValDoc(null);
+        getPigSismaDocumentis().remove(pigSismaDocumenti);
+        pigSismaDocumenti.setPigSismaValDoc(null);
 
-	return pigSismaDocumenti;
+        return pigSismaDocumenti;
     }
 
     // bi-directional many-to-one association to PigSismaPianoDocReq
     @OneToMany(mappedBy = "pigSismaValDoc")
     public List<PigSismaPianoDocReq> getPigSismaPianoDocReqs() {
-	return this.pigSismaPianoDocReqs;
+        return this.pigSismaPianoDocReqs;
     }
 
     public void setPigSismaPianoDocReqs(List<PigSismaPianoDocReq> pigSismaPianoDocReqs) {
-	this.pigSismaPianoDocReqs = pigSismaPianoDocReqs;
+        this.pigSismaPianoDocReqs = pigSismaPianoDocReqs;
     }
 
     public PigSismaPianoDocReq addPigSismaPianoDocReq(PigSismaPianoDocReq pigSismaPianoDocReq) {
-	getPigSismaPianoDocReqs().add(pigSismaPianoDocReq);
-	pigSismaPianoDocReq.setPigSismaValDoc(this);
+        getPigSismaPianoDocReqs().add(pigSismaPianoDocReq);
+        pigSismaPianoDocReq.setPigSismaValDoc(this);
 
-	return pigSismaPianoDocReq;
+        return pigSismaPianoDocReq;
     }
 
     public PigSismaPianoDocReq removePigSismaPianoDocReq(PigSismaPianoDocReq pigSismaPianoDocReq) {
-	getPigSismaPianoDocReqs().remove(pigSismaPianoDocReq);
-	pigSismaPianoDocReq.setPigSismaValDoc(null);
+        getPigSismaPianoDocReqs().remove(pigSismaPianoDocReq);
+        pigSismaPianoDocReq.setPigSismaValDoc(null);
 
-	return pigSismaPianoDocReq;
+        return pigSismaPianoDocReq;
     }
 
 }

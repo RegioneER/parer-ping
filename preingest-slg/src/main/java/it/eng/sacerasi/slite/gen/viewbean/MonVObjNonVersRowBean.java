@@ -37,100 +37,100 @@ public class MonVObjNonVersRowBean extends BaseRow implements JEEBaseRowInterfac
     public static MonVObjNonVersTableDescriptor TABLE_DESCRIPTOR = new MonVObjNonVersTableDescriptor();
 
     public MonVObjNonVersRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public String getCdKeyObject() {
-	return getString("cd_key_object");
+        return getString("cd_key_object");
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	setObject("cd_key_object", cdKeyObject);
+        setObject("cd_key_object", cdKeyObject);
     }
 
     public String getNmTipoObject() {
-	return getString("nm_tipo_object");
+        return getString("nm_tipo_object");
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	setObject("nm_tipo_object", nmTipoObject);
+        setObject("nm_tipo_object", nmTipoObject);
     }
 
     public String getFlVerif() {
-	return getString("fl_verif");
+        return getString("fl_verif");
     }
 
     public void setFlVerif(String flVerif) {
-	setObject("fl_verif", flVerif);
+        setObject("fl_verif", flVerif);
     }
 
     public String getFlNonRisolub() {
-	return getString("fl_non_risolub");
+        return getString("fl_non_risolub");
     }
 
     public void setFlNonRisolub(String flNonRisolub) {
-	setObject("fl_non_risolub", flNonRisolub);
+        setObject("fl_non_risolub", flNonRisolub);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVObjNonVers entity = (MonVObjNonVers) obj;
-	this.setIdVers(entity.getMonVObjNonVersId() == null ? null
-		: entity.getMonVObjNonVersId().getIdVers());
-	this.setCdKeyObject(entity.getMonVObjNonVersId() == null ? null
-		: entity.getMonVObjNonVersId().getCdKeyObject());
-	this.setNmTipoObject(entity.getNmTipoObject());
-	this.setFlVerif(entity.getFlVerif());
-	this.setFlNonRisolub(entity.getFlNonRisolub());
+        MonVObjNonVers entity = (MonVObjNonVers) obj;
+        this.setIdVers(entity.getMonVObjNonVersId() == null ? null
+                : entity.getMonVObjNonVersId().getIdVers());
+        this.setCdKeyObject(entity.getMonVObjNonVersId() == null ? null
+                : entity.getMonVObjNonVersId().getCdKeyObject());
+        this.setNmTipoObject(entity.getNmTipoObject());
+        this.setFlVerif(entity.getFlVerif());
+        this.setFlNonRisolub(entity.getFlNonRisolub());
     }
 
     @Override
     public MonVObjNonVers rowBeanToEntity() {
-	MonVObjNonVers entity = new MonVObjNonVers();
-	entity.setMonVObjNonVersId(new MonVObjNonVersId());
-	entity.getMonVObjNonVersId().setIdVers(this.getIdVers());
-	entity.getMonVObjNonVersId().setCdKeyObject(this.getCdKeyObject());
-	entity.setNmTipoObject(this.getNmTipoObject());
-	entity.setFlVerif(this.getFlVerif());
-	entity.setFlNonRisolub(this.getFlNonRisolub());
-	return entity;
+        MonVObjNonVers entity = new MonVObjNonVers();
+        entity.setMonVObjNonVersId(new MonVObjNonVersId());
+        entity.getMonVObjNonVersId().setIdVers(this.getIdVers());
+        entity.getMonVObjNonVersId().setCdKeyObject(this.getCdKeyObject());
+        entity.setNmTipoObject(this.getNmTipoObject());
+        entity.setFlVerif(this.getFlVerif());
+        entity.setFlNonRisolub(this.getFlNonRisolub());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

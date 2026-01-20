@@ -26,10 +26,10 @@ public class ListaOggRicRecuperatiType {
     private List<OggRicRecuperatiType> oggetto;
 
     public List<OggRicRecuperatiType> getOggetto() {
-	return oggetto;
+        return oggetto;
     }
 
     public void setOggetto(List<OggRicRecuperatiType> oggetto) {
-	this.oggetto = oggetto;
+        this.oggetto = oggetto;
     }
 }

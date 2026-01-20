@@ -42,57 +42,57 @@ public class OrgVTreeAmbitoTerrit implements Serializable {
 
     @Column(name = "CD_AMBITO_TERRIT")
     public String getCdAmbitoTerrit() {
-	return this.cdAmbitoTerrit;
+        return this.cdAmbitoTerrit;
     }
 
     public void setCdAmbitoTerrit(String cdAmbitoTerrit) {
-	this.cdAmbitoTerrit = cdAmbitoTerrit;
+        this.cdAmbitoTerrit = cdAmbitoTerrit;
     }
 
     @Column(name = "DS_TREE_CD_AMBITO_TERRIT")
     public String getDsTreeCdAmbitoTerrit() {
-	return this.dsTreeCdAmbitoTerrit;
+        return this.dsTreeCdAmbitoTerrit;
     }
 
     public void setDsTreeCdAmbitoTerrit(String dsTreeCdAmbitoTerrit) {
-	this.dsTreeCdAmbitoTerrit = dsTreeCdAmbitoTerrit;
+        this.dsTreeCdAmbitoTerrit = dsTreeCdAmbitoTerrit;
     }
 
     @Column(name = "DS_TREE_ID_AMBITO_TERRIT")
     public String getDsTreeIdAmbitoTerrit() {
-	return this.dsTreeIdAmbitoTerrit;
+        return this.dsTreeIdAmbitoTerrit;
     }
 
     public void setDsTreeIdAmbitoTerrit(String dsTreeIdAmbitoTerrit) {
-	this.dsTreeIdAmbitoTerrit = dsTreeIdAmbitoTerrit;
+        this.dsTreeIdAmbitoTerrit = dsTreeIdAmbitoTerrit;
     }
 
     @Id
     @Column(name = "ID_AMBITO_TERRIT")
     public BigDecimal getIdAmbitoTerrit() {
-	return this.idAmbitoTerrit;
+        return this.idAmbitoTerrit;
     }
 
     public void setIdAmbitoTerrit(BigDecimal idAmbitoTerrit) {
-	this.idAmbitoTerrit = idAmbitoTerrit;
+        this.idAmbitoTerrit = idAmbitoTerrit;
     }
 
     @Column(name = "ID_AMBITO_TERRIT_PADRE")
     public BigDecimal getIdAmbitoTerritPadre() {
-	return this.idAmbitoTerritPadre;
+        return this.idAmbitoTerritPadre;
     }
 
     public void setIdAmbitoTerritPadre(BigDecimal idAmbitoTerritPadre) {
-	this.idAmbitoTerritPadre = idAmbitoTerritPadre;
+        this.idAmbitoTerritPadre = idAmbitoTerritPadre;
     }
 
     @Column(name = "TI_AMBITO_TERRIT")
     public String getTiAmbitoTerrit() {
-	return this.tiAmbitoTerrit;
+        return this.tiAmbitoTerrit;
     }
 
     public void setTiAmbitoTerrit(String tiAmbitoTerrit) {
-	this.tiAmbitoTerrit = tiAmbitoTerrit;
+        this.tiAmbitoTerrit = tiAmbitoTerrit;
     }
 
 }

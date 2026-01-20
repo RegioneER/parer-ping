@@ -38,30 +38,30 @@ public class AplVRangeMbyteCoda implements Serializable {
 
     @Column(name = "ID_CODA_DA_USARE")
     public String getIdCodaDaUsare() {
-	return this.idCodaDaUsare;
+        return this.idCodaDaUsare;
     }
 
     public void setIdCodaDaUsare(String idCodaDaUsare) {
-	this.idCodaDaUsare = idCodaDaUsare;
+        this.idCodaDaUsare = idCodaDaUsare;
     }
 
     @Id
     @Column(name = "NI_LIMITE_INF")
     public BigDecimal getNiLimiteInf() {
-	return this.niLimiteInf;
+        return this.niLimiteInf;
     }
 
     public void setNiLimiteInf(BigDecimal niLimiteInf) {
-	this.niLimiteInf = niLimiteInf;
+        this.niLimiteInf = niLimiteInf;
     }
 
     @Column(name = "NI_LIMITE_SUP")
     public BigDecimal getNiLimiteSup() {
-	return this.niLimiteSup;
+        return this.niLimiteSup;
     }
 
     public void setNiLimiteSup(BigDecimal niLimiteSup) {
-	this.niLimiteSup = niLimiteSup;
+        this.niLimiteSup = niLimiteSup;
     }
 
 }

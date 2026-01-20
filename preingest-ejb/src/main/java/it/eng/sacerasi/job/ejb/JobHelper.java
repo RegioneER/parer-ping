@@ -37,34 +37,34 @@ public class JobHelper {
     private EntityManager entityManager;
 
     public List<Long> getListaVersatori() {
-	List<Long> lstObjects;
-	String queryStr = "SELECT u.idVers FROM PigVers u";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	lstObjects = query.getResultList();
+        List<Long> lstObjects;
+        String queryStr = "SELECT u.idVers FROM PigVers u";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        lstObjects = query.getResultList();
 
-	return lstObjects;
+        return lstObjects;
     }
 
     public List<PigSessioneRecup> getListaSessioni(List<Long> idVersatori,
-	    Constants.StatoSessioneRecup stato) {
-	List<PigSessioneRecup> lstSessioni;
-	String queryStr = "SELECT u FROM PigSessioneRecup u WHERE u.tiStato = :tiStato AND u.pigVer.idVers IN (:idVers) ";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("tiStato", stato.name());
-	query.setParameter("idVers", idVersatori);
-	lstSessioni = query.getResultList();
+            Constants.StatoSessioneRecup stato) {
+        List<PigSessioneRecup> lstSessioni;
+        String queryStr = "SELECT u FROM PigSessioneRecup u WHERE u.tiStato = :tiStato AND u.pigVer.idVers IN (:idVers) ";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("tiStato", stato.name());
+        query.setParameter("idVers", idVersatori);
+        lstSessioni = query.getResultList();
 
-	return lstSessioni;
+        return lstSessioni;
     }
 
     public List<PigObject> getListaObjects(List<Long> idVersatori, Constants.StatoOggetto stato) {
-	List<PigObject> lstObjects;
-	String queryStr = "SELECT u FROM PigObject u WHERE u.tiStatoObject = :tiStato AND u.pigVer.idVers IN (:idVers) ";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("tiStato", stato.name());
-	query.setParameter("idVers", idVersatori);
-	lstObjects = query.getResultList();
+        List<PigObject> lstObjects;
+        String queryStr = "SELECT u FROM PigObject u WHERE u.tiStatoObject = :tiStato AND u.pigVer.idVers IN (:idVers) ";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("tiStato", stato.name());
+        query.setParameter("idVers", idVersatori);
+        lstObjects = query.getResultList();
 
-	return lstObjects;
+        return lstObjects;
     }
 }

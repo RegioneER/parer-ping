@@ -48,39 +48,39 @@ public class PigVDettStrumUrb implements Serializable {
 
     @Column(name = "FL_DELETED", columnDefinition = "char")
     public String getFlDeleted() {
-	return this.flDeleted;
+        return this.flDeleted;
     }
 
     public void setFlDeleted(String flDeleted) {
-	this.flDeleted = flDeleted;
+        this.flDeleted = flDeleted;
     }
 
     @Column(name = "FL_ESITO_VERIFICA", columnDefinition = "char")
     public String getFlEsitoVerifica() {
-	return this.flEsitoVerifica;
+        return this.flEsitoVerifica;
     }
 
     public void setFlEsitoVerifica(String flEsitoVerifica) {
-	this.flEsitoVerifica = flEsitoVerifica;
+        this.flEsitoVerifica = flEsitoVerifica;
     }
 
     @Column(name = "ID_DOCUMENTO")
     public BigDecimal getIdDocumento() {
-	return this.idDocumento;
+        return this.idDocumento;
     }
 
     public void setIdDocumento(BigDecimal idDocumento) {
-	this.idDocumento = idDocumento;
+        this.idDocumento = idDocumento;
     }
 
     @Id
     @Column(name = "ID_STRUMENTI_URBANISTICI")
     public BigDecimal getIdStrumentiUrbanistici() {
-	return this.idStrumentiUrbanistici;
+        return this.idStrumentiUrbanistici;
     }
 
     public void setIdStrumentiUrbanistici(BigDecimal idStrumentiUrbanistici) {
-	this.idStrumentiUrbanistici = idStrumentiUrbanistici;
+        this.idStrumentiUrbanistici = idStrumentiUrbanistici;
     }
 
     /*

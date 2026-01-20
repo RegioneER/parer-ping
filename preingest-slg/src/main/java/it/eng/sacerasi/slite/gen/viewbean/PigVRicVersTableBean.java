@@ -38,19 +38,19 @@ public class PigVRicVersTableBean extends AbstractBaseTable<PigVRicVersRowBean> 
     public static PigVRicVersTableDescriptor TABLE_DESCRIPTOR = new PigVRicVersTableDescriptor();
 
     public PigVRicVersTableBean() {
-	super();
+        super();
     }
 
     protected PigVRicVersRowBean createRow() {
-	return new PigVRicVersRowBean();
+        return new PigVRicVersRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigVRicVersRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

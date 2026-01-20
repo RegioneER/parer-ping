@@ -47,52 +47,52 @@ public class RecuperaVersErrHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(RecuperaVersErrHelper.class);
+        return ArquillianUtils.createPingJar(RecuperaVersErrHelper.class);
     }
 
     @Test
     void getListaObjects_queryIsOk() {
-	List<Long> idVersatori = aListOfLong(2);
-	String statoTimeout = aString();
-	String statoErrVers = aString();
-	helper.getListaObjects(idVersatori, statoTimeout, statoErrVers, 60);
-	assertTrue(true);
+        List<Long> idVersatori = aListOfLong(2);
+        String statoTimeout = aString();
+        String statoErrVers = aString();
+        helper.getListaObjects(idVersatori, statoTimeout, statoErrVers, 60);
+        assertTrue(true);
     }
 
     @Test
     void getUdVersTimeoutConsideraVerataErr() {
-	PigUnitaDocObject versataOk = new PigUnitaDocObject();
-	versataOk.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
-	PigUnitaDocObject versataErr = new PigUnitaDocObject();
-	versataErr.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+        PigUnitaDocObject versataOk = new PigUnitaDocObject();
+        versataOk.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
+        PigUnitaDocObject versataErr = new PigUnitaDocObject();
+        versataErr.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_ERR.name());
 
-	PigObject obj = new PigObject();
-	obj.setPigUnitaDocObjects(new ArrayList<>());
-	obj.getPigUnitaDocObjects().add(versataOk);
-	obj.getPigUnitaDocObjects().add(versataErr);
+        PigObject obj = new PigObject();
+        obj.setPigUnitaDocObjects(new ArrayList<>());
+        obj.getPigUnitaDocObjects().add(versataOk);
+        obj.getPigUnitaDocObjects().add(versataErr);
 
-	final List<PigUnitaDocObject> list = helper.getUdVersTimeout(obj);
-	assertEquals(1, list.size());
-	assertEquals(versataErr.getTiStatoUnitaDocObject(), list.get(0).getTiStatoUnitaDocObject());
+        final List<PigUnitaDocObject> list = helper.getUdVersTimeout(obj);
+        assertEquals(1, list.size());
+        assertEquals(versataErr.getTiStatoUnitaDocObject(), list.get(0).getTiStatoUnitaDocObject());
     }
 
     @Test
     void getUdVersTimeoutConsideraVerataTimeout() {
-	PigUnitaDocObject versataOk = new PigUnitaDocObject();
-	versataOk.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
+        PigUnitaDocObject versataOk = new PigUnitaDocObject();
+        versataOk.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
 
-	PigUnitaDocObject versataTimeout = new PigUnitaDocObject();
-	versataTimeout
-		.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name());
+        PigUnitaDocObject versataTimeout = new PigUnitaDocObject();
+        versataTimeout
+                .setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_TIMEOUT.name());
 
-	PigObject obj = new PigObject();
-	obj.setPigUnitaDocObjects(new ArrayList<>());
-	obj.getPigUnitaDocObjects().add(versataOk);
-	obj.getPigUnitaDocObjects().add(versataTimeout);
+        PigObject obj = new PigObject();
+        obj.setPigUnitaDocObjects(new ArrayList<>());
+        obj.getPigUnitaDocObjects().add(versataOk);
+        obj.getPigUnitaDocObjects().add(versataTimeout);
 
-	final List<PigUnitaDocObject> list = helper.getUdVersTimeout(obj);
-	assertEquals(1, list.size());
-	assertEquals(versataTimeout.getTiStatoUnitaDocObject(),
-		list.get(0).getTiStatoUnitaDocObject());
+        final List<PigUnitaDocObject> list = helper.getUdVersTimeout(obj);
+        assertEquals(1, list.size());
+        assertEquals(versataTimeout.getTiStatoUnitaDocObject(),
+                list.get(0).getTiStatoUnitaDocObject());
     }
 }

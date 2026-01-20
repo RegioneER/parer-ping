@@ -45,22 +45,22 @@ public class RichiestaRestituzioneOggetto {
 
     @WebMethod(operationName = "richiestaRestituzioneOggetto")
     public RichiestaRestituzioneOggettoRisposta richiestaRestituzioneOggetto(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "cdPassword") String cdPassword,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject) {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "cdPassword") String cdPassword,
+            @WebParam(name = "cdKeyObject") String cdKeyObject) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	RichiestaRestituzioneOggettoRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.richiestaRestituzioneOggetto(nmAmbiente, nmVersatore, cdKeyObject);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        RichiestaRestituzioneOggettoRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.richiestaRestituzioneOggetto(nmAmbiente, nmVersatore, cdKeyObject);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

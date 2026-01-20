@@ -46,64 +46,64 @@ public class PigStatoObject implements Serializable {
     private List<PigStatoClasseErrore> pigStatoClasseErrores = new ArrayList<>();
 
     public PigStatoObject() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_STATO_OBJECT_IDSTATOOBJECT_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_STATO_OBJECT"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_STATO_OBJECT"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_STATO_OBJECT_IDSTATOOBJECT_GENERATOR")
     @Column(name = "ID_STATO_OBJECT")
     public Long getIdStatoObject() {
-	return this.idStatoObject;
+        return this.idStatoObject;
     }
 
     public void setIdStatoObject(Long idStatoObject) {
-	this.idStatoObject = idStatoObject;
+        this.idStatoObject = idStatoObject;
     }
 
     @Column(name = "DS_TI_STATO_OBJECT")
     public String getDsTiStatoObject() {
-	return this.dsTiStatoObject;
+        return this.dsTiStatoObject;
     }
 
     public void setDsTiStatoObject(String dsTiStatoObject) {
-	this.dsTiStatoObject = dsTiStatoObject;
+        this.dsTiStatoObject = dsTiStatoObject;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-	return this.tiStatoObject;
+        return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	this.tiStatoObject = tiStatoObject;
+        this.tiStatoObject = tiStatoObject;
     }
 
     // bi-directional many-to-one association to PigStatoClasseErrore
     @OneToMany(mappedBy = "pigStatoObject")
     public List<PigStatoClasseErrore> getPigStatoClasseErrores() {
-	return this.pigStatoClasseErrores;
+        return this.pigStatoClasseErrores;
     }
 
     public void setPigStatoClasseErrores(List<PigStatoClasseErrore> pigStatoClasseErrores) {
-	this.pigStatoClasseErrores = pigStatoClasseErrores;
+        this.pigStatoClasseErrores = pigStatoClasseErrores;
     }
 
     public PigStatoClasseErrore addPigStatoClasseErrore(PigStatoClasseErrore pigStatoClasseErrore) {
-	getPigStatoClasseErrores().add(pigStatoClasseErrore);
-	pigStatoClasseErrore.setPigStatoObject(this);
+        getPigStatoClasseErrores().add(pigStatoClasseErrore);
+        pigStatoClasseErrore.setPigStatoObject(this);
 
-	return pigStatoClasseErrore;
+        return pigStatoClasseErrore;
     }
 
     public PigStatoClasseErrore removePigStatoClasseErrore(
-	    PigStatoClasseErrore pigStatoClasseErrore) {
-	getPigStatoClasseErrores().remove(pigStatoClasseErrore);
-	pigStatoClasseErrore.setPigStatoObject(null);
+            PigStatoClasseErrore pigStatoClasseErrore) {
+        getPigStatoClasseErrores().remove(pigStatoClasseErrore);
+        pigStatoClasseErrore.setPigStatoObject(null);
 
-	return pigStatoClasseErrore;
+        return pigStatoClasseErrore;
     }
 
 }

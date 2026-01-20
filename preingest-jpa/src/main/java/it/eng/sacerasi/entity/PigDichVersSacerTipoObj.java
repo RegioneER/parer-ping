@@ -44,50 +44,50 @@ public class PigDichVersSacerTipoObj implements Serializable {
     private PigTipoObject pigTipoObject;
 
     public PigDichVersSacerTipoObj() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_DICH_VERS_SACER_TIPO_OBJ_IDDICHVERSSACERTIPOOBJ_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_DICH_VERS_SACER_TIPO_OBJ"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_DICH_VERS_SACER_TIPO_OBJ"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_DICH_VERS_SACER_TIPO_OBJ_IDDICHVERSSACERTIPOOBJ_GENERATOR")
     @Column(name = "ID_DICH_VERS_SACER_TIPO_OBJ")
     public Long getIdDichVersSacerTipoObj() {
-	return this.idDichVersSacerTipoObj;
+        return this.idDichVersSacerTipoObj;
     }
 
     public void setIdDichVersSacerTipoObj(Long idDichVersSacerTipoObj) {
-	this.idDichVersSacerTipoObj = idDichVersSacerTipoObj;
+        this.idDichVersSacerTipoObj = idDichVersSacerTipoObj;
     }
 
     @Column(name = "ID_ORGANIZ_IAM")
     public java.math.BigDecimal getIdOrganizIam() {
-	return this.idOrganizIam;
+        return this.idOrganizIam;
     }
 
     public void setIdOrganizIam(java.math.BigDecimal idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @Column(name = "TI_DICH_VERS")
     public String getTiDichVers() {
-	return this.tiDichVers;
+        return this.tiDichVers;
     }
 
     public void setTiDichVers(String tiDichVers) {
-	this.tiDichVers = tiDichVers;
+        this.tiDichVers = tiDichVers;
     }
 
     // bi-directional many-to-one association to PigTipoObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_TIPO_OBJECT")
     public PigTipoObject getPigTipoObject() {
-	return this.pigTipoObject;
+        return this.pigTipoObject;
     }
 
     public void setPigTipoObject(PigTipoObject pigTipoObject) {
-	this.pigTipoObject = pigTipoObject;
+        this.pigTipoObject = pigTipoObject;
     }
 
 }

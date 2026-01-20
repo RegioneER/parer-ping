@@ -39,10 +39,10 @@ public class CommonDb {
     private ConfigurationHelper configurationHelper;
 
     public String getRootFtpParam() {
-	return configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
+        return configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_FTP);
     }
 
     public String getRootTrasfParam() {
-	return configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_TRASF);
+        return configurationHelper.getValoreParamApplicByApplic(Constants.ROOT_TRASF);
     }
 }

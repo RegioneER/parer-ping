@@ -38,21 +38,21 @@ public class PigVChkDelDichverssacerobj implements Serializable {
 
     @Column(name = "FL_DEL_DCH_VERS_SACER_TIOBJ_OK", columnDefinition = "char")
     public String getFlDelDchVersSacerTiobjOk() {
-	return this.flDelDchVersSacerTiobjOk;
+        return this.flDelDchVersSacerTiobjOk;
     }
 
     public void setFlDelDchVersSacerTiobjOk(String flDelDchVersSacerTiobjOk) {
-	this.flDelDchVersSacerTiobjOk = flDelDchVersSacerTiobjOk;
+        this.flDelDchVersSacerTiobjOk = flDelDchVersSacerTiobjOk;
     }
 
     @Id
     @Column(name = "ID_DICH_VERS_SACER_TIPO_OBJ")
     public BigDecimal getIdDichVersSacerTipoObj() {
-	return this.idDichVersSacerTipoObj;
+        return this.idDichVersSacerTipoObj;
     }
 
     public void setIdDichVersSacerTipoObj(BigDecimal idDichVersSacerTipoObj) {
-	this.idDichVersSacerTipoObj = idDichVersSacerTipoObj;
+        this.idDichVersSacerTipoObj = idDichVersSacerTipoObj;
     }
 
 }

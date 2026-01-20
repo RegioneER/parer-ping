@@ -50,33 +50,33 @@ public class VersamentoOggettoHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(VersamentoOggettoHelper.class);
+        return ArquillianUtils.createPingJar(VersamentoOggettoHelper.class);
     }
 
     @Test
     void entityManagerIsNotNull() {
-	assertNotNull(helper.getEntityManager());
+        assertNotNull(helper.getEntityManager());
     }
 
     @Test
     void getMonVLisStatoVers_queryIsOk() {
-	long idUtente = aLong();
-	BigDecimal idAmbiente = aBigDecimal();
-	BigDecimal idVers = aBigDecimal();
-	BigDecimal idTipoOggetto = aBigDecimal();
-	BigDecimal idOggetto = aBigDecimal();
-	String cdKeyObject = aString();
-	String dsObject = aString();
-	String note = aString();
-	Date dataDa = todayTs();
-	Date dataA = tomorrowTs();
-	String tiStatoEsterno = aString();
-	List<String> tiStatoObject = aListOfString(2);
-	List<String> tiVersFile = aListOfString(2);
-	String tiContenutoOggetto = aString();
-	helper.getMonVLisStatoVers(idUtente, idAmbiente, idVers, idTipoOggetto, idOggetto,
-		cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject, tiVersFile,
-		note, tiContenutoOggetto);
-	assertTrue(true);
+        long idUtente = aLong();
+        BigDecimal idAmbiente = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
+        BigDecimal idTipoOggetto = aBigDecimal();
+        BigDecimal idOggetto = aBigDecimal();
+        String cdKeyObject = aString();
+        String dsObject = aString();
+        String note = aString();
+        Date dataDa = todayTs();
+        Date dataA = tomorrowTs();
+        String tiStatoEsterno = aString();
+        List<String> tiStatoObject = aListOfString(2);
+        List<String> tiVersFile = aListOfString(2);
+        String tiContenutoOggetto = aString();
+        helper.getMonVLisStatoVers(idUtente, idAmbiente, idVers, idTipoOggetto, idOggetto,
+                cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject, tiVersFile,
+                note, tiContenutoOggetto);
+        assertTrue(true);
     }
 }

@@ -33,19 +33,19 @@ public class SIOrgEnteConvenzOrgTableBean extends AbstractBaseTable<SIOrgEnteCon
     public static SIOrgEnteConvenzOrgTableDescriptor TABLE_DESCRIPTOR = new SIOrgEnteConvenzOrgTableDescriptor();
 
     public SIOrgEnteConvenzOrgTableBean() {
-	super();
+        super();
     }
 
     protected SIOrgEnteConvenzOrgRowBean createRow() {
-	return new SIOrgEnteConvenzOrgRowBean();
+        return new SIOrgEnteConvenzOrgRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<SIOrgEnteConvenzOrgRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -26,81 +26,81 @@ public class RichiestaVersatoreInput {
     private Integer timeout;
 
     public RichiestaVersatoreInput(String urlRichiesta, String nmAmbiente, String nmVers,
-	    String cdKeyObject, Integer timeout) {
-	this.urlRichiesta = urlRichiesta;
-	this.nmAmbiente = nmAmbiente;
-	this.nmVers = nmVers;
-	this.cdKeyObject = cdKeyObject;
-	this.timeout = timeout;
+            String cdKeyObject, Integer timeout) {
+        this.urlRichiesta = urlRichiesta;
+        this.nmAmbiente = nmAmbiente;
+        this.nmVers = nmVers;
+        this.cdKeyObject = cdKeyObject;
+        this.timeout = timeout;
     }
 
     /**
      * @return the urlRichiesta
      */
     public String getUrlRichiesta() {
-	return urlRichiesta;
+        return urlRichiesta;
     }
 
     /**
      * @param urlRichiesta the urlRichiesta to set
      */
     public void setUrlRichiesta(String urlRichiesta) {
-	this.urlRichiesta = urlRichiesta;
+        this.urlRichiesta = urlRichiesta;
     }
 
     /**
      * @return the nmAmbiente
      */
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     /**
      * @param nmAmbiente the nmAmbiente to set
      */
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     /**
      * @return the nmVers
      */
     public String getNmVers() {
-	return nmVers;
+        return nmVers;
     }
 
     /**
      * @param nmVers the nmVers to set
      */
     public void setNmVers(String nmVers) {
-	this.nmVers = nmVers;
+        this.nmVers = nmVers;
     }
 
     /**
      * @return the cdKeyObject
      */
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     /**
      * @param cdKeyObject the cdKeyObject to set
      */
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     /**
      * @return the timeout
      */
     public Integer getTimeout() {
-	return timeout;
+        return timeout;
     }
 
     /**
      * @param timeout the timeout to set
      */
     public void setTimeout(Integer timeout) {
-	this.timeout = timeout;
+        this.timeout = timeout;
     }
 }

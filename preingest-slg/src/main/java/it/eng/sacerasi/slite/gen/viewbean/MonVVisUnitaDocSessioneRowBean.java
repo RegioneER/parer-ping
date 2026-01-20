@@ -37,285 +37,285 @@ public class MonVVisUnitaDocSessioneRowBean extends BaseRow implements JEEBaseRo
     public static MonVVisUnitaDocSessioneTableDescriptor TABLE_DESCRIPTOR = new MonVVisUnitaDocSessioneTableDescriptor();
 
     public MonVVisUnitaDocSessioneRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdSessioneIngest() {
-	return getBigDecimal("id_sessione_ingest");
+        return getBigDecimal("id_sessione_ingest");
     }
 
     public void setIdSessioneIngest(BigDecimal idSessioneIngest) {
-	setObject("id_sessione_ingest", idSessioneIngest);
+        setObject("id_sessione_ingest", idSessioneIngest);
     }
 
     public Timestamp getDtApertura() {
-	return getTimestamp("dt_apertura");
+        return getTimestamp("dt_apertura");
     }
 
     public void setDtApertura(Timestamp dtApertura) {
-	setObject("dt_apertura", dtApertura);
+        setObject("dt_apertura", dtApertura);
     }
 
     public Timestamp getDtChiusura() {
-	return getTimestamp("dt_chiusura");
+        return getTimestamp("dt_chiusura");
     }
 
     public void setDtChiusura(Timestamp dtChiusura) {
-	setObject("dt_chiusura", dtChiusura);
+        setObject("dt_chiusura", dtChiusura);
     }
 
     public BigDecimal getIdAmbienteVers() {
-	return getBigDecimal("id_ambiente_vers");
+        return getBigDecimal("id_ambiente_vers");
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	setObject("id_ambiente_vers", idAmbienteVers);
+        setObject("id_ambiente_vers", idAmbienteVers);
     }
 
     public String getNmAmbienteVers() {
-	return getString("nm_ambiente_vers");
+        return getString("nm_ambiente_vers");
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-	setObject("nm_ambiente_vers", nmAmbienteVers);
+        setObject("nm_ambiente_vers", nmAmbienteVers);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public String getNmVers() {
-	return getString("nm_vers");
+        return getString("nm_vers");
     }
 
     public void setNmVers(String nmVers) {
-	setObject("nm_vers", nmVers);
+        setObject("nm_vers", nmVers);
     }
 
     public String getCdKeyObject() {
-	return getString("cd_key_object");
+        return getString("cd_key_object");
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	setObject("cd_key_object", cdKeyObject);
+        setObject("cd_key_object", cdKeyObject);
     }
 
     public String getDsObject() {
-	return getString("ds_object");
+        return getString("ds_object");
     }
 
     public void setDsObject(String dsObject) {
-	setObject("ds_object", dsObject);
+        setObject("ds_object", dsObject);
     }
 
     public BigDecimal getIdUnitaDocSessione() {
-	return getBigDecimal("id_unita_doc_sessione");
+        return getBigDecimal("id_unita_doc_sessione");
     }
 
     public void setIdUnitaDocSessione(BigDecimal idUnitaDocSessione) {
-	setObject("id_unita_doc_sessione", idUnitaDocSessione);
+        setObject("id_unita_doc_sessione", idUnitaDocSessione);
     }
 
     public String getCdRegistroUnitaDocSacer() {
-	return getString("cd_registro_unita_doc_sacer");
+        return getString("cd_registro_unita_doc_sacer");
     }
 
     public void setCdRegistroUnitaDocSacer(String cdRegistroUnitaDocSacer) {
-	setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
+        setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
     }
 
     public BigDecimal getAaUnitaDocSacer() {
-	return getBigDecimal("aa_unita_doc_sacer");
+        return getBigDecimal("aa_unita_doc_sacer");
     }
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
-	setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
+        setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
     }
 
     public String getCdKeyUnitaDocSacer() {
-	return getString("cd_key_unita_doc_sacer");
+        return getString("cd_key_unita_doc_sacer");
     }
 
     public void setCdKeyUnitaDocSacer(String cdKeyUnitaDocSacer) {
-	setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
+        setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
     }
 
     public BigDecimal getNiSizeFileByte() {
-	return getBigDecimal("ni_size_file_byte");
+        return getBigDecimal("ni_size_file_byte");
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	setObject("ni_size_file_byte", niSizeFileByte);
+        setObject("ni_size_file_byte", niSizeFileByte);
     }
 
     public String getTiStatoUnitaDocObject() {
-	return getString("ti_stato_unita_doc_object");
+        return getString("ti_stato_unita_doc_object");
     }
 
     public void setTiStatoUnitaDocObject(String tiStatoUnitaDocObject) {
-	setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
+        setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
     }
 
     // MEV 27407
     public Timestamp getDtStato() {
-	return getTimestamp("dt_stato");
+        return getTimestamp("dt_stato");
     }
 
     public void setDtStato(Timestamp dtStato) {
-	setObject("dt_stato", dtStato);
+        setObject("dt_stato", dtStato);
     }
 
     public String getCdErrSacer() {
-	return getString("cd_err_sacer");
+        return getString("cd_err_sacer");
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	setObject("cd_err_sacer", cdErrSacer);
+        setObject("cd_err_sacer", cdErrSacer);
     }
 
     public String getDlErrSacer() {
-	return getString("dl_err_sacer");
+        return getString("dl_err_sacer");
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	setObject("dl_err_sacer", dlErrSacer);
+        setObject("dl_err_sacer", dlErrSacer);
     }
 
     public String getBlXmlVersSacer() {
-	return getString("bl_xml_vers_sacer");
+        return getString("bl_xml_vers_sacer");
     }
 
     public void setBlXmlVersSacer(String blXmlVersSacer) {
-	setObject("bl_xml_vers_sacer", blXmlVersSacer);
+        setObject("bl_xml_vers_sacer", blXmlVersSacer);
     }
 
     public String getBlXmlIndiceSacer() {
-	return getString("bl_xml_indice_sacer");
+        return getString("bl_xml_indice_sacer");
     }
 
     public void setBlXmlIndiceSacer(String blXmlIndiceSacer) {
-	setObject("bl_xml_indice_sacer", blXmlIndiceSacer);
+        setObject("bl_xml_indice_sacer", blXmlIndiceSacer);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getDlCompositoOrganiz() {
-	return getString("dl_composito_organiz");
+        return getString("dl_composito_organiz");
     }
 
     public void setDlCompositoOrganiz(String dlCompositoOrganiz) {
-	setObject("dl_composito_organiz", dlCompositoOrganiz);
+        setObject("dl_composito_organiz", dlCompositoOrganiz);
     }
 
     public String getFlVersSimulato() {
-	return getString("fl_vers_simulato");
+        return getString("fl_vers_simulato");
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	setObject("fl_vers_simulato", flVersSimulato);
+        setObject("fl_vers_simulato", flVersSimulato);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVVisUnitaDocSessione entity = (MonVVisUnitaDocSessione) obj;
-	this.setIdSessioneIngest(entity.getIdSessioneIngest());
-	if (entity.getDtApertura() != null) {
-	    this.setDtApertura(new Timestamp(entity.getDtApertura().getTime()));
-	}
-	if (entity.getDtChiusura() != null) {
-	    this.setDtChiusura(new Timestamp(entity.getDtChiusura().getTime()));
-	}
-	this.setIdAmbienteVers(entity.getIdAmbienteVers());
-	this.setNmAmbienteVers(entity.getNmAmbienteVers());
-	this.setIdVers(entity.getIdVers());
-	this.setNmVers(entity.getNmVers());
-	this.setCdKeyObject(entity.getCdKeyObject());
-	this.setDsObject(entity.getDsObject());
-	this.setIdUnitaDocSessione(entity.getIdUnitaDocSessione());
-	this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
-	this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
-	this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
-	this.setNiSizeFileByte(entity.getNiSizeFileByte());
-	this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
-	this.setCdErrSacer(entity.getCdErrSacer());
-	this.setDlErrSacer(entity.getDlErrSacer());
-	this.setBlXmlVersSacer(entity.getBlXmlVersSacer());
-	this.setBlXmlIndiceSacer(entity.getBlXmlIndiceSacer());
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
-	this.setFlVersSimulato(entity.getFlVersSimulato());
+        MonVVisUnitaDocSessione entity = (MonVVisUnitaDocSessione) obj;
+        this.setIdSessioneIngest(entity.getIdSessioneIngest());
+        if (entity.getDtApertura() != null) {
+            this.setDtApertura(new Timestamp(entity.getDtApertura().getTime()));
+        }
+        if (entity.getDtChiusura() != null) {
+            this.setDtChiusura(new Timestamp(entity.getDtChiusura().getTime()));
+        }
+        this.setIdAmbienteVers(entity.getIdAmbienteVers());
+        this.setNmAmbienteVers(entity.getNmAmbienteVers());
+        this.setIdVers(entity.getIdVers());
+        this.setNmVers(entity.getNmVers());
+        this.setCdKeyObject(entity.getCdKeyObject());
+        this.setDsObject(entity.getDsObject());
+        this.setIdUnitaDocSessione(entity.getIdUnitaDocSessione());
+        this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
+        this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
+        this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
+        this.setNiSizeFileByte(entity.getNiSizeFileByte());
+        this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
+        this.setCdErrSacer(entity.getCdErrSacer());
+        this.setDlErrSacer(entity.getDlErrSacer());
+        this.setBlXmlVersSacer(entity.getBlXmlVersSacer());
+        this.setBlXmlIndiceSacer(entity.getBlXmlIndiceSacer());
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
+        this.setFlVersSimulato(entity.getFlVersSimulato());
 
-	if (entity.getDtStato() != null) {
-	    this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
-	}
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
     }
 
     @Override
     public MonVVisUnitaDocSessione rowBeanToEntity() {
-	MonVVisUnitaDocSessione entity = new MonVVisUnitaDocSessione();
-	entity.setIdSessioneIngest(this.getIdSessioneIngest());
-	entity.setDtApertura(this.getDtApertura());
-	entity.setDtChiusura(this.getDtChiusura());
-	entity.setIdAmbienteVers(this.getIdAmbienteVers());
-	entity.setNmAmbienteVers(this.getNmAmbienteVers());
-	entity.setIdVers(this.getIdVers());
-	entity.setNmVers(this.getNmVers());
-	entity.setCdKeyObject(this.getCdKeyObject());
-	entity.setDsObject(this.getDsObject());
-	entity.setIdUnitaDocSessione(this.getIdUnitaDocSessione());
-	entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
-	entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
-	entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
-	entity.setNiSizeFileByte(this.getNiSizeFileByte());
-	entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
-	entity.setCdErrSacer(this.getCdErrSacer());
-	entity.setDlErrSacer(this.getDlErrSacer());
-	entity.setBlXmlVersSacer(this.getBlXmlVersSacer());
-	entity.setBlXmlIndiceSacer(this.getBlXmlIndiceSacer());
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
-	entity.setFlVersSimulato(this.getFlVersSimulato());
-	entity.setDtStato(this.getDtStato());
-	return entity;
+        MonVVisUnitaDocSessione entity = new MonVVisUnitaDocSessione();
+        entity.setIdSessioneIngest(this.getIdSessioneIngest());
+        entity.setDtApertura(this.getDtApertura());
+        entity.setDtChiusura(this.getDtChiusura());
+        entity.setIdAmbienteVers(this.getIdAmbienteVers());
+        entity.setNmAmbienteVers(this.getNmAmbienteVers());
+        entity.setIdVers(this.getIdVers());
+        entity.setNmVers(this.getNmVers());
+        entity.setCdKeyObject(this.getCdKeyObject());
+        entity.setDsObject(this.getDsObject());
+        entity.setIdUnitaDocSessione(this.getIdUnitaDocSessione());
+        entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
+        entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
+        entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
+        entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
+        entity.setCdErrSacer(this.getCdErrSacer());
+        entity.setDlErrSacer(this.getDlErrSacer());
+        entity.setBlXmlVersSacer(this.getBlXmlVersSacer());
+        entity.setBlXmlIndiceSacer(this.getBlXmlIndiceSacer());
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
+        entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setDtStato(this.getDtStato());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

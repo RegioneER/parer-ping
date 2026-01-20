@@ -34,19 +34,19 @@ public class XfoTrasfTableBean extends AbstractBaseTable<XfoTrasfRowBean> {
     public static XfoTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoTrasfTableDescriptor();
 
     public XfoTrasfTableBean() {
-	super();
+        super();
     }
 
     protected XfoTrasfRowBean createRow() {
-	return new XfoTrasfRowBean();
+        return new XfoTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<XfoTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

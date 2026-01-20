@@ -31,24 +31,24 @@ public class NfsUtils {
     }
 
     public static void createEmptyDir(String fullPath) throws IOException {
-	Path dirPath = Paths.get(fullPath);
-	File directory = dirPath.toFile();
-	if (directory.exists()) {
-	    log.debug("La cartella {} esiste, la dobbiamo svuotare", fullPath);
-	    File[] files = directory.listFiles((dir, name) -> {
-		boolean toDelete = !name.matches("\\.nfs.+");
-		log.debug("File {} lo devo cancellare? {}", name, toDelete);
-		return toDelete;
-	    });
-	    if (files != null) {
-		for (File file : files) {
-		    log.debug("Procedo alla cancellazione di {}", file.getAbsolutePath());
-		    FileUtils.forceDelete(file);
-		}
-	    }
-	} else {
-	    log.debug("La cartella {} non esiste, la creo", fullPath);
-	    Files.createDirectory(dirPath);
-	}
+        Path dirPath = Paths.get(fullPath);
+        File directory = dirPath.toFile();
+        if (directory.exists()) {
+            log.debug("La cartella {} esiste, la dobbiamo svuotare", fullPath);
+            File[] files = directory.listFiles((dir, name) -> {
+                boolean toDelete = !name.matches("\\.nfs.+");
+                log.debug("File {} lo devo cancellare? {}", name, toDelete);
+                return toDelete;
+            });
+            if (files != null) {
+                for (File file : files) {
+                    log.debug("Procedo alla cancellazione di {}", file.getAbsolutePath());
+                    FileUtils.forceDelete(file);
+                }
+            }
+        } else {
+            log.debug("La cartella {} non esiste, la creo", fullPath);
+            Files.createDirectory(dirPath);
+        }
     }
 }

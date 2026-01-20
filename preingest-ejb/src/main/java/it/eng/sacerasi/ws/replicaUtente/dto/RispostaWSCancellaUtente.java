@@ -31,74 +31,74 @@ public class RispostaWSCancellaUtente implements IRispostaWS {
     private CancellaUtenteRisposta cancellaUtenteRisposta;
 
     public SeverityEnum getSeverity() {
-	return severity;
+        return severity;
     }
 
     public void setSeverity(SeverityEnum severity) {
-	this.severity = severity;
+        this.severity = severity;
     }
 
     public ErrorTypeEnum getErrorType() {
-	return errorType;
+        return errorType;
     }
 
     public void setErrorType(ErrorTypeEnum errorType) {
-	this.errorType = errorType;
+        this.errorType = errorType;
     }
 
     public String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
-	this.errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     public String getErrorCode() {
-	return errorCode;
+        return errorCode;
     }
 
     public void setErrorCode(String errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     public CancellaUtenteRisposta getCancellaUtenteRisposta() {
-	return cancellaUtenteRisposta;
+        return cancellaUtenteRisposta;
     }
 
     public void setCancellaUtenteRisposta(CancellaUtenteRisposta cancellaUtenteRisposta) {
-	this.cancellaUtenteRisposta = cancellaUtenteRisposta;
+        this.cancellaUtenteRisposta = cancellaUtenteRisposta;
     }
 
     public AvanzamentoWs getAvanzamento() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setAvanzamento(AvanzamentoWs avanzamento) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsErrBundle(String errCode, Object... params) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsErrBundle(String errCode) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsWarnBundle(String errCode, Object... params) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsWarnBundle(String errCode) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsError(String errCode, String errMessage) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setEsitoWsWarning(String errCode, String errMessage) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

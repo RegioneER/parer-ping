@@ -45,7 +45,7 @@ import it.eng.xformer.helper.TrasformazioniHelper;
 @Stateless(mappedName = "ParametersManager")
 @LocalBean
 @Interceptors({
-	it.eng.sacerasi.aop.TransactionInterceptor.class })
+        it.eng.sacerasi.aop.TransactionInterceptor.class })
 public class ParametersManager {
 
     private final Logger logger = LoggerFactory.getLogger(ParametersManager.class);
@@ -54,218 +54,218 @@ public class ParametersManager {
     private TrasformazioniHelper helper;
 
     public long insertNewParametersSet(String name, String description, String type,
-	    long idParentTrasf) {
+            long idParentTrasf) {
 
-	XfoTrasf xfoTrasf = helper.findById(XfoTrasf.class, idParentTrasf);
+        XfoTrasf xfoTrasf = helper.findById(XfoTrasf.class, idParentTrasf);
 
-	XfoSetParamTrasf xfoSetParamTrasf = new XfoSetParamTrasf();
-	xfoSetParamTrasf.setNmSetParamTrasf(name);
-	xfoSetParamTrasf.setDsSetParamTrasf(description);
-	xfoSetParamTrasf.setFlSetParamArk(type);
-	xfoSetParamTrasf.setXfoTrasf(xfoTrasf);
+        XfoSetParamTrasf xfoSetParamTrasf = new XfoSetParamTrasf();
+        xfoSetParamTrasf.setNmSetParamTrasf(name);
+        xfoSetParamTrasf.setDsSetParamTrasf(description);
+        xfoSetParamTrasf.setFlSetParamArk(type);
+        xfoSetParamTrasf.setXfoTrasf(xfoTrasf);
 
-	helper.insertEntity(xfoSetParamTrasf, true);
+        helper.insertEntity(xfoSetParamTrasf, true);
 
-	return xfoSetParamTrasf.getIdSetParamTrasf();
+        return xfoSetParamTrasf.getIdSetParamTrasf();
     }
 
     public long insertNewParameter(String name, String description, String type,
-	    String defaultValue, long idParentParamsSet) {
-	XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
-		idParentParamsSet);
+            String defaultValue, long idParentParamsSet) {
+        XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
+                idParentParamsSet);
 
-	XfoParamTrasf xfoParamTrasf = new XfoParamTrasf();
-	xfoParamTrasf.setNmParamTrasf(name);
-	xfoParamTrasf.setDsParamTrasf(description);
-	xfoParamTrasf.setTiParamTrasf(type);
-	xfoParamTrasf.setDsValoreParam(defaultValue);
-	xfoParamTrasf.setXfoSetParamTrasf(xfoSetParamTrasf);
+        XfoParamTrasf xfoParamTrasf = new XfoParamTrasf();
+        xfoParamTrasf.setNmParamTrasf(name);
+        xfoParamTrasf.setDsParamTrasf(description);
+        xfoParamTrasf.setTiParamTrasf(type);
+        xfoParamTrasf.setDsValoreParam(defaultValue);
+        xfoParamTrasf.setXfoSetParamTrasf(xfoSetParamTrasf);
 
-	helper.insertEntity(xfoParamTrasf, true);
+        helper.insertEntity(xfoParamTrasf, true);
 
-	return xfoParamTrasf.getIdParamTrasf();
+        return xfoParamTrasf.getIdParamTrasf();
     }
 
     public XfoSetParamTrasfTableBean searchParametersSetsByTransformation(long idTrasf)
-	    throws ParerUserError {
-	XfoSetParamTrasfTableBean table = new XfoSetParamTrasfTableBean();
+            throws ParerUserError {
+        XfoSetParamTrasfTableBean table = new XfoSetParamTrasfTableBean();
 
-	List<XfoSetParamTrasf> paramtersSets = helper.searchXfoSetParamTrasfbyXfoTrasf(idTrasf);
-	if (paramtersSets != null && !paramtersSets.isEmpty()) {
-	    try {
-		table = (XfoSetParamTrasfTableBean) Transform.entities2TableBean(paramtersSets);
-	    } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		    | IllegalAccessException | IllegalArgumentException
-		    | InvocationTargetException ex) {
-		logger.error("Errore durante il recupero delle trasformazioni: "
-			+ ExceptionUtils.getRootCauseMessage(ex), ex);
-		throw new ParerUserError("Errore durante il recupero dei parametri: "
-			+ ExceptionUtils.getRootCauseMessage(ex));
-	    }
-	}
+        List<XfoSetParamTrasf> paramtersSets = helper.searchXfoSetParamTrasfbyXfoTrasf(idTrasf);
+        if (paramtersSets != null && !paramtersSets.isEmpty()) {
+            try {
+                table = (XfoSetParamTrasfTableBean) Transform.entities2TableBean(paramtersSets);
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                    | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException ex) {
+                logger.error("Errore durante il recupero delle trasformazioni: "
+                        + ExceptionUtils.getRootCauseMessage(ex), ex);
+                throw new ParerUserError("Errore durante il recupero dei parametri: "
+                        + ExceptionUtils.getRootCauseMessage(ex));
+            }
+        }
 
-	return table;
+        return table;
     }
 
     public XfoSetParamTrasfRowBean getXfoSetParamTrasfRowBean(long idSetParamTrasf)
-	    throws ParerUserError {
-	XfoSetParamTrasfRowBean rowBean = null;
+            throws ParerUserError {
+        XfoSetParamTrasfRowBean rowBean = null;
 
-	XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
-		idSetParamTrasf);
+        XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
+                idSetParamTrasf);
 
-	try {
-	    rowBean = (XfoSetParamTrasfRowBean) Transform.entity2RowBean(xfoSetParamTrasf);
-	} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-	    String messaggio = "Eccezione imprevista nell recupero della trasformazione ";
-	    messaggio += ExceptionUtils.getRootCauseMessage(e);
-	    logger.error(messaggio, e);
-	    throw new ParerUserError(messaggio);
-	}
+        try {
+            rowBean = (XfoSetParamTrasfRowBean) Transform.entity2RowBean(xfoSetParamTrasf);
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            String messaggio = "Eccezione imprevista nell recupero della trasformazione ";
+            messaggio += ExceptionUtils.getRootCauseMessage(e);
+            logger.error(messaggio, e);
+            throw new ParerUserError(messaggio);
+        }
 
-	return rowBean;
+        return rowBean;
     }
 
     public XfoParamTrasfTableBean searchParametersBySet(long idSetParamTrasf)
-	    throws ParerUserError {
-	XfoParamTrasfTableBean table = new XfoParamTrasfTableBean();
+            throws ParerUserError {
+        XfoParamTrasfTableBean table = new XfoParamTrasfTableBean();
 
-	List<XfoParamTrasf> parameters = helper.searchXfoParamTrasfbySet(idSetParamTrasf);
-	if (parameters != null && !parameters.isEmpty()) {
-	    try {
-		for (XfoParamTrasf paramTrasf : parameters) {
-		    XfoParamTrasfRowBean row = (XfoParamTrasfRowBean) Transform
-			    .entity2RowBean(paramTrasf);
-		    if (row.getDsValoreParam() == null) {
-			row.setDsValoreParam("--");
-		    }
+        List<XfoParamTrasf> parameters = helper.searchXfoParamTrasfbySet(idSetParamTrasf);
+        if (parameters != null && !parameters.isEmpty()) {
+            try {
+                for (XfoParamTrasf paramTrasf : parameters) {
+                    XfoParamTrasfRowBean row = (XfoParamTrasfRowBean) Transform
+                            .entity2RowBean(paramTrasf);
+                    if (row.getDsValoreParam() == null) {
+                        row.setDsValoreParam("--");
+                    }
 
-		    table.add(row);
-		}
-	    } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		    | IllegalAccessException | IllegalArgumentException
-		    | InvocationTargetException ex) {
-		logger.error("Errore durante il recupero dei parametri: "
-			+ ExceptionUtils.getRootCauseMessage(ex), ex);
-		throw new ParerUserError("Errore durante il recupero dei parametri: "
-			+ ExceptionUtils.getRootCauseMessage(ex));
-	    }
-	}
+                    table.add(row);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                    | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException ex) {
+                logger.error("Errore durante il recupero dei parametri: "
+                        + ExceptionUtils.getRootCauseMessage(ex), ex);
+                throw new ParerUserError("Errore durante il recupero dei parametri: "
+                        + ExceptionUtils.getRootCauseMessage(ex));
+            }
+        }
 
-	return table;
+        return table;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void updateParametersSet(long idParametersSet, String name, String description,
-	    String type) throws ParerUserError {
-	XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
-		idParametersSet);
+            String type) throws ParerUserError {
+        XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
+                idParametersSet);
 
-	if (xfoSetParamTrasf != null) {
-	    xfoSetParamTrasf.setNmSetParamTrasf(name);
-	    xfoSetParamTrasf.setDsSetParamTrasf(description);
-	    xfoSetParamTrasf.setFlSetParamArk(type);
-	} else {
-	    String messaggio = "Eccezione imprevista nell'aggiornamento del set di parametri.";
-	    logger.error(messaggio);
-	    throw new ParerUserError(messaggio);
-	}
+        if (xfoSetParamTrasf != null) {
+            xfoSetParamTrasf.setNmSetParamTrasf(name);
+            xfoSetParamTrasf.setDsSetParamTrasf(description);
+            xfoSetParamTrasf.setFlSetParamArk(type);
+        } else {
+            String messaggio = "Eccezione imprevista nell'aggiornamento del set di parametri.";
+            logger.error(messaggio);
+            throw new ParerUserError(messaggio);
+        }
     }
 
     public void updateParameter(long idParameterTrasf, String newDescription, String newType,
-	    String newValue) throws ParerUserError {
-	XfoParamTrasf xfoParamTrasf = helper.findById(XfoParamTrasf.class, idParameterTrasf);
-	if (xfoParamTrasf != null) {
-	    xfoParamTrasf.setDsParamTrasf(newDescription);
-	    xfoParamTrasf.setTiParamTrasf(newType);
-	    xfoParamTrasf.setDsValoreParam(newValue);
-	} else {
-	    String messaggio = "Eccezione imprevista nell'aggiornamento del parametro.";
-	    logger.error(messaggio);
-	    throw new ParerUserError(messaggio);
-	}
+            String newValue) throws ParerUserError {
+        XfoParamTrasf xfoParamTrasf = helper.findById(XfoParamTrasf.class, idParameterTrasf);
+        if (xfoParamTrasf != null) {
+            xfoParamTrasf.setDsParamTrasf(newDescription);
+            xfoParamTrasf.setTiParamTrasf(newType);
+            xfoParamTrasf.setDsValoreParam(newValue);
+        } else {
+            String messaggio = "Eccezione imprevista nell'aggiornamento del parametro.";
+            logger.error(messaggio);
+            throw new ParerUserError(messaggio);
+        }
     }
 
     public void updateParameterByName(long idtrasf, String name, String newDescription,
-	    String newType, String newValue) throws ParerUserError {
-	XfoParamTrasf xfoParamTrasf = helper.searchXfoParamTrasfbyName(name, idtrasf);
-	if (xfoParamTrasf != null) {
-	    xfoParamTrasf.setDsParamTrasf(newDescription);
-	    xfoParamTrasf.setTiParamTrasf(newType);
-	    xfoParamTrasf.setDsValoreParam(newValue);
-	} else {
-	    String messaggio = "Eccezione imprevista nell'aggiornamento del parametro.";
-	    logger.error(messaggio);
-	    throw new ParerUserError(messaggio);
-	}
+            String newType, String newValue) throws ParerUserError {
+        XfoParamTrasf xfoParamTrasf = helper.searchXfoParamTrasfbyName(name, idtrasf);
+        if (xfoParamTrasf != null) {
+            xfoParamTrasf.setDsParamTrasf(newDescription);
+            xfoParamTrasf.setTiParamTrasf(newType);
+            xfoParamTrasf.setDsValoreParam(newValue);
+        } else {
+            String messaggio = "Eccezione imprevista nell'aggiornamento del parametro.";
+            logger.error(messaggio);
+            throw new ParerUserError(messaggio);
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void deleteParametersSet(long idSetParameterTrasf) throws ParerUserError {
-	logger.debug("Eseguo l'eliminazione del set di parametri.");
-	XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
-		idSetParameterTrasf);
-	helper.removeEntity(xfoSetParamTrasf, true);
+        logger.debug("Eseguo l'eliminazione del set di parametri.");
+        XfoSetParamTrasf xfoSetParamTrasf = helper.findById(XfoSetParamTrasf.class,
+                idSetParameterTrasf);
+        helper.removeEntity(xfoSetParamTrasf, true);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void deleteParameter(long idParameterTrasf) throws ParerUserError {
-	logger.debug("Eseguo l'eliminazione del set di parametri.");
-	XfoParamTrasf xfoParamTrasf = helper.findById(XfoParamTrasf.class, idParameterTrasf);
-	helper.removeEntity(xfoParamTrasf, true);
+        logger.debug("Eseguo l'eliminazione del set di parametri.");
+        XfoParamTrasf xfoParamTrasf = helper.findById(XfoParamTrasf.class, idParameterTrasf);
+        helper.removeEntity(xfoParamTrasf, true);
     }
 
     public boolean parametersSetExists(String parametersSetName, long idTrasf) {
-	return helper.parametersSetExists(parametersSetName, idTrasf);
+        return helper.parametersSetExists(parametersSetName, idTrasf);
     }
 
     public boolean isParameterAssigned(String parameter, long idTrasf) {
-	return helper.isParameterAssigned(parameter, idTrasf);
+        return helper.isParameterAssigned(parameter, idTrasf);
     }
 
     public XfoSetParamTrasf getParametersSet(String parametersSetName, long idTrasf) {
-	return helper.getParametersSet(parametersSetName, idTrasf);
+        return helper.getParametersSet(parametersSetName, idTrasf);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void updateParametersInParametersSets(long idTrasf,
-	    Map<String, String> updatedParameters, String defaultSetName) throws ParerUserError {
+            Map<String, String> updatedParameters, String defaultSetName) throws ParerUserError {
 
-	logger.debug("updateParametersInParametersSet: Aggiornamento parametri...");
-	List<XfoParamTrasf> parameters = helper.gettAllXfoParamTrasfbyTrasf(idTrasf);
+        logger.debug("updateParametersInParametersSet: Aggiornamento parametri...");
+        List<XfoParamTrasf> parameters = helper.gettAllXfoParamTrasfbyTrasf(idTrasf);
 
-	// elimina i parametri non presenti nel nuovo set
-	for (XfoParamTrasf param : parameters) {
-	    if (!updatedParameters.containsKey(param.getNmParamTrasf())) {
-		deleteParameter(param.getIdParamTrasf());
-		logger.debug("updateParametersInParametersSet: rimosso parametro "
-			+ param.getNmParamTrasf());
-	    }
-	}
+        // elimina i parametri non presenti nel nuovo set
+        for (XfoParamTrasf param : parameters) {
+            if (!updatedParameters.containsKey(param.getNmParamTrasf())) {
+                deleteParameter(param.getIdParamTrasf());
+                logger.debug("updateParametersInParametersSet: rimosso parametro "
+                        + param.getNmParamTrasf());
+            }
+        }
 
-	// aggiunge i parametri non presenti nel set esistente o aggiorna i valori standard se
-	// diversi da quelli attuali
-	for (Map.Entry<String, String> updatedParam : updatedParameters.entrySet()) {
-	    if (isParameterAssigned(updatedParam.getKey(), idTrasf)) {
-		updateParameterByName(idTrasf, updatedParam.getKey(), "--", "ALFANUMERICO",
-			updatedParam.getValue());
-		logger.debug("updateParametersInParametersSet: aggiornato parametro "
-			+ updatedParam.getKey() + " con valore " + updatedParam.getValue());
-	    } else {
-		XfoSetParamTrasf defaultParametersSet = getParametersSet(defaultSetName, idTrasf);
+        // aggiunge i parametri non presenti nel set esistente o aggiorna i valori standard se
+        // diversi da quelli attuali
+        for (Map.Entry<String, String> updatedParam : updatedParameters.entrySet()) {
+            if (isParameterAssigned(updatedParam.getKey(), idTrasf)) {
+                updateParameterByName(idTrasf, updatedParam.getKey(), "--", "ALFANUMERICO",
+                        updatedParam.getValue());
+                logger.debug("updateParametersInParametersSet: aggiornato parametro "
+                        + updatedParam.getKey() + " con valore " + updatedParam.getValue());
+            } else {
+                XfoSetParamTrasf defaultParametersSet = getParametersSet(defaultSetName, idTrasf);
 
-		if (defaultParametersSet == null) {
-		    long idParametersSet = insertNewParametersSet(defaultSetName, "--", "1",
-			    idTrasf);
-		    defaultParametersSet = helper.findById(XfoSetParamTrasf.class, idParametersSet);
-		}
+                if (defaultParametersSet == null) {
+                    long idParametersSet = insertNewParametersSet(defaultSetName, "--", "1",
+                            idTrasf);
+                    defaultParametersSet = helper.findById(XfoSetParamTrasf.class, idParametersSet);
+                }
 
-		insertNewParameter(updatedParam.getKey(), "--", "ALFANUMERICO",
-			updatedParam.getValue(), defaultParametersSet.getIdSetParamTrasf());
-		logger.debug("updateParametersInParametersSet: inserito parametro "
-			+ updatedParam.getKey() + " con valore " + updatedParam.getValue());
-	    }
-	}
+                insertNewParameter(updatedParam.getKey(), "--", "ALFANUMERICO",
+                        updatedParam.getValue(), defaultParametersSet.getIdSetParamTrasf());
+                logger.debug("updateParametersInParametersSet: inserito parametro "
+                        + updatedParam.getKey() + " con valore " + updatedParam.getValue());
+            }
+        }
     }
 }

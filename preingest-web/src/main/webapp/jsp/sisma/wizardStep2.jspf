@@ -160,23 +160,21 @@
                                 max_file_size: '15gb',
                                 unique_names: false,
                                 container: 'container-per-plupload',
-                                chunk_size: '20mb',
+                                chunk_size: '20mb', 
                                 prevent_duplicates: true,
-                                multi_selection: false,
+                                /* MEV#39397 - Aggiornamento Plugin JS Plupload */
+                                /*      multi_selection: false, */
+                                max_retries: 0,
+                                multi_selection: true,
+                                /* ****************************************** */
                                 filters: [
                                     {title: "Zip files", extensions: "zip"}
                                 ],
                                 resize: {width: 300, height: 200, quality: 90},
                                 preinit: {
                                     UploadFile: function (up, file) {
-                                        var nmTipoDocumento = $("#tipo_" + numero).text();
-                                        var testoStato = $("#stato_" + numero).text();
-                                        var tiVerificaAgenzia=null;
-                                        if (testoStato==='Verifica AG KO') {
-                                            tiVerificaAgenzia='0';
-                                        }
-                                        up.setOption('multipart_params', {'nmTipoDocumento': nmTipoDocumento, 'idSessione':up.id, 'dimensione':file.origSize, 'tiVerificaAgenzia':tiVerificaAgenzia});
-                                        determinaNavigabilita();
+                                        /* MEV#39397 - Aggiornamento Plugin JS Plupload 
+                                        eliminato tutto. */                                    
                                     },
                                     UploadProgress: function (up, file) {
                                         $('#avanz_' + numero).html(file.percent + '%');
@@ -185,6 +183,14 @@
                                         $('#avanz_'+ numero ).width((sizeParent/100)*file.percent);
                                     },
                                     BeforeUpload: function (up, file) {
+                                        var nmTipoDocumento = $("#tipo_" + numero).text();
+                                        var testoStato = $("#stato_" + numero).text();
+                                        var tiVerificaAgenzia=null;
+                                        if (testoStato==='Verifica AG KO') {
+                                            tiVerificaAgenzia='0';
+                                        }
+                                        up.setOption('multipart_params', {'nmTipoDocumento': nmTipoDocumento, 'idSessione':up.id, 'dimensione':file.origSize, 'tiVerificaAgenzia':tiVerificaAgenzia});
+                                        determinaNavigabilita();
                                     },
                                     FileUploaded: function (up, file, result) {
                                         var esito=jQuery.parseJSON(result.response);
@@ -196,10 +202,7 @@
                                             determinaNavigabilita();
                                         } else {
                                             $('#avanz_'+ numero ).width("100%");
-                                        }
-                                    },
-                                    UploadComplete: function (up, files) {
-                                        plupload.each(files, function (file) {
+                                            /* MEV#39397 - Aggiornamento Plugin JS Plupload */
                                             $('#bottone_' + numero).empty();
                                             $('#bottone_' + numero).append('<center><input class="pulsanteUpload" id="rimuovi_' + numero + '" type="button" value="Rimuovi file"/></center>');
                                             var nmTipoDoc=$('#tipo_' + numero).text();
@@ -208,11 +211,6 @@
                                                 $.post("Sisma.html", {operation: "rimuoviFile", nmFileOrig: file.name}).done(function (data) {
                                                     inizializzaRiga(numero, bodyTable, nmTipoDoc, '', false, null, null, null, verificaAgenzia);   
                                                     determinaNavigabilita();
-/*
-                                                    if (verificaAgenzia==='0') {
-                                                        alert('Bisognerebbe RIATTIVARE i pulsanti di navigazione!');
-                                                    }
-*/                                                    
                                                 });
                                                 $.ajaxSetup({async: true});
                                             });
@@ -220,8 +218,13 @@
                                             $('#dimensione_' + numero).html(formatFileSize(file.size, 2));
                                             $('#dataDoc_' + numero).html((new Date()).toLocaleDateString());
                                             determinaNavigabilita();
-                                        });
-
+                                            /*********************************************/
+                                        }
+                                    },
+                                    UploadComplete: function (up, files) {
+                                        /* MEV#39397 - Aggiornamento Plugin JS Plupload 
+                                        eliminato tutto e trasferito nell'evento FileUploaded nella else. */ 
+                                        determinaNavigabilita();
                                     },
                                     Error: function (up, err) {
                                         if (err.code==-601) {
@@ -295,7 +298,7 @@
                         for(var t=0; t<parerUploader.length; t++) {
                             // Se un uploader sta caricando...
                             // Testa la nullità perché nel caso di verifica agenzia non tutto l'array potrebbe essere carico
-                            if (parerUploader[t]!=null && parerUploader[t].state==2) {
+                            if (parerUploader[t]!=null && parerUploader[t].state==plupload.UPLOADING) {
                                 uploadInProgress=true;
                                 break;
                             }

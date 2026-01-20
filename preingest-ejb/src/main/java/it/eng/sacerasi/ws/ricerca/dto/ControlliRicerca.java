@@ -53,15 +53,15 @@ public class ControlliRicerca {
      * @return rispostaControlli, l'esito della verifica
      */
     public RispostaControlli verificaNomeTipoObjectConXML(String nmTipoObject,
-	    String xmlDatiSpecFiltri, String xmlDatiSpecOutput, String xmlDatiSpecOrder) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
-	if (StringUtils.isBlank(nmTipoObject) && (StringUtils.isNotBlank(xmlDatiSpecFiltri)
-		|| StringUtils.isNotBlank(xmlDatiSpecOutput)
-		|| StringUtils.isNotBlank(xmlDatiSpecOrder))) {
-	    rispostaControlli.setrBoolean(false);
-	}
-	return rispostaControlli;
+            String xmlDatiSpecFiltri, String xmlDatiSpecOutput, String xmlDatiSpecOrder) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
+        if (StringUtils.isBlank(nmTipoObject) && (StringUtils.isNotBlank(xmlDatiSpecFiltri)
+                || StringUtils.isNotBlank(xmlDatiSpecOutput)
+                || StringUtils.isNotBlank(xmlDatiSpecOrder))) {
+            rispostaControlli.setrBoolean(false);
+        }
+        return rispostaControlli;
     }
 
     /**
@@ -79,123 +79,123 @@ public class ControlliRicerca {
      *         nome colonna corrispondente su DB
      */
     public RispostaControlli verificaXMLDatiSpecFiltri(long idTipoObject,
-	    List<DatoSpecFiltroConNomeColonna> listaDatiSpecFiltriConNomeColonna,
-	    List<AttribDatiSpecBean> attribDatiSpecBean) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
+            List<DatoSpecFiltroConNomeColonna> listaDatiSpecFiltriConNomeColonna,
+            List<AttribDatiSpecBean> attribDatiSpecBean) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
 
-	/*
-	 * Creo tre liste per 3 controlli: una contenente gli eventuali filtri non trovati, una
-	 * contenente gli eventuali attributi non filtri ed una contenente gli eventuali attributi
-	 * con nome colonna DB uguale a null
-	 */
-	List<String> attributiNonTrovati = new ArrayList<>();
-	List<String> attributiNonFiltri = new ArrayList<>();
-	List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
+        /*
+         * Creo tre liste per 3 controlli: una contenente gli eventuali filtri non trovati, una
+         * contenente gli eventuali attributi non filtri ed una contenente gli eventuali attributi
+         * con nome colonna DB uguale a null
+         */
+        List<String> attributiNonTrovati = new ArrayList<>();
+        List<String> attributiNonFiltri = new ArrayList<>();
+        List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
 
-	// Confronto le due liste: i filtri con gli attributi dati spec.
-	for (DatoSpecFiltroConNomeColonna filtroTypeConNomeColonna : listaDatiSpecFiltriConNomeColonna) {
-	    boolean trovato = false;
-	    // Controllo quale tipo di filtro sto trattando: se un valore, nullo oppure a due valori
-	    if (filtroTypeConNomeColonna.getFiltro().getFiltroUnValore() != null) {
-		for (AttribDatiSpecBean ab : attribDatiSpecBean) {
-		    if (filtroTypeConNomeColonna.getFiltro().getFiltroUnValore().getDatoSpecifico()
-			    .equals(ab.getNmAttribDatiSpec())) {
-			trovato = true;
-			if (ab.getFlFiltroDiario().equals("0")) {
-			    attributiNonFiltri.add(ab.getNmAttribDatiSpec());
-			} else {
-			    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
-			    // diverso da null
-			    if (ab.getNomeColonna() != null) {
-				filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
-				filtroTypeConNomeColonna.setDataType(ab.getDataType());
-			    } else {
-				attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
-			    }
-			    break;
-			}
-		    }
-		}
-		if (!trovato) {
-		    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro().getFiltroUnValore()
-			    .getDatoSpecifico());
-		}
-	    } else if (filtroTypeConNomeColonna.getFiltro().getFiltroNullo() != null) {
-		for (AttribDatiSpecBean ab : attribDatiSpecBean) {
-		    if (filtroTypeConNomeColonna.getFiltro().getFiltroNullo().getDatoSpecifico()
-			    .equals(ab.getNmAttribDatiSpec())) {
-			trovato = true;
-			if (ab.getFlFiltroDiario().equals("0")) {
-			    attributiNonFiltri.add(ab.getNmAttribDatiSpec());
-			} else {
-			    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
-			    // diverso da null
-			    if (ab.getNomeColonna() != null) {
-				filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
-				filtroTypeConNomeColonna.setDataType(ab.getDataType());
-			    } else {
-				attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
-			    }
-			    break;
-			}
-		    }
-		}
-		if (!trovato) {
-		    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro().getFiltroNullo()
-			    .getDatoSpecifico());
-		}
-	    } else if (filtroTypeConNomeColonna.getFiltro().getFiltroDueValori() != null) {
-		for (AttribDatiSpecBean ab : attribDatiSpecBean) {
-		    if (filtroTypeConNomeColonna.getFiltro().getFiltroDueValori().getDatoSpecifico()
-			    .equals(ab.getNmAttribDatiSpec())) {
-			trovato = true;
-			if (ab.getFlFiltroDiario().equals("0")) {
-			    attributiNonFiltri.add(ab.getNmAttribDatiSpec());
-			} else {
-			    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
-			    // diverso da null
-			    if (ab.getNomeColonna() != null) {
-				filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
-				filtroTypeConNomeColonna.setDataType(ab.getDataType());
-			    } else {
-				attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
-			    }
-			    break;
-			}
-		    }
-		}
-		if (!trovato) {
-		    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro()
-			    .getFiltroDueValori().getDatoSpecifico());
-		}
-	    }
-	}
-	// Primo controllo: verifico che siano stati trovati tutti i filtri
-	if (!attributiNonTrovati.isEmpty()) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("006");
-	    rispostaControlli.setrObject(attributiNonTrovati);
-	    rispostaControlli.setrString(
-		    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
-	} // Altrimenti, secondo controllo: verifico se siano tutti di tipo filtro
-	else if (!attributiNonFiltri.isEmpty()) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("007");
-	    rispostaControlli.setrObject(attributiNonFiltri);
-	    rispostaControlli.setrString(
-		    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
-	} // Altrimenti, terzo controllo: verifico che abbiano tutti il campo colonna DB valorizzato
-	else if (!attributiConCampoColonnaDBNullo.isEmpty()) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("666");
-	    rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
-	    rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB è nullo ");
-	} // Altrimenti, restituisco i filtri con l'aggiunta del nome colonna del DB
-	else {
-	    rispostaControlli.setrObject(listaDatiSpecFiltriConNomeColonna);
-	}
-	return rispostaControlli;
+        // Confronto le due liste: i filtri con gli attributi dati spec.
+        for (DatoSpecFiltroConNomeColonna filtroTypeConNomeColonna : listaDatiSpecFiltriConNomeColonna) {
+            boolean trovato = false;
+            // Controllo quale tipo di filtro sto trattando: se un valore, nullo oppure a due valori
+            if (filtroTypeConNomeColonna.getFiltro().getFiltroUnValore() != null) {
+                for (AttribDatiSpecBean ab : attribDatiSpecBean) {
+                    if (filtroTypeConNomeColonna.getFiltro().getFiltroUnValore().getDatoSpecifico()
+                            .equals(ab.getNmAttribDatiSpec())) {
+                        trovato = true;
+                        if (ab.getFlFiltroDiario().equals("0")) {
+                            attributiNonFiltri.add(ab.getNmAttribDatiSpec());
+                        } else {
+                            // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
+                            // diverso da null
+                            if (ab.getNomeColonna() != null) {
+                                filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
+                                filtroTypeConNomeColonna.setDataType(ab.getDataType());
+                            } else {
+                                attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!trovato) {
+                    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro().getFiltroUnValore()
+                            .getDatoSpecifico());
+                }
+            } else if (filtroTypeConNomeColonna.getFiltro().getFiltroNullo() != null) {
+                for (AttribDatiSpecBean ab : attribDatiSpecBean) {
+                    if (filtroTypeConNomeColonna.getFiltro().getFiltroNullo().getDatoSpecifico()
+                            .equals(ab.getNmAttribDatiSpec())) {
+                        trovato = true;
+                        if (ab.getFlFiltroDiario().equals("0")) {
+                            attributiNonFiltri.add(ab.getNmAttribDatiSpec());
+                        } else {
+                            // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
+                            // diverso da null
+                            if (ab.getNomeColonna() != null) {
+                                filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
+                                filtroTypeConNomeColonna.setDataType(ab.getDataType());
+                            } else {
+                                attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!trovato) {
+                    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro().getFiltroNullo()
+                            .getDatoSpecifico());
+                }
+            } else if (filtroTypeConNomeColonna.getFiltro().getFiltroDueValori() != null) {
+                for (AttribDatiSpecBean ab : attribDatiSpecBean) {
+                    if (filtroTypeConNomeColonna.getFiltro().getFiltroDueValori().getDatoSpecifico()
+                            .equals(ab.getNmAttribDatiSpec())) {
+                        trovato = true;
+                        if (ab.getFlFiltroDiario().equals("0")) {
+                            attributiNonFiltri.add(ab.getNmAttribDatiSpec());
+                        } else {
+                            // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia
+                            // diverso da null
+                            if (ab.getNomeColonna() != null) {
+                                filtroTypeConNomeColonna.setColumnName(ab.getNomeColonna());
+                                filtroTypeConNomeColonna.setDataType(ab.getDataType());
+                            } else {
+                                attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!trovato) {
+                    attributiNonTrovati.add(filtroTypeConNomeColonna.getFiltro()
+                            .getFiltroDueValori().getDatoSpecifico());
+                }
+            }
+        }
+        // Primo controllo: verifico che siano stati trovati tutti i filtri
+        if (!attributiNonTrovati.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("006");
+            rispostaControlli.setrObject(attributiNonTrovati);
+            rispostaControlli.setrString(
+                    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
+        } // Altrimenti, secondo controllo: verifico se siano tutti di tipo filtro
+        else if (!attributiNonFiltri.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("007");
+            rispostaControlli.setrObject(attributiNonFiltri);
+            rispostaControlli.setrString(
+                    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
+        } // Altrimenti, terzo controllo: verifico che abbiano tutti il campo colonna DB valorizzato
+        else if (!attributiConCampoColonnaDBNullo.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("666");
+            rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
+            rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB è nullo ");
+        } // Altrimenti, restituisco i filtri con l'aggiunta del nome colonna del DB
+        else {
+            rispostaControlli.setrObject(listaDatiSpecFiltriConNomeColonna);
+        }
+        return rispostaControlli;
     }
 
     /**
@@ -210,68 +210,68 @@ public class ControlliRicerca {
      *         l'aggiunta del nome colonna corrispondente su DB
      */
     public RispostaControlli verificaXMLDatiSpecOutput(long idTipoObject,
-	    List<String> listaDatiSpecOutput, List<AttribDatiSpecBean> listaAttribDatiSpecBean) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
-	List<String> attributiNonTrovati = new ArrayList<>();
-	List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
+            List<String> listaDatiSpecOutput, List<AttribDatiSpecBean> listaAttribDatiSpecBean) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
+        List<String> attributiNonTrovati = new ArrayList<>();
+        List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
 
-	/*
-	 * Creo una LinkedHashMap che conterrà come chiave il dato specifico e come valore il suo
-	 * nome colonna nel DB
-	 */
-	// LinkedHashMap<String, String> hsDatiSpecOutput = new LinkedHashMap<>();
+        /*
+         * Creo una LinkedHashMap che conterrà come chiave il dato specifico e come valore il suo
+         * nome colonna nel DB
+         */
+        // LinkedHashMap<String, String> hsDatiSpecOutput = new LinkedHashMap<>();
 
-	/*
-	 * Creo una lista che conterr� il dato specifico che voglio in output con l'aggiunta del
-	 * nome colonna del DB
-	 */
-	List<DatoSpecOutputConNomeColonna> listaDatiSpecOutputConNomeColonna = new ArrayList<>();
+        /*
+         * Creo una lista che conterr� il dato specifico che voglio in output con l'aggiunta del
+         * nome colonna del DB
+         */
+        List<DatoSpecOutputConNomeColonna> listaDatiSpecOutputConNomeColonna = new ArrayList<>();
 
-	// Confronto le due liste: i dati specifici di output con gli attributi dati spec.
-	for (String datoSpecOut : listaDatiSpecOutput) {
-	    boolean trovato = false;
-	    for (AttribDatiSpecBean ab : listaAttribDatiSpecBean) {
-		if (datoSpecOut.equals(ab.getNmAttribDatiSpec())) {
-		    trovato = true;
-		    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia diverso da
-		    // null
-		    if (ab.getNomeColonna() != null) {
-			DatoSpecOutputConNomeColonna dato = new DatoSpecOutputConNomeColonna();
-			dato.setDatoSpecificoOutput(datoSpecOut);
-			dato.setColumnName(ab.getNomeColonna());
-			dato.setDataType(ab.getDataType());
-			listaDatiSpecOutputConNomeColonna.add(dato);
-		    } else {
-			attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
-		    }
-		    break;
-		}
-	    }
-	    if (!trovato) {
-		attributiNonTrovati.add(datoSpecOut);
-	    }
-	}
+        // Confronto le due liste: i dati specifici di output con gli attributi dati spec.
+        for (String datoSpecOut : listaDatiSpecOutput) {
+            boolean trovato = false;
+            for (AttribDatiSpecBean ab : listaAttribDatiSpecBean) {
+                if (datoSpecOut.equals(ab.getNmAttribDatiSpec())) {
+                    trovato = true;
+                    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia diverso da
+                    // null
+                    if (ab.getNomeColonna() != null) {
+                        DatoSpecOutputConNomeColonna dato = new DatoSpecOutputConNomeColonna();
+                        dato.setDatoSpecificoOutput(datoSpecOut);
+                        dato.setColumnName(ab.getNomeColonna());
+                        dato.setDataType(ab.getDataType());
+                        listaDatiSpecOutputConNomeColonna.add(dato);
+                    } else {
+                        attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
+                    }
+                    break;
+                }
+            }
+            if (!trovato) {
+                attributiNonTrovati.add(datoSpecOut);
+            }
+        }
 
-	// Verifico che siano stati trovati tutti i dati specifici di output...
-	if (attributiNonTrovati.size() > 0) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("008");
-	    rispostaControlli.setrObject(attributiNonTrovati);
-	    rispostaControlli.setrString(
-		    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
-	} // ...quindi che abbiano il nome colonna DB diverso da null...
-	else if (attributiConCampoColonnaDBNullo.size() > 0) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("666");
-	    rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
-	    rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB � nullo ");
-	} // ...e in caso affermativo restituisco i dati specifici di output con l'aggiunta del nome
-	  // colonna del DB
-	else {
-	    rispostaControlli.setrObject(listaDatiSpecOutputConNomeColonna);
-	}
-	return rispostaControlli;
+        // Verifico che siano stati trovati tutti i dati specifici di output...
+        if (!attributiNonTrovati.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("008");
+            rispostaControlli.setrObject(attributiNonTrovati);
+            rispostaControlli.setrString(
+                    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
+        } // ...quindi che abbiano il nome colonna DB diverso da null...
+        else if (!attributiConCampoColonnaDBNullo.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("666");
+            rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
+            rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB � nullo ");
+        } // ...e in caso affermativo restituisco i dati specifici di output con l'aggiunta del nome
+          // colonna del DB
+        else {
+            rispostaControlli.setrObject(listaDatiSpecOutputConNomeColonna);
+        }
+        return rispostaControlli;
     }
 
     /**
@@ -287,54 +287,54 @@ public class ControlliRicerca {
      *         relativo ordine, con l'aggiunta del nome colonna corrispondente su DB
      */
     public RispostaControlli verificaXMLDatiSpecOrder(long idTipoObject,
-	    List<DatoSpecOrderConNomeColonna> listaDatiSpecOrderConNomeColonna,
-	    List<AttribDatiSpecBean> listaAttribDatiSpecBean) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
-	List<String> attributiNonTrovati = new ArrayList<>();
-	List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
+            List<DatoSpecOrderConNomeColonna> listaDatiSpecOrderConNomeColonna,
+            List<AttribDatiSpecBean> listaAttribDatiSpecBean) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
+        List<String> attributiNonTrovati = new ArrayList<>();
+        List<String> attributiConCampoColonnaDBNullo = new ArrayList<>();
 
-	// Confronto le due liste: i dati specifici per l'ordine con gli attributi dati spec.
-	for (DatoSpecOrderConNomeColonna datoSpecOrder : listaDatiSpecOrderConNomeColonna) {
-	    boolean trovato = false;
-	    for (AttribDatiSpecBean ab : listaAttribDatiSpecBean) {
-		if (datoSpecOrder.getDatoSpecificoOrder().getDatoSpecifico()
-			.equals(ab.getNmAttribDatiSpec())) {
-		    trovato = true;
-		    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia diverso da
-		    // null
-		    if (ab.getNomeColonna() != null) {
-			datoSpecOrder.setColumnName(ab.getNomeColonna());
-		    } else {
-			attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
-		    }
-		    break;
-		}
-	    }
-	    if (!trovato) {
-		attributiNonTrovati.add(datoSpecOrder.getDatoSpecificoOrder().getDatoSpecifico());
-	    }
-	}
+        // Confronto le due liste: i dati specifici per l'ordine con gli attributi dati spec.
+        for (DatoSpecOrderConNomeColonna datoSpecOrder : listaDatiSpecOrderConNomeColonna) {
+            boolean trovato = false;
+            for (AttribDatiSpecBean ab : listaAttribDatiSpecBean) {
+                if (datoSpecOrder.getDatoSpecificoOrder().getDatoSpecifico()
+                        .equals(ab.getNmAttribDatiSpec())) {
+                    trovato = true;
+                    // Tutto OK: ricavo il nome colonna da DB, controllando che esso sia diverso da
+                    // null
+                    if (ab.getNomeColonna() != null) {
+                        datoSpecOrder.setColumnName(ab.getNomeColonna());
+                    } else {
+                        attributiConCampoColonnaDBNullo.add(ab.getNmAttribDatiSpec());
+                    }
+                    break;
+                }
+            }
+            if (!trovato) {
+                attributiNonTrovati.add(datoSpecOrder.getDatoSpecificoOrder().getDatoSpecifico());
+            }
+        }
 
-	// Verifico che siano stati trovati tutti i dati specifici di ordine...
-	if (attributiNonTrovati.size() > 0) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("009");
-	    rispostaControlli.setrObject(attributiNonTrovati);
-	    rispostaControlli.setrString(
-		    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
-	} // ...quindi che abbiano il nome colonna DB diverso da null...
-	else if (attributiConCampoColonnaDBNullo.size() > 0) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr("666");
-	    rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
-	    rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB � nullo ");
-	} // ...e in caso affermativo restituisco i dati specifici per l'ordine con l'aggiunta del
-	  // nome colonna del DB
-	else {
-	    rispostaControlli.setrObject(listaDatiSpecOrderConNomeColonna);
-	}
-	return rispostaControlli;
+        // Verifico che siano stati trovati tutti i dati specifici di ordine...
+        if (!attributiNonTrovati.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("009");
+            rispostaControlli.setrObject(attributiNonTrovati);
+            rispostaControlli.setrString(
+                    (entityManager.find(PigTipoObject.class, idTipoObject)).getNmTipoObject());
+        } // ...quindi che abbiano il nome colonna DB diverso da null...
+        else if (!attributiConCampoColonnaDBNullo.isEmpty()) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr("666");
+            rispostaControlli.setrObject(attributiConCampoColonnaDBNullo);
+            rispostaControlli.setrString(" - Il nome colonna del/dei filtro/i su DB � nullo ");
+        } // ...e in caso affermativo restituisco i dati specifici per l'ordine con l'aggiunta del
+          // nome colonna del DB
+        else {
+            rispostaControlli.setrObject(listaDatiSpecOrderConNomeColonna);
+        }
+        return rispostaControlli;
     }
 
     /**
@@ -347,35 +347,35 @@ public class ControlliRicerca {
      */
     @SuppressWarnings("unchecked")
     public List<AttribDatiSpecBean> getAttribDatiSpecBean(long idTipoObject) {
-	List<AttribDatiSpecBean> listaAttribDatiSpecBean = new ArrayList<>();
-	try {
-	    String queryStr = "SELECT DISTINCT attrib_dati_spec.nmAttribDatiSpec, "
-		    + "attrib_dati_spec.flFiltroDiario, " + "attrib_dati_spec.nmColDatiSpec, "
-		    + "attrib_dati_spec.tiDatatypeCol " + "FROM PigTipoObject tipo_object "
-		    + "JOIN tipo_object.pigXsdDatiSpecs xsd_dati_spec "
-		    + "JOIN xsd_dati_spec.pigAttribDatiSpecs attrib_dati_spec "
-		    + "WHERE tipo_object.idTipoObject = :idTipoObject ";
+        List<AttribDatiSpecBean> listaAttribDatiSpecBean = new ArrayList<>();
+        try {
+            String queryStr = "SELECT DISTINCT attrib_dati_spec.nmAttribDatiSpec, "
+                    + "attrib_dati_spec.flFiltroDiario, " + "attrib_dati_spec.nmColDatiSpec, "
+                    + "attrib_dati_spec.tiDatatypeCol " + "FROM PigTipoObject tipo_object "
+                    + "JOIN tipo_object.pigXsdDatiSpecs xsd_dati_spec "
+                    + "JOIN xsd_dati_spec.pigAttribDatiSpecs attrib_dati_spec "
+                    + "WHERE tipo_object.idTipoObject = :idTipoObject ";
 
-	    javax.persistence.Query query = entityManager.createQuery(queryStr);
-	    query.setParameter("idTipoObject", idTipoObject);
+            javax.persistence.Query query = entityManager.createQuery(queryStr);
+            query.setParameter("idTipoObject", idTipoObject);
 
-	    List<Object[]> attribDatiSpecObjectList = query.getResultList();
+            List<Object[]> attribDatiSpecObjectList = query.getResultList();
 
-	    for (Object[] o : attribDatiSpecObjectList) {
-		AttribDatiSpecBean bean = new AttribDatiSpecBean();
-		bean.setNmAttribDatiSpec((String) o[0]);
-		bean.setFlFiltroDiario((String) o[1]);
-		bean.setNomeColonna((String) o[2]);
-		String dataType = (String) o[3];
-		bean.setDataType(AttribDatiSpecDataType.valueOf(dataType));
-		listaAttribDatiSpecBean.add(bean);
-	    }
+            for (Object[] o : attribDatiSpecObjectList) {
+                AttribDatiSpecBean bean = new AttribDatiSpecBean();
+                bean.setNmAttribDatiSpec((String) o[0]);
+                bean.setFlFiltroDiario((String) o[1]);
+                bean.setNomeColonna((String) o[2]);
+                String dataType = (String) o[3];
+                bean.setDataType(AttribDatiSpecDataType.valueOf(dataType));
+                listaAttribDatiSpecBean.add(bean);
+            }
 
-	} catch (Exception e) {
-	    log.error(
-		    "Eccezione nel join tra le tabelle PigTipoObject, PigXsdDatiSpec e PigAttribDatiSpec",
-		    e);
-	}
-	return listaAttribDatiSpecBean;
+        } catch (Exception e) {
+            log.error(
+                    "Eccezione nel join tra le tabelle PigTipoObject, PigXsdDatiSpec e PigAttribDatiSpec",
+                    e);
+        }
+        return listaAttribDatiSpecBean;
     }
 }

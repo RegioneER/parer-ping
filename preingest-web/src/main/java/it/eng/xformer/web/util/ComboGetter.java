@@ -25,82 +25,82 @@ import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 public class ComboGetter {
 
     public ComboGetter() {
-	// empty
+        // empty
     }
 
     /*
      * GESTIONE DECODEMAP GENERICHE
      */
     public static DecodeMapIF getMappaGenericFlagSiNo() {
-	BaseTable bt = new BaseTable();
-	BaseRow br = new BaseRow();
-	BaseRow br1 = new BaseRow();
-	// Imposto i valori della combo INDICATORE
-	DecodeMap mappaIndicatore = new DecodeMap();
-	br.setString("flag", Constants.ComboFlag.SI.name());
-	br.setString("valore", Constants.ComboFlag.SI.getValue());
-	bt.add(br);
-	br1.setString("flag", Constants.ComboFlag.NO.name());
-	br1.setString("valore", Constants.ComboFlag.NO.getValue());
-	bt.add(br1);
-	mappaIndicatore.populatedMap(bt, "valore", "flag");
-	return mappaIndicatore;
+        BaseTable bt = new BaseTable();
+        BaseRow br = new BaseRow();
+        BaseRow br1 = new BaseRow();
+        // Imposto i valori della combo INDICATORE
+        DecodeMap mappaIndicatore = new DecodeMap();
+        br.setString("flag", Constants.ComboFlag.SI.name());
+        br.setString("valore", Constants.ComboFlag.SI.getValue());
+        bt.add(br);
+        br1.setString("flag", Constants.ComboFlag.NO.name());
+        br1.setString("valore", Constants.ComboFlag.NO.getValue());
+        bt.add(br1);
+        mappaIndicatore.populatedMap(bt, "valore", "flag");
+        return mappaIndicatore;
     }
 
     public static DecodeMapIF getMappaParametersSetType() {
-	BaseTable bt = new BaseTable();
-	BaseRow br = new BaseRow();
-	BaseRow br1 = new BaseRow();
-	// Imposto i valori della combo INDICATORE
-	DecodeMap mappaIndicatore = new DecodeMap();
-	br.setString("flag", Constants.ComboFlagParametersSetType.ARCHIVISTICO.name());
-	br.setString("valore", Constants.ComboFlagParametersSetType.ARCHIVISTICO.getValue());
-	bt.add(br);
-	br1.setString("flag", Constants.ComboFlagParametersSetType.TECNICO.name());
-	br1.setString("valore", Constants.ComboFlagParametersSetType.TECNICO.getValue());
-	bt.add(br1);
-	mappaIndicatore.populatedMap(bt, "valore", "flag");
-	return mappaIndicatore;
+        BaseTable bt = new BaseTable();
+        BaseRow br = new BaseRow();
+        BaseRow br1 = new BaseRow();
+        // Imposto i valori della combo INDICATORE
+        DecodeMap mappaIndicatore = new DecodeMap();
+        br.setString("flag", Constants.ComboFlagParametersSetType.ARCHIVISTICO.name());
+        br.setString("valore", Constants.ComboFlagParametersSetType.ARCHIVISTICO.getValue());
+        bt.add(br);
+        br1.setString("flag", Constants.ComboFlagParametersSetType.TECNICO.name());
+        br1.setString("valore", Constants.ComboFlagParametersSetType.TECNICO.getValue());
+        bt.add(br1);
+        mappaIndicatore.populatedMap(bt, "valore", "flag");
+        return mappaIndicatore;
     }
 
     public static <T extends Enum<?>> DecodeMap getMappaSortedGenericEnum(String key,
-	    T... enumerator) {
-	BaseTable bt = new BaseTable();
-	DecodeMap mappa = new DecodeMap();
-	for (T mod : Utils.sortEnum(enumerator)) {
-	    bt.add(createKeyValueBaseRow(key, mod.name()));
-	}
-	mappa.populatedMap(bt, key, key);
-	return mappa;
+            T... enumerator) {
+        BaseTable bt = new BaseTable();
+        DecodeMap mappa = new DecodeMap();
+        for (T mod : Utils.sortEnum(enumerator)) {
+            bt.add(createKeyValueBaseRow(key, mod.name()));
+        }
+        mappa.populatedMap(bt, key, key);
+        return mappa;
     }
 
     public static <T extends Enum<?>> DecodeMap getMappaOrdinalGenericEnum(String key,
-	    T... enumerator) {
-	BaseTable bt = new BaseTable();
-	DecodeMap mappa = new DecodeMap();
-	for (T mod : enumerator) {
-	    bt.add(createKeyValueBaseRow(key, mod.name()));
-	}
-	mappa.populatedMap(bt, key, key);
-	return mappa;
+            T... enumerator) {
+        BaseTable bt = new BaseTable();
+        DecodeMap mappa = new DecodeMap();
+        for (T mod : enumerator) {
+            bt.add(createKeyValueBaseRow(key, mod.name()));
+        }
+        mappa.populatedMap(bt, key, key);
+        return mappa;
     }
 
     private static BaseRow createKeyValueBaseRow(String key, String value) {
-	BaseRow br = new BaseRow();
-	br.setString(key, value);
-	return br;
+        BaseRow br = new BaseRow();
+        br.setString(key, value);
+        return br;
     }
 
     public static <T extends Enum<?>> DecodeMap getMappaSortedGenericStringList(String key,
-	    List<String> list) {
-	BaseTable bt = new BaseTable();
-	DecodeMap mappa = new DecodeMap();
+            List<String> list) {
+        BaseTable bt = new BaseTable();
+        DecodeMap mappa = new DecodeMap();
 
-	Collections.sort(list);
-	for (String value : list) {
-	    bt.add(createKeyValueBaseRow(key, value));
-	}
-	mappa.populatedMap(bt, key, key);
-	return mappa;
+        Collections.sort(list);
+        for (String value : list) {
+            bt.add(createKeyValueBaseRow(key, value));
+        }
+        mappa.populatedMap(bt, key, key);
+        return mappa;
     }
 }

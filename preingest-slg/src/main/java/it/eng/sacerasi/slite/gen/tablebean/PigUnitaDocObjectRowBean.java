@@ -39,175 +39,175 @@ public class PigUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowInter
     public static PigUnitaDocObjectTableDescriptor TABLE_DESCRIPTOR = new PigUnitaDocObjectTableDescriptor();
 
     public PigUnitaDocObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdUnitaDocObject() {
-	return getBigDecimal("id_unita_doc_object");
+        return getBigDecimal("id_unita_doc_object");
     }
 
     public void setIdUnitaDocObject(BigDecimal idUnitaDocObject) {
-	setObject("id_unita_doc_object", idUnitaDocObject);
+        setObject("id_unita_doc_object", idUnitaDocObject);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public String getCdRegistroUnitaDocSacer() {
-	return getString("cd_registro_unita_doc_sacer");
+        return getString("cd_registro_unita_doc_sacer");
     }
 
     public void setCdRegistroUnitaDocSacer(String cdRegistroUnitaDocSacer) {
-	setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
+        setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
     }
 
     public BigDecimal getAaUnitaDocSacer() {
-	return getBigDecimal("aa_unita_doc_sacer");
+        return getBigDecimal("aa_unita_doc_sacer");
     }
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
-	setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
+        setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
     }
 
     public String getCdKeyUnitaDocSacer() {
-	return getString("cd_key_unita_doc_sacer");
+        return getString("cd_key_unita_doc_sacer");
     }
 
     public void setCdKeyUnitaDocSacer(String cdKeyUnitaDocSacer) {
-	setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
+        setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
     }
 
     public BigDecimal getNiSizeFileByte() {
-	return getBigDecimal("ni_size_file_byte");
+        return getBigDecimal("ni_size_file_byte");
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	setObject("ni_size_file_byte", niSizeFileByte);
+        setObject("ni_size_file_byte", niSizeFileByte);
     }
 
     public String getTiStatoUnitaDocObject() {
-	return getString("ti_stato_unita_doc_object");
+        return getString("ti_stato_unita_doc_object");
     }
 
     public void setTiStatoUnitaDocObject(String tiStatoUnitaDocObject) {
-	setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
+        setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
     }
 
     public String getCdErrSacer() {
-	return getString("cd_err_sacer");
+        return getString("cd_err_sacer");
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	setObject("cd_err_sacer", cdErrSacer);
+        setObject("cd_err_sacer", cdErrSacer);
     }
 
     public String getDlErrSacer() {
-	return getString("dl_err_sacer");
+        return getString("dl_err_sacer");
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	setObject("dl_err_sacer", dlErrSacer);
+        setObject("dl_err_sacer", dlErrSacer);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     // MEV 27407
     public Timestamp getDtStato() {
-	return getTimestamp("dt_stato");
+        return getTimestamp("dt_stato");
     }
 
     public void setDtStato(Timestamp dtStato) {
-	setObject("dt_stato", dtStato);
+        setObject("dt_stato", dtStato);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigUnitaDocObject entity = (PigUnitaDocObject) obj;
+        PigUnitaDocObject entity = (PigUnitaDocObject) obj;
 
-	this.setIdUnitaDocObject(new BigDecimal(entity.getIdUnitaDocObject()));
-	if (entity.getPigObject() != null) {
-	    this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
+        this.setIdUnitaDocObject(new BigDecimal(entity.getIdUnitaDocObject()));
+        if (entity.getPigObject() != null) {
+            this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
 
-	}
-	this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
-	this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
-	this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
-	this.setNiSizeFileByte(entity.getNiSizeFileByte());
-	this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
+        }
+        this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
+        this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
+        this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
+        this.setNiSizeFileByte(entity.getNiSizeFileByte());
+        this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
 
-	if (entity.getDtStato() != null) {
-	    this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
-	}
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
 
-	this.setCdErrSacer(entity.getCdErrSacer());
-	this.setDlErrSacer(entity.getDlErrSacer());
-	this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
-		: null);
+        this.setCdErrSacer(entity.getCdErrSacer());
+        this.setDlErrSacer(entity.getDlErrSacer());
+        this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
+                : null);
     }
 
     @Override
     public PigUnitaDocObject rowBeanToEntity() {
-	PigUnitaDocObject entity = new PigUnitaDocObject();
-	if (this.getIdUnitaDocObject() != null) {
-	    entity.setIdUnitaDocObject(this.getIdUnitaDocObject().longValue());
-	}
-	if (this.getIdObject() != null) {
-	    if (entity.getPigObject() == null) {
-		entity.setPigObject(new PigObject());
-	    }
-	    entity.getPigObject().setIdObject(this.getIdObject().longValue());
-	}
-	entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
-	entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
-	entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
-	entity.setNiSizeFileByte(this.getNiSizeFileByte());
-	entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
-	entity.setDtStato(this.getDtStato());
-	entity.setCdErrSacer(this.getCdErrSacer());
-	entity.setDlErrSacer(this.getDlErrSacer());
-	entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
-	return entity;
+        PigUnitaDocObject entity = new PigUnitaDocObject();
+        if (this.getIdUnitaDocObject() != null) {
+            entity.setIdUnitaDocObject(this.getIdUnitaDocObject().longValue());
+        }
+        if (this.getIdObject() != null) {
+            if (entity.getPigObject() == null) {
+                entity.setPigObject(new PigObject());
+            }
+            entity.getPigObject().setIdObject(this.getIdObject().longValue());
+        }
+        entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
+        entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
+        entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
+        entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
+        entity.setDtStato(this.getDtStato());
+        entity.setCdErrSacer(this.getCdErrSacer());
+        entity.setDlErrSacer(this.getDlErrSacer());
+        entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

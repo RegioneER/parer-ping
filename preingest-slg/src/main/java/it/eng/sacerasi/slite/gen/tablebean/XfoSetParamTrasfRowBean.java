@@ -37,110 +37,110 @@ public class XfoSetParamTrasfRowBean extends BaseRow implements JEEBaseRowInterf
     public static XfoSetParamTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoSetParamTrasfTableDescriptor();
 
     public XfoSetParamTrasfRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdSetParamTrasf() {
-	return getBigDecimal("id_set_param_trasf");
+        return getBigDecimal("id_set_param_trasf");
     }
 
     public void setIdSetParamTrasf(BigDecimal idSetParamTrasf) {
-	setObject("id_set_param_trasf", idSetParamTrasf);
+        setObject("id_set_param_trasf", idSetParamTrasf);
     }
 
     public BigDecimal getIdTrasf() {
-	return getBigDecimal("id_trasf");
+        return getBigDecimal("id_trasf");
     }
 
     public void setIdTrasf(BigDecimal idTrasf) {
-	setObject("id_trasf", idTrasf);
+        setObject("id_trasf", idTrasf);
     }
 
     public String getNmSetParamTrasf() {
-	return getString("nm_set_param_trasf");
+        return getString("nm_set_param_trasf");
     }
 
     public void setNmSetParamTrasf(String nmSetParamTrasf) {
-	setObject("nm_set_param_trasf", nmSetParamTrasf);
+        setObject("nm_set_param_trasf", nmSetParamTrasf);
     }
 
     public String getDsSetParamTrasf() {
-	return getString("ds_set_param_trasf");
+        return getString("ds_set_param_trasf");
     }
 
     public void setDsSetParamTrasf(String dsSetParamTrasf) {
-	setObject("ds_set_param_trasf", dsSetParamTrasf);
+        setObject("ds_set_param_trasf", dsSetParamTrasf);
     }
 
     public String getFlSetParamArk() {
-	return getString("fl_set_param_ark");
+        return getString("fl_set_param_ark");
     }
 
     public void setFlSetParamArk(String flSetParamArk) {
-	setObject("fl_set_param_ark", flSetParamArk);
+        setObject("fl_set_param_ark", flSetParamArk);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	XfoSetParamTrasf entity = (XfoSetParamTrasf) obj;
+        XfoSetParamTrasf entity = (XfoSetParamTrasf) obj;
 
-	this.setIdSetParamTrasf(new BigDecimal(entity.getIdSetParamTrasf()));
+        this.setIdSetParamTrasf(new BigDecimal(entity.getIdSetParamTrasf()));
 
-	if (entity.getXfoTrasf() != null) {
-	    this.setIdTrasf(new BigDecimal(entity.getXfoTrasf().getIdTrasf()));
-	}
+        if (entity.getXfoTrasf() != null) {
+            this.setIdTrasf(new BigDecimal(entity.getXfoTrasf().getIdTrasf()));
+        }
 
-	this.setNmSetParamTrasf(entity.getNmSetParamTrasf());
-	this.setDsSetParamTrasf(entity.getDsSetParamTrasf());
-	this.setFlSetParamArk(entity.getFlSetParamArk());
+        this.setNmSetParamTrasf(entity.getNmSetParamTrasf());
+        this.setDsSetParamTrasf(entity.getDsSetParamTrasf());
+        this.setFlSetParamArk(entity.getFlSetParamArk());
     }
 
     @Override
     public XfoSetParamTrasf rowBeanToEntity() {
-	XfoSetParamTrasf entity = new XfoSetParamTrasf();
-	if (this.getIdSetParamTrasf() != null) {
-	    entity.setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
-	}
-	if (this.getIdTrasf() != null) {
-	    if (entity.getXfoTrasf() == null) {
-		entity.setXfoTrasf(new XfoTrasf());
-	    }
-	    entity.getXfoTrasf().setIdTrasf(this.getIdTrasf().longValue());
-	}
-	entity.setNmSetParamTrasf(this.getNmSetParamTrasf());
-	entity.setDsSetParamTrasf(this.getDsSetParamTrasf());
-	entity.setFlSetParamArk(this.getFlSetParamArk());
-	return entity;
+        XfoSetParamTrasf entity = new XfoSetParamTrasf();
+        if (this.getIdSetParamTrasf() != null) {
+            entity.setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
+        }
+        if (this.getIdTrasf() != null) {
+            if (entity.getXfoTrasf() == null) {
+                entity.setXfoTrasf(new XfoTrasf());
+            }
+            entity.getXfoTrasf().setIdTrasf(this.getIdTrasf().longValue());
+        }
+        entity.setNmSetParamTrasf(this.getNmSetParamTrasf());
+        entity.setDsSetParamTrasf(this.getDsSetParamTrasf());
+        entity.setFlSetParamArk(this.getFlSetParamArk());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

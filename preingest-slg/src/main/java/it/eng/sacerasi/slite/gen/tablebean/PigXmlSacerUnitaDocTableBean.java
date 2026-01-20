@@ -34,19 +34,19 @@ public class PigXmlSacerUnitaDocTableBean extends AbstractBaseTable<PigXmlSacerU
     public static PigXmlSacerUnitaDocTableDescriptor TABLE_DESCRIPTOR = new PigXmlSacerUnitaDocTableDescriptor();
 
     public PigXmlSacerUnitaDocTableBean() {
-	super();
+        super();
     }
 
     protected PigXmlSacerUnitaDocRowBean createRow() {
-	return new PigXmlSacerUnitaDocRowBean();
+        return new PigXmlSacerUnitaDocRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigXmlSacerUnitaDocRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

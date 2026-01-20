@@ -47,27 +47,27 @@ public class XfoStoricoTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_STORICO_TRASF,
-		new ColumnDescriptor(COL_ID_STORICO_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, false));
-	map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, false));
-	map.put(COL_CD_VERSIONE, new ColumnDescriptor(COL_CD_VERSIONE, Types.VARCHAR, 100, false));
-	map.put(COL_DS_VERSIONE, new ColumnDescriptor(COL_DS_VERSIONE, Types.VARCHAR, 4000, false));
-	map.put(COL_DT_ISTITUZ, new ColumnDescriptor(COL_DT_ISTITUZ, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_SOPPRES, new ColumnDescriptor(COL_DT_SOPPRES, Types.TIMESTAMP, 7, false));
-	map.put(COL_BL_TRASF, new ColumnDescriptor(COL_BL_TRASF, Types.BLOB, 4000, false));
+        map.put(COL_ID_STORICO_TRASF,
+                new ColumnDescriptor(COL_ID_STORICO_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TRASF, new ColumnDescriptor(COL_ID_TRASF, Types.DECIMAL, 22, false));
+        map.put(COL_CD_TRASF, new ColumnDescriptor(COL_CD_TRASF, Types.VARCHAR, 100, false));
+        map.put(COL_CD_VERSIONE, new ColumnDescriptor(COL_CD_VERSIONE, Types.VARCHAR, 100, false));
+        map.put(COL_DS_VERSIONE, new ColumnDescriptor(COL_DS_VERSIONE, Types.VARCHAR, 4000, false));
+        map.put(COL_DT_ISTITUZ, new ColumnDescriptor(COL_DT_ISTITUZ, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_SOPPRES, new ColumnDescriptor(COL_DT_SOPPRES, Types.TIMESTAMP, 7, false));
+        map.put(COL_BL_TRASF, new ColumnDescriptor(COL_BL_TRASF, Types.BLOB, 4000, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

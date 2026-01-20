@@ -36,125 +36,125 @@ public class NotificaPrelievoCheckHelper {
     private ControlliNotificaPrelievo controlliNotif;
 
     public void checkRichiesta(NotificaPrelievoExt npExt, RispostaWSNotificaPrelievo rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	// Verifica Nome Ambiente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS
-		    .verificaNomeAmbiente(npExt.getNotificaPrelievoInput().getNmAmbiente());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_001);
-		    rispostaControlli.setDsErr(
-			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_001,
-				    npExt.getNotificaPrelievoInput().getNmAmbiente()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		rispostaWs.getNotificaPrelievoRisposta()
-			.setNmAmbiente(npExt.getNotificaPrelievoInput().getNmAmbiente());
-	    }
-	}
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        // Verifica Nome Ambiente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS
+                    .verificaNomeAmbiente(npExt.getNotificaPrelievoInput().getNmAmbiente());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_001);
+                    rispostaControlli.setDsErr(
+                            MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_001,
+                                    npExt.getNotificaPrelievoInput().getNmAmbiente()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                rispostaWs.getNotificaPrelievoRisposta()
+                        .setNmAmbiente(npExt.getNotificaPrelievoInput().getNmAmbiente());
+            }
+        }
 
-	Long idVersatore = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNomeVersatore(
-		    npExt.getNotificaPrelievoInput().getNmAmbiente(),
-		    npExt.getNotificaPrelievoInput().getNmVersatore());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_002);
-		    rispostaControlli.setDsErr(
-			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_002,
-				    npExt.getNotificaPrelievoInput().getNmVersatore()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		idVersatore = rispostaControlli.getrLong();
-		rispostaWs.getNotificaPrelievoRisposta()
-			.setNmVersatore(npExt.getNotificaPrelievoInput().getNmVersatore());
-		npExt.setFtpOutput((String) rispostaControlli.getrObject());
-	    }
-	}
-	npExt.setIdVersatore(idVersatore);
+        Long idVersatore = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNomeVersatore(
+                    npExt.getNotificaPrelievoInput().getNmAmbiente(),
+                    npExt.getNotificaPrelievoInput().getNmVersatore());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_002);
+                    rispostaControlli.setDsErr(
+                            MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_002,
+                                    npExt.getNotificaPrelievoInput().getNmVersatore()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                idVersatore = rispostaControlli.getrLong();
+                rispostaWs.getNotificaPrelievoRisposta()
+                        .setNmVersatore(npExt.getNotificaPrelievoInput().getNmVersatore());
+                npExt.setFtpOutput((String) rispostaControlli.getrObject());
+            }
+        }
+        npExt.setIdVersatore(idVersatore);
 
-	// Verifica che chiave object sia diverso da stringa vuota e spazi
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNotBlankCdKeyObject(
-		    npExt.getNotificaPrelievoInput().getCdKeyObject(),
-		    MessaggiWSBundle.PING_NOTIFPREL_004);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    }
-	}
-	// Verifica che chiave object sia lungo meno di 96 caratteri
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaCdKeyObjectLength(
-		    npExt.getNotificaPrelievoInput().getCdKeyObject(),
-		    MessaggiWSBundle.PING_NOTIFPREL_008);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    }
-	}
-	// Verifica esistenza oggetto su db
-	Long idObject = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaCdKeyObject(
-		    npExt.getNotificaPrelievoInput().getNmAmbiente(),
-		    npExt.getNotificaPrelievoInput().getNmVersatore(),
-		    npExt.getNotificaPrelievoInput().getCdKeyObject());
-	    if (!rispostaControlli.isrBoolean()) {
-		rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_005);
-		rispostaControlli
-			.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_005,
-				npExt.getNotificaPrelievoInput().getCdKeyObject()));
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    } else {
-		rispostaWs.getNotificaPrelievoRisposta()
-			.setCdKeyObject(npExt.getNotificaPrelievoInput().getCdKeyObject());
-		idObject = rispostaControlli.getrLong();
-	    }
-	}
-	npExt.setIdObject(idObject);
+        // Verifica che chiave object sia diverso da stringa vuota e spazi
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNotBlankCdKeyObject(
+                    npExt.getNotificaPrelievoInput().getCdKeyObject(),
+                    MessaggiWSBundle.PING_NOTIFPREL_004);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            }
+        }
+        // Verifica che chiave object sia lungo meno di 96 caratteri
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaCdKeyObjectLength(
+                    npExt.getNotificaPrelievoInput().getCdKeyObject(),
+                    MessaggiWSBundle.PING_NOTIFPREL_008);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            }
+        }
+        // Verifica esistenza oggetto su db
+        Long idObject = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaCdKeyObject(
+                    npExt.getNotificaPrelievoInput().getNmAmbiente(),
+                    npExt.getNotificaPrelievoInput().getNmVersatore(),
+                    npExt.getNotificaPrelievoInput().getCdKeyObject());
+            if (!rispostaControlli.isrBoolean()) {
+                rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_005);
+                rispostaControlli
+                        .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_005,
+                                npExt.getNotificaPrelievoInput().getCdKeyObject()));
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            } else {
+                rispostaWs.getNotificaPrelievoRisposta()
+                        .setCdKeyObject(npExt.getNotificaPrelievoInput().getCdKeyObject());
+                idObject = rispostaControlli.getrLong();
+            }
+        }
+        npExt.setIdObject(idObject);
 
-	Long idSessione = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliNotif.verificaOggetto(idObject);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    } else {
-		idSessione = rispostaControlli.getrLong();
-	    }
-	}
-	npExt.setIdSessioneRecup(idSessione);
+        Long idSessione = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliNotif.verificaOggetto(idObject);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            } else {
+                idSessione = rispostaControlli.getrLong();
+            }
+        }
+        npExt.setIdSessioneRecup(idSessione);
     }
 
     private void setRispostaWsError(RispostaWSNotificaPrelievo rispostaWs, SeverityEnum sev,
-	    Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getNotificaPrelievoRisposta().setCdEsito(esito);
-	rispostaWs.getNotificaPrelievoRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getNotificaPrelievoRisposta().setDlErr(rispostaControlli.getDsErr());
+            Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getNotificaPrelievoRisposta().setCdEsito(esito);
+        rispostaWs.getNotificaPrelievoRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getNotificaPrelievoRisposta().setDlErr(rispostaControlli.getDsErr());
     }
 }

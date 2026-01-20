@@ -34,74 +34,74 @@ public class PayloadFascicolo implements Serializable {
     private String passwordSacer;
 
     public long getObjectId() {
-	return objectId;
+        return objectId;
     }
 
     public void setObjectId(long objectId) {
-	this.objectId = objectId;
+        this.objectId = objectId;
     }
 
     public BigDecimal getSessionId() {
-	return sessionId;
+        return sessionId;
     }
 
     public void setSessionId(BigDecimal sessionId) {
-	this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     public String getUrlServVersamento() {
-	return urlServVersamento;
+        return urlServVersamento;
     }
 
     public void setUrlServVersamento(String urlServVersamento) {
-	this.urlServVersamento = urlServVersamento;
+        this.urlServVersamento = urlServVersamento;
     }
 
     public String getUserIdSacer() {
-	return userIdSacer;
+        return userIdSacer;
     }
 
     public void setUserIdSacer(String userIdSacer) {
-	this.userIdSacer = userIdSacer;
+        this.userIdSacer = userIdSacer;
     }
 
     public String getPasswordSacer() {
-	return passwordSacer;
+        return passwordSacer;
     }
 
     public void setPasswordSacer(String passwordSacer) {
-	this.passwordSacer = passwordSacer;
+        this.passwordSacer = passwordSacer;
     }
 
     public long getFascicoloId() {
-	return this.fascicoloId;
+        return this.fascicoloId;
     }
 
     public void setFascicoloId(long fascicoloId) {
-	this.fascicoloId = fascicoloId;
+        this.fascicoloId = fascicoloId;
     }
 
     public long getFascicoloSessionId() {
-	return this.fascicoloSessionId;
+        return this.fascicoloSessionId;
     }
 
     public void setFascicoloSessionId(long fascicoloSessionId) {
-	this.fascicoloSessionId = fascicoloSessionId;
+        this.fascicoloSessionId = fascicoloSessionId;
     }
 
     public BigDecimal getAaFascicoloSacer() {
-	return this.aaFascicoloSacer;
+        return this.aaFascicoloSacer;
     }
 
     public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
-	this.aaFascicoloSacer = aaFascicoloSacer;
+        this.aaFascicoloSacer = aaFascicoloSacer;
     }
 
     public String getCdKeyFascicoloSacer() {
-	return this.cdKeyFascicoloSacer;
+        return this.cdKeyFascicoloSacer;
     }
 
     public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
-	this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
+        this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
     }
 }

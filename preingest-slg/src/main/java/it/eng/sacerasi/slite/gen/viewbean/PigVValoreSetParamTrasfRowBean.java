@@ -37,101 +37,101 @@ public class PigVValoreSetParamTrasfRowBean extends BaseRow implements JEEBaseRo
     public static PigVValoreSetParamTrasfTableDescriptor TABLE_DESCRIPTOR = new PigVValoreSetParamTrasfTableDescriptor();
 
     public PigVValoreSetParamTrasfRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdVersTipoObjectDaTrasf() {
-	return getBigDecimal("id_vers_tipo_object_da_trasf");
+        return getBigDecimal("id_vers_tipo_object_da_trasf");
     }
 
     public void setIdVersTipoObjectDaTrasf(BigDecimal idVersTipoObjectDaTrasf) {
-	setObject("id_vers_tipo_object_da_trasf", idVersTipoObjectDaTrasf);
+        setObject("id_vers_tipo_object_da_trasf", idVersTipoObjectDaTrasf);
     }
 
     public BigDecimal getIdSetParamTrasf() {
-	return getBigDecimal("id_set_param_trasf");
+        return getBigDecimal("id_set_param_trasf");
     }
 
     public void setIdSetParamTrasf(BigDecimal idSetParamTrasf) {
-	setObject("id_set_param_trasf", idSetParamTrasf);
+        setObject("id_set_param_trasf", idSetParamTrasf);
     }
 
     public String getNmSetParamTrasf() {
-	return getString("nm_set_param_trasf");
+        return getString("nm_set_param_trasf");
     }
 
     public void setNmSetParamTrasf(String nmSetParamTrasf) {
-	setObject("nm_set_param_trasf", nmSetParamTrasf);
+        setObject("nm_set_param_trasf", nmSetParamTrasf);
     }
 
     public BigDecimal getIdValoreSetParamTrasf() {
-	return getBigDecimal("id_valore_set_param_trasf");
+        return getBigDecimal("id_valore_set_param_trasf");
     }
 
     public void setIdValoreSetParamTrasf(BigDecimal idValoreSetParamTrasf) {
-	setObject("id_valore_set_param_trasf", idValoreSetParamTrasf);
+        setObject("id_valore_set_param_trasf", idValoreSetParamTrasf);
     }
 
     public String getDsListaValoreParam() {
-	return getString("ds_lista_valore_param");
+        return getString("ds_lista_valore_param");
     }
 
     public void setDsListaValoreParam(String dsListaValoreParam) {
-	setObject("ds_lista_valore_param", dsListaValoreParam);
+        setObject("ds_lista_valore_param", dsListaValoreParam);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigVValoreSetParamTrasf entity = (PigVValoreSetParamTrasf) obj;
-	this.setIdVersTipoObjectDaTrasf(entity.getPigVValoreSetParamTrasfId() == null ? null
-		: entity.getPigVValoreSetParamTrasfId().getIdVersTipoObjectDaTrasf());
-	this.setIdSetParamTrasf(entity.getPigVValoreSetParamTrasfId() == null ? null
-		: entity.getPigVValoreSetParamTrasfId().getIdSetParamTrasf());
-	this.setNmSetParamTrasf(entity.getNmSetParamTrasf());
-	this.setIdValoreSetParamTrasf(entity.getIdValoreSetParamTrasf());
-	this.setDsListaValoreParam(entity.getDsListaValoreParam());
+        PigVValoreSetParamTrasf entity = (PigVValoreSetParamTrasf) obj;
+        this.setIdVersTipoObjectDaTrasf(entity.getPigVValoreSetParamTrasfId() == null ? null
+                : entity.getPigVValoreSetParamTrasfId().getIdVersTipoObjectDaTrasf());
+        this.setIdSetParamTrasf(entity.getPigVValoreSetParamTrasfId() == null ? null
+                : entity.getPigVValoreSetParamTrasfId().getIdSetParamTrasf());
+        this.setNmSetParamTrasf(entity.getNmSetParamTrasf());
+        this.setIdValoreSetParamTrasf(entity.getIdValoreSetParamTrasf());
+        this.setDsListaValoreParam(entity.getDsListaValoreParam());
     }
 
     @Override
     public PigVValoreSetParamTrasf rowBeanToEntity() {
-	PigVValoreSetParamTrasf entity = new PigVValoreSetParamTrasf();
-	entity.setPigVValoreSetParamTrasfId(new PigVValoreSetParamTrasfId());
-	entity.getPigVValoreSetParamTrasfId()
-		.setIdVersTipoObjectDaTrasf(this.getIdVersTipoObjectDaTrasf());
-	entity.getPigVValoreSetParamTrasfId().setIdSetParamTrasf(this.getIdSetParamTrasf());
-	entity.setNmSetParamTrasf(this.getNmSetParamTrasf());
-	entity.setIdValoreSetParamTrasf(this.getIdValoreSetParamTrasf());
-	entity.setDsListaValoreParam(this.getDsListaValoreParam());
-	return entity;
+        PigVValoreSetParamTrasf entity = new PigVValoreSetParamTrasf();
+        entity.setPigVValoreSetParamTrasfId(new PigVValoreSetParamTrasfId());
+        entity.getPigVValoreSetParamTrasfId()
+                .setIdVersTipoObjectDaTrasf(this.getIdVersTipoObjectDaTrasf());
+        entity.getPigVValoreSetParamTrasfId().setIdSetParamTrasf(this.getIdSetParamTrasf());
+        entity.setNmSetParamTrasf(this.getNmSetParamTrasf());
+        entity.setIdValoreSetParamTrasf(this.getIdValoreSetParamTrasf());
+        entity.setDsListaValoreParam(this.getDsListaValoreParam());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

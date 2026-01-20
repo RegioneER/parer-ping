@@ -56,50 +56,50 @@ public class PigVersTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_ID_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, false));
-	map.put(COL_DS_VERS, new ColumnDescriptor(COL_DS_VERS, Types.VARCHAR, 254, false));
-	map.put(COL_DS_PATH_INPUT_FTP,
-		new ColumnDescriptor(COL_DS_PATH_INPUT_FTP, Types.VARCHAR, 254, false));
-	map.put(COL_DS_PATH_OUTPUT_FTP,
-		new ColumnDescriptor(COL_DS_PATH_OUTPUT_FTP, Types.VARCHAR, 254, false));
-	map.put(COL_DS_PATH_TRASF,
-		new ColumnDescriptor(COL_DS_PATH_TRASF, Types.VARCHAR, 254, false));
-	map.put(COL_DS_PATH_DA_VERSARE,
-		new ColumnDescriptor(COL_DS_PATH_DA_VERSARE, Types.VARCHAR, 254, false));
-	map.put(COL_DT_INI_VAL_APPART_AMBIENTE,
-		new ColumnDescriptor(COL_DT_INI_VAL_APPART_AMBIENTE, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_FIN_VAL_APPART_AMBIENTE,
-		new ColumnDescriptor(COL_DT_FIN_VAL_APPART_AMBIENTE, Types.TIMESTAMP, 7, false));
-	map.put(COL_ID_ENTE_CONVENZ,
-		new ColumnDescriptor(COL_ID_ENTE_CONVENZ, Types.DECIMAL, 22, false));
-	map.put(COL_ID_ENTE_FORNIT_ESTERN,
-		new ColumnDescriptor(COL_ID_ENTE_FORNIT_ESTERN, Types.DECIMAL, 22, false));
-	map.put(COL_DT_INI_VAL_APPART_ENTE_SIAM,
-		new ColumnDescriptor(COL_DT_INI_VAL_APPART_ENTE_SIAM, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_FINE_VAL_APPART_ENTE_SIAM,
-		new ColumnDescriptor(COL_DT_FINE_VAL_APPART_ENTE_SIAM, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_INI_VAL_VERS,
-		new ColumnDescriptor(COL_DT_INI_VAL_VERS, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_FINE_VAL_VERS,
-		new ColumnDescriptor(COL_DT_FINE_VAL_VERS, Types.TIMESTAMP, 7, false));
-	map.put(COL_FL_CESSATO, new ColumnDescriptor(COL_FL_CESSATO, Types.VARCHAR, 1, false));
-	map.put(COL_FL_ARCHIVIO_RESTITUITO,
-		new ColumnDescriptor(COL_FL_ARCHIVIO_RESTITUITO, Types.VARCHAR, 1, false));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_ID_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, false));
+        map.put(COL_DS_VERS, new ColumnDescriptor(COL_DS_VERS, Types.VARCHAR, 254, false));
+        map.put(COL_DS_PATH_INPUT_FTP,
+                new ColumnDescriptor(COL_DS_PATH_INPUT_FTP, Types.VARCHAR, 254, false));
+        map.put(COL_DS_PATH_OUTPUT_FTP,
+                new ColumnDescriptor(COL_DS_PATH_OUTPUT_FTP, Types.VARCHAR, 254, false));
+        map.put(COL_DS_PATH_TRASF,
+                new ColumnDescriptor(COL_DS_PATH_TRASF, Types.VARCHAR, 254, false));
+        map.put(COL_DS_PATH_DA_VERSARE,
+                new ColumnDescriptor(COL_DS_PATH_DA_VERSARE, Types.VARCHAR, 254, false));
+        map.put(COL_DT_INI_VAL_APPART_AMBIENTE,
+                new ColumnDescriptor(COL_DT_INI_VAL_APPART_AMBIENTE, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_FIN_VAL_APPART_AMBIENTE,
+                new ColumnDescriptor(COL_DT_FIN_VAL_APPART_AMBIENTE, Types.TIMESTAMP, 7, false));
+        map.put(COL_ID_ENTE_CONVENZ,
+                new ColumnDescriptor(COL_ID_ENTE_CONVENZ, Types.DECIMAL, 22, false));
+        map.put(COL_ID_ENTE_FORNIT_ESTERN,
+                new ColumnDescriptor(COL_ID_ENTE_FORNIT_ESTERN, Types.DECIMAL, 22, false));
+        map.put(COL_DT_INI_VAL_APPART_ENTE_SIAM,
+                new ColumnDescriptor(COL_DT_INI_VAL_APPART_ENTE_SIAM, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_FINE_VAL_APPART_ENTE_SIAM,
+                new ColumnDescriptor(COL_DT_FINE_VAL_APPART_ENTE_SIAM, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_INI_VAL_VERS,
+                new ColumnDescriptor(COL_DT_INI_VAL_VERS, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_FINE_VAL_VERS,
+                new ColumnDescriptor(COL_DT_FINE_VAL_VERS, Types.TIMESTAMP, 7, false));
+        map.put(COL_FL_CESSATO, new ColumnDescriptor(COL_FL_CESSATO, Types.VARCHAR, 1, false));
+        map.put(COL_FL_ARCHIVIO_RESTITUITO,
+                new ColumnDescriptor(COL_FL_ARCHIVIO_RESTITUITO, Types.VARCHAR, 1, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

@@ -24,16 +24,16 @@ public class WSDescRicercaRestituzioniOggetti implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_RICERCA_DIARIO_ASYNC;
+        return Costanti.WS_RICERCA_DIARIO_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_RICERCA_DIARIO_VRSN;
+        return Costanti.WS_RICERCA_DIARIO_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_RICERCA_DIARIO_COMP;
+        return Costanti.WS_RICERCA_DIARIO_COMP;
     }
 }

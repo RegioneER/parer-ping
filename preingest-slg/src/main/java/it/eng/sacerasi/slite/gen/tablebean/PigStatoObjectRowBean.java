@@ -36,81 +36,81 @@ public class PigStatoObjectRowBean extends BaseRow implements JEEBaseRowInterfac
     public static PigStatoObjectTableDescriptor TABLE_DESCRIPTOR = new PigStatoObjectTableDescriptor();
 
     public PigStatoObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdStatoObject() {
-	return getBigDecimal("id_stato_object");
+        return getBigDecimal("id_stato_object");
     }
 
     public void setIdStatoObject(BigDecimal idStatoObject) {
-	setObject("id_stato_object", idStatoObject);
+        setObject("id_stato_object", idStatoObject);
     }
 
     public String getTiStatoObject() {
-	return getString("ti_stato_object");
+        return getString("ti_stato_object");
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	setObject("ti_stato_object", tiStatoObject);
+        setObject("ti_stato_object", tiStatoObject);
     }
 
     public String getDsTiStatoObject() {
-	return getString("ds_ti_stato_object");
+        return getString("ds_ti_stato_object");
     }
 
     public void setDsTiStatoObject(String dsTiStatoObject) {
-	setObject("ds_ti_stato_object", dsTiStatoObject);
+        setObject("ds_ti_stato_object", dsTiStatoObject);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigStatoObject entity = (PigStatoObject) obj;
+        PigStatoObject entity = (PigStatoObject) obj;
 
-	this.setIdStatoObject(new BigDecimal(entity.getIdStatoObject()));
-	this.setTiStatoObject(entity.getTiStatoObject());
-	this.setDsTiStatoObject(entity.getDsTiStatoObject());
+        this.setIdStatoObject(new BigDecimal(entity.getIdStatoObject()));
+        this.setTiStatoObject(entity.getTiStatoObject());
+        this.setDsTiStatoObject(entity.getDsTiStatoObject());
     }
 
     @Override
     public PigStatoObject rowBeanToEntity() {
-	PigStatoObject entity = new PigStatoObject();
-	if (this.getIdStatoObject() != null) {
-	    entity.setIdStatoObject(this.getIdStatoObject().longValue());
-	}
-	entity.setTiStatoObject(this.getTiStatoObject());
-	entity.setDsTiStatoObject(this.getDsTiStatoObject());
-	return entity;
+        PigStatoObject entity = new PigStatoObject();
+        if (this.getIdStatoObject() != null) {
+            entity.setIdStatoObject(this.getIdStatoObject().longValue());
+        }
+        entity.setTiStatoObject(this.getTiStatoObject());
+        entity.setDsTiStatoObject(this.getDsTiStatoObject());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -42,23 +42,23 @@ public class PigSopClassDicomVersTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_SOP_CLASS_DICOM_VERS,
-		new ColumnDescriptor(COL_ID_SOP_CLASS_DICOM_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_ID_SOP_CLASS_DICOM,
-		new ColumnDescriptor(COL_ID_SOP_CLASS_DICOM, Types.DECIMAL, 22, false));
+        map.put(COL_ID_SOP_CLASS_DICOM_VERS,
+                new ColumnDescriptor(COL_ID_SOP_CLASS_DICOM_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_ID_SOP_CLASS_DICOM,
+                new ColumnDescriptor(COL_ID_SOP_CLASS_DICOM, Types.DECIMAL, 22, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

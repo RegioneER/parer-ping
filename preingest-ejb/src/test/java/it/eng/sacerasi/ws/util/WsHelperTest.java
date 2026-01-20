@@ -40,15 +40,15 @@ public class WsHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(WsHelper.class);
+        return ArquillianUtils.createPingJar(WsHelper.class);
     }
 
     @Test
     void checkAuthorizations_queryIsOk() throws AuthWSException {
-	String nmAmbiente = aString();
-	String nmVersatore = aString();
-	String username = aString();
-	String servizioWeb = aString();
-	helper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+        String nmAmbiente = aString();
+        String nmVersatore = aString();
+        String username = aString();
+        String servizioWeb = aString();
+        helper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
     }
 }

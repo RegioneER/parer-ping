@@ -29,48 +29,48 @@ public class Chiave implements Serializable {
     private String nomefileDerivato;
 
     public Long getAnno() {
-	return anno;
+        return anno;
     }
 
     public void setAnno(Long anno) {
-	this.anno = anno;
+        this.anno = anno;
     }
 
     public String getNumero() {
-	return numero;
+        return numero;
     }
 
     public void setNumero(String numero) {
-	this.numero = numero;
+        this.numero = numero;
     }
 
     public String getRegistro() {
-	return registro;
+        return registro;
     }
 
     public void setRegistro(String registro) {
-	this.registro = registro;
+        this.registro = registro;
     }
 
     public String getChiaveCompatta() {
-	return chiaveCompatta;
+        return chiaveCompatta;
     }
 
     public void setChiaveCompatta(String chiaveCompatta) {
-	this.chiaveCompatta = chiaveCompatta;
+        this.chiaveCompatta = chiaveCompatta;
     }
 
     public String getNomefileDerivato() {
-	return nomefileDerivato;
+        return nomefileDerivato;
     }
 
     public void setNomefileDerivato(String nomefileDerivato) {
-	this.nomefileDerivato = nomefileDerivato;
+        this.nomefileDerivato = nomefileDerivato;
     }
 
     @Override
     public String toString() {
-	return "registro=" + registro + ", anno=" + anno + ", numero=" + numero;
+        return "registro=" + registro + ", anno=" + anno + ", numero=" + numero;
     }
 
 }

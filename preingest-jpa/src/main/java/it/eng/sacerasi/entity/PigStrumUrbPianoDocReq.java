@@ -37,48 +37,48 @@ public class PigStrumUrbPianoDocReq implements Serializable {
     private PigStrumUrbValDoc pigStrumUrbValDoc;
 
     public PigStrumUrbPianoDocReq() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @Column(name = "ID_STRUM_URB_PIANO_DOC_REQ")
     public Long getIdStrumUrbPianoDocReq() {
-	return this.idStrumUrbPianoDocReq;
+        return this.idStrumUrbPianoDocReq;
     }
 
     public void setIdStrumUrbPianoDocReq(Long idStrumUrbPianoDocReq) {
-	this.idStrumUrbPianoDocReq = idStrumUrbPianoDocReq;
+        this.idStrumUrbPianoDocReq = idStrumUrbPianoDocReq;
     }
 
     @Column(name = "FL_DOC_OBBLIGATORIO", columnDefinition = "char")
     public String getFlDocObbligatorio() {
-	return this.flDocObbligatorio;
+        return this.flDocObbligatorio;
     }
 
     public void setFlDocObbligatorio(String flDocObbligatorio) {
-	this.flDocObbligatorio = flDocObbligatorio;
+        this.flDocObbligatorio = flDocObbligatorio;
     }
 
     // bi-directional many-to-one association to PigStrumUrbPianoStato
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_STRUM_URB_PIANO_STATO")
     public PigStrumUrbPianoStato getPigStrumUrbPianoStato() {
-	return this.pigStrumUrbPianoStato;
+        return this.pigStrumUrbPianoStato;
     }
 
     public void setPigStrumUrbPianoStato(PigStrumUrbPianoStato pigStrumUrbPianoStato) {
-	this.pigStrumUrbPianoStato = pigStrumUrbPianoStato;
+        this.pigStrumUrbPianoStato = pigStrumUrbPianoStato;
     }
 
     // bi-directional many-to-one association to PigStrumUrbValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PIG_STRUM_URB_VAL_DOC")
     public PigStrumUrbValDoc getPigStrumUrbValDoc() {
-	return this.pigStrumUrbValDoc;
+        return this.pigStrumUrbValDoc;
     }
 
     public void setPigStrumUrbValDoc(PigStrumUrbValDoc pigStrumUrbValDoc) {
-	this.pigStrumUrbValDoc = pigStrumUrbValDoc;
+        this.pigStrumUrbValDoc = pigStrumUrbValDoc;
     }
 
 }

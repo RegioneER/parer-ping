@@ -38,21 +38,21 @@ public class PigVChkSimulaVersSacer implements Serializable {
 
     @Column(name = "FL_SIMULA_VERS_SACER_OK", columnDefinition = "char")
     public String getFlSimulaVersSacerOk() {
-	return this.flSimulaVersSacerOk;
+        return this.flSimulaVersSacerOk;
     }
 
     public void setFlSimulaVersSacerOk(String flSimulaVersSacerOk) {
-	this.flSimulaVersSacerOk = flSimulaVersSacerOk;
+        this.flSimulaVersSacerOk = flSimulaVersSacerOk;
     }
 
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return this.idObject;
+        return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
 }

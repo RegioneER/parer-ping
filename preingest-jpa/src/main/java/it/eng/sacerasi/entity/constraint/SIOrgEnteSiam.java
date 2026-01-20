@@ -30,14 +30,14 @@ public final class SIOrgEnteSiam {
      * Tipo di ente
      */
     public enum TiEnte {
-	CONVENZIONATO, NON_CONVENZIONATO
+        CONVENZIONATO, NON_CONVENZIONATO
     }
 
     /**
      * Tipo di ente
      */
     public enum TiEnteConvenz {
-	AMMINISTRATORE, CONSERVATORE, GESTORE, PRODUTTORE
+        AMMINISTRATORE, CONSERVATORE, GESTORE, PRODUTTORE
     }
 
     /**
@@ -45,7 +45,7 @@ public final class SIOrgEnteSiam {
      * 'SOGGETTO_ATTUATORE', 'ORGANO_VIGILANZA', 'VERSATORE_ESTERNO')
      */
     public enum TiEnteNonConvenz {
-	FORNITORE_ESTERNO, SOGGETTO_ATTUATORE, ORGANO_VIGILANZA, VERSATORE_ESTERNO
+        FORNITORE_ESTERNO, SOGGETTO_ATTUATORE, ORGANO_VIGILANZA, VERSATORE_ESTERNO
     }
 
 }

@@ -43,24 +43,24 @@ public class RichiestaSopClassListHelper {
     @SuppressWarnings("unchecked")
     public RispostaControlli getSopClassListByIdVersatore(Long idVersatore) {
 
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
 
-	try {
-	    String queryStr = "SELECT sop FROM PigSopClassDicomVers sopVers INNER JOIN sopVers.pigSopClassDicom sop WHERE sopVers.pigVer.idVers = :idVers";
+        try {
+            String queryStr = "SELECT sop FROM PigSopClassDicomVers sopVers INNER JOIN sopVers.pigSopClassDicom sop WHERE sopVers.pigVer.idVers = :idVers";
 
-	    javax.persistence.Query query = entityManager.createQuery(queryStr);
-	    query.setParameter("idVers", idVersatore);
-	    List<PigSopClassDicom> listaSopClass = query.getResultList();
-	    rispostaControlli.setrObject(listaSopClass);
-	} catch (Exception e) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
-	    rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
-		    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
-	    log.error("Eccezione nella lettura  della tabella delle liste SopClass ", e);
-	}
+            javax.persistence.Query query = entityManager.createQuery(queryStr);
+            query.setParameter("idVers", idVersatore);
+            List<PigSopClassDicom> listaSopClass = query.getResultList();
+            rispostaControlli.setrObject(listaSopClass);
+        } catch (Exception e) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+            rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
+            log.error("Eccezione nella lettura  della tabella delle liste SopClass ", e);
+        }
 
-	return rispostaControlli;
+        return rispostaControlli;
     }
 }

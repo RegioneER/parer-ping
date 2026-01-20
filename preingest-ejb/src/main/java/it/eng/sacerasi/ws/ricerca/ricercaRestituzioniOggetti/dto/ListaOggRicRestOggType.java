@@ -24,10 +24,10 @@ public class ListaOggRicRestOggType {
     private List<OggettoRicRestOggType> oggetto;
 
     public List<OggettoRicRestOggType> getOggetto() {
-	return oggetto;
+        return oggetto;
     }
 
     public void setOggetto(List<OggettoRicRestOggType> oggetto) {
-	this.oggetto = oggetto;
+        this.oggetto = oggetto;
     }
 }

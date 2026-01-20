@@ -25,37 +25,37 @@ public class RichiestaSopClassListInput {
 
     // public RichiestaSopClassListInput(String nmAmbiente, String nmVersatore, String cdPassword) {
     public RichiestaSopClassListInput(String nmAmbiente, String nmVersatore) {
-	this.nmAmbiente = nmAmbiente;
-	this.nmVersatore = nmVersatore;
-	// this.cdPassword = cdPassword;
+        this.nmAmbiente = nmAmbiente;
+        this.nmVersatore = nmVersatore;
+        // this.cdPassword = cdPassword;
     }
 
     /**
      * @return the nmAmbiente
      */
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     /**
      * @param nmAmbiente the nmAmbiente to set
      */
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     /**
      * @return the nmVersatore
      */
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     /**
      * @param nmVersatore the nmVersatore to set
      */
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     // /**

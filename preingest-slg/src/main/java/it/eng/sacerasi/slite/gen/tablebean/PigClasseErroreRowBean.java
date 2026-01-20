@@ -35,81 +35,81 @@ public class PigClasseErroreRowBean extends BaseRow implements JEEBaseRowInterfa
     public static PigClasseErroreTableDescriptor TABLE_DESCRIPTOR = new PigClasseErroreTableDescriptor();
 
     public PigClasseErroreRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdClasseErrore() {
-	return getBigDecimal("id_classe_errore");
+        return getBigDecimal("id_classe_errore");
     }
 
     public void setIdClasseErrore(BigDecimal idClasseErrore) {
-	setObject("id_classe_errore", idClasseErrore);
+        setObject("id_classe_errore", idClasseErrore);
     }
 
     public String getCdClasseErrore() {
-	return getString("cd_classe_errore");
+        return getString("cd_classe_errore");
     }
 
     public void setCdClasseErrore(String cdClasseErrore) {
-	setObject("cd_classe_errore", cdClasseErrore);
+        setObject("cd_classe_errore", cdClasseErrore);
     }
 
     public String getDsClasseErrore() {
-	return getString("ds_classe_errore");
+        return getString("ds_classe_errore");
     }
 
     public void setDsClasseErrore(String dsClasseErrore) {
-	setObject("ds_classe_errore", dsClasseErrore);
+        setObject("ds_classe_errore", dsClasseErrore);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigClasseErrore entity = (PigClasseErrore) obj;
+        PigClasseErrore entity = (PigClasseErrore) obj;
 
-	this.setIdClasseErrore(new BigDecimal(entity.getIdClasseErrore()));
-	this.setCdClasseErrore(entity.getCdClasseErrore());
-	this.setDsClasseErrore(entity.getDsClasseErrore());
+        this.setIdClasseErrore(new BigDecimal(entity.getIdClasseErrore()));
+        this.setCdClasseErrore(entity.getCdClasseErrore());
+        this.setDsClasseErrore(entity.getDsClasseErrore());
     }
 
     @Override
     public PigClasseErrore rowBeanToEntity() {
-	PigClasseErrore entity = new PigClasseErrore();
-	if (this.getIdClasseErrore() != null) {
-	    entity.setIdClasseErrore(this.getIdClasseErrore().longValue());
-	}
-	entity.setCdClasseErrore(this.getCdClasseErrore());
-	entity.setDsClasseErrore(this.getDsClasseErrore());
-	return entity;
+        PigClasseErrore entity = new PigClasseErrore();
+        if (this.getIdClasseErrore() != null) {
+            entity.setIdClasseErrore(this.getIdClasseErrore().longValue());
+        }
+        entity.setCdClasseErrore(this.getCdClasseErrore());
+        entity.setDsClasseErrore(this.getDsClasseErrore());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -22,10 +22,10 @@ public class FascicoloDocObject extends DocObject implements Serializable {
     private transient UnitaDocumentaria unitaDocumentariaXmlBean;
 
     public UnitaDocumentaria getUnitaDocumentariaXmlBean() {
-	return unitaDocumentariaXmlBean;
+        return unitaDocumentariaXmlBean;
     }
 
     public void setUnitaDocumentariaXmlBean(UnitaDocumentaria unitaDocumentariaXmlBean) {
-	this.unitaDocumentariaXmlBean = unitaDocumentariaXmlBean;
+        this.unitaDocumentariaXmlBean = unitaDocumentariaXmlBean;
     }
 }

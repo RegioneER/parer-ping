@@ -43,24 +43,24 @@ public class PigXmlObjectTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_XML_OBJECT,
-		new ColumnDescriptor(COL_ID_XML_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_CD_VERSIONE_XML_VERS,
-		new ColumnDescriptor(COL_CD_VERSIONE_XML_VERS, Types.VARCHAR, 100, false));
-	map.put(COL_BL_XML, new ColumnDescriptor(COL_BL_XML, Types.CLOB, 4000, false));
+        map.put(COL_ID_XML_OBJECT,
+                new ColumnDescriptor(COL_ID_XML_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_CD_VERSIONE_XML_VERS,
+                new ColumnDescriptor(COL_CD_VERSIONE_XML_VERS, Types.VARCHAR, 100, false));
+        map.put(COL_BL_XML, new ColumnDescriptor(COL_BL_XML, Types.CLOB, 4000, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

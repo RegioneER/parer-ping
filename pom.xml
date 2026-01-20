@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>8.2.2-SNAPSHOT</version>
+    <version>8.3.0</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -21,17 +21,17 @@
         <preingest.xmlmodule.version>3.2.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
         <spagofat.version>7.1.3</spagofat.version>
-        <parer-kettle-soap-client.version>3.0.0</parer-kettle-soap-client.version>
+        <parer-kettle-soap-client.version>3.1.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
         <xadisk.version>1.2.2.5</xadisk.version>
         <javacsv.version>2.0</javacsv.version>
-        <software.amazon.awssdk.version>2.31.63</software.amazon.awssdk.version>
-        <netty.version>4.1.118.Final</netty.version>
+        <software.amazon.awssdk.version>2.38.7</software.amazon.awssdk.version>
+        <netty.version>4.1.126.Final</netty.version>
         <xml-resolver.version>1.2</xml-resolver.version>
-        <tika.version>3.1.0</tika.version>  
+        <tika.version>3.2.3</tika.version>  
         <!-- WEBJARS -->        
-        <plupload.version>2.3.9</plupload.version>
+        <plupload.version>3.1.5</plupload.version>
         <!-- Java 11 - Hibernate jpamodelgen -->
         <hibernate-jpamodelgen-version>5.6.14.Final-redhat-00001</hibernate-jpamodelgen-version>
         <!-- JBoss EAP -->
@@ -227,15 +227,6 @@
                 <artifactId>idp-jaas-rdbms</artifactId>
                 <version>${idp-jaas-rdbms.version}</version>
             </dependency>
-            <!-- Framework -->
-            <dependency>
-                <groupId>it.eng.parer</groupId>
-                <artifactId>spagofat</artifactId>
-                <version>${spagofat.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- AWS -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
@@ -251,8 +242,16 @@
                 <version>${netty.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>        
-                        
+            </dependency>            
+            <!-- Framework -->
+            <dependency>
+                <groupId>it.eng.parer</groupId>
+                <artifactId>spagofat</artifactId>
+                <version>${spagofat.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency> 
                 <groupId>joda-time</groupId> 
                 <artifactId>joda-time</artifactId> 
@@ -303,23 +302,6 @@
                 <artifactId>plupload</artifactId>
                 <version>${plupload.version}</version>
             </dependency>                                                             			
-
-<!--            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-core</artifactId>
-                <version>${opensaml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-saml-api</artifactId>
-                <version>${opensaml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-saml-impl</artifactId>
-                <version>${opensaml.version}</version>
-            </dependency>                                   -->
-
         </dependencies>
         
     </dependencyManagement>

@@ -45,71 +45,71 @@ public class SIAplApplic implements Serializable {
     private List<SLLogLoginUser> sLLogLoginUsers = new ArrayList<>();
 
     public SIAplApplic() {
-	// Hibernate
+        // Hibernate
     }
 
     @Id
     @Column(name = "ID_APPLIC")
     public Long getIdApplic() {
-	return this.idApplic;
+        return this.idApplic;
     }
 
     public void setIdApplic(Long idApplic) {
-	this.idApplic = idApplic;
+        this.idApplic = idApplic;
     }
 
     @Column(name = "CD_PSW_REPLICA_USER")
     public String getCdPswReplicaUser() {
-	return this.cdPswReplicaUser;
+        return this.cdPswReplicaUser;
     }
 
     public void setCdPswReplicaUser(String cdPswReplicaUser) {
-	this.cdPswReplicaUser = cdPswReplicaUser;
+        this.cdPswReplicaUser = cdPswReplicaUser;
     }
 
     @Column(name = "DS_APPLIC")
     public String getDsApplic() {
-	return this.dsApplic;
+        return this.dsApplic;
     }
 
     public void setDsApplic(String dsApplic) {
-	this.dsApplic = dsApplic;
+        this.dsApplic = dsApplic;
     }
 
     @Column(name = "DS_URL_REPLICA_USER")
     public String getDsUrlReplicaUser() {
-	return this.dsUrlReplicaUser;
+        return this.dsUrlReplicaUser;
     }
 
     public void setDsUrlReplicaUser(String dsUrlReplicaUser) {
-	this.dsUrlReplicaUser = dsUrlReplicaUser;
+        this.dsUrlReplicaUser = dsUrlReplicaUser;
     }
 
     @Column(name = "NM_APPLIC")
     public String getNmApplic() {
-	return this.nmApplic;
+        return this.nmApplic;
     }
 
     public void setNmApplic(String nmApplic) {
-	this.nmApplic = nmApplic;
+        this.nmApplic = nmApplic;
     }
 
     @Column(name = "NM_USER_REPLICA_USER")
     public String getNmUserReplicaUser() {
-	return this.nmUserReplicaUser;
+        return this.nmUserReplicaUser;
     }
 
     public void setNmUserReplicaUser(String nmUserReplicaUser) {
-	this.nmUserReplicaUser = nmUserReplicaUser;
+        this.nmUserReplicaUser = nmUserReplicaUser;
     }
 
     @OneToMany(mappedBy = "sIAplApplic")
     public List<SLLogLoginUser> getsLLogLoginUsers() {
-	return sLLogLoginUsers;
+        return sLLogLoginUsers;
     }
 
     public void setsLLogLoginUsers(List<SLLogLoginUser> sLLogLoginUsers) {
-	this.sLLogLoginUsers = sLLogLoginUsers;
+        this.sLLogLoginUsers = sLLogLoginUsers;
     }
 
 }

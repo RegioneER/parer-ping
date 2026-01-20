@@ -28,23 +28,23 @@ public class EsitoSalvataggioSisma implements Serializable {
     private PigSisma.TiStato stato;
 
     public EsitoSalvataggioSisma() {
-	super();
+        super();
     }
 
     public boolean isOk() {
-	return ok;
+        return ok;
     }
 
     public void setOk(boolean ok) {
-	this.ok = ok;
+        this.ok = ok;
     }
 
     public PigSisma.TiStato getStato() {
-	return stato;
+        return stato;
     }
 
     public void setStato(PigSisma.TiStato stato) {
-	this.stato = stato;
+        this.stato = stato;
     }
 
 }

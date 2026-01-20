@@ -52,7 +52,7 @@ public class ConfigurationHelper {
      * Default constructor.
      */
     public ConfigurationHelper() {
-	// Non utilizzato
+        // Non utilizzato
     }
 
     private static final Logger log = LoggerFactory.getLogger(ConfigurationHelper.class.getName());
@@ -60,35 +60,35 @@ public class ConfigurationHelper {
     private EntityManager entityManager;
 
     public Map<String, String> getConfiguration() {
-	String queryStr = "SELECT paramApplic.nmParamApplic, valoreParamApplic.dsValoreParamApplic "
-		+ "FROM PigValoreParamApplic valoreParamApplic "
-		+ "JOIN valoreParamApplic.pigParamApplic paramApplic "
-		+ "WHERE valoreParamApplic.tiAppart = 'APPLIC' ";
-	Query query = entityManager.createQuery(queryStr);
+        String queryStr = "SELECT paramApplic.nmParamApplic, valoreParamApplic.dsValoreParamApplic "
+                + "FROM PigValoreParamApplic valoreParamApplic "
+                + "JOIN valoreParamApplic.pigParamApplic paramApplic "
+                + "WHERE valoreParamApplic.tiAppart = 'APPLIC' ";
+        Query query = entityManager.createQuery(queryStr);
 
-	List<Object[]> configurazioni = query.getResultList();
-	Map<String, String> config = new HashMap<>();
-	for (Object[] configurazione : configurazioni) {
-	    config.put((String) configurazione[0], (String) configurazione[1]);
-	}
-	return config;
+        List<Object[]> configurazioni = query.getResultList();
+        Map<String, String> config = new HashMap<>();
+        for (Object[] configurazione : configurazioni) {
+            config.put((String) configurazione[0], (String) configurazione[1]);
+        }
+        return config;
     }
 
     /*
      * Restituisce il nome dell'applicazione configurato sulla tabella dei parametri
      */
     public String getParamApplicApplicationName() {
-	String queryStr = "SELECT valoreParamApplic.dsValoreParamApplic "
-		+ "FROM PigValoreParamApplic valoreParamApplic "
-		+ "JOIN valoreParamApplic.pigParamApplic paramApplic "
-		+ "WHERE paramApplic.nmParamApplic = 'NM_APPLIC' ";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	List<String> paramList = query.getResultList();
-	if (paramList != null && !paramList.isEmpty()) {
-	    return paramList.get(0);
-	} else {
-	    return null;
-	}
+        String queryStr = "SELECT valoreParamApplic.dsValoreParamApplic "
+                + "FROM PigValoreParamApplic valoreParamApplic "
+                + "JOIN valoreParamApplic.pigParamApplic paramApplic "
+                + "WHERE paramApplic.nmParamApplic = 'NM_APPLIC' ";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        List<String> paramList = query.getResultList();
+        if (paramList != null && !paramList.isEmpty()) {
+            return paramList.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -100,9 +100,9 @@ public class ConfigurationHelper {
      * @return valore del parametro filtrato per tipologia <em>APPLIC</em> .
      */
     public String getValoreParamApplicByApplic(String nmParamApplic) {
-	return getValoreParamApplic(nmParamApplic, BigDecimal.valueOf(Integer.MIN_VALUE),
-		BigDecimal.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Integer.MIN_VALUE),
-		TipoPigVGetValAppart.APPLIC);
+        return getValoreParamApplic(nmParamApplic, BigDecimal.valueOf(Integer.MIN_VALUE),
+                BigDecimal.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Integer.MIN_VALUE),
+                TipoPigVGetValAppart.APPLIC);
     }
 
     /**
@@ -116,10 +116,10 @@ public class ConfigurationHelper {
      * @return valore del parametro filtrato per tipologia <em>AMBIENTEVERS</em> .
      */
     public String getValoreParamApplicByAmbienteVers(String nmParamApplic,
-	    BigDecimal idAmbienteVers) {
-	return getValoreParamApplic(nmParamApplic, idAmbienteVers,
-		BigDecimal.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Integer.MIN_VALUE),
-		TipoPigVGetValAppart.AMBIENTEVERS);
+            BigDecimal idAmbienteVers) {
+        return getValoreParamApplic(nmParamApplic, idAmbienteVers,
+                BigDecimal.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Integer.MIN_VALUE),
+                TipoPigVGetValAppart.AMBIENTEVERS);
     }
 
     /**
@@ -134,9 +134,9 @@ public class ConfigurationHelper {
      * @return valore del parametro filtrato per tipologia <em>VERS</em> .
      */
     public String getValoreParamApplicByIdVers(String nmParamApplic, BigDecimal idAmbienteVers,
-	    BigDecimal idVers) {
-	return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers,
-		BigDecimal.valueOf(Integer.MIN_VALUE), TipoPigVGetValAppart.VERS);
+            BigDecimal idVers) {
+        return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers,
+                BigDecimal.valueOf(Integer.MIN_VALUE), TipoPigVGetValAppart.VERS);
     }
 
     /**
@@ -152,9 +152,9 @@ public class ConfigurationHelper {
      * @return valore del parametro filtrato per tipologia <em>TIPOOBJECT</em> .
      */
     public String getValoreParamApplicByTipoObj(String nmParamApplic, BigDecimal idAmbienteVers,
-	    BigDecimal idVers, BigDecimal idTipoObject) {
-	return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers, idTipoObject,
-		TipoPigVGetValAppart.TIPOOBJECT);
+            BigDecimal idVers, BigDecimal idTipoObject) {
+        return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers, idTipoObject,
+                TipoPigVGetValAppart.TIPOOBJECT);
     }
 
     /**
@@ -168,178 +168,178 @@ public class ConfigurationHelper {
      * @return il valore del parametro
      */
     private String getValoreParamApplic(String nmParamApplic, BigDecimal idAmbienteVers,
-	    BigDecimal idVers, BigDecimal idTipoObject, TipoPigVGetValAppart tipoPigVGetValAppart) {
+            BigDecimal idVers, BigDecimal idTipoObject, TipoPigVGetValAppart tipoPigVGetValAppart) {
 
-	long id = Integer.MIN_VALUE;// su questo id non troverò alcun elemento value sicuramente
-				    // null
-	List<PigVGetValParamDto> result = null;
+        long id = Integer.MIN_VALUE;// su questo id non troverò alcun elemento value sicuramente
+        // null
+        List<PigVGetValParamDto> result = null;
 
-	// base query (template)
-	Map<String, String> queryData = new HashMap<>();
-	String queryStr = null;
+        // base query (template)
+        Map<String, String> queryData = new HashMap<>();
+        String queryStr = null;
 
-	// query template -> create DTO
-	String queryStrTempl = "SELECT NEW it.eng.sacerasi.web.helper.dto.PigVGetValParamDto (${"
-		+ PIGVGETVALPARAMBYCOL + "}) " + "FROM PigParamApplic paramApplic, ${"
-		+ PIGVGETVALPARAMBY + "} getvalParam  "
-		+ "WHERE paramApplic.nmParamApplic = :nmParamApplic "
-		+ "AND getvalParam.nmParamApplic = paramApplic.nmParamApplic "
-		+ "AND paramApplic.${" + FLAPLPARAMAPPLICAPPART + "} = :flAppart ${"
-		+ IDAPLVGETVALPARAMBY + "} ";
+        // query template -> create DTO
+        String queryStrTempl = "SELECT NEW it.eng.sacerasi.web.helper.dto.PigVGetValParamDto (${"
+                + PIGVGETVALPARAMBYCOL + "}) " + "FROM PigParamApplic paramApplic, ${"
+                + PIGVGETVALPARAMBY + "} getvalParam  "
+                + "WHERE paramApplic.nmParamApplic = :nmParamApplic "
+                + "AND getvalParam.nmParamApplic = paramApplic.nmParamApplic "
+                + "AND paramApplic.${" + FLAPLPARAMAPPLICAPPART + "} = :flAppart ${"
+                + IDAPLVGETVALPARAMBY + "} ";
 
-	// tipo appartenenza
-	TiAppart tiAppart = null;
+        // tipo appartenenza
+        TiAppart tiAppart = null;
 
-	switch (tipoPigVGetValAppart) {
-	case TIPOOBJECT:
-	    //
-	    id = idTipoObject != null ? idTipoObject.longValue() : Integer.MIN_VALUE;
-	    //
-	    tiAppart = TiAppart.TIPO_OGGETTO;
-	    //
-	    queryData.put(PIGVGETVALPARAMBYCOL,
-		    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
-	    queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByTiogg");
-	    queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartTipoOggetto");
-	    queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idTipoObject = :id");
-	    // replace
-	    queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
-	    break;
-	case VERS:
-	    //
-	    id = idVers != null ? idVers.longValue() : Integer.MIN_VALUE;
-	    //
-	    tiAppart = TiAppart.VERS;
-	    //
-	    queryData.put(PIGVGETVALPARAMBYCOL,
-		    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
-	    queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByVer");
-	    queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartVers");
-	    queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idVers = :id");
-	    // replace
-	    queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
-	    break;
-	case AMBIENTEVERS:
-	    //
-	    id = idAmbienteVers != null ? idAmbienteVers.longValue() : Integer.MIN_VALUE;
-	    //
-	    tiAppart = TiAppart.AMBIENTE;
-	    //
-	    queryData.put(PIGVGETVALPARAMBYCOL,
-		    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
-	    queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByAmb");
-	    queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartAmbiente");
-	    queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idAmbienteVers = :id");
-	    // replace
-	    queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
-	    break;
-	default:
-	    //
-	    tiAppart = TiAppart.APPLIC;
-	    //
-	    queryData.put(PIGVGETVALPARAMBYCOL, "getvalParam.dsValoreParamApplic");
-	    queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByApl");
-	    queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartApplic");
-	    queryData.put(IDAPLVGETVALPARAMBY, "");
-	    // replace
-	    queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
-	    break;
-	}
+        switch (tipoPigVGetValAppart) {
+        case TIPOOBJECT:
+            //
+            id = idTipoObject != null ? idTipoObject.longValue() : Integer.MIN_VALUE;
+            //
+            tiAppart = TiAppart.TIPO_OGGETTO;
+            //
+            queryData.put(PIGVGETVALPARAMBYCOL,
+                    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
+            queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByTiogg");
+            queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartTipoOggetto");
+            queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idTipoObject = :id");
+            // replace
+            queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
+            break;
+        case VERS:
+            //
+            id = idVers != null ? idVers.longValue() : Integer.MIN_VALUE;
+            //
+            tiAppart = TiAppart.VERS;
+            //
+            queryData.put(PIGVGETVALPARAMBYCOL,
+                    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
+            queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByVer");
+            queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartVers");
+            queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idVers = :id");
+            // replace
+            queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
+            break;
+        case AMBIENTEVERS:
+            //
+            id = idAmbienteVers != null ? idAmbienteVers.longValue() : Integer.MIN_VALUE;
+            //
+            tiAppart = TiAppart.AMBIENTE;
+            //
+            queryData.put(PIGVGETVALPARAMBYCOL,
+                    "getvalParam.dsValoreParamApplic, getvalParam.tiAppart");
+            queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByAmb");
+            queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartAmbiente");
+            queryData.put(IDAPLVGETVALPARAMBY, "AND getvalParam.idAmbienteVers = :id");
+            // replace
+            queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
+            break;
+        default:
+            //
+            tiAppart = TiAppart.APPLIC;
+            //
+            queryData.put(PIGVGETVALPARAMBYCOL, "getvalParam.dsValoreParamApplic");
+            queryData.put(PIGVGETVALPARAMBY, "PigVGetvalParamByApl");
+            queryData.put(FLAPLPARAMAPPLICAPPART, "flAppartApplic");
+            queryData.put(IDAPLVGETVALPARAMBY, "");
+            // replace
+            queryStr = StringSubstitutor.replace(queryStrTempl, queryData);
+            break;
+        }
 
-	try {
-	    TypedQuery<PigVGetValParamDto> query = entityManager.createQuery(queryStr,
-		    PigVGetValParamDto.class);
-	    query.setParameter("nmParamApplic", nmParamApplic);
-	    query.setParameter("flAppart", "1");// fixed
-	    // solo nel caso in cui contenga la condition sull'ID
-	    if (StringUtils.isNotBlank(queryData.get(IDAPLVGETVALPARAMBY))) {
-		query.setParameter("id", HibernateUtils.bigDecimalFrom(id));
-	    }
-	    // get result
-	    result = query.getResultList();
-	} catch (Exception e) {
-	    // throws Exception
-	    final String msg = "Errore nella lettura del parametro " + nmParamApplic;
-	    log.error(msg);
-	    throw new ParamApplicNotFoundException(msg, nmParamApplic);
-	}
+        try {
+            TypedQuery<PigVGetValParamDto> query = entityManager.createQuery(queryStr,
+                    PigVGetValParamDto.class);
+            query.setParameter("nmParamApplic", nmParamApplic);
+            query.setParameter("flAppart", "1");// fixed
+            // solo nel caso in cui contenga la condition sull'ID
+            if (StringUtils.isNotBlank(queryData.get(IDAPLVGETVALPARAMBY))) {
+                query.setParameter("id", HibernateUtils.bigDecimalFrom(id));
+            }
+            // get result
+            result = query.getResultList();
+        } catch (Exception e) {
+            // throws Exception
+            final String msg = "Errore nella lettura del parametro " + nmParamApplic;
+            log.error(msg);
+            throw new ParamApplicNotFoundException(msg, nmParamApplic);
+        }
 
-	if (result != null && !result.isEmpty()) {
-	    /*
-	     * if more than one ....
-	     */
-	    if (result.size() > 1) {
-		/*
-		 * Ordine / Priorità TiAppart idAaTipoFascicolo -> idTipoUnitaDoc -> idStrut ->
-		 * idAmbiente -> applicazione ======= Ordine / Priorità TiAppart idAaTipoFascicolo
-		 * -> idTipoUnitaDoc -> idStrut -> idAmbiente -> applicazione
-		 */
-		// filter by getTiAppart
-		return getDsValoreParamApplicByTiAppart(nmParamApplic, result, tiAppart);
-	    } else {
-		return result.get(0).getDsValoreParamApplic(); // one is expected
-	    }
-	} else if (Constants.TipoPigVGetValAppart.next(tipoPigVGetValAppart) != null) {
-	    /*
-	     * Ordine / Priorità Viste idTipoObject -> idVers -> -> idAmbienteVers -> applicazione
-	     */
-	    return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers, idTipoObject,
-		    Constants.TipoPigVGetValAppart.next(tipoPigVGetValAppart));
-	} else {
-	    // thorws Exception
-	    final String msg = String.format(
-		    "Parametro %s non definito o non valorizzato: tipo %s idAmbienteVers %s idVers %s idTipoObject %s",
-		    nmParamApplic, tipoPigVGetValAppart, idAmbienteVers, idVers, idTipoObject);
-	    log.error(msg);
-	    throw new ParamApplicNotFoundException(msg, nmParamApplic);
-	}
+        if (result != null && !result.isEmpty()) {
+            /*
+             * if more than one ....
+             */
+            if (result.size() > 1) {
+                /*
+                 * Ordine / Priorità TiAppart idAaTipoFascicolo -> idTipoUnitaDoc -> idStrut ->
+                 * idAmbiente -> applicazione ======= Ordine / Priorità TiAppart idAaTipoFascicolo
+                 * -> idTipoUnitaDoc -> idStrut -> idAmbiente -> applicazione
+                 */
+                // filter by getTiAppart
+                return getDsValoreParamApplicByTiAppart(nmParamApplic, result, tiAppart);
+            } else {
+                return result.get(0).getDsValoreParamApplic(); // one is expected
+            }
+        } else if (Constants.TipoPigVGetValAppart.next(tipoPigVGetValAppart) != null) {
+            /*
+             * Ordine / Priorità Viste idTipoObject -> idVers -> -> idAmbienteVers -> applicazione
+             */
+            return getValoreParamApplic(nmParamApplic, idAmbienteVers, idVers, idTipoObject,
+                    Constants.TipoPigVGetValAppart.next(tipoPigVGetValAppart));
+        } else {
+            // thorws Exception
+            final String msg = String.format(
+                    "Parametro %s non definito o non valorizzato: tipo %s idAmbienteVers %s idVers %s idTipoObject %s",
+                    nmParamApplic, tipoPigVGetValAppart, idAmbienteVers, idVers, idTipoObject);
+            log.error(msg);
+            throw new ParamApplicNotFoundException(msg, nmParamApplic);
+        }
     }
 
     private String getDsValoreParamApplicByTiAppart(String nmParamApplic,
-	    List<PigVGetValParamDto> result, final TiAppart tiAppart) {
-	List<PigVGetValParamDto> resultFiltered = new ArrayList<>();
-	for (PigVGetValParamDto valParam : result) {
-	    if (valParam.getTiAppart().equals(tiAppart.name())) {
-		resultFiltered.add(valParam);
-		break;
-	    }
-	}
+            List<PigVGetValParamDto> result, final TiAppart tiAppart) {
+        List<PigVGetValParamDto> resultFiltered = new ArrayList<>();
+        for (PigVGetValParamDto valParam : result) {
+            if (valParam.getTiAppart().equals(tiAppart.name())) {
+                resultFiltered.add(valParam);
+                break;
+            }
+        }
 
-	/* questa condizione non dovrebbe mai verificarsi */
-	if (tiAppart.name().equals(TiAppart.APPLIC.name()) && resultFiltered.isEmpty()) {
-	    // thorws Exception
-	    final String msg = "Parametro " + nmParamApplic + " non definito o non valorizzato";
-	    log.error(msg);
-	    throw new ParamApplicNotFoundException(msg, nmParamApplic);
-	}
+        /* questa condizione non dovrebbe mai verificarsi */
+        if (tiAppart.name().equals(TiAppart.APPLIC.name()) && resultFiltered.isEmpty()) {
+            // thorws Exception
+            final String msg = "Parametro " + nmParamApplic + " non definito o non valorizzato";
+            log.error(msg);
+            throw new ParamApplicNotFoundException(msg, nmParamApplic);
+        }
 
-	if (resultFiltered.isEmpty()) {
-	    TiAppart nextTiAppart = null;
-	    switch (tiAppart) {
-	    case TIPO_OGGETTO:
-		nextTiAppart = TiAppart.VERS;
-		break;
-	    case VERS:
-		nextTiAppart = TiAppart.AMBIENTE;
-		break;
-	    default:
-		nextTiAppart = TiAppart.APPLIC;
-		break;
-	    }
-	    return getDsValoreParamApplicByTiAppart(nmParamApplic, result, nextTiAppart);
-	} else {
-	    return resultFiltered.get(0).getDsValoreParamApplic();// expected one
-	}
+        if (resultFiltered.isEmpty()) {
+            TiAppart nextTiAppart = null;
+            switch (tiAppart) {
+            case TIPO_OGGETTO:
+                nextTiAppart = TiAppart.VERS;
+                break;
+            case VERS:
+                nextTiAppart = TiAppart.AMBIENTE;
+                break;
+            default:
+                nextTiAppart = TiAppart.APPLIC;
+                break;
+            }
+            return getDsValoreParamApplicByTiAppart(nmParamApplic, result, nextTiAppart);
+        } else {
+            return resultFiltered.get(0).getDsValoreParamApplic();// expected one
+        }
     }
 
     public String getUrlAssociazioneUtenteCf() {
-	return getValoreParamApplic(URL_ASSOCIAZIONE_UTENTE_CF, null, null, null,
-		Constants.TipoPigVGetValAppart.APPLIC);
+        return getValoreParamApplic(URL_ASSOCIAZIONE_UTENTE_CF, null, null, null,
+                Constants.TipoPigVGetValAppart.APPLIC);
     }
 
     public String getUrlBackAssociazioneUtenteCf() {
-	return getValoreParamApplic(URL_BACK_ASSOCIAZIONE_UTENTE_CF, null, null, null,
-		Constants.TipoPigVGetValAppart.APPLIC);
+        return getValoreParamApplic(URL_BACK_ASSOCIAZIONE_UTENTE_CF, null, null, null,
+                Constants.TipoPigVGetValAppart.APPLIC);
     }
 
 }

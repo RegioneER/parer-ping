@@ -46,30 +46,30 @@ public class PigValoreParamApplicTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VALORE_PARAM_APPLIC,
-		new ColumnDescriptor(COL_ID_VALORE_PARAM_APPLIC, Types.DECIMAL, 22, true));
-	map.put(COL_ID_PARAM_APPLIC,
-		new ColumnDescriptor(COL_ID_PARAM_APPLIC, Types.DECIMAL, 22, false));
-	map.put(COL_TI_APPART, new ColumnDescriptor(COL_TI_APPART, Types.VARCHAR, 30, false));
-	map.put(COL_DS_VALORE_PARAM_APPLIC,
-		new ColumnDescriptor(COL_DS_VALORE_PARAM_APPLIC, Types.VARCHAR, 254, false));
-	map.put(COL_ID_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_ID_VALORE_PARAM_APPLIC,
+                new ColumnDescriptor(COL_ID_VALORE_PARAM_APPLIC, Types.DECIMAL, 22, true));
+        map.put(COL_ID_PARAM_APPLIC,
+                new ColumnDescriptor(COL_ID_PARAM_APPLIC, Types.DECIMAL, 22, false));
+        map.put(COL_TI_APPART, new ColumnDescriptor(COL_TI_APPART, Types.VARCHAR, 30, false));
+        map.put(COL_DS_VALORE_PARAM_APPLIC,
+                new ColumnDescriptor(COL_DS_VALORE_PARAM_APPLIC, Types.VARCHAR, 254, false));
+        map.put(COL_ID_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

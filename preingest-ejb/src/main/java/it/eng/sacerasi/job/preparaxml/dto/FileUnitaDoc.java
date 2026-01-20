@@ -35,77 +35,77 @@ public class FileUnitaDoc implements Serializable {
     String tipoHashFile;
     String encodingFile;
     String hashFile;
-    FileType parsedFileType;
+    transient FileType parsedFileType;
 
     public String getIdFile() {
-	return idFile;
+        return idFile;
     }
 
     public void setIdFile(String idFile) {
-	this.idFile = idFile;
+        this.idFile = idFile;
     }
 
     public String getNomeFile() {
-	return nomeFile;
+        return nomeFile;
     }
 
     public void setNomeFile(String nomeFile) {
-	this.nomeFile = nomeFile;
+        this.nomeFile = nomeFile;
     }
 
     public String getUrnFile() {
-	return urnFile;
+        return urnFile;
     }
 
     public void setUrnFile(String urnFile) {
-	this.urnFile = urnFile;
+        this.urnFile = urnFile;
     }
 
     public String getUrnFileInZip() {
-	return urnFileInZip;
+        return urnFileInZip;
     }
 
     public void setUrnFileInZip(String urnFileInZip) {
-	this.urnFileInZip = urnFileInZip;
+        this.urnFileInZip = urnFileInZip;
     }
 
     public PigTipoFileObject getRifPigTipoFileObject() {
-	return rifPigTipoFileObject;
+        return rifPigTipoFileObject;
     }
 
     public void setRifPigTipoFileObject(PigTipoFileObject rifPigTipoFileObject) {
-	this.rifPigTipoFileObject = rifPigTipoFileObject;
+        this.rifPigTipoFileObject = rifPigTipoFileObject;
     }
 
     public String getTipoHashFile() {
-	return tipoHashFile;
+        return tipoHashFile;
     }
 
     public void setTipoHashFile(String tipoHashFile) {
-	this.tipoHashFile = tipoHashFile;
+        this.tipoHashFile = tipoHashFile;
     }
 
     public String getEncodingFile() {
-	return encodingFile;
+        return encodingFile;
     }
 
     public void setEncodingFile(String encodingFile) {
-	this.encodingFile = encodingFile;
+        this.encodingFile = encodingFile;
     }
 
     public String getHashFile() {
-	return hashFile;
+        return hashFile;
     }
 
     public void setHashFile(String hashFile) {
-	this.hashFile = hashFile;
+        this.hashFile = hashFile;
     }
 
     public FileType getParsedFileType() {
-	return parsedFileType;
+        return parsedFileType;
     }
 
     public void setParsedFileType(FileType parsedFileType) {
-	this.parsedFileType = parsedFileType;
+        this.parsedFileType = parsedFileType;
     }
 }

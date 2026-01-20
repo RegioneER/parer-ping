@@ -38,19 +38,19 @@ public class PigVValoreParamTrasfTableBean extends AbstractBaseTable<PigVValoreP
     public static PigVValoreParamTrasfTableDescriptor TABLE_DESCRIPTOR = new PigVValoreParamTrasfTableDescriptor();
 
     public PigVValoreParamTrasfTableBean() {
-	super();
+        super();
     }
 
     protected PigVValoreParamTrasfRowBean createRow() {
-	return new PigVValoreParamTrasfRowBean();
+        return new PigVValoreParamTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigVValoreParamTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

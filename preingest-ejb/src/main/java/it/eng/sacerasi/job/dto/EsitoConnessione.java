@@ -28,58 +28,58 @@ public class EsitoConnessione {
     private String messaggioErrore;
 
     public boolean isErroreConnessione() {
-	return erroreConnessione;
+        return erroreConnessione;
     }
 
     public void setErroreConnessione(boolean erroreConnessione) {
-	this.erroreConnessione = erroreConnessione;
+        this.erroreConnessione = erroreConnessione;
     }
 
     public String getDescrErr() {
-	return descrErr;
+        return descrErr;
     }
 
     public void setDescrErr(String descrErr) {
-	this.descrErr = descrErr;
+        this.descrErr = descrErr;
     }
 
     public String getXmlResponse() {
-	return xmlResponse;
+        return xmlResponse;
     }
 
     public void setXmlResponse(String xmlResponse) {
-	this.xmlResponse = xmlResponse;
+        this.xmlResponse = xmlResponse;
     }
 
     public String getDescrErrConnessione() {
-	return descrErrConnessione;
+        return descrErrConnessione;
     }
 
     public void setDescrErrConnessione(String descrErrConnessione) {
-	this.descrErrConnessione = descrErrConnessione;
+        this.descrErrConnessione = descrErrConnessione;
     }
 
     public String getCodiceEsito() {
-	return codiceEsito;
+        return codiceEsito;
     }
 
     public void setCodiceEsito(String codiceEsito) {
-	this.codiceEsito = codiceEsito;
+        this.codiceEsito = codiceEsito;
     }
 
     public String getCodiceErrore() {
-	return codiceErrore;
+        return codiceErrore;
     }
 
     public void setCodiceErrore(String codiceErrore) {
-	this.codiceErrore = codiceErrore;
+        this.codiceErrore = codiceErrore;
     }
 
     public String getMessaggioErrore() {
-	return messaggioErrore;
+        return messaggioErrore;
     }
 
     public void setMessaggioErrore(String messaggioErrore) {
-	this.messaggioErrore = messaggioErrore;
+        this.messaggioErrore = messaggioErrore;
     }
 }

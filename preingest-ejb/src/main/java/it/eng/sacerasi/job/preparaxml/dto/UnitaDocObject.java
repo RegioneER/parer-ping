@@ -35,34 +35,34 @@ public class UnitaDocObject extends DocObject implements Serializable {
     private ArrayList<FileUnitaDoc> listaFileUnitaDoc;
 
     public UnitaDocumentaria getUnitaDocumentariaXmlBean() {
-	return unitaDocumentariaXmlBean;
+        return unitaDocumentariaXmlBean;
     }
 
     public void setUnitaDocumentariaXmlBean(UnitaDocumentaria unitaDocumentariaXmlBean) {
-	this.unitaDocumentariaXmlBean = unitaDocumentariaXmlBean;
+        this.unitaDocumentariaXmlBean = unitaDocumentariaXmlBean;
     }
 
     public IndiceMM getIndiceMMXmlBean() {
-	return indiceMMXmlBean;
+        return indiceMMXmlBean;
     }
 
     public void setIndiceMMXmlBean(IndiceMM indiceMMXmlBean) {
-	this.indiceMMXmlBean = indiceMMXmlBean;
+        this.indiceMMXmlBean = indiceMMXmlBean;
     }
 
     public String getIndiceMMXml() {
-	return indiceMMXml;
+        return indiceMMXml;
     }
 
     public void setIndiceMMXml(String indiceMMXml) {
-	this.indiceMMXml = indiceMMXml;
+        this.indiceMMXml = indiceMMXml;
     }
 
     public ArrayList<FileUnitaDoc> getListaFileUnitaDoc() {
-	return listaFileUnitaDoc;
+        return listaFileUnitaDoc;
     }
 
     public void setListaFileUnitaDoc(ArrayList<FileUnitaDoc> listaFileUnitaDoc) {
-	this.listaFileUnitaDoc = listaFileUnitaDoc;
+        this.listaFileUnitaDoc = listaFileUnitaDoc;
     }
 }

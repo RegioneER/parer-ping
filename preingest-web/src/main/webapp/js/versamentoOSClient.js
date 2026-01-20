@@ -9,7 +9,11 @@ VersamentoOSClient.init = function (extensions_filters) {
         unique_names: false,
         chunk_size: '20mb',
         prevent_duplicates: true,
-        multi_selection: false,
+        /* MEV#39397 - Aggiornamento Plugin JS Plupload */
+        max_retries: 0,
+        multi_selection: true,
+        /* multi_selection: false, */
+        /************************************************/
         filters: extensions_filters,
         preinit: {
             PostInit: function () {
@@ -44,7 +48,9 @@ VersamentoOSClient.init = function (extensions_filters) {
 
                 $('input[name="operation__versaOggettoObjectStorage"]').prop('disabled', false);
             },
-            UploadFile: function (up, file) {
+            /* MEV#39397 - Aggiornamento Plugin JS Plupload */
+            BeforeUpload: function (up, file) {
+/*            UploadFile: function (up, file) { */
                 let cd_vers_gen = $('input[name="Cd_vers_gen"]') ? $('input[name="Cd_vers_gen"]').val() : null;
                 let ti_gest_oggetti_figli = $('select[name="Ti_gest_oggetti_figli"]') ? $('select[name="Ti_gest_oggetti_figli"]').val() : null;
                 let xml_to_upload_string = $('#Xml_to_upload_string') ? $('#Xml_to_upload_string').val() : null;
@@ -61,8 +67,11 @@ VersamentoOSClient.init = function (extensions_filters) {
                 let ti_priorita_versamento = $('select[name="Ti_priorita_versamento"]') ? $('select[name="Ti_priorita_versamento"]').val() : null;
 
                 up.setOption('multipart_params', {
-                    'idSessione': up.id,
-                    'dimensione': file.origSize,
+                    /* MEV#39397 - Aggiornamento Plugin JS Plupload */
+                    /* 'idSessione': up.id, */
+                    'idSessione': up.uid,
+                    'dimensione': file.size,
+                    
                     'nm_ambiente_vers': $('input[name="Nm_ambiente_vers"]').val(),
                     'nm_vers': $('input[name="Nm_vers"]').val(),
                     'nm_tipo_object': $('select[name="Nm_tipo_object"]').val(),
@@ -99,7 +108,7 @@ VersamentoOSClient.init = function (extensions_filters) {
             FileUploaded: function (up, file, result) {
                 var esito = jQuery.parseJSON(result.response);
                 //MEV#21995 gestire gli errori.
-                if (esito.result.code != 200) {
+                if (esito.result.code !== 200) {
                     up.stop();
                     VersamentoOSClient.showErrorMessage(esito.result);
                     VersamentoOSClient.showObjectStorageUpload();
@@ -146,7 +155,7 @@ VersamentoOSClient.showObjectStorageUpload = function (isDaTrasformare) {
         var reader = new FileReader();
 
         reader.onload = function (evt) {
-            if (evt.target.readyState != 2)
+            if (evt.target.readyState !== 2)
                 return;
             if (evt.target.error) {
                 alert('Error while reading file');

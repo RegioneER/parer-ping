@@ -41,28 +41,28 @@ public class RicercaRecuperatiExecuteQueries {
 
     public ListaOggRicRecuperatiType querySearch(String nmAmbienteVers, String nmVersatore) {
 
-	ListaOggRicRecuperatiType listaOggType = new ListaOggRicRecuperatiType();
-	List<OggRicRecuperatiType> listaOgg = new ArrayList<>();
+        ListaOggRicRecuperatiType listaOggType = new ListaOggRicRecuperatiType();
+        List<OggRicRecuperatiType> listaOgg = new ArrayList<>();
 
-	StringBuilder queryStr = new StringBuilder(
-		"SELECT sessioneRecup.cdKeyObject FROM PigSessioneRecup sessioneRecup "
-			+ " WHERE sessioneRecup.tiStato = 'RECUPERATO' AND sessioneRecup.nmAmbienteVers = :nmAmbienteVers "
-			+ " AND sessioneRecup.nmVers = :nmVersatore");
+        StringBuilder queryStr = new StringBuilder(
+                "SELECT sessioneRecup.cdKeyObject FROM PigSessioneRecup sessioneRecup "
+                        + " WHERE sessioneRecup.tiStato = 'RECUPERATO' AND sessioneRecup.nmAmbienteVers = :nmAmbienteVers "
+                        + " AND sessioneRecup.nmVers = :nmVersatore");
 
-	Query query = entityManager.createQuery(queryStr.toString());
-	query.setParameter("nmAmbienteVers", nmAmbienteVers);
-	query.setParameter("nmVersatore", nmVersatore);
+        Query query = entityManager.createQuery(queryStr.toString());
+        query.setParameter("nmAmbienteVers", nmAmbienteVers);
+        query.setParameter("nmVersatore", nmVersatore);
 
-	List<String> listaSess = query.getResultList();
+        List<String> listaSess = query.getResultList();
 
-	for (String cdKey : listaSess) {
-	    OggRicRecuperatiType ogg = new OggRicRecuperatiType();
-	    ogg.setCdKeyObject(cdKey);
-	    listaOgg.add(ogg);
-	}
-	listaOggType.setOggetto(listaOgg);
+        for (String cdKey : listaSess) {
+            OggRicRecuperatiType ogg = new OggRicRecuperatiType();
+            ogg.setCdKeyObject(cdKey);
+            listaOgg.add(ogg);
+        }
+        listaOggType.setOggetto(listaOgg);
 
-	return listaOggType;
+        return listaOggType;
     }
 
 }

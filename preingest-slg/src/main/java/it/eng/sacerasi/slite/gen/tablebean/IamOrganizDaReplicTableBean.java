@@ -33,19 +33,19 @@ public class IamOrganizDaReplicTableBean extends AbstractBaseTable<IamOrganizDaR
     public static IamOrganizDaReplicTableDescriptor TABLE_DESCRIPTOR = new IamOrganizDaReplicTableDescriptor();
 
     public IamOrganizDaReplicTableBean() {
-	super();
+        super();
     }
 
     protected IamOrganizDaReplicRowBean createRow() {
-	return new IamOrganizDaReplicRowBean();
+        return new IamOrganizDaReplicRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamOrganizDaReplicRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

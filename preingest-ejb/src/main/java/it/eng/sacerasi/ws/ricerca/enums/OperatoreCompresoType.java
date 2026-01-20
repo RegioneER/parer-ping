@@ -35,14 +35,14 @@ public enum OperatoreCompresoType {
     private static final java.util.Map<java.lang.String, OperatoreCompresoType> enumConstants = new java.util.HashMap<java.lang.String, OperatoreCompresoType>();
 
     static {
-	for (OperatoreCompresoType c : OperatoreCompresoType.values()) {
-	    OperatoreCompresoType.enumConstants.put(c.value, c);
-	}
+        for (OperatoreCompresoType c : OperatoreCompresoType.values()) {
+            OperatoreCompresoType.enumConstants.put(c.value, c);
+        }
 
     };
 
     private OperatoreCompresoType(final java.lang.String value) {
-	this.value = value;
+        this.value = value;
     }
 
     /**
@@ -53,11 +53,11 @@ public enum OperatoreCompresoType {
      * @return the constant for this value
      */
     public static OperatoreCompresoType fromValue(final java.lang.String value) {
-	OperatoreCompresoType c = OperatoreCompresoType.enumConstants.get(value);
-	if (c != null) {
-	    return c;
-	}
-	throw new IllegalArgumentException(value);
+        OperatoreCompresoType c = OperatoreCompresoType.enumConstants.get(value);
+        if (c != null) {
+            return c;
+        }
+        throw new IllegalArgumentException(value);
     }
 
     /**
@@ -74,7 +74,7 @@ public enum OperatoreCompresoType {
      * @return the value of this constant
      */
     public java.lang.String toString() {
-	return this.value;
+        return this.value;
     }
 
     /**
@@ -83,7 +83,7 @@ public enum OperatoreCompresoType {
      * @return the value of this constant
      */
     public java.lang.String value() {
-	return this.value;
+        return this.value;
     }
 
 }

@@ -44,22 +44,22 @@ public class CancellaUtenteHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(CancellaUtenteEjb.class)
-		.addClasses(CancellaUtenteExt.class, RispostaWSCancellaUtente.class)
-		.addPackages(true, "it.eng.sacerasi.ws.dto", "org.apache.commons.lang3");
+        return ArquillianUtils.createPingJar(CancellaUtenteEjb.class)
+                .addClasses(CancellaUtenteExt.class, RispostaWSCancellaUtente.class)
+                .addPackages(true, "it.eng.sacerasi.ws.dto", "org.apache.commons.lang3");
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void deleteIamUser_queryIsOk() {
-	CancellaUtenteExt cuExt = new CancellaUtenteExt();
-	cuExt.setIdUserIam(-99);
-	RispostaWSCancellaUtente rispostaWs = new RispostaWSCancellaUtente();
+        CancellaUtenteExt cuExt = new CancellaUtenteExt();
+        cuExt.setIdUserIam(-99);
+        RispostaWSCancellaUtente rispostaWs = new RispostaWSCancellaUtente();
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.deleteIamUser(cuExt, rispostaWs);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.deleteIamUser(cuExt, rispostaWs);
+            throw new RollbackException();
+        });
 
     }
 

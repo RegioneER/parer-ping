@@ -43,22 +43,22 @@ public class PigSopClassDicomVers implements Serializable {
     private PigVers pigVer;
 
     public PigSopClassDicomVers() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_SOP_CLASS_DICOM_VERS_IDSOPCLASSDICOMVERS_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_SOP_CLASS_DICOM_VERS"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_SOP_CLASS_DICOM_VERS"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SOP_CLASS_DICOM_VERS_IDSOPCLASSDICOMVERS_GENERATOR")
     @Column(name = "ID_SOP_CLASS_DICOM_VERS")
     // @XmlID
     public Long getIdSopClassDicomVers() {
-	return this.idSopClassDicomVers;
+        return this.idSopClassDicomVers;
     }
 
     public void setIdSopClassDicomVers(Long idSopClassDicomVers) {
-	this.idSopClassDicomVers = idSopClassDicomVers;
+        this.idSopClassDicomVers = idSopClassDicomVers;
     }
 
     // bi-directional many-to-one association to PigSopClassDicom
@@ -66,11 +66,11 @@ public class PigSopClassDicomVers implements Serializable {
     @JoinColumn(name = "ID_SOP_CLASS_DICOM")
 
     public PigSopClassDicom getPigSopClassDicom() {
-	return this.pigSopClassDicom;
+        return this.pigSopClassDicom;
     }
 
     public void setPigSopClassDicom(PigSopClassDicom pigSopClassDicom) {
-	this.pigSopClassDicom = pigSopClassDicom;
+        this.pigSopClassDicom = pigSopClassDicom;
     }
 
     // bi-directional many-to-one association to PigVers
@@ -78,11 +78,11 @@ public class PigSopClassDicomVers implements Serializable {
     @JoinColumn(name = "ID_VERS")
     @XmlInverseReference(mappedBy = "pigSopClassDicomVers")
     public PigVers getPigVer() {
-	return this.pigVer;
+        return this.pigVer;
     }
 
     public void setPigVer(PigVers pigVer) {
-	this.pigVer = pigVer;
+        this.pigVer = pigVer;
     }
 
 }

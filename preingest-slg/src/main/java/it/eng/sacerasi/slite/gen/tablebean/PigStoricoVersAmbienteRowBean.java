@@ -39,121 +39,121 @@ public class PigStoricoVersAmbienteRowBean extends BaseRow implements JEEBaseRow
     public static PigStoricoVersAmbienteTableDescriptor TABLE_DESCRIPTOR = new PigStoricoVersAmbienteTableDescriptor();
 
     public PigStoricoVersAmbienteRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdStoricoVersAmbiente() {
-	return getBigDecimal("id_storico_vers_ambiente");
+        return getBigDecimal("id_storico_vers_ambiente");
     }
 
     public void setIdStoricoVersAmbiente(BigDecimal idStoricoVersAmbiente) {
-	setObject("id_storico_vers_ambiente", idStoricoVersAmbiente);
+        setObject("id_storico_vers_ambiente", idStoricoVersAmbiente);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public BigDecimal getIdAmbienteVers() {
-	return getBigDecimal("id_ambiente_vers");
+        return getBigDecimal("id_ambiente_vers");
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	setObject("id_ambiente_vers", idAmbienteVers);
+        setObject("id_ambiente_vers", idAmbienteVers);
     }
 
     public Timestamp getDtIniVal() {
-	return getTimestamp("dt_ini_val");
+        return getTimestamp("dt_ini_val");
     }
 
     public void setDtIniVal(Timestamp dtIniVal) {
-	setObject("dt_ini_val", dtIniVal);
+        setObject("dt_ini_val", dtIniVal);
     }
 
     public Timestamp getDtFineVal() {
-	return getTimestamp("dt_fine_val");
+        return getTimestamp("dt_fine_val");
     }
 
     public void setDtFineVal(Timestamp dtFineVal) {
-	setObject("dt_fine_val", dtFineVal);
+        setObject("dt_fine_val", dtFineVal);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigStoricoVersAmbiente entity = (PigStoricoVersAmbiente) obj;
+        PigStoricoVersAmbiente entity = (PigStoricoVersAmbiente) obj;
 
-	this.setIdStoricoVersAmbiente(new BigDecimal(entity.getIdStoricoVersAmbiente()));
-	if (entity.getPigVer() != null) {
-	    this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
+        this.setIdStoricoVersAmbiente(new BigDecimal(entity.getIdStoricoVersAmbiente()));
+        if (entity.getPigVer() != null) {
+            this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
 
-	}
-	if (entity.getPigAmbienteVer() != null) {
-	    this.setIdAmbienteVers(new BigDecimal(entity.getPigAmbienteVer().getIdAmbienteVers()));
+        }
+        if (entity.getPigAmbienteVer() != null) {
+            this.setIdAmbienteVers(new BigDecimal(entity.getPigAmbienteVer().getIdAmbienteVers()));
 
-	}
-	if (entity.getDtIniVal() != null) {
-	    this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
-	}
-	if (entity.getDtFineVal() != null) {
-	    this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
-	}
+        }
+        if (entity.getDtIniVal() != null) {
+            this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
+        }
+        if (entity.getDtFineVal() != null) {
+            this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
+        }
     }
 
     @Override
     public PigStoricoVersAmbiente rowBeanToEntity() {
-	PigStoricoVersAmbiente entity = new PigStoricoVersAmbiente();
-	if (this.getIdStoricoVersAmbiente() != null) {
-	    entity.setIdStoricoVersAmbiente(this.getIdStoricoVersAmbiente().longValue());
-	}
-	if (this.getIdVers() != null) {
-	    if (entity.getPigVer() == null) {
-		entity.setPigVer(new PigVers());
-	    }
-	    entity.getPigVer().setIdVers(this.getIdVers().longValue());
-	}
-	if (this.getIdAmbienteVers() != null) {
-	    if (entity.getPigAmbienteVer() == null) {
-		entity.setPigAmbienteVer(new PigAmbienteVers());
-	    }
-	    entity.getPigAmbienteVer().setIdAmbienteVers(this.getIdAmbienteVers().longValue());
-	}
-	entity.setDtIniVal(this.getDtIniVal());
-	entity.setDtFineVal(this.getDtFineVal());
-	return entity;
+        PigStoricoVersAmbiente entity = new PigStoricoVersAmbiente();
+        if (this.getIdStoricoVersAmbiente() != null) {
+            entity.setIdStoricoVersAmbiente(this.getIdStoricoVersAmbiente().longValue());
+        }
+        if (this.getIdVers() != null) {
+            if (entity.getPigVer() == null) {
+                entity.setPigVer(new PigVers());
+            }
+            entity.getPigVer().setIdVers(this.getIdVers().longValue());
+        }
+        if (this.getIdAmbienteVers() != null) {
+            if (entity.getPigAmbienteVer() == null) {
+                entity.setPigAmbienteVer(new PigAmbienteVers());
+            }
+            entity.getPigAmbienteVer().setIdAmbienteVers(this.getIdAmbienteVers().longValue());
+        }
+        entity.setDtIniVal(this.getDtIniVal());
+        entity.setDtFineVal(this.getDtFineVal());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

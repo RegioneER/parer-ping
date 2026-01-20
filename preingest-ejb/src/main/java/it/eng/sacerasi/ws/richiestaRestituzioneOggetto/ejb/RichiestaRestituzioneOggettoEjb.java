@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 @Stateless(mappedName = "RichiestaRestituzioneOggettoEjb")
 @LocalBean
 @Interceptors({
-	it.eng.sacerasi.aop.TransactionInterceptor.class })
+        it.eng.sacerasi.aop.TransactionInterceptor.class })
 public class RichiestaRestituzioneOggettoEjb {
 
     private static final Logger log = LoggerFactory
-	    .getLogger(RichiestaRestituzioneOggettoEjb.class);
+            .getLogger(RichiestaRestituzioneOggettoEjb.class);
 
     @EJB
     private SalvataggioDati salvataggioDati;
@@ -46,76 +46,76 @@ public class RichiestaRestituzioneOggettoEjb {
     private RichiestaRestituzioneOggettoCheckHelper richiestaRestituzioneOggettoCheckHelper;
 
     public RichiestaRestituzioneOggettoRisposta richiestaRestituzioneOggetto(String nmAmbiente,
-	    String nmVersatore, String cdKeyObject) {
+            String nmVersatore, String cdKeyObject) {
 
-	log.debug(
-		"Ricevuta richiesta di RichiestaRestituzioneOggetto con i parametri : "
-			+ "nmAmbiente = {} " + " , " + "nmVersatore = {}  , cdKeyObject = {}",
-		nmAmbiente, nmVersatore, cdKeyObject);
-	// Istanzio la risposta
-	RispostaWSRichiestaRestituzioneOggetto rispostaWs = new RispostaWSRichiestaRestituzioneOggetto();
-	rispostaWs.setRichiestaRestituzioneOggettoRisposta(
-		new RichiestaRestituzioneOggettoRisposta());
-	// Imposto l'esito della risposta di default OK
-	rispostaWs.getRichiestaRestituzioneOggettoRisposta().setCdEsito(Constants.EsitoServizio.OK);
-	// Istanzio l'oggetto che contiene i parametri ricevuti
-	RichiestaRestituzioneOggettoInput inputParameters = new RichiestaRestituzioneOggettoInput(
-		nmAmbiente, nmVersatore, cdKeyObject);
-	// Istanzio l'Ext con l'oggetto creato
-	RichiestaRestituzioneOggettoExt rroExt = new RichiestaRestituzioneOggettoExt();
-	rroExt.setDescrizione(new WSDescRichiestaRestituzioneOggetto());
-	rroExt.setRichiestaRestituzioneOggettoInput(inputParameters);
+        log.debug(
+                "Ricevuta richiesta di RichiestaRestituzioneOggetto con i parametri : "
+                        + "nmAmbiente = {} " + " , " + "nmVersatore = {}  , cdKeyObject = {}",
+                nmAmbiente, nmVersatore, cdKeyObject);
+        // Istanzio la risposta
+        RispostaWSRichiestaRestituzioneOggetto rispostaWs = new RispostaWSRichiestaRestituzioneOggetto();
+        rispostaWs.setRichiestaRestituzioneOggettoRisposta(
+                new RichiestaRestituzioneOggettoRisposta());
+        // Imposto l'esito della risposta di default OK
+        rispostaWs.getRichiestaRestituzioneOggettoRisposta().setCdEsito(Constants.EsitoServizio.OK);
+        // Istanzio l'oggetto che contiene i parametri ricevuti
+        RichiestaRestituzioneOggettoInput inputParameters = new RichiestaRestituzioneOggettoInput(
+                nmAmbiente, nmVersatore, cdKeyObject);
+        // Istanzio l'Ext con l'oggetto creato
+        RichiestaRestituzioneOggettoExt rroExt = new RichiestaRestituzioneOggettoExt();
+        rroExt.setDescrizione(new WSDescRichiestaRestituzioneOggetto());
+        rroExt.setRichiestaRestituzioneOggettoInput(inputParameters);
 
-	// Chiamo la classe RichiestaRestituzioneOggettoCheck che gestisce i controlli e popola la
-	// rispostaWs
-	log.debug("Inizio controlli");
-	richiestaRestituzioneOggettoCheckHelper.checkRichiesta(rroExt, rispostaWs);
-	log.debug("Fine controlli");
+        // Chiamo la classe RichiestaRestituzioneOggettoCheck che gestisce i controlli e popola la
+        // rispostaWs
+        log.debug("Inizio controlli");
+        richiestaRestituzioneOggettoCheckHelper.checkRichiesta(rroExt, rispostaWs);
+        log.debug("Fine controlli");
 
-	RispostaControlli tmpRispCon;
+        RispostaControlli tmpRispCon;
 
-	log.debug("Apertura transazione");
-	rroExt.setDtApertura(Calendar.getInstance().getTime());
-	if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-	    // Ho passato i controlli con esito positivo
-	    log.debug("STATO SESSIONE: IN_ATTESA_RECUP");
-	    rroExt.setStatoSessione(Constants.StatoSessioneRecup.IN_ATTESA_RECUP);
-	} else {
-	    // Ho passato i controlli con esito negativo
-	    log.debug("STATO SESSIONE: CHIUSO_ERR");
-	    rroExt.setStatoSessione(Constants.StatoSessioneRecup.CHIUSO_ERR);
-	}
+        log.debug("Apertura transazione");
+        rroExt.setDtApertura(Calendar.getInstance().getTime());
+        if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+            // Ho passato i controlli con esito positivo
+            log.debug("STATO SESSIONE: IN_ATTESA_RECUP");
+            rroExt.setStatoSessione(Constants.StatoSessioneRecup.IN_ATTESA_RECUP);
+        } else {
+            // Ho passato i controlli con esito negativo
+            log.debug("STATO SESSIONE: CHIUSO_ERR");
+            rroExt.setStatoSessione(Constants.StatoSessioneRecup.CHIUSO_ERR);
+        }
 
-	log.debug(
-		"Creo sessione di recupero con stato definito sopra e codErr (se presente) : {}, dsErr (se presente): {}",
-		rispostaWs.getErrorCode(), rispostaWs.getErrorMessage());
-	tmpRispCon = salvataggioDati.creaSessioneRecupero(rroExt, rispostaWs.getErrorCode(),
-		rispostaWs.getErrorMessage());
+        log.debug(
+                "Creo sessione di recupero con stato definito sopra e codErr (se presente) : {}, dsErr (se presente): {}",
+                rispostaWs.getErrorCode(), rispostaWs.getErrorMessage());
+        tmpRispCon = salvataggioDati.creaSessioneRecupero(rroExt, rispostaWs.getErrorCode(),
+                rispostaWs.getErrorMessage());
 
-	if (tmpRispCon.getCodErr() != null) {
-	    setRispostaWsError(rispostaWs, tmpRispCon);
-	}
+        if (tmpRispCon.getCodErr() != null) {
+            setRispostaWsError(rispostaWs, tmpRispCon);
+        }
 
-	if (tmpRispCon.isrBoolean()
-		&& rispostaWs.getErrorType() != IRispostaWS.ErrorTypeEnum.DB_FATAL) {
-	    log.info("Fine transazione - COMMIT");
+        if (tmpRispCon.isrBoolean()
+                && rispostaWs.getErrorType() != IRispostaWS.ErrorTypeEnum.DB_FATAL) {
+            log.info("Fine transazione - COMMIT");
 
-	}
+        }
 
-	return rispostaWs.getRichiestaRestituzioneOggettoRisposta();
+        return rispostaWs.getRichiestaRestituzioneOggettoRisposta();
     }
 
     private void setRispostaWsError(RispostaWSRichiestaRestituzioneOggetto risp,
-	    RispostaControlli tmpRispostaControlli) {
-	risp.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	risp.setErrorCode(tmpRispostaControlli.getCodErr());
-	risp.setErrorMessage(tmpRispostaControlli.getDsErr());
-	risp.getRichiestaRestituzioneOggettoRisposta().setCdEsito(Constants.EsitoServizio.KO);
-	risp.getRichiestaRestituzioneOggettoRisposta().setCdErr(tmpRispostaControlli.getCodErr());
-	risp.getRichiestaRestituzioneOggettoRisposta().setDlErr(tmpRispostaControlli.getDsErr());
-	log.debug("Errore richiesta : {} - {}", tmpRispostaControlli.getCodErr(),
-		tmpRispostaControlli.getDsErr());
-	log.debug("Fine transazione - ROLLBACK");
+            RispostaControlli tmpRispostaControlli) {
+        risp.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+        risp.setErrorCode(tmpRispostaControlli.getCodErr());
+        risp.setErrorMessage(tmpRispostaControlli.getDsErr());
+        risp.getRichiestaRestituzioneOggettoRisposta().setCdEsito(Constants.EsitoServizio.KO);
+        risp.getRichiestaRestituzioneOggettoRisposta().setCdErr(tmpRispostaControlli.getCodErr());
+        risp.getRichiestaRestituzioneOggettoRisposta().setDlErr(tmpRispostaControlli.getDsErr());
+        log.debug("Errore richiesta : {} - {}", tmpRispostaControlli.getCodErr(),
+                tmpRispostaControlli.getDsErr());
+        log.debug("Fine transazione - ROLLBACK");
 
     }
 }

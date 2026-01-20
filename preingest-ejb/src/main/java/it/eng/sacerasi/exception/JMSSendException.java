@@ -25,11 +25,11 @@ public class JMSSendException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public JMSSendException(String message) {
-	super(message);
+        super(message);
     }
 
     public JMSSendException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
 }

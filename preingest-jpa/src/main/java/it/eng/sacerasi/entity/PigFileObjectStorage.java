@@ -42,66 +42,66 @@ public class PigFileObjectStorage implements Serializable {
     private PigFileObject pigFileObject;
 
     public PigFileObjectStorage() {
-	super();
+        super();
     }
 
     @Id
     @GenericGenerator(name = "PIG_FILE_OBJECT_STORAGE_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_FILE_OBJECT_STORAGE"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_FILE_OBJECT_STORAGE"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_FILE_OBJECT_STORAGE_GENERATOR")
     @Column(name = "ID_PIG_FILE_OBJECT_STORAGE")
     public Long getIdPigFileObjectStorage() {
-	return idPigFileObjectStorage;
+        return idPigFileObjectStorage;
     }
 
     public void setIdPigFileObjectStorage(Long idPigFileObjectStorage) {
-	this.idPigFileObjectStorage = idPigFileObjectStorage;
+        this.idPigFileObjectStorage = idPigFileObjectStorage;
     }
 
     @Column(name = "ID_DEC_BACKEND")
     public Long getIdDecBackend() {
-	return idDecBackend;
+        return idDecBackend;
     }
 
     public void setIdDecBackend(Long idDecBackend) {
-	this.idDecBackend = idDecBackend;
+        this.idDecBackend = idDecBackend;
     }
 
     @Column(name = "NM_TENANT")
     public String getNmTenant() {
-	return nmTenant;
+        return nmTenant;
     }
 
     public void setNmTenant(String nmTenant) {
-	this.nmTenant = nmTenant;
+        this.nmTenant = nmTenant;
     }
 
     @Column(name = "NM_BUCKET")
     public String getNmBucket() {
-	return nmBucket;
+        return nmBucket;
     }
 
     public void setNmBucket(String nmBucket) {
-	this.nmBucket = nmBucket;
+        this.nmBucket = nmBucket;
     }
 
     @Column(name = "CD_KEY_FILE")
     public String getCdKeyFile() {
-	return cdKeyFile;
+        return cdKeyFile;
     }
 
     public void setCdKeyFile(String cdKeyFile) {
-	this.cdKeyFile = cdKeyFile;
+        this.cdKeyFile = cdKeyFile;
     }
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PIG_FILE_OBJECT")
     public PigFileObject getPigFileObject() {
-	return pigFileObject;
+        return pigFileObject;
     }
 
     public void setPigFileObject(PigFileObject pigFileObject) {
-	this.pigFileObject = pigFileObject;
+        this.pigFileObject = pigFileObject;
     }
 }

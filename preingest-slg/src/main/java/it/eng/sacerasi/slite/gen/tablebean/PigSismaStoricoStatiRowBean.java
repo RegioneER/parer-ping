@@ -28,7 +28,7 @@ import java.sql.Timestamp;
  *
  */
 public class PigSismaStoricoStatiRowBean extends BaseRow
-	implements BaseRowInterface, JEEBaseRowInterface {
+        implements BaseRowInterface, JEEBaseRowInterface {
 
     /*
      * @Generated( value = "it.eg.dbtool.db.oracle.beangen.Oracle4JPAClientBeanGen$TableBeanWriter",
@@ -38,109 +38,109 @@ public class PigSismaStoricoStatiRowBean extends BaseRow
     public static PigSismaStoricoStatiTableDescriptor TABLE_DESCRIPTOR = new PigSismaStoricoStatiTableDescriptor();
 
     public PigSismaStoricoStatiRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdStato() {
-	return getBigDecimal("id_stato");
+        return getBigDecimal("id_stato");
     }
 
     public void setIdStato(BigDecimal idStato) {
-	setObject("id_stato", idStato);
+        setObject("id_stato", idStato);
     }
 
     public BigDecimal getIdSisma() {
-	return getBigDecimal("id_sisma");
+        return getBigDecimal("id_sisma");
     }
 
     public void setIdSisma(BigDecimal idSisma) {
-	setObject("id_sisma", idSisma);
+        setObject("id_sisma", idSisma);
     }
 
     public String getTiStato() {
-	return getString("ti_stato");
+        return getString("ti_stato");
     }
 
     public void setTiStato(String tiStato) {
-	setObject("ti_stato", tiStato);
+        setObject("ti_stato", tiStato);
     }
 
     public Timestamp getTsRegStato() {
-	return getTimestamp("ts_reg_stato");
+        return getTimestamp("ts_reg_stato");
     }
 
     public void setTsRegStato(Timestamp tsRegStato) {
-	setObject("ts_reg_stato", tsRegStato);
+        setObject("ts_reg_stato", tsRegStato);
     }
 
     public String getCdDesc() {
-	return getString("cd_desc");
+        return getString("cd_desc");
     }
 
     public void setCdDesc(String cdDesc) {
-	setObject("cd_desc", cdDesc);
+        setObject("cd_desc", cdDesc);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigSismaStoricoStati entity = (PigSismaStoricoStati) obj;
-	this.setIdStato(
-		entity.getIdStato() == null ? null : BigDecimal.valueOf(entity.getIdStato()));
-	if (entity.getPigSisma() != null) {
-	    this.setIdSisma(entity.getPigSisma().getIdSisma() == null ? null
-		    : BigDecimal.valueOf(entity.getPigSisma().getIdSisma()));
-	}
-	this.setTiStato(entity.getTiStato());
-	this.setTsRegStato(new Timestamp(entity.getTsRegStato().getTime()));
-	this.setCdDesc(entity.getDescrizione());
+        PigSismaStoricoStati entity = (PigSismaStoricoStati) obj;
+        this.setIdStato(
+                entity.getIdStato() == null ? null : BigDecimal.valueOf(entity.getIdStato()));
+        if (entity.getPigSisma() != null) {
+            this.setIdSisma(entity.getPigSisma().getIdSisma() == null ? null
+                    : BigDecimal.valueOf(entity.getPigSisma().getIdSisma()));
+        }
+        this.setTiStato(entity.getTiStato());
+        this.setTsRegStato(new Timestamp(entity.getTsRegStato().getTime()));
+        this.setCdDesc(entity.getDescrizione());
     }
 
     @Override
     public PigSismaStoricoStati rowBeanToEntity() {
-	PigSismaStoricoStati entity = new PigSismaStoricoStati();
-	if (this.getIdStato() != null) {
-	    entity.setIdStato(this.getIdStato().longValue());
-	}
-	if (this.getIdSisma() != null) {
-	    if (entity.getPigSisma() == null) {
-		entity.setPigSisma(new PigSisma());
-	    }
-	    entity.getPigSisma().setIdSisma(this.getIdSisma().longValue());
-	}
-	entity.setTiStato(this.getTiStato());
-	entity.setTsRegStato(this.getTsRegStato());
-	entity.setDescrizione(this.getCdDesc());
-	return entity;
+        PigSismaStoricoStati entity = new PigSismaStoricoStati();
+        if (this.getIdStato() != null) {
+            entity.setIdStato(this.getIdStato().longValue());
+        }
+        if (this.getIdSisma() != null) {
+            if (entity.getPigSisma() == null) {
+                entity.setPigSisma(new PigSisma());
+            }
+            entity.getPigSisma().setIdSisma(this.getIdSisma().longValue());
+        }
+        entity.setTiStato(this.getTiStato());
+        entity.setTsRegStato(this.getTsRegStato());
+        entity.setDescrizione(this.getCdDesc());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.valueOf(getObject("rownum").toString());
+        return Integer.valueOf(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.valueOf(getObject("rnum").toString());
+        return Integer.valueOf(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.valueOf(getObject("numrecords").toString());
+        return Integer.valueOf(getObject("numrecords").toString());
     }
 
 }

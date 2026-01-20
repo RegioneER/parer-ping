@@ -46,93 +46,93 @@ public class InviaOggettiGeneratiAPingTimer extends JobTimer {
     private SessionContext context;
 
     public InviaOggettiGeneratiAPingTimer() {
-	super(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING);
+        super(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING);
     }
 
     @Override
     @Lock(LockType.WRITE)
     public void startCronScheduled(CronSchedule sched, String applicationName) {
-	boolean existTimer = false;
-	ScheduleExpression tmpScheduleExpression;
+        boolean existTimer = false;
+        ScheduleExpression tmpScheduleExpression;
 
-	for (Object obj : timerService.getTimers()) {
-	    Timer timer = (Timer) obj;
-	    String scheduled = (String) timer.getInfo();
-	    if (scheduled.equals(jobName)) {
-		existTimer = true;
-	    }
-	}
-	if (!existTimer) {
-	    logger.info("Schedulazione: Ore: " + sched.getHour());
-	    logger.info("Schedulazione: Minuti: " + sched.getMinute());
-	    logger.info("Schedulazione: DOW: " + sched.getDayOfWeek());
-	    logger.info("Schedulazione: Mese: " + sched.getMonth());
-	    logger.info("Schedulazione: DOM: " + sched.getDayOfMonth());
+        for (Object obj : timerService.getTimers()) {
+            Timer timer = (Timer) obj;
+            String scheduled = (String) timer.getInfo();
+            if (scheduled.equals(jobName)) {
+                existTimer = true;
+            }
+        }
+        if (!existTimer) {
+            logger.info("Schedulazione: Ore: " + sched.getHour());
+            logger.info("Schedulazione: Minuti: " + sched.getMinute());
+            logger.info("Schedulazione: DOW: " + sched.getDayOfWeek());
+            logger.info("Schedulazione: Mese: " + sched.getMonth());
+            logger.info("Schedulazione: DOM: " + sched.getDayOfMonth());
 
-	    tmpScheduleExpression = new ScheduleExpression();
-	    tmpScheduleExpression.hour(sched.getHour());
-	    tmpScheduleExpression.minute(sched.getMinute());
-	    tmpScheduleExpression.dayOfWeek(sched.getDayOfWeek());
-	    tmpScheduleExpression.month(sched.getMonth());
-	    tmpScheduleExpression.dayOfMonth(sched.getDayOfMonth());
-	    logger.info("Lancio il timer InviaOggettiGeneratiAPingTimer...");
-	    timerService.createCalendarTimer(tmpScheduleExpression,
-		    new TimerConfig(jobName, false));
-	}
+            tmpScheduleExpression = new ScheduleExpression();
+            tmpScheduleExpression.hour(sched.getHour());
+            tmpScheduleExpression.minute(sched.getMinute());
+            tmpScheduleExpression.dayOfWeek(sched.getDayOfWeek());
+            tmpScheduleExpression.month(sched.getMonth());
+            tmpScheduleExpression.dayOfMonth(sched.getDayOfMonth());
+            logger.info("Lancio il timer InviaOggettiGeneratiAPingTimer...");
+            timerService.createCalendarTimer(tmpScheduleExpression,
+                    new TimerConfig(jobName, false));
+        }
     }
 
     @Override
     @Lock(LockType.WRITE)
     public void startSingleAction(String applicationName) {
-	boolean existTimer = false;
+        boolean existTimer = false;
 
-	for (Object obj : timerService.getTimers()) {
-	    Timer timer = (Timer) obj;
-	    String scheduled = (String) timer.getInfo();
-	    if (scheduled.equals(jobName)) {
-		existTimer = true;
-	    }
-	}
-	if (!existTimer) {
-	    timerService.createTimer(TIME_DURATION, jobName);
-	}
+        for (Object obj : timerService.getTimers()) {
+            Timer timer = (Timer) obj;
+            String scheduled = (String) timer.getInfo();
+            if (scheduled.equals(jobName)) {
+                existTimer = true;
+            }
+        }
+        if (!existTimer) {
+            timerService.createTimer(TIME_DURATION, jobName);
+        }
     }
 
     @Override
     public void stop(String applicationName) {
-	for (Object obj : timerService.getTimers()) {
-	    Timer timer = (Timer) obj;
-	    String scheduled = (String) timer.getInfo();
-	    if (scheduled.equals(jobName)) {
-		timer.cancel();
-	    }
-	}
+        for (Object obj : timerService.getTimers()) {
+            Timer timer = (Timer) obj;
+            String scheduled = (String) timer.getInfo();
+            if (scheduled.equals(jobName)) {
+                timer.cancel();
+            }
+        }
     }
 
     @Timeout
     public void doJob(Timer timer) {
-	if (timer.getInfo().equals(jobName)) {
-	    context.getBusinessObject(InviaOggettiGeneratiAPingTimer.class).startProcess(timer);
-	}
+        if (timer.getInfo().equals(jobName)) {
+            context.getBusinessObject(InviaOggettiGeneratiAPingTimer.class).startProcess(timer);
+        }
     }
 
     @Override
     public void startProcess(Timer timer) {
-	try {
-	    jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
-		    Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
-	    inviaOggettiGeneratiAPing.run();
-	    jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
-		    Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
-	} catch (Exception e) {
-	    // questo log viene scritto solo in caso di errore.
-	    String message = null;
-	    if (e.getCause() != null) {
-		message = e.getCause().getMessage();
-	    }
-	    jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
-		    Constants.TipiRegLogJob.ERRORE, message);
-	    logger.error("Errore nell'esecuzione del job di \"Invia oggetti generati a PING\"", e);
-	}
+        try {
+            jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
+                    Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
+            inviaOggettiGeneratiAPing.run();
+            jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
+                    Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
+        } catch (Exception e) {
+            // questo log viene scritto solo in caso di errore.
+            String message = null;
+            if (e.getCause() != null) {
+                message = e.getCause().getMessage();
+            }
+            jobLogger.writeAtomicLog(Constants.NomiJob.INVIA_OGGETTI_GENERATI_A_PING,
+                    Constants.TipiRegLogJob.ERRORE, message);
+            logger.error("Errore nell'esecuzione del job di \"Invia oggetti generati a PING\"", e);
+        }
     }
 }

@@ -37,161 +37,161 @@ public class MonVLisVersObjNonVersRowBean extends BaseRow implements JEEBaseRowI
     public static MonVLisVersObjNonVersTableDescriptor TABLE_DESCRIPTOR = new MonVLisVersObjNonVersTableDescriptor();
 
     public MonVLisVersObjNonVersRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public String getCdKeyObject() {
-	return getString("cd_key_object");
+        return getString("cd_key_object");
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	setObject("cd_key_object", cdKeyObject);
+        setObject("cd_key_object", cdKeyObject);
     }
 
     public String getNmTipoObject() {
-	return getString("nm_tipo_object");
+        return getString("nm_tipo_object");
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	setObject("nm_tipo_object", nmTipoObject);
+        setObject("nm_tipo_object", nmTipoObject);
     }
 
     public BigDecimal getIdSessioneIngest() {
-	return getBigDecimal("id_sessione_ingest");
+        return getBigDecimal("id_sessione_ingest");
     }
 
     public void setIdSessioneIngest(BigDecimal idSessioneIngest) {
-	setObject("id_sessione_ingest", idSessioneIngest);
+        setObject("id_sessione_ingest", idSessioneIngest);
     }
 
     public Timestamp getDtApertura() {
-	return getTimestamp("dt_apertura");
+        return getTimestamp("dt_apertura");
     }
 
     public void setDtApertura(Timestamp dtApertura) {
-	setObject("dt_apertura", dtApertura);
+        setObject("dt_apertura", dtApertura);
     }
 
     public Timestamp getDtChiusura() {
-	return getTimestamp("dt_chiusura");
+        return getTimestamp("dt_chiusura");
     }
 
     public void setDtChiusura(Timestamp dtChiusura) {
-	setObject("dt_chiusura", dtChiusura);
+        setObject("dt_chiusura", dtChiusura);
     }
 
     public String getTiStato() {
-	return getString("ti_stato");
+        return getString("ti_stato");
     }
 
     public void setTiStato(String tiStato) {
-	setObject("ti_stato", tiStato);
+        setObject("ti_stato", tiStato);
     }
 
     public String getCdErr() {
-	return getString("cd_err");
+        return getString("cd_err");
     }
 
     public void setCdErr(String cdErr) {
-	setObject("cd_err", cdErr);
+        setObject("cd_err", cdErr);
     }
 
     public String getDlErr() {
-	return getString("dl_err");
+        return getString("dl_err");
     }
 
     public void setDlErr(String dlErr) {
-	setObject("dl_err", dlErr);
+        setObject("dl_err", dlErr);
     }
 
     public String getFlVerif() {
-	return getString("fl_verif");
+        return getString("fl_verif");
     }
 
     public void setFlVerif(String flVerif) {
-	setObject("fl_verif", flVerif);
+        setObject("fl_verif", flVerif);
     }
 
     public String getFlNonRisolub() {
-	return getString("fl_non_risolub");
+        return getString("fl_non_risolub");
     }
 
     public void setFlNonRisolub(String flNonRisolub) {
-	setObject("fl_non_risolub", flNonRisolub);
+        setObject("fl_non_risolub", flNonRisolub);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVLisVersObjNonVers entity = (MonVLisVersObjNonVers) obj;
-	this.setIdVers(entity.getIdVers());
-	this.setCdKeyObject(entity.getCdKeyObject());
-	this.setNmTipoObject(entity.getNmTipoObject());
-	this.setIdSessioneIngest(entity.getIdSessioneIngest());
-	if (entity.getDtApertura() != null) {
-	    this.setDtApertura(new Timestamp(entity.getDtApertura().getTime()));
-	}
-	if (entity.getDtChiusura() != null) {
-	    this.setDtChiusura(new Timestamp(entity.getDtChiusura().getTime()));
-	}
-	this.setTiStato(entity.getTiStato());
-	this.setCdErr(entity.getCdErr());
-	this.setDlErr(entity.getDlErr());
-	this.setFlVerif(entity.getFlVerif());
-	this.setFlNonRisolub(entity.getFlNonRisolub());
+        MonVLisVersObjNonVers entity = (MonVLisVersObjNonVers) obj;
+        this.setIdVers(entity.getIdVers());
+        this.setCdKeyObject(entity.getCdKeyObject());
+        this.setNmTipoObject(entity.getNmTipoObject());
+        this.setIdSessioneIngest(entity.getIdSessioneIngest());
+        if (entity.getDtApertura() != null) {
+            this.setDtApertura(new Timestamp(entity.getDtApertura().getTime()));
+        }
+        if (entity.getDtChiusura() != null) {
+            this.setDtChiusura(new Timestamp(entity.getDtChiusura().getTime()));
+        }
+        this.setTiStato(entity.getTiStato());
+        this.setCdErr(entity.getCdErr());
+        this.setDlErr(entity.getDlErr());
+        this.setFlVerif(entity.getFlVerif());
+        this.setFlNonRisolub(entity.getFlNonRisolub());
     }
 
     @Override
     public MonVLisVersObjNonVers rowBeanToEntity() {
-	MonVLisVersObjNonVers entity = new MonVLisVersObjNonVers();
-	entity.setIdVers(this.getIdVers());
-	entity.setCdKeyObject(this.getCdKeyObject());
-	entity.setNmTipoObject(this.getNmTipoObject());
-	entity.setIdSessioneIngest(this.getIdSessioneIngest());
-	entity.setDtApertura(this.getDtApertura());
-	entity.setDtChiusura(this.getDtChiusura());
-	entity.setTiStato(this.getTiStato());
-	entity.setCdErr(this.getCdErr());
-	entity.setDlErr(this.getDlErr());
-	entity.setFlVerif(this.getFlVerif());
-	entity.setFlNonRisolub(this.getFlNonRisolub());
-	return entity;
+        MonVLisVersObjNonVers entity = new MonVLisVersObjNonVers();
+        entity.setIdVers(this.getIdVers());
+        entity.setCdKeyObject(this.getCdKeyObject());
+        entity.setNmTipoObject(this.getNmTipoObject());
+        entity.setIdSessioneIngest(this.getIdSessioneIngest());
+        entity.setDtApertura(this.getDtApertura());
+        entity.setDtChiusura(this.getDtChiusura());
+        entity.setTiStato(this.getTiStato());
+        entity.setCdErr(this.getCdErr());
+        entity.setDlErr(this.getDlErr());
+        entity.setFlVerif(this.getFlVerif());
+        entity.setFlNonRisolub(this.getFlNonRisolub());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

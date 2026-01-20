@@ -37,35 +37,35 @@ public class Constants {
 
     public enum ComboFlag {
 
-	SI("1"), NO("0");
+        SI("1"), NO("0");
 
-	private final String value;
+        private final String value;
 
-	private ComboFlag(String value) {
-	    this.value = value;
-	}
+        private ComboFlag(String value) {
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
     }
 
     public enum ComboFlagParametersSetType {
 
-	ARCHIVISTICO("1"), TECNICO("0");
+        ARCHIVISTICO("1"), TECNICO("0");
 
-	private final String value;
+        private final String value;
 
-	private ComboFlagParametersSetType(String value) {
-	    this.value = value;
-	}
+        private ComboFlagParametersSetType(String value) {
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
     }
 
     public enum ComboFlagParametersType {
-	NUMERICO, ALFANUMERICO, DATA, FLAG;
+        NUMERICO, ALFANUMERICO, DATA, FLAG;
     }
 }

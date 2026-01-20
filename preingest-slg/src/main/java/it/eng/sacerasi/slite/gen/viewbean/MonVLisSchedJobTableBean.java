@@ -38,19 +38,19 @@ public class MonVLisSchedJobTableBean extends AbstractBaseTable<MonVLisSchedJobR
     public static MonVLisSchedJobTableDescriptor TABLE_DESCRIPTOR = new MonVLisSchedJobTableDescriptor();
 
     public MonVLisSchedJobTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisSchedJobRowBean createRow() {
-	return new MonVLisSchedJobRowBean();
+        return new MonVLisSchedJobRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisSchedJobRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

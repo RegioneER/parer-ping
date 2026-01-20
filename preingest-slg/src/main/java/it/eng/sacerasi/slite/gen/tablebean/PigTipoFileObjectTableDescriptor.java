@@ -55,49 +55,49 @@ public class PigTipoFileObjectTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_TIPO_FILE_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_FILE_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_NM_TIPO_FILE_OBJECT,
-		new ColumnDescriptor(COL_NM_TIPO_FILE_OBJECT, Types.VARCHAR, 100, false));
-	map.put(COL_DS_TIPO_FILE_OBJECT,
-		new ColumnDescriptor(COL_DS_TIPO_FILE_OBJECT, Types.VARCHAR, 254, false));
-	map.put(COL_FL_VERS_SACER_ASINC,
-		new ColumnDescriptor(COL_FL_VERS_SACER_ASINC, Types.VARCHAR, 1, false));
-	map.put(COL_NM_TIPO_DOC_SACER,
-		new ColumnDescriptor(COL_NM_TIPO_DOC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_TI_DOC_SACER, new ColumnDescriptor(COL_TI_DOC_SACER, Types.VARCHAR, 20, false));
-	map.put(COL_NM_TIPO_STRUT_DOC_SACER,
-		new ColumnDescriptor(COL_NM_TIPO_STRUT_DOC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_NM_TIPO_COMP_DOC_SACER,
-		new ColumnDescriptor(COL_NM_TIPO_COMP_DOC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_NM_FMT_FILE_VERS_SACER,
-		new ColumnDescriptor(COL_NM_FMT_FILE_VERS_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_FL_VER_FIRMA_FMT_SACER,
-		new ColumnDescriptor(COL_FL_VER_FIRMA_FMT_SACER, Types.VARCHAR, 1, false));
-	map.put(COL_NM_FMT_FILE_CALC_SACER,
-		new ColumnDescriptor(COL_NM_FMT_FILE_CALC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_DS_FMT_RAPPR_ESTESO_CALC_SACER, new ColumnDescriptor(
-		COL_DS_FMT_RAPPR_ESTESO_CALC_SACER, Types.VARCHAR, 254, false));
-	map.put(COL_DS_FMT_RAPPR_CALC_SACER,
-		new ColumnDescriptor(COL_DS_FMT_RAPPR_CALC_SACER, Types.VARCHAR, 254, false));
-	map.put(COL_FL_CALC_HASH_SACER,
-		new ColumnDescriptor(COL_FL_CALC_HASH_SACER, Types.VARCHAR, 1, false));
-	map.put(COL_TI_CALC_HASH_SACER,
-		new ColumnDescriptor(COL_TI_CALC_HASH_SACER, Types.VARCHAR, 20, false));
+        map.put(COL_ID_TIPO_FILE_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_FILE_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_NM_TIPO_FILE_OBJECT,
+                new ColumnDescriptor(COL_NM_TIPO_FILE_OBJECT, Types.VARCHAR, 100, false));
+        map.put(COL_DS_TIPO_FILE_OBJECT,
+                new ColumnDescriptor(COL_DS_TIPO_FILE_OBJECT, Types.VARCHAR, 254, false));
+        map.put(COL_FL_VERS_SACER_ASINC,
+                new ColumnDescriptor(COL_FL_VERS_SACER_ASINC, Types.VARCHAR, 1, false));
+        map.put(COL_NM_TIPO_DOC_SACER,
+                new ColumnDescriptor(COL_NM_TIPO_DOC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_TI_DOC_SACER, new ColumnDescriptor(COL_TI_DOC_SACER, Types.VARCHAR, 20, false));
+        map.put(COL_NM_TIPO_STRUT_DOC_SACER,
+                new ColumnDescriptor(COL_NM_TIPO_STRUT_DOC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_NM_TIPO_COMP_DOC_SACER,
+                new ColumnDescriptor(COL_NM_TIPO_COMP_DOC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_NM_FMT_FILE_VERS_SACER,
+                new ColumnDescriptor(COL_NM_FMT_FILE_VERS_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_FL_VER_FIRMA_FMT_SACER,
+                new ColumnDescriptor(COL_FL_VER_FIRMA_FMT_SACER, Types.VARCHAR, 1, false));
+        map.put(COL_NM_FMT_FILE_CALC_SACER,
+                new ColumnDescriptor(COL_NM_FMT_FILE_CALC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_DS_FMT_RAPPR_ESTESO_CALC_SACER, new ColumnDescriptor(
+                COL_DS_FMT_RAPPR_ESTESO_CALC_SACER, Types.VARCHAR, 254, false));
+        map.put(COL_DS_FMT_RAPPR_CALC_SACER,
+                new ColumnDescriptor(COL_DS_FMT_RAPPR_CALC_SACER, Types.VARCHAR, 254, false));
+        map.put(COL_FL_CALC_HASH_SACER,
+                new ColumnDescriptor(COL_FL_CALC_HASH_SACER, Types.VARCHAR, 1, false));
+        map.put(COL_TI_CALC_HASH_SACER,
+                new ColumnDescriptor(COL_TI_CALC_HASH_SACER, Types.VARCHAR, 20, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

@@ -48,31 +48,31 @@ public class RecuperoErroriInCodaHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(RecuperoErroriInCodaHelper.class);
+        return ArquillianUtils.createPingJar(RecuperoErroriInCodaHelper.class);
     }
 
     @Test
     void getListaObjects_queryIsOk() {
-	List<Long> idVersatori = aListOfLong(2);
-	for (Constants.StatoOggetto stato : Constants.StatoOggetto.values()) {
-	    helper.getListaObjects(idVersatori, stato);
-	    assertTrue(true);
-	}
+        List<Long> idVersatori = aListOfLong(2);
+        for (Constants.StatoOggetto stato : Constants.StatoOggetto.values()) {
+            helper.getListaObjects(idVersatori, stato);
+            assertTrue(true);
+        }
 
     }
 
     @Test
     void getCountUdDaVersare() {
-	PigObject obj = new PigObject();
-	PigUnitaDocObject daContare = new PigUnitaDocObject();
-	daContare.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.DA_VERSARE.name());
-	PigUnitaDocObject daEscludere = new PigUnitaDocObject();
-	daEscludere.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
-	obj.setPigUnitaDocObjects(new ArrayList<>());
-	obj.getPigUnitaDocObjects().add(daContare);
-	obj.getPigUnitaDocObjects().add(daEscludere);
-	final int count = helper.getCountUdDaVersare(obj);
-	assertEquals(1, count);
+        PigObject obj = new PigObject();
+        PigUnitaDocObject daContare = new PigUnitaDocObject();
+        daContare.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.DA_VERSARE.name());
+        PigUnitaDocObject daEscludere = new PigUnitaDocObject();
+        daEscludere.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.VERSATA_OK.name());
+        obj.setPigUnitaDocObjects(new ArrayList<>());
+        obj.getPigUnitaDocObjects().add(daContare);
+        obj.getPigUnitaDocObjects().add(daEscludere);
+        final int count = helper.getCountUdDaVersare(obj);
+        assertEquals(1, count);
 
     }
 

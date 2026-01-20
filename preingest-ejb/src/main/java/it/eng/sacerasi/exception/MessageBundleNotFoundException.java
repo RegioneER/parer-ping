@@ -28,19 +28,19 @@ public class MessageBundleNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 6923294062644864262L;
 
     public MessageBundleNotFoundException() {
-	super();
+        super();
     }
 
     public MessageBundleNotFoundException(String message, Throwable throwable) {
-	super(message, throwable);
+        super(message, throwable);
     }
 
     public MessageBundleNotFoundException(Throwable throwable) {
-	super(throwable);
+        super(throwable);
     }
 
     public MessageBundleNotFoundException(String message) {
-	super(message);
+        super(message);
     }
 
 }

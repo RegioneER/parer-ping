@@ -29,47 +29,47 @@ public class GenericDto implements Serializable {
     private ArrayList<String> warnMessages = new ArrayList<>();
 
     public boolean existsMessages() {
-	return !infoMessages.isEmpty() || !warnMessages.isEmpty();
+        return !infoMessages.isEmpty() || !warnMessages.isEmpty();
     }
 
     public boolean existsInfoMessages() {
-	return !infoMessages.isEmpty();
+        return !infoMessages.isEmpty();
     }
 
     public boolean existsWarnMessages() {
-	return !warnMessages.isEmpty();
+        return !warnMessages.isEmpty();
     }
 
     public List<String> getInfoMessages() {
-	return infoMessages;
+        return infoMessages;
     }
 
     public List<String> getWarnMessages() {
-	return warnMessages;
+        return warnMessages;
     }
 
     public void addInfoMessage(String message) {
-	infoMessages.add(message);
+        infoMessages.add(message);
     }
 
     public void addWarnMessage(String message) {
-	warnMessages.add(message);
+        warnMessages.add(message);
     }
 
     public String getWarnMessage() {
-	if (!warnMessages.isEmpty()) {
-	    return warnMessages.get(0);
-	} else {
-	    return null;
-	}
+        if (!warnMessages.isEmpty()) {
+            return warnMessages.get(0);
+        } else {
+            return null;
+        }
     }
 
     public String getInfoMessage() {
-	if (!infoMessages.isEmpty()) {
-	    return infoMessages.get(0);
-	} else {
-	    return null;
-	}
+        if (!infoMessages.isEmpty()) {
+            return infoMessages.get(0);
+        } else {
+            return null;
+        }
     }
 
 }

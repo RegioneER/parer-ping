@@ -27,33 +27,33 @@ public class ChiaveDocumento implements Serializable {
     private String registro;
 
     public ChiaveDocumento(String anno, String numero, String registro) {
-	this.anno = anno;
-	this.numero = numero;
-	this.registro = registro;
+        this.anno = anno;
+        this.numero = numero;
+        this.registro = registro;
     }
 
     public String getAnno() {
-	return anno;
+        return anno;
     }
 
     public void setAnno(String anno) {
-	this.anno = anno;
+        this.anno = anno;
     }
 
     public String getNumero() {
-	return numero;
+        return numero;
     }
 
     public void setNumero(String numero) {
-	this.numero = numero;
+        this.numero = numero;
     }
 
     public String getRegistro() {
-	return registro;
+        return registro;
     }
 
     public void setRegistro(String registro) {
-	this.registro = registro;
+        this.registro = registro;
     }
 
 }

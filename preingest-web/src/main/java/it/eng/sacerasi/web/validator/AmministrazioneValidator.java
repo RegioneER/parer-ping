@@ -29,57 +29,57 @@ import it.eng.spagoLite.message.MessageBox;
 public class AmministrazioneValidator extends TypeValidator {
 
     public AmministrazioneValidator(MessageBox messageBox) {
-	super(messageBox);
+        super(messageBox);
     }
 
     public void validaDatiVersatoreBase(Status status, String tipologia, BigDecimal idAmbienteVers,
-	    String nmVers, String dsVers, Date dtIniValVers, Date dtFineValVers,
-	    Date dtIniValAmbienteVers, Date dtFineValAmbienteVers, String dsPathInputFtp,
-	    String dsPathOutputFtp, String dsPathTrasf) {
-	if (status.equals(Status.insert)) {
-	    if (tipologia == null) {
-		getMessageBox()
-			.addError("Errore di compilazione form: tipologia non inserita<br/>");
-	    }
-	}
-	if (idAmbienteVers == null) {
-	    getMessageBox()
-		    .addError("Errore di compilazione form: Ambiente Versatore non inserito<br/>");
-	}
-	if (nmVers == null) {
-	    getMessageBox()
-		    .addError("Errore di compilazione form: Nome Versatore non inserito<br/>");
-	}
-	if (dsVers == null) {
-	    getMessageBox().addError(
-		    "Errore di compilazione form: descrizione versatore non inserito<br/>");
-	}
-	if (dsPathInputFtp == null) {
-	    getMessageBox().addError("Errore di compilazione form: path input non inserito<br/>");
-	}
-	if (dsPathOutputFtp == null) {
-	    getMessageBox().addError("Errore di compilazione form: path output non inserito<br/>");
-	}
-	if (dsPathTrasf == null) {
-	    getMessageBox()
-		    .addError("Errore di compilazione form: path trasformazione non inserito<br/>");
-	}
-	if (dtIniValVers == null) {
-	    getMessageBox().addError(
-		    "Errore di compilazione form: data di inizio validità versatore non inserita<br/>");
-	}
-	if (dtFineValVers == null) {
-	    getMessageBox().addError(
-		    "Errore di compilazione form: data di fine validità versatore non inserita<br/>");
-	}
-	if (dtIniValAmbienteVers == null) {
-	    getMessageBox().addError(
-		    "Errore di compilazione form: data di inizio validità appartenenza ambiente versatore non inserita<br/>");
-	}
-	if (dtFineValAmbienteVers == null) {
-	    getMessageBox().addError(
-		    "Errore di compilazione form: data di fine validità appartenenza ambiente versatore non inserita<br/>");
-	}
+            String nmVers, String dsVers, Date dtIniValVers, Date dtFineValVers,
+            Date dtIniValAmbienteVers, Date dtFineValAmbienteVers, String dsPathInputFtp,
+            String dsPathOutputFtp, String dsPathTrasf) {
+        if (status.equals(Status.insert)) {
+            if (tipologia == null) {
+                getMessageBox()
+                        .addError("Errore di compilazione form: tipologia non inserita<br/>");
+            }
+        }
+        if (idAmbienteVers == null) {
+            getMessageBox()
+                    .addError("Errore di compilazione form: Ambiente Versatore non inserito<br/>");
+        }
+        if (nmVers == null) {
+            getMessageBox()
+                    .addError("Errore di compilazione form: Nome Versatore non inserito<br/>");
+        }
+        if (dsVers == null) {
+            getMessageBox().addError(
+                    "Errore di compilazione form: descrizione versatore non inserito<br/>");
+        }
+        if (dsPathInputFtp == null) {
+            getMessageBox().addError("Errore di compilazione form: path input non inserito<br/>");
+        }
+        if (dsPathOutputFtp == null) {
+            getMessageBox().addError("Errore di compilazione form: path output non inserito<br/>");
+        }
+        if (dsPathTrasf == null) {
+            getMessageBox()
+                    .addError("Errore di compilazione form: path trasformazione non inserito<br/>");
+        }
+        if (dtIniValVers == null) {
+            getMessageBox().addError(
+                    "Errore di compilazione form: data di inizio validità versatore non inserita<br/>");
+        }
+        if (dtFineValVers == null) {
+            getMessageBox().addError(
+                    "Errore di compilazione form: data di fine validità versatore non inserita<br/>");
+        }
+        if (dtIniValAmbienteVers == null) {
+            getMessageBox().addError(
+                    "Errore di compilazione form: data di inizio validità appartenenza ambiente versatore non inserita<br/>");
+        }
+        if (dtFineValAmbienteVers == null) {
+            getMessageBox().addError(
+                    "Errore di compilazione form: data di fine validità appartenenza ambiente versatore non inserita<br/>");
+        }
     }
 
 }

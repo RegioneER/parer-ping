@@ -24,8 +24,8 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import it.eng.paginator.util.HibernateUtils;
-import it.eng.sacerasi.exception.ParerErrorSeverity;
 import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.exception.error.ErrorSeverity;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
 import it.eng.sacerasi.ws.dto.IRispostaWS;
 import it.eng.sacerasi.ws.replicaUtente.dto.CancellaUtenteExt;
@@ -44,21 +44,21 @@ public class CancellaUtenteEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteIamUser(CancellaUtenteExt cuExt, RispostaWSCancellaUtente rispostaWs)
-	    throws ParerInternalError {
-	try {
-	    Query q = entityManager
-		    .createQuery("DELETE FROM IamUser u WHERE u.idUserIam = :idUserIam ");
-	    q.setParameter("idUserIam", HibernateUtils.longFrom(cuExt.getIdUserIam()));
-	    q.executeUpdate();
-	} catch (Exception ex) {
-	    rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
-	    rispostaWs.setErrorCode(MessaggiWSBundle.SERVIZI_USR_001);
-	    rispostaWs.setErrorMessage("Errore nella cancellazione dell'utente "
-		    + ExceptionUtils.getRootCauseMessage(ex));
-	    throw new ParerInternalError(ParerErrorSeverity.ERROR,
-		    "Errore nella cancellazione dell'utente "
-			    + ExceptionUtils.getRootCauseMessage(ex),
-		    ex);
-	}
+            throws ParerInternalError {
+        try {
+            Query q = entityManager
+                    .createQuery("DELETE FROM IamUser u WHERE u.idUserIam = :idUserIam ");
+            q.setParameter("idUserIam", HibernateUtils.longFrom(cuExt.getIdUserIam()));
+            q.executeUpdate();
+        } catch (Exception ex) {
+            rispostaWs.setSeverity(IRispostaWS.SeverityEnum.ERROR);
+            rispostaWs.setErrorCode(MessaggiWSBundle.SERVIZI_USR_001);
+            rispostaWs.setErrorMessage("Errore nella cancellazione dell'utente "
+                    + ExceptionUtils.getRootCauseMessage(ex));
+            throw new ParerInternalError(ErrorSeverity.ERROR,
+                    "Errore nella cancellazione dell'utente "
+                            + ExceptionUtils.getRootCauseMessage(ex),
+                    ex);
+        }
     }
 }

@@ -36,98 +36,98 @@ public class PigDichVersSacerRowBean extends BaseRow implements JEEBaseRowInterf
     public static PigDichVersSacerTableDescriptor TABLE_DESCRIPTOR = new PigDichVersSacerTableDescriptor();
 
     public PigDichVersSacerRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdDichVersSacer() {
-	return getBigDecimal("id_dich_vers_sacer");
+        return getBigDecimal("id_dich_vers_sacer");
     }
 
     public void setIdDichVersSacer(BigDecimal idDichVersSacer) {
-	setObject("id_dich_vers_sacer", idDichVersSacer);
+        setObject("id_dich_vers_sacer", idDichVersSacer);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getTiDichVers() {
-	return getString("ti_dich_vers");
+        return getString("ti_dich_vers");
     }
 
     public void setTiDichVers(String tiDichVers) {
-	setObject("ti_dich_vers", tiDichVers);
+        setObject("ti_dich_vers", tiDichVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigDichVersSacer entity = (PigDichVersSacer) obj;
+        PigDichVersSacer entity = (PigDichVersSacer) obj;
 
-	this.setIdDichVersSacer(new BigDecimal(entity.getIdDichVersSacer()));
-	if (entity.getPigVer() != null) {
-	    this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
-	}
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setTiDichVers(entity.getTiDichVers());
+        this.setIdDichVersSacer(new BigDecimal(entity.getIdDichVersSacer()));
+        if (entity.getPigVer() != null) {
+            this.setIdVers(new BigDecimal(entity.getPigVer().getIdVers()));
+        }
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setTiDichVers(entity.getTiDichVers());
     }
 
     @Override
     public PigDichVersSacer rowBeanToEntity() {
-	PigDichVersSacer entity = new PigDichVersSacer();
-	if (this.getIdDichVersSacer() != null) {
-	    entity.setIdDichVersSacer(this.getIdDichVersSacer().longValue());
-	}
-	if (this.getIdVers() != null) {
-	    if (entity.getPigVer() == null) {
-		entity.setPigVer(new PigVers());
-	    }
-	    entity.getPigVer().setIdVers(this.getIdVers().longValue());
-	}
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setTiDichVers(this.getTiDichVers());
-	return entity;
+        PigDichVersSacer entity = new PigDichVersSacer();
+        if (this.getIdDichVersSacer() != null) {
+            entity.setIdDichVersSacer(this.getIdDichVersSacer().longValue());
+        }
+        if (this.getIdVers() != null) {
+            if (entity.getPigVer() == null) {
+                entity.setPigVer(new PigVers());
+            }
+            entity.getPigVer().setIdVers(this.getIdVers().longValue());
+        }
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setTiDichVers(this.getTiDichVers());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

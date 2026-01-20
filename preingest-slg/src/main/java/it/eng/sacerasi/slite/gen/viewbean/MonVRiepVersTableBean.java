@@ -38,19 +38,19 @@ public class MonVRiepVersTableBean extends AbstractBaseTable<MonVRiepVersRowBean
     public static MonVRiepVersTableDescriptor TABLE_DESCRIPTOR = new MonVRiepVersTableDescriptor();
 
     public MonVRiepVersTableBean() {
-	super();
+        super();
     }
 
     protected MonVRiepVersRowBean createRow() {
-	return new MonVRiepVersRowBean();
+        return new MonVRiepVersRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVRiepVersRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

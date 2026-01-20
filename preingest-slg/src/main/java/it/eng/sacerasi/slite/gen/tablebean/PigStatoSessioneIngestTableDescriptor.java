@@ -43,25 +43,25 @@ public class PigStatoSessioneIngestTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_STATO_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_STATO_SESSIONE_INGEST, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
-	map.put(COL_TS_REG_STATO,
-		new ColumnDescriptor(COL_TS_REG_STATO, Types.TIMESTAMP, 11, false));
-	map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
+        map.put(COL_ID_STATO_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_STATO_SESSIONE_INGEST, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
+        map.put(COL_TS_REG_STATO,
+                new ColumnDescriptor(COL_TS_REG_STATO, Types.TIMESTAMP, 11, false));
+        map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

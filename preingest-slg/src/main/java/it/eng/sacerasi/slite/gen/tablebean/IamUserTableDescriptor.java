@@ -52,34 +52,34 @@ public class IamUserTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, true));
-	map.put(COL_NM_USERID, new ColumnDescriptor(COL_NM_USERID, Types.VARCHAR, 100, false));
-	map.put(COL_CD_PSW, new ColumnDescriptor(COL_CD_PSW, Types.VARCHAR, 100, false));
-	map.put(COL_FL_USER_ADMIN,
-		new ColumnDescriptor(COL_FL_USER_ADMIN, Types.VARCHAR, 1, false));
-	map.put(COL_NM_COGNOME_USER,
-		new ColumnDescriptor(COL_NM_COGNOME_USER, Types.VARCHAR, 100, false));
-	map.put(COL_NM_NOME_USER,
-		new ColumnDescriptor(COL_NM_NOME_USER, Types.VARCHAR, 100, false));
-	map.put(COL_FL_ATTIVO, new ColumnDescriptor(COL_FL_ATTIVO, Types.VARCHAR, 1, false));
-	map.put(COL_DT_REG_PSW, new ColumnDescriptor(COL_DT_REG_PSW, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_SCAD_PSW, new ColumnDescriptor(COL_DT_SCAD_PSW, Types.TIMESTAMP, 7, false));
-	map.put(COL_CD_SALT, new ColumnDescriptor(COL_CD_SALT, Types.VARCHAR, 100, false));
-	map.put(COL_CD_FISC, new ColumnDescriptor(COL_CD_FISC, Types.VARCHAR, 16, false));
-	map.put(COL_DS_EMAIL, new ColumnDescriptor(COL_DS_EMAIL, Types.VARCHAR, 254, false));
-	map.put(COL_FL_CONTR_IP, new ColumnDescriptor(COL_FL_CONTR_IP, Types.VARCHAR, 1, false));
+        map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, true));
+        map.put(COL_NM_USERID, new ColumnDescriptor(COL_NM_USERID, Types.VARCHAR, 100, false));
+        map.put(COL_CD_PSW, new ColumnDescriptor(COL_CD_PSW, Types.VARCHAR, 100, false));
+        map.put(COL_FL_USER_ADMIN,
+                new ColumnDescriptor(COL_FL_USER_ADMIN, Types.VARCHAR, 1, false));
+        map.put(COL_NM_COGNOME_USER,
+                new ColumnDescriptor(COL_NM_COGNOME_USER, Types.VARCHAR, 100, false));
+        map.put(COL_NM_NOME_USER,
+                new ColumnDescriptor(COL_NM_NOME_USER, Types.VARCHAR, 100, false));
+        map.put(COL_FL_ATTIVO, new ColumnDescriptor(COL_FL_ATTIVO, Types.VARCHAR, 1, false));
+        map.put(COL_DT_REG_PSW, new ColumnDescriptor(COL_DT_REG_PSW, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_SCAD_PSW, new ColumnDescriptor(COL_DT_SCAD_PSW, Types.TIMESTAMP, 7, false));
+        map.put(COL_CD_SALT, new ColumnDescriptor(COL_CD_SALT, Types.VARCHAR, 100, false));
+        map.put(COL_CD_FISC, new ColumnDescriptor(COL_CD_FISC, Types.VARCHAR, 16, false));
+        map.put(COL_DS_EMAIL, new ColumnDescriptor(COL_DS_EMAIL, Types.VARCHAR, 254, false));
+        map.put(COL_FL_CONTR_IP, new ColumnDescriptor(COL_FL_CONTR_IP, Types.VARCHAR, 1, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

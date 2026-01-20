@@ -24,10 +24,10 @@ public class ListaOggRicDiarioType {
     private List<OggettoRicDiarioType> oggetto;
 
     public List<OggettoRicDiarioType> getOggetto() {
-	return oggetto;
+        return oggetto;
     }
 
     public void setOggetto(List<OggettoRicDiarioType> oggetto) {
-	this.oggetto = oggetto;
+        this.oggetto = oggetto;
     }
 }

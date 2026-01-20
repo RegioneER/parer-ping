@@ -47,33 +47,33 @@ public class RicercaRestituzioniOggetti {
 
     @WebMethod(operationName = "ricercaRestituzioniOggetti")
     public RicercaRestituzioniOggettiRisposta ricercaRestituzioniOggetti(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "nmTipoObject") String nmTipoObject,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject,
-	    @WebParam(name = "tiStatoSessione") String tiStatoSessione,
-	    @WebParam(name = "dtAperturaSessioneDa") Date dtAperturaSessioneDa,
-	    @WebParam(name = "dtAperturaSessioneA") Date dtAperturaSessioneA,
-	    @WebParam(name = "niRecordInizio") Integer niRecordInizio,
-	    @WebParam(name = "niRecordResultSet") Integer niRecordResultSet,
-	    @WebParam(name = "xmlDatiSpecOutput") String xmlDatiSpecOutput,
-	    @WebParam(name = "xmlDatiSpecFiltri") String xmlDatiSpecFiltri,
-	    @WebParam(name = "xmlDatiSpecOrder") String xmlDatiSpecOrder) {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "nmTipoObject") String nmTipoObject,
+            @WebParam(name = "cdKeyObject") String cdKeyObject,
+            @WebParam(name = "tiStatoSessione") String tiStatoSessione,
+            @WebParam(name = "dtAperturaSessioneDa") Date dtAperturaSessioneDa,
+            @WebParam(name = "dtAperturaSessioneA") Date dtAperturaSessioneA,
+            @WebParam(name = "niRecordInizio") Integer niRecordInizio,
+            @WebParam(name = "niRecordResultSet") Integer niRecordResultSet,
+            @WebParam(name = "xmlDatiSpecOutput") String xmlDatiSpecOutput,
+            @WebParam(name = "xmlDatiSpecFiltri") String xmlDatiSpecFiltri,
+            @WebParam(name = "xmlDatiSpecOrder") String xmlDatiSpecOrder) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	RicercaRestituzioniOggettiRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.ricercaRestituzioniOggetti(nmAmbiente, nmVersatore, nmTipoObject,
-		    cdKeyObject, tiStatoSessione, dtAperturaSessioneDa, dtAperturaSessioneA,
-		    niRecordInizio, niRecordResultSet, xmlDatiSpecOutput, xmlDatiSpecFiltri,
-		    xmlDatiSpecOrder);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        RicercaRestituzioniOggettiRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.ricercaRestituzioniOggetti(nmAmbiente, nmVersatore, nmTipoObject,
+                    cdKeyObject, tiStatoSessione, dtAperturaSessioneDa, dtAperturaSessioneA,
+                    niRecordInizio, niRecordResultSet, xmlDatiSpecOutput, xmlDatiSpecFiltri,
+                    xmlDatiSpecOrder);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

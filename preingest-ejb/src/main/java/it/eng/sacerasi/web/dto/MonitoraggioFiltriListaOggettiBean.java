@@ -46,164 +46,164 @@ public class MonitoraggioFiltriListaOggettiBean implements Serializable {
     private String tiContenuto;
 
     public BigDecimal getIdAmbienteVers() {
-	return idAmbienteVers;
+        return idAmbienteVers;
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	this.idAmbienteVers = idAmbienteVers;
+        this.idAmbienteVers = idAmbienteVers;
     }
 
     public BigDecimal getIdVers() {
-	return idVers;
+        return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     public BigDecimal getIdTipoObject() {
-	return idTipoObject;
+        return idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     public String getPeriodoVers() {
-	return periodoVers;
+        return periodoVers;
     }
 
     public void setPeriodoVers(String periodoVers) {
-	this.periodoVers = periodoVers;
+        this.periodoVers = periodoVers;
     }
 
     public Date getGiornoVersDa() {
-	return giornoVersDa;
+        return giornoVersDa;
     }
 
     public void setGiornoVersDa(Date giornoVersDa) {
-	this.giornoVersDa = giornoVersDa;
+        this.giornoVersDa = giornoVersDa;
     }
 
     public Date getGiornoVersA() {
-	return giornoVersA;
+        return giornoVersA;
     }
 
     public void setGiornoVersA(Date giornoVersA) {
-	this.giornoVersA = giornoVersA;
+        this.giornoVersA = giornoVersA;
     }
 
     public BigDecimal getOreVersDa() {
-	return oreVersDa;
+        return oreVersDa;
     }
 
     public void setOreVersDa(BigDecimal oreVersDa) {
-	this.oreVersDa = oreVersDa;
+        this.oreVersDa = oreVersDa;
     }
 
     public BigDecimal getMinutiVersDa() {
-	return minutiVersDa;
+        return minutiVersDa;
     }
 
     public void setMinutiVersDa(BigDecimal minutiVersDa) {
-	this.minutiVersDa = minutiVersDa;
+        this.minutiVersDa = minutiVersDa;
     }
 
     public BigDecimal getOreVersA() {
-	return oreVersA;
+        return oreVersA;
     }
 
     public void setOreVersA(BigDecimal oreVersA) {
-	this.oreVersA = oreVersA;
+        this.oreVersA = oreVersA;
     }
 
     public BigDecimal getMinutiVersA() {
-	return minutiVersA;
+        return minutiVersA;
     }
 
     public void setMinutiVersA(BigDecimal minutiVersA) {
-	this.minutiVersA = minutiVersA;
+        this.minutiVersA = minutiVersA;
     }
 
     public Date getGiornoVersDaValidato() {
-	return giornoVersDaValidato;
+        return giornoVersDaValidato;
     }
 
     public void setGiornoVersDaValidato(Date giornoVersDaValidato) {
-	this.giornoVersDaValidato = giornoVersDaValidato;
+        this.giornoVersDaValidato = giornoVersDaValidato;
     }
 
     public Date getGiornoVersAValidato() {
-	return giornoVersAValidato;
+        return giornoVersAValidato;
     }
 
     public void setGiornoVersAValidato(Date giornoVersAValidato) {
-	this.giornoVersAValidato = giornoVersAValidato;
+        this.giornoVersAValidato = giornoVersAValidato;
     }
 
     public List<String> getStatoObject() {
-	return statoObject;
+        return statoObject;
     }
 
     public void setStatoObject(List<String> statoObject) {
-	this.statoObject = statoObject;
+        this.statoObject = statoObject;
     }
 
     public String getRegistro() {
-	return registro;
+        return registro;
     }
 
     public void setRegistro(String registro) {
-	this.registro = registro;
+        this.registro = registro;
     }
 
     public BigDecimal getAnno() {
-	return anno;
+        return anno;
     }
 
     public void setAnno(BigDecimal anno) {
-	this.anno = anno;
+        this.anno = anno;
     }
 
     public String getCodice() {
-	return codice;
+        return codice;
     }
 
     public void setCodice(String codice) {
-	this.codice = codice;
+        this.codice = codice;
     }
 
     public String getChiave() {
-	return chiave;
+        return chiave;
     }
 
     public void setChiave(String chiave) {
-	this.chiave = chiave;
+        this.chiave = chiave;
     }
 
     public List<String> getTiVersFile() {
-	return tiVersFile;
+        return tiVersFile;
     }
 
     public void setTiVersFile(List<String> tiVersFile) {
-	this.tiVersFile = tiVersFile;
+        this.tiVersFile = tiVersFile;
     }
 
     // MEV 26979
     public BigDecimal getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     // MEV 39012
     public String getTiContenuto() {
-	return tiContenuto;
+        return tiContenuto;
     }
 
     public void setTiContenuto(String tiContenuto) {
-	this.tiContenuto = tiContenuto;
+        this.tiContenuto = tiContenuto;
     }
 }

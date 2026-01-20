@@ -28,27 +28,27 @@ public class MonFakeSessn {
     private String password;
 
     public String getIpChiamante() {
-	return ipChiamante;
+        return ipChiamante;
     }
 
     public void setIpChiamante(String ipChiamante) {
-	this.ipChiamante = ipChiamante;
+        this.ipChiamante = ipChiamante;
     }
 
     public String getLoginName() {
-	return loginName;
+        return loginName;
     }
 
     public void setLoginName(String loginName) {
-	this.loginName = loginName;
+        this.loginName = loginName;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
 }

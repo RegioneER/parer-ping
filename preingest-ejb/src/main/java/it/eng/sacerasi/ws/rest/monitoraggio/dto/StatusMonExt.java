@@ -34,66 +34,66 @@ public class StatusMonExt implements IStatusMonExt {
     private IWSDesc descrizione;
 
     public User getUtente() {
-	return utente;
+        return utente;
     }
 
     public void setUtente(User utente) {
-	this.utente = utente;
+        this.utente = utente;
     }
 
     @Override
     public String getDatiXml() {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public void setDatiXml(String datiXml) {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public String getLoginName() {
-	return loginName;
+        return loginName;
     }
 
     @Override
     public void setLoginName(String loginName) {
-	this.loginName = loginName;
+        this.loginName = loginName;
     }
 
     @Override
     public String getVersioneWsChiamata() {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public void setVersioneWsChiamata(String versioneWsChiamata) {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
     @Override
     public EnumSet<Costanti.ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Metodo non implementato");
+        throw new UnsupportedOperationException("Metodo non implementato");
     }
 
 }

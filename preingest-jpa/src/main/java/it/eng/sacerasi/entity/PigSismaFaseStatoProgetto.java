@@ -37,39 +37,39 @@ public class PigSismaFaseStatoProgetto implements Serializable {
     private PigSismaStatoProgetto pigSismaStatoProgetto;
 
     public PigSismaFaseStatoProgetto() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @Column(name = "ID_SISMA_FASE_STATO_PROGETTO")
     public Long getIdSismaFaseStatoProgetto() {
-	return idSismaFaseStatoProgetto;
+        return idSismaFaseStatoProgetto;
     }
 
     public void setIdSismaFaseStatoProgetto(Long idSismaFaseStatoProgetto) {
-	this.idSismaFaseStatoProgetto = idSismaFaseStatoProgetto;
+        this.idSismaFaseStatoProgetto = idSismaFaseStatoProgetto;
     }
 
     // bi-directional many-to-one association to PigSismaFaseProgetto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_FASE_PROGETTO")
     public PigSismaFaseProgetto getPigSismaFaseProgetto() {
-	return pigSismaFaseProgetto;
+        return pigSismaFaseProgetto;
     }
 
     public void setPigSismaFaseProgetto(PigSismaFaseProgetto pigSismaFaseProgetto) {
-	this.pigSismaFaseProgetto = pigSismaFaseProgetto;
+        this.pigSismaFaseProgetto = pigSismaFaseProgetto;
     }
 
     // bi-directional many-to-one association to PigSismaStatoProgetto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_STATO_PROGETTO")
     public PigSismaStatoProgetto getPigSismaStatoProgetto() {
-	return pigSismaStatoProgetto;
+        return pigSismaStatoProgetto;
     }
 
     public void setPigSismaStatoProgetto(PigSismaStatoProgetto pigSismaStatoProgetto) {
-	this.pigSismaStatoProgetto = pigSismaStatoProgetto;
+        this.pigSismaStatoProgetto = pigSismaStatoProgetto;
     }
 
 }

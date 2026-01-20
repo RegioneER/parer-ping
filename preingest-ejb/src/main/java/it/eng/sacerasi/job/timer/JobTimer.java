@@ -47,49 +47,49 @@ public abstract class JobTimer implements JbossJobTimer {
     protected JobLogger jobLogger;
 
     protected JobTimer(Constants.NomiJob jobName) {
-	if (jobName == null) {
-	    throw new IllegalArgumentException();
-	}
+        if (jobName == null) {
+            throw new IllegalArgumentException();
+        }
 
-	this.jobName = jobName.name();
+        this.jobName = jobName.name();
     }
 
     @Override
     public String getJobName() {
-	return jobName;
+        return jobName;
     }
 
     protected boolean isActive() {
-	boolean result = false;
+        boolean result = false;
 
-	for (Object obj : timerService.getTimers()) {
-	    Timer timer = (Timer) obj;
-	    String scheduled = (String) timer.getInfo();
-	    if (scheduled.equals(jobName)) {
-		result = true;
-		break;
-	    }
-	}
+        for (Object obj : timerService.getTimers()) {
+            Timer timer = (Timer) obj;
+            String scheduled = (String) timer.getInfo();
+            if (scheduled.equals(jobName)) {
+                result = true;
+                break;
+            }
+        }
 
-	return result;
+        return result;
     }
 
     @Override
     public Date getNextElaboration(String applicationName) {
-	try {
-	    for (Object obj : timerService.getTimers()) {
-		Timer timer = (Timer) obj;
-		String scheduled = (String) timer.getInfo();
+        try {
+            for (Object obj : timerService.getTimers()) {
+                Timer timer = (Timer) obj;
+                String scheduled = (String) timer.getInfo();
 
-		if (scheduled.equals(jobName)) {
-		    return timer.getNextTimeout();
-		}
-	    }
+                if (scheduled.equals(jobName)) {
+                    return timer.getNextTimeout();
+                }
+            }
 
-	} catch (NoMoreTimeoutsException e) {
-	    logger.warn("Il metodo timer.getNextTimeout() ha restituito eccezione");
-	}
-	return null;
+        } catch (NoMoreTimeoutsException e) {
+            logger.warn("Il metodo timer.getNextTimeout() ha restituito eccezione");
+        }
+        return null;
     }
 
     /**

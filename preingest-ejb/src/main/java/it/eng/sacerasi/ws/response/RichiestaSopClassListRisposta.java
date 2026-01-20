@@ -31,54 +31,54 @@ public class RichiestaSopClassListRisposta {
     private ListaSopClassRespType listaSOPClass;
 
     public RichiestaSopClassListRisposta() {
-	listaSOPClass = new ListaSopClassRespType();
+        listaSOPClass = new ListaSopClassRespType();
     }
 
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     public EsitoServizio getCdEsito() {
-	return cdEsito;
+        return cdEsito;
     }
 
     public void setCdEsito(EsitoServizio cdEsito) {
-	this.cdEsito = cdEsito;
+        this.cdEsito = cdEsito;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     public ListaSopClassRespType getListaSOPClass() {
-	return listaSOPClass;
+        return listaSOPClass;
     }
 
     public void setListaSOPClass(ListaSopClassRespType listaSOPClass) {
-	this.listaSOPClass = listaSOPClass;
+        this.listaSOPClass = listaSOPClass;
     }
 }

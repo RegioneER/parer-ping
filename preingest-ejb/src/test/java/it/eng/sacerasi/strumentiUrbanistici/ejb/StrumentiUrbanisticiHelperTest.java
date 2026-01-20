@@ -48,146 +48,146 @@ public class StrumentiUrbanisticiHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(StrumentiUrbanisticiHelper.class);
+        return ArquillianUtils.createPingJar(StrumentiUrbanisticiHelper.class);
     }
 
     @Test
     void getEntityManager_notNull() {
-	assertNotNull(helper.getEntityManager());
+        assertNotNull(helper.getEntityManager());
     }
 
     @Test
     void findTipiStrumentiUrbanistici_queryIsOk() {
-	helper.findTipiStrumentiUrbanistici();
-	assertTrue(true);
+        helper.findTipiStrumentiUrbanistici();
+        assertTrue(true);
     }
 
     private PigVers aPigVers() {
-	PigVers pigVer = new PigVers();
-	pigVer.setIdVers(aLong());
-	return pigVer;
+        PigVers pigVer = new PigVers();
+        pigVer.setIdVers(aLong());
+        return pigVer;
     }
 
     @Test
     void findSUByVersAndStates_queryIsOk() {
-	BigDecimal idVers = BigDecimal.ZERO;
-	EnumSet set = EnumSet.of(PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO);
-	helper.findSUByVersAndStates(new RicercaStrumentiUrbanisticiDTO(), idVers, set);
-	assertTrue(true);
+        BigDecimal idVers = BigDecimal.ZERO;
+        EnumSet set = EnumSet.of(PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO);
+        helper.findSUByVersAndStates(new RicercaStrumentiUrbanisticiDTO(), idVers, set);
+        assertTrue(true);
     }
 
     @Test
     void findSUByVersAndCdKey_queryIsOk() {
-	PigVers pigVer = aPigVers();
-	String cdKey = aString();
-	helper.findSUByVersAndCdKey(pigVer, cdKey);
-	assertTrue(true);
+        PigVers pigVer = aPigVers();
+        String cdKey = aString();
+        helper.findSUByVersAndCdKey(pigVer, cdKey);
+        assertTrue(true);
     }
 
     @Test
     void findNumeriByVersAnnoTipoSUFase_queryIsOk() {
-	PigVers pigVer = aPigVers();
-	BigDecimal anno = aBigDecimal();
-	String nmTipoStrumento = aString();
-	String fase = aString();
-	helper.findNumeriByVersAnnoTipoSUFase(pigVer, anno, nmTipoStrumento, fase);
-	assertTrue(true);
+        PigVers pigVer = aPigVers();
+        BigDecimal anno = aBigDecimal();
+        String nmTipoStrumento = aString();
+        String fase = aString();
+        helper.findNumeriByVersAnnoTipoSUFase(pigVer, anno, nmTipoStrumento, fase);
+        assertTrue(true);
     }
 
     @Test
     void getSUByVersAndCdKey_queryIsOk() {
-	PigVers pigVer = aPigVers();
-	String cdKey = aString();
-	helper.getSUByVersAndCdKey(pigVer, cdKey);
-	assertTrue(true);
+        PigVers pigVer = aPigVers();
+        String cdKey = aString();
+        helper.getSUByVersAndCdKey(pigVer, cdKey);
+        assertTrue(true);
     }
 
     @Test
     void findPigStrumUrbPianoStatoByNomeTipo_queryIsOk() {
-	String nomeTipo = aString();
-	helper.findPigStrumUrbPianoStatoByNomeTipo(nomeTipo);
-	assertTrue(true);
+        String nomeTipo = aString();
+        helper.findPigStrumUrbPianoStatoByNomeTipo(nomeTipo);
+        assertTrue(true);
     }
 
     @Test
     void getPigStrumUrbPianoStatoByNomeTipoByTipoAndFase_queryIsOk() {
-	String nmTipoStrumentoUrbanistico = aString();
-	String tiFaseStrumento = aString();
-	helper.getPigStrumUrbPianoStatoByNomeTipoByTipoAndFase(nmTipoStrumentoUrbanistico,
-		tiFaseStrumento);
-	assertTrue(true);
+        String nmTipoStrumentoUrbanistico = aString();
+        String tiFaseStrumento = aString();
+        helper.getPigStrumUrbPianoStatoByNomeTipoByTipoAndFase(nmTipoStrumentoUrbanistico,
+                tiFaseStrumento);
+        assertTrue(true);
     }
 
     @Test
     void getPigStrumUrbValDocByNomeTipoDoc_queryIsOk() {
-	String nmTipoDocumento = aString();
-	helper.getPigStrumUrbValDocByNomeTipoDoc(nmTipoDocumento);
-	assertTrue(true);
+        String nmTipoDocumento = aString();
+        helper.getPigStrumUrbValDocByNomeTipoDoc(nmTipoDocumento);
+        assertTrue(true);
     }
 
     @Test
     void getPigStrumUrbDocumentiBySuNmFileOrig_queryIsOk() {
-	PigStrumentiUrbanistici pigStrumentiUrbanistici = null;
-	String nmFileOrig = aString();
-	helper.getPigStrumUrbDocumentiBySuNmFileOrig(pigStrumentiUrbanistici, nmFileOrig);
-	assertTrue(true);
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = null;
+        String nmFileOrig = aString();
+        helper.getPigStrumUrbDocumentiBySuNmFileOrig(pigStrumentiUrbanistici, nmFileOrig);
+        assertTrue(true);
     }
 
     @Test
     void getPigStrumUrbByCdKeyAndTiStato_queryIsOk() {
-	String cdKey = aString();
-	PigStrumentiUrbanistici.TiStato tiStato = null;
-	helper.getPigStrumUrbByCdKeyAndTiStato(cdKey, tiStato);
-	assertTrue(true);
+        String cdKey = aString();
+        PigStrumentiUrbanistici.TiStato tiStato = null;
+        helper.getPigStrumUrbByCdKeyAndTiStato(cdKey, tiStato);
+        assertTrue(true);
     }
 
     @Test
     void getDatiNavigazionePerSU_queryIsOk() {
-	BigDecimal idStrumentiUrbanistici = aBigDecimal();
-	helper.getDatiNavigazionePerSU(idStrumentiUrbanistici);
-	assertTrue(true);
+        BigDecimal idStrumentiUrbanistici = aBigDecimal();
+        helper.getDatiNavigazionePerSU(idStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void findPigVSuLisDocsPianoByTipoStrumentoFase_queryIsOk() {
-	String nmTipoStrumento = aString();
-	String tiFaseStrumento = aString();
-	helper.findPigVSuLisDocsPianoByTipoStrumentoFase(nmTipoStrumento, tiFaseStrumento);
-	assertTrue(true);
+        String nmTipoStrumento = aString();
+        String tiFaseStrumento = aString();
+        helper.findPigVSuLisDocsPianoByTipoStrumentoFase(nmTipoStrumento, tiFaseStrumento);
+        assertTrue(true);
     }
 
     @Test
     void getDatiAnagraficiByVers_queryIsOk() {
-	PigVers vers = aPigVers();
-	helper.getDatiAnagraficiByVers(vers);
-	assertTrue(true);
+        PigVers vers = aPigVers();
+        helper.getDatiAnagraficiByVers(vers);
+        assertTrue(true);
     }
 
     @Test
     void getDatiAnagraficiByIdVers_queryIsOk() {
-	BigDecimal idVers = aBigDecimal();
-	helper.getDatiAnagraficiByIdVers(idVers);
-	assertTrue(true);
+        BigDecimal idVers = aBigDecimal();
+        helper.getDatiAnagraficiByIdVers(idVers);
+        assertTrue(true);
     }
 
     @Test
     void getDimensioneDocumentiBySU_queryIsOk() {
-	PigStrumentiUrbanistici pigStrumentiUrbanistici = null;
-	helper.getDimensioneDocumentiBySU(pigStrumentiUrbanistici);
-	assertTrue(true);
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = null;
+        helper.getDimensioneDocumentiBySU(pigStrumentiUrbanistici);
+        assertTrue(true);
     }
 
     @Test
     void findDatiAmbienteByIdSU_queryIsOk() {
-	BigDecimal id = aBigDecimal();
-	helper.findDatiAmbienteByIdSU(id);
-	assertTrue(true);
+        BigDecimal id = aBigDecimal();
+        helper.findDatiAmbienteByIdSU(id);
+        assertTrue(true);
     }
 
     @Test
     void existsPigStrumUrbDocumenti_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.existsPigStrumUrbDocumenti(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.existsPigStrumUrbDocumenti(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 }

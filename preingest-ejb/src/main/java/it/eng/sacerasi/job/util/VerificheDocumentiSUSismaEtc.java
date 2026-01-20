@@ -33,7 +33,7 @@ public class VerificheDocumentiSUSismaEtc {
     private static final Logger log = LoggerFactory.getLogger(VerificheDocumentiSUSismaEtc.class);
 
     private VerificheDocumentiSUSismaEtc() {
-	throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Utility class");
     }
 
     /**
@@ -45,19 +45,19 @@ public class VerificheDocumentiSUSismaEtc {
      *         altrimenti true.
      */
     public static final boolean isLongMoreThan254Chars(String completeZipFileName,
-	    String entryInsideZip) {
-	boolean esito = false;
-	// Prende solo il nome del file senza ".zip" finale
-	String nomeSenzaZip = completeZipFileName.substring(0, completeZipFileName.indexOf(".zip"));
-	String nomeCompleto = nomeSenzaZip + "_" + entryInsideZip;
-	int lun = nomeCompleto.length();
-	if (lun > 254) {
-	    log.debug("l'entry {} è lunga {} quindi > 254 caratteri!", nomeCompleto, lun);
-	    esito = true;
-	} else {
-	    log.debug("l'entry {} è lunga {}.", nomeCompleto, lun);
-	}
-	return esito;
+            String entryInsideZip) {
+        boolean esito = false;
+        // Prende solo il nome del file senza ".zip" finale
+        String nomeSenzaZip = completeZipFileName.substring(0, completeZipFileName.indexOf(".zip"));
+        String nomeCompleto = nomeSenzaZip + "_" + entryInsideZip;
+        int lun = nomeCompleto.length();
+        if (lun > 254) {
+            log.debug("l'entry {} è lunga {} quindi > 254 caratteri!", nomeCompleto, lun);
+            esito = true;
+        } else {
+            log.debug("l'entry {} è lunga {}.", nomeCompleto, lun);
+        }
+        return esito;
     }
 
     /**
@@ -69,27 +69,27 @@ public class VerificheDocumentiSUSismaEtc {
      * @return true se file è uno zip valido
      */
     public static boolean isValidZip(final File file, Charset charset) {
-	try (ZipFile zipfile = new ZipFile(file, charset);) {
-	    return true;
-	} catch (IOException e) {
-	    return false;
-	}
+        try (ZipFile zipfile = new ZipFile(file, charset);) {
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     // MEV 30808
     public static int firstFailurePoint(Pattern regex, String str) {
-	for (int i = 0; i <= str.length(); i++) {
-	    Matcher m = regex.matcher(str.substring(0, i));
-	    if (!m.matches() && !m.hitEnd()) {
-		return i;
-	    }
-	}
+        for (int i = 0; i <= str.length(); i++) {
+            Matcher m = regex.matcher(str.substring(0, i));
+            if (!m.matches() && !m.hitEnd()) {
+                return i;
+            }
+        }
 
-	if (regex.matcher(str).matches()) {
-	    return -1;
-	} else {
-	    return str.length();
-	}
+        if (regex.matcher(str).matches()) {
+            return -1;
+        } else {
+            return str.length();
+        }
     }
 
 }

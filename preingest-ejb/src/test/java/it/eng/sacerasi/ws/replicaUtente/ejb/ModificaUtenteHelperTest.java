@@ -49,66 +49,66 @@ public class ModificaUtenteHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(ModificaUtenteEjb.class)
-		.addPackages(true, "it.eng.sacerasi.ws.replicaUtente.dto", "it.eng.sacerasi.ws.dto")
-		.addClass("it.eng.integriam.server.ws.reputente.Utente");
+        return ArquillianUtils.createPingJar(ModificaUtenteEjb.class)
+                .addPackages(true, "it.eng.sacerasi.ws.replicaUtente.dto", "it.eng.sacerasi.ws.dto")
+                .addClass("it.eng.integriam.server.ws.reputente.Utente");
     }
 
     @Test
     void getIamUser_queryIsOk() {
-	long idUserIam = aLong();
-	helper.getIamUser(idUserIam);
-	assertTrue(true);
+        long idUserIam = aLong();
+        helper.getIamUser(idUserIam);
+        assertTrue(true);
     }
 
     @Test
     @Disabled("difficile da testare in maniera safe")
     void eseguiModificaUtente_queryIsOk() {
-	Utente utente = new Utente();
-	utente.setIdUserIam(-99L);
-	helper.eseguiModificaUtente(utente);
-	assertTrue(true);
+        Utente utente = new Utente();
+        utente.setIdUserIam(-99L);
+        helper.eseguiModificaUtente(utente);
+        assertTrue(true);
     }
 
     @Test
     void getListaAbilOrganizDB_queryIsOk() {
-	long idUserIam = 1L;
-	assertFalse(helper.getListaAbilOrganizDB(idUserIam).isEmpty());
+        long idUserIam = 1L;
+        assertFalse(helper.getListaAbilOrganizDB(idUserIam).isEmpty());
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void deleteIamAbilTipoDato_queryIsOk() {
-	Collection<Long> idSet = new HashSet<>();
-	idSet.add(-999L);
+        Collection<Long> idSet = new HashSet<>();
+        idSet.add(-999L);
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.deleteIamAbilTipoDato(idSet);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.deleteIamAbilTipoDato(idSet);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void deleteIamAutorServ_queryIsOk() {
-	Collection<Long> idSet = new HashSet<>();
-	idSet.add(-999L);
+        Collection<Long> idSet = new HashSet<>();
+        idSet.add(-999L);
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.deleteIamAutorServ(idSet);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.deleteIamAutorServ(idSet);
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void deleteIamAbilOrganiz_queryIsOk() {
-	Collection<Long> idSet = new HashSet<>();
-	idSet.add(-999L);
+        Collection<Long> idSet = new HashSet<>();
+        idSet.add(-999L);
 
-	assertThrows(RollbackException.class, () -> {
-	    helper.deleteIamAbilOrganiz(idSet);
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            helper.deleteIamAbilOrganiz(idSet);
+            throw new RollbackException();
+        });
     }
 }

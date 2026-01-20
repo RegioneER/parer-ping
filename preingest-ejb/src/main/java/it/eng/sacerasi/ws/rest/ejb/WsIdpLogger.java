@@ -17,15 +17,9 @@
  */
 package it.eng.sacerasi.ws.rest.ejb;
 
-import it.eng.parer.idpjaas.logutils.IdpConfigLog;
-import it.eng.parer.idpjaas.logutils.IdpLogger;
-import it.eng.parer.idpjaas.logutils.LogDto;
-import it.eng.parer.sacerlog.ejb.common.AppServerInstance;
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import it.eng.spagoCore.util.JpaUtils;
 import java.sql.SQLException;
 import java.util.Map;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -33,8 +27,19 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.parer.idpjaas.logutils.IdpConfigLog;
+import it.eng.parer.idpjaas.logutils.IdpLogger;
+import it.eng.parer.idpjaas.logutils.LogDto;
+import it.eng.parer.sacerlog.ejb.common.AppServerInstance;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.exception.SacerPingRuntimeException;
+import it.eng.sacerasi.exception.error.ErrorCategory.PingErrorCategory;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import it.eng.spagoCore.util.JpaUtils;
 
 /**
  *
@@ -59,73 +64,62 @@ public class WsIdpLogger {
     //
     @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
     public void scriviLog(LogDto logDto) {
-	Map<String, String> iamDefaults = configurationHelper.getConfiguration();
+        Map<String, String> iamDefaults = configurationHelper.getConfiguration();
 
-	if (iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE) != null
-		&& !iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE).isEmpty()
-		&& iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE) != null
-		&& !iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE).isEmpty()
-		&& iamDefaults.get(Constants.IDP_QRY_DISABLE_USER) != null
-		&& !iamDefaults.get(Constants.IDP_QRY_DISABLE_USER).isEmpty()
-		&& iamDefaults.get(Constants.IDP_MAX_GIORNI) != null
-		&& !iamDefaults.get(Constants.IDP_MAX_GIORNI).isEmpty()
-		&& iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI) != null
-		&& !iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI).isEmpty()) {
-	    java.sql.Connection connection = null;
-	    try {
-		IdpConfigLog icl = new IdpConfigLog();
-		icl.setQryRegistraEventoUtente(
-			iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE));
-		icl.setQryVerificaDisattivazioneUtente(
-			iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE));
-		icl.setQryDisabilitaUtente(iamDefaults.get(Constants.IDP_QRY_DISABLE_USER));
-		icl.setMaxTentativi(
-			Integer.parseInt(iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI)));
-		icl.setMaxGiorni(Integer.parseInt(iamDefaults.get(Constants.IDP_MAX_GIORNI)));
+        if (iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE) != null
+                && !iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE).isEmpty()
+                && iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE) != null
+                && !iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE).isEmpty()
+                && iamDefaults.get(Constants.IDP_QRY_DISABLE_USER) != null
+                && !iamDefaults.get(Constants.IDP_QRY_DISABLE_USER).isEmpty()
+                && iamDefaults.get(Constants.IDP_MAX_GIORNI) != null
+                && !iamDefaults.get(Constants.IDP_MAX_GIORNI).isEmpty()
+                && iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI) != null
+                && !iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI).isEmpty()) {
+            try (java.sql.Connection connection = JpaUtils.provideConnectionFrom(entityManager);) {
 
-		logDto.setServername(asi.getName());
+                IdpConfigLog icl = new IdpConfigLog();
+                icl.setQryRegistraEventoUtente(
+                        iamDefaults.get(Constants.IDP_QRY_REGISTRA_EVENTO_UTENTE));
+                icl.setQryVerificaDisattivazioneUtente(
+                        iamDefaults.get(Constants.IDP_QRY_VERIFICA_DISATTIVAZIONE_UTENTE));
+                icl.setQryDisabilitaUtente(iamDefaults.get(Constants.IDP_QRY_DISABLE_USER));
+                icl.setMaxTentativi(
+                        Integer.parseInt(iamDefaults.get(Constants.IDP_MAX_TENTATIVI_FALLITI)));
+                icl.setMaxGiorni(Integer.parseInt(iamDefaults.get(Constants.IDP_MAX_GIORNI)));
 
-		connection = JpaUtils.provideConnectionFrom(entityManager);
+                logDto.setServername(asi.getName());
 
-		IdpLogger.EsitiLog risposta = (new IdpLogger(icl).scriviLog(logDto, connection));
+                IdpLogger.EsitiLog risposta = (new IdpLogger(icl).scriviLog(logDto, connection));
 
-		if (risposta == IdpLogger.EsitiLog.UTENTE_DISATTIVATO) {
-		    String queryStr = "update IamUser iu " + "set iu.flAttivo = :flAttivoIn "
-			    + "where iu.nmUserid = :nmUseridIn ";
+                if (risposta == IdpLogger.EsitiLog.UTENTE_DISATTIVATO) {
+                    String queryStr = "update IamUser iu " + "set iu.flAttivo = :flAttivoIn "
+                            + "where iu.nmUserid = :nmUseridIn ";
 
-		    // l'operazione di log dell'evento BAD_PASS ha causato la disattivazione
-		    // dell'utente nella tabella USR_USER di IAM; questa situazione verrà recepita
-		    // tra circa 5 minuti, durante i quali l'utente risulta ancora attivo per PING.
-		    // Per accelerare la risposta del sistema, disattivo l'utente anche nella
-		    // tabella locale. Tra 5 minuti il job di aggiornamento utenti ripeterà
-		    // la stessa situazione.
-		    javax.persistence.Query query = entityManager.createQuery(queryStr);
-		    query.setParameter("flAttivoIn", "0");
-		    query.setParameter("nmUseridIn", logDto.getNmUser());
-		    query.executeUpdate();
+                    // l'operazione di log dell'evento BAD_PASS ha causato la disattivazione
+                    // dell'utente nella tabella USR_USER di IAM; questa situazione verrà recepita
+                    // tra circa 5 minuti, durante i quali l'utente risulta ancora attivo per PING.
+                    // Per accelerare la risposta del sistema, disattivo l'utente anche nella
+                    // tabella locale. Tra 5 minuti il job di aggiornamento utenti ripeterà
+                    // la stessa situazione.
+                    javax.persistence.Query query = entityManager.createQuery(queryStr);
+                    query.setParameter("flAttivoIn", "0");
+                    query.setParameter("nmUseridIn", logDto.getNmUser());
+                    query.executeUpdate();
 
-		    log.warn("ERRORE DI AUTENTICAZIONE WS." + " DISATTIVAZIONE UTENTE: "
-			    + logDto.getNmUser());
-		}
+                    log.warn("ERRORE DI AUTENTICAZIONE WS." + " DISATTIVAZIONE UTENTE: {}",
+                            logDto.getNmUser());
+                }
 
-	    } catch (SQLException ex) {
-		throw new RuntimeException(
-			"WsIdpLogger: Errore nell'accesso ai dati di log: " + ex.getMessage());
-	    } catch (Exception ex) {
-		throw new RuntimeException("WsIdpLogger: Errore: " + ex.getMessage());
-	    } finally {
-		if (connection != null) {
-		    try {
-			connection.close();
-		    } catch (SQLException ex) {
-			throw new RuntimeException(
-				"WsIdpLogger: Errore nella chiusura della connessione: "
-					+ ex.getMessage());
-		    }
-		}
-	    }
-
-	}
+            } catch (SQLException ex) {
+                throw new SacerPingRuntimeException(
+                        "WsIdpLogger: Errore nell'accesso ai dati di log", ex,
+                        PingErrorCategory.INTERNAL_ERROR);
+            } catch (Exception ex) {
+                throw new SacerPingRuntimeException("WsIdpLogger: Errore", ex,
+                        PingErrorCategory.INTERNAL_ERROR);
+            }
+        }
 
     }
 

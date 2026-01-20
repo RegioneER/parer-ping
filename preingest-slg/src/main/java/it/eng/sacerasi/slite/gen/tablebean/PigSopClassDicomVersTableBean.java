@@ -34,19 +34,19 @@ public class PigSopClassDicomVersTableBean extends AbstractBaseTable<PigSopClass
     public static PigSopClassDicomVersTableDescriptor TABLE_DESCRIPTOR = new PigSopClassDicomVersTableDescriptor();
 
     public PigSopClassDicomVersTableBean() {
-	super();
+        super();
     }
 
     protected PigSopClassDicomVersRowBean createRow() {
-	return new PigSopClassDicomVersRowBean();
+        return new PigSopClassDicomVersRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigSopClassDicomVersRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

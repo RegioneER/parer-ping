@@ -44,26 +44,26 @@ public class MonVObjAnnulRangeDtTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_TI_STATO_OBJECT,
-		new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, true));
-	map.put(COL_TI_DT_CREAZIONE,
-		new ColumnDescriptor(COL_TI_DT_CREAZIONE, Types.VARCHAR, 19, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_TI_STATO_OBJECT,
+                new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, true));
+        map.put(COL_TI_DT_CREAZIONE,
+                new ColumnDescriptor(COL_TI_DT_CREAZIONE, Types.VARCHAR, 19, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

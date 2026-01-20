@@ -44,44 +44,44 @@ public class XfoFileTrasf implements Serializable {
 
     @Id
     @GenericGenerator(name = "XFO_FILE_TRASF_IDFILETRASF_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_FILE_TRASF"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_FILE_TRASF"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "XFO_FILE_TRASF_IDFILETRASF_GENERATOR")
     @Column(name = "ID_FILE_TRASF")
     public Long getIdTrasf() {
-	return this.idFileTrasf;
+        return this.idFileTrasf;
     }
 
     public void setIdTrasf(Long idTrasf) {
-	this.idFileTrasf = idTrasf;
+        this.idFileTrasf = idTrasf;
     }
 
     @JoinColumn(name = "ID_TRASF", referencedColumnName = "ID_TRASF")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public XfoTrasf getXfoTrasf() {
-	return xfoTrasf;
+        return xfoTrasf;
     }
 
     public void setXfoTrasf(XfoTrasf xfoTrasf) {
-	this.xfoTrasf = xfoTrasf;
+        this.xfoTrasf = xfoTrasf;
     }
 
     @Column(name = "NM_FILE_TRASF")
     public String getNmFileTrasf() {
-	return nmFileTrasf;
+        return nmFileTrasf;
     }
 
     public void setNmFileTrasf(String nmFileTrasf) {
-	this.nmFileTrasf = nmFileTrasf;
+        this.nmFileTrasf = nmFileTrasf;
     }
 
     @Lob
     @Column(name = "BL_FILE_TRASF")
     public byte[] getBlFileTrasf() {
-	return blFileTrasf;
+        return blFileTrasf;
     }
 
     public void setBlFileTrasf(byte[] blFileTrasf) {
-	this.blFileTrasf = blFileTrasf;
+        this.blFileTrasf = blFileTrasf;
     }
 }

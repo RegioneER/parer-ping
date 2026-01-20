@@ -43,23 +43,23 @@ public class DateFormatter {
      * @return data formattata tipo {@link Date}
      */
     public static Date formatta2359(String dataA) {
-	DateFormat formatter;
-	Date dataOraA = null;
-	try {
-	    formatter = new SimpleDateFormat("yyyy-MM-dd");
-	    dataOraA = (Date) formatter.parse(dataA);
+        DateFormat formatter;
+        Date dataOraA = null;
+        try {
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
+            dataOraA = (Date) formatter.parse(dataA);
 
-	    Calendar c = Calendar.getInstance();
-	    c.setTime(dataOraA);
-	    c.set(Calendar.HOUR_OF_DAY, 23);
-	    c.set(Calendar.MINUTE, 59);
-	    c.set(Calendar.SECOND, 59);
-	    dataOraA = c.getTime();
+            Calendar c = Calendar.getInstance();
+            c.setTime(dataOraA);
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 59);
+            dataOraA = c.getTime();
 
-	} catch (ParseException ex) {
-	    log.error(ex.getMessage(), ex);
-	}
+        } catch (ParseException ex) {
+            log.error(ex.getMessage(), ex);
+        }
 
-	return dataOraA;
+        return dataOraA;
     }
 }

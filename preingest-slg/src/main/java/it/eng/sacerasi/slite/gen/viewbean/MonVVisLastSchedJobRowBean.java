@@ -37,89 +37,89 @@ public class MonVVisLastSchedJobRowBean extends BaseRow implements JEEBaseRowInt
     public static MonVVisLastSchedJobTableDescriptor TABLE_DESCRIPTOR = new MonVVisLastSchedJobTableDescriptor();
 
     public MonVVisLastSchedJobRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdLogJob() {
-	return getBigDecimal("id_log_job");
+        return getBigDecimal("id_log_job");
     }
 
     public void setIdLogJob(BigDecimal idLogJob) {
-	setObject("id_log_job", idLogJob);
+        setObject("id_log_job", idLogJob);
     }
 
     public String getNmJob() {
-	return getString("nm_job");
+        return getString("nm_job");
     }
 
     public void setNmJob(String nmJob) {
-	setObject("nm_job", nmJob);
+        setObject("nm_job", nmJob);
     }
 
     public Timestamp getDtRegLogJobIni() {
-	return getTimestamp("dt_reg_log_job_ini");
+        return getTimestamp("dt_reg_log_job_ini");
     }
 
     public void setDtRegLogJobIni(Timestamp dtRegLogJobIni) {
-	setObject("dt_reg_log_job_ini", dtRegLogJobIni);
+        setObject("dt_reg_log_job_ini", dtRegLogJobIni);
     }
 
     public String getFlJobAttivo() {
-	return getString("fl_job_attivo");
+        return getString("fl_job_attivo");
     }
 
     public void setFlJobAttivo(String flJobAttivo) {
-	setObject("fl_job_attivo", flJobAttivo);
+        setObject("fl_job_attivo", flJobAttivo);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVVisLastSchedJob entity = (MonVVisLastSchedJob) obj;
-	this.setIdLogJob(entity.getIdLogJob());
-	this.setNmJob(entity.getNmJob());
-	if (entity.getDtRegLogJobIni() != null) {
-	    this.setDtRegLogJobIni(new Timestamp(entity.getDtRegLogJobIni().getTime()));
-	}
-	this.setFlJobAttivo(entity.getFlJobAttivo());
+        MonVVisLastSchedJob entity = (MonVVisLastSchedJob) obj;
+        this.setIdLogJob(entity.getIdLogJob());
+        this.setNmJob(entity.getNmJob());
+        if (entity.getDtRegLogJobIni() != null) {
+            this.setDtRegLogJobIni(new Timestamp(entity.getDtRegLogJobIni().getTime()));
+        }
+        this.setFlJobAttivo(entity.getFlJobAttivo());
     }
 
     @Override
     public MonVVisLastSchedJob rowBeanToEntity() {
-	MonVVisLastSchedJob entity = new MonVVisLastSchedJob();
-	entity.setIdLogJob(this.getIdLogJob());
-	entity.setNmJob(this.getNmJob());
-	entity.setDtRegLogJobIni(this.getDtRegLogJobIni());
-	entity.setFlJobAttivo(this.getFlJobAttivo());
-	return entity;
+        MonVVisLastSchedJob entity = new MonVVisLastSchedJob();
+        entity.setIdLogJob(this.getIdLogJob());
+        entity.setNmJob(this.getNmJob());
+        entity.setDtRegLogJobIni(this.getDtRegLogJobIni());
+        entity.setFlJobAttivo(this.getFlJobAttivo());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

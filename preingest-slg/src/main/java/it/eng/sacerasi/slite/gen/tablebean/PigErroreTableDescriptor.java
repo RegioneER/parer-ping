@@ -44,25 +44,25 @@ public class PigErroreTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_ERRORE, new ColumnDescriptor(COL_ID_ERRORE, Types.DECIMAL, 22, true));
-	map.put(COL_CD_ERRORE, new ColumnDescriptor(COL_CD_ERRORE, Types.VARCHAR, 100, false));
-	map.put(COL_DS_ERRORE, new ColumnDescriptor(COL_DS_ERRORE, Types.VARCHAR, 500, false));
-	map.put(COL_DS_ERRORE_FILTRO,
-		new ColumnDescriptor(COL_DS_ERRORE_FILTRO, Types.VARCHAR, 500, false));
-	map.put(COL_ID_CLASSE_ERRORE,
-		new ColumnDescriptor(COL_ID_CLASSE_ERRORE, Types.DECIMAL, 22, false));
+        map.put(COL_ID_ERRORE, new ColumnDescriptor(COL_ID_ERRORE, Types.DECIMAL, 22, true));
+        map.put(COL_CD_ERRORE, new ColumnDescriptor(COL_CD_ERRORE, Types.VARCHAR, 100, false));
+        map.put(COL_DS_ERRORE, new ColumnDescriptor(COL_DS_ERRORE, Types.VARCHAR, 500, false));
+        map.put(COL_DS_ERRORE_FILTRO,
+                new ColumnDescriptor(COL_DS_ERRORE_FILTRO, Types.VARCHAR, 500, false));
+        map.put(COL_ID_CLASSE_ERRORE,
+                new ColumnDescriptor(COL_ID_CLASSE_ERRORE, Types.DECIMAL, 22, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

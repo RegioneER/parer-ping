@@ -37,191 +37,191 @@ public class MonVLisUnitaDocObjectRowBean extends BaseRow implements JEEBaseRowI
     public static MonVLisUnitaDocObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisUnitaDocObjectTableDescriptor();
 
     public MonVLisUnitaDocObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdUnitaDocObject() {
-	return getBigDecimal("id_unita_doc_object");
+        return getBigDecimal("id_unita_doc_object");
     }
 
     public void setIdUnitaDocObject(BigDecimal idUnitaDocObject) {
-	setObject("id_unita_doc_object", idUnitaDocObject);
+        setObject("id_unita_doc_object", idUnitaDocObject);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public String getCdRegistroUnitaDocSacer() {
-	return getString("cd_registro_unita_doc_sacer");
+        return getString("cd_registro_unita_doc_sacer");
     }
 
     public void setCdRegistroUnitaDocSacer(String cdRegistroUnitaDocSacer) {
-	setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
+        setObject("cd_registro_unita_doc_sacer", cdRegistroUnitaDocSacer);
     }
 
     public BigDecimal getAaUnitaDocSacer() {
-	return getBigDecimal("aa_unita_doc_sacer");
+        return getBigDecimal("aa_unita_doc_sacer");
     }
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
-	setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
+        setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
     }
 
     public String getCdKeyUnitaDocSacer() {
-	return getString("cd_key_unita_doc_sacer");
+        return getString("cd_key_unita_doc_sacer");
     }
 
     public void setCdKeyUnitaDocSacer(String cdKeyUnitaDocSacer) {
-	setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
+        setObject("cd_key_unita_doc_sacer", cdKeyUnitaDocSacer);
     }
 
     public BigDecimal getNiSizeFileByte() {
-	return getBigDecimal("ni_size_file_byte");
+        return getBigDecimal("ni_size_file_byte");
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	setObject("ni_size_file_byte", niSizeFileByte);
+        setObject("ni_size_file_byte", niSizeFileByte);
     }
 
     public String getTiStatoUnitaDocObject() {
-	return getString("ti_stato_unita_doc_object");
+        return getString("ti_stato_unita_doc_object");
     }
 
     public void setTiStatoUnitaDocObject(String tiStatoUnitaDocObject) {
-	setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
+        setObject("ti_stato_unita_doc_object", tiStatoUnitaDocObject);
     }
 
     public String getCdErrSacer() {
-	return getString("cd_err_sacer");
+        return getString("cd_err_sacer");
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	setObject("cd_err_sacer", cdErrSacer);
+        setObject("cd_err_sacer", cdErrSacer);
     }
 
     public String getDlErrSacer() {
-	return getString("dl_err_sacer");
+        return getString("dl_err_sacer");
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	setObject("dl_err_sacer", dlErrSacer);
+        setObject("dl_err_sacer", dlErrSacer);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getFlVersSimulato() {
-	return getString("fl_vers_simulato");
+        return getString("fl_vers_simulato");
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	setObject("fl_vers_simulato", flVersSimulato);
+        setObject("fl_vers_simulato", flVersSimulato);
     }
 
     public String getDlCompositoOrganiz() {
-	return getString("dl_composito_organiz");
+        return getString("dl_composito_organiz");
     }
 
     public void setDlCompositoOrganiz(String dlCompositoOrganiz) {
-	setObject("dl_composito_organiz", dlCompositoOrganiz);
+        setObject("dl_composito_organiz", dlCompositoOrganiz);
     }
 
     public String getCdConcatDlErrSacer() {
-	return getString("cd_concat_dl_err_sacer");
+        return getString("cd_concat_dl_err_sacer");
     }
 
     public void setCdConcatDlErrSacer(String cdConcatDlErrSacer) {
-	setObject("cd_concat_dl_err_sacer", cdConcatDlErrSacer);
+        setObject("cd_concat_dl_err_sacer", cdConcatDlErrSacer);
     }
 
     // MEV 27407
     public Timestamp getDtStato() {
-	return getTimestamp("dt_stato");
+        return getTimestamp("dt_stato");
     }
 
     public void setDtStato(Timestamp dtStato) {
-	setObject("dt_stato", dtStato);
+        setObject("dt_stato", dtStato);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVLisUnitaDocObject entity = (MonVLisUnitaDocObject) obj;
-	this.setIdUnitaDocObject(entity.getIdUnitaDocObject());
-	this.setIdObject(entity.getIdObject());
-	this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
-	this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
-	this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
-	this.setNiSizeFileByte(entity.getNiSizeFileByte());
-	this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
-	this.setCdErrSacer(entity.getCdErrSacer());
-	this.setDlErrSacer(entity.getDlErrSacer());
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setFlVersSimulato(entity.getFlVersSimulato());
-	this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
-	this.setCdConcatDlErrSacer(entity.getCdConcatDlErrSacer());
+        MonVLisUnitaDocObject entity = (MonVLisUnitaDocObject) obj;
+        this.setIdUnitaDocObject(entity.getIdUnitaDocObject());
+        this.setIdObject(entity.getIdObject());
+        this.setCdRegistroUnitaDocSacer(entity.getCdRegistroUnitaDocSacer());
+        this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
+        this.setCdKeyUnitaDocSacer(entity.getCdKeyUnitaDocSacer());
+        this.setNiSizeFileByte(entity.getNiSizeFileByte());
+        this.setTiStatoUnitaDocObject(entity.getTiStatoUnitaDocObject());
+        this.setCdErrSacer(entity.getCdErrSacer());
+        this.setDlErrSacer(entity.getDlErrSacer());
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setFlVersSimulato(entity.getFlVersSimulato());
+        this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
+        this.setCdConcatDlErrSacer(entity.getCdConcatDlErrSacer());
 
-	if (entity.getDtStato() != null) {
-	    this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
-	}
+        if (entity.getDtStato() != null) {
+            this.setDtStato(new Timestamp(entity.getDtStato().getTime()));
+        }
     }
 
     @Override
     public MonVLisUnitaDocObject rowBeanToEntity() {
-	MonVLisUnitaDocObject entity = new MonVLisUnitaDocObject();
-	entity.setIdUnitaDocObject(this.getIdUnitaDocObject());
-	entity.setIdObject(this.getIdObject());
-	entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
-	entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
-	entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
-	entity.setNiSizeFileByte(this.getNiSizeFileByte());
-	entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
-	entity.setCdErrSacer(this.getCdErrSacer());
-	entity.setDlErrSacer(this.getDlErrSacer());
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setFlVersSimulato(this.getFlVersSimulato());
-	entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
-	entity.setCdConcatDlErrSacer(this.getCdConcatDlErrSacer());
-	entity.setDtStato(this.getDtStato());
-	return entity;
+        MonVLisUnitaDocObject entity = new MonVLisUnitaDocObject();
+        entity.setIdUnitaDocObject(this.getIdUnitaDocObject());
+        entity.setIdObject(this.getIdObject());
+        entity.setCdRegistroUnitaDocSacer(this.getCdRegistroUnitaDocSacer());
+        entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
+        entity.setCdKeyUnitaDocSacer(this.getCdKeyUnitaDocSacer());
+        entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setTiStatoUnitaDocObject(this.getTiStatoUnitaDocObject());
+        entity.setCdErrSacer(this.getCdErrSacer());
+        entity.setDlErrSacer(this.getDlErrSacer());
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
+        entity.setCdConcatDlErrSacer(this.getCdConcatDlErrSacer());
+        entity.setDtStato(this.getDtStato());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -36,135 +36,135 @@ public class PigAmbienteVersRowBean extends BaseRow implements JEEBaseRowInterfa
     public static PigAmbienteVersTableDescriptor TABLE_DESCRIPTOR = new PigAmbienteVersTableDescriptor();
 
     public PigAmbienteVersRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdAmbienteVers() {
-	return getBigDecimal("id_ambiente_vers");
+        return getBigDecimal("id_ambiente_vers");
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	setObject("id_ambiente_vers", idAmbienteVers);
+        setObject("id_ambiente_vers", idAmbienteVers);
     }
 
     public String getNmAmbienteVers() {
-	return getString("nm_ambiente_vers");
+        return getString("nm_ambiente_vers");
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-	setObject("nm_ambiente_vers", nmAmbienteVers);
+        setObject("nm_ambiente_vers", nmAmbienteVers);
     }
 
     public String getDsAmbienteVers() {
-	return getString("ds_ambiente_vers");
+        return getString("ds_ambiente_vers");
     }
 
     public void setDsAmbienteVers(String dsAmbienteVers) {
-	setObject("ds_ambiente_vers", dsAmbienteVers);
+        setObject("ds_ambiente_vers", dsAmbienteVers);
     }
 
     public Timestamp getDtIniVal() {
-	return getTimestamp("dt_ini_val");
+        return getTimestamp("dt_ini_val");
     }
 
     public void setDtIniVal(Timestamp dtIniVal) {
-	setObject("dt_ini_val", dtIniVal);
+        setObject("dt_ini_val", dtIniVal);
     }
 
     public Timestamp getDtFineVal() {
-	return getTimestamp("dt_fine_val");
+        return getTimestamp("dt_fine_val");
     }
 
     public void setDtFineVal(Timestamp dtFineVal) {
-	setObject("dt_fine_val", dtFineVal);
+        setObject("dt_fine_val", dtFineVal);
     }
 
     public BigDecimal getIdEnteConserv() {
-	return getBigDecimal("id_ente_conserv");
+        return getBigDecimal("id_ente_conserv");
     }
 
     public void setIdEnteConserv(BigDecimal idEnteConserv) {
-	setObject("id_ente_conserv", idEnteConserv);
+        setObject("id_ente_conserv", idEnteConserv);
     }
 
     public BigDecimal getIdEnteGestore() {
-	return getBigDecimal("id_ente_gestore");
+        return getBigDecimal("id_ente_gestore");
     }
 
     public void setIdEnteGestore(BigDecimal idEnteGestore) {
-	setObject("id_ente_gestore", idEnteGestore);
+        setObject("id_ente_gestore", idEnteGestore);
     }
 
     public String getDsNote() {
-	return getString("ds_note");
+        return getString("ds_note");
     }
 
     public void setDsNote(String ds_note) {
-	setObject("ds_note", ds_note);
+        setObject("ds_note", ds_note);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigAmbienteVers entity = (PigAmbienteVers) obj;
+        PigAmbienteVers entity = (PigAmbienteVers) obj;
 
-	this.setIdAmbienteVers(new BigDecimal(entity.getIdAmbienteVers()));
-	this.setNmAmbienteVers(entity.getNmAmbienteVers());
-	this.setDsAmbienteVers(entity.getDsAmbienteVers());
-	if (entity.getDtIniVal() != null) {
-	    this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
-	}
-	if (entity.getDtFineVal() != null) {
-	    this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
-	}
-	this.setIdEnteConserv(entity.getIdEnteConserv());
-	this.setIdEnteGestore(entity.getIdEnteGestore());
-	this.setDsNote(entity.getDsNote());
+        this.setIdAmbienteVers(new BigDecimal(entity.getIdAmbienteVers()));
+        this.setNmAmbienteVers(entity.getNmAmbienteVers());
+        this.setDsAmbienteVers(entity.getDsAmbienteVers());
+        if (entity.getDtIniVal() != null) {
+            this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
+        }
+        if (entity.getDtFineVal() != null) {
+            this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
+        }
+        this.setIdEnteConserv(entity.getIdEnteConserv());
+        this.setIdEnteGestore(entity.getIdEnteGestore());
+        this.setDsNote(entity.getDsNote());
     }
 
     @Override
     public PigAmbienteVers rowBeanToEntity() {
-	PigAmbienteVers entity = new PigAmbienteVers();
-	if (this.getIdAmbienteVers() != null) {
-	    entity.setIdAmbienteVers(this.getIdAmbienteVers().longValue());
-	}
-	entity.setNmAmbienteVers(this.getNmAmbienteVers());
-	entity.setDsAmbienteVers(this.getDsAmbienteVers());
-	entity.setDtIniVal(this.getDtIniVal());
-	entity.setDtFineVal(this.getDtFineVal());
-	entity.setIdEnteConserv(this.getIdEnteConserv());
-	entity.setIdEnteGestore(this.getIdEnteGestore());
-	entity.setDsNote(this.getDsNote());
-	return entity;
+        PigAmbienteVers entity = new PigAmbienteVers();
+        if (this.getIdAmbienteVers() != null) {
+            entity.setIdAmbienteVers(this.getIdAmbienteVers().longValue());
+        }
+        entity.setNmAmbienteVers(this.getNmAmbienteVers());
+        entity.setDsAmbienteVers(this.getDsAmbienteVers());
+        entity.setDtIniVal(this.getDtIniVal());
+        entity.setDtFineVal(this.getDtFineVal());
+        entity.setIdEnteConserv(this.getIdEnteConserv());
+        entity.setIdEnteGestore(this.getIdEnteGestore());
+        entity.setDsNote(this.getDsNote());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

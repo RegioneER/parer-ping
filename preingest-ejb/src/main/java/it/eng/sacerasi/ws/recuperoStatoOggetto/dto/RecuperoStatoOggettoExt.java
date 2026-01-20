@@ -31,49 +31,49 @@ public class RecuperoStatoOggettoExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public RecuperoStatoOggettoInput getRecuperoStatoOggettoInput() {
-	return recuperoStatoOggettoInput;
+        return recuperoStatoOggettoInput;
     }
 
     public void setRecuperoStatoOggettoInput(RecuperoStatoOggettoInput recuperoStatoOggettoInput) {
-	this.recuperoStatoOggettoInput = recuperoStatoOggettoInput;
+        this.recuperoStatoOggettoInput = recuperoStatoOggettoInput;
     }
 
     /**
      * @return the idObject
      */
     public Long getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     /**
      * @param idObject the idObject to set
      */
     public void setIdObject(Long idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
 }

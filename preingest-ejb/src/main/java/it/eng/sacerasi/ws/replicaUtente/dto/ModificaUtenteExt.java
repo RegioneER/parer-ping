@@ -26,18 +26,18 @@ public class ModificaUtenteExt {
     private Utente modificaUtenteInput;
 
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     public Utente getModificaUtenteInput() {
-	return modificaUtenteInput;
+        return modificaUtenteInput;
     }
 
     public void setModificaUtenteInput(Utente modificaUtenteInput) {
-	this.modificaUtenteInput = modificaUtenteInput;
+        this.modificaUtenteInput = modificaUtenteInput;
     }
 }

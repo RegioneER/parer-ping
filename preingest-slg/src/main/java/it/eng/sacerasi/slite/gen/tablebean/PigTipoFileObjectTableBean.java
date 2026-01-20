@@ -34,19 +34,19 @@ public class PigTipoFileObjectTableBean extends AbstractBaseTable<PigTipoFileObj
     public static PigTipoFileObjectTableDescriptor TABLE_DESCRIPTOR = new PigTipoFileObjectTableDescriptor();
 
     public PigTipoFileObjectTableBean() {
-	super();
+        super();
     }
 
     protected PigTipoFileObjectRowBean createRow() {
-	return new PigTipoFileObjectRowBean();
+        return new PigTipoFileObjectRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigTipoFileObjectRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

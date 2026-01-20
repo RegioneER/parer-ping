@@ -37,141 +37,141 @@ public class MonVLisSchedJobRowBean extends BaseRow implements JEEBaseRowInterfa
     public static MonVLisSchedJobTableDescriptor TABLE_DESCRIPTOR = new MonVLisSchedJobTableDescriptor();
 
     public MonVLisSchedJobRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdLogJob() {
-	return getBigDecimal("id_log_job");
+        return getBigDecimal("id_log_job");
     }
 
     public void setIdLogJob(BigDecimal idLogJob) {
-	setObject("id_log_job", idLogJob);
+        setObject("id_log_job", idLogJob);
     }
 
     public String getNmJob() {
-	return getString("nm_job");
+        return getString("nm_job");
     }
 
     public void setNmJob(String nmJob) {
-	setObject("nm_job", nmJob);
+        setObject("nm_job", nmJob);
     }
 
     public Timestamp getDtRegLogJobIni() {
-	return getTimestamp("dt_reg_log_job_ini");
+        return getTimestamp("dt_reg_log_job_ini");
     }
 
     public void setDtRegLogJobIni(Timestamp dtRegLogJobIni) {
-	setObject("dt_reg_log_job_ini", dtRegLogJobIni);
+        setObject("dt_reg_log_job_ini", dtRegLogJobIni);
     }
 
     public Timestamp getDtRegLogJobFine() {
-	return getTimestamp("dt_reg_log_job_fine");
+        return getTimestamp("dt_reg_log_job_fine");
     }
 
     public void setDtRegLogJobFine(Timestamp dtRegLogJobFine) {
-	setObject("dt_reg_log_job_fine", dtRegLogJobFine);
+        setObject("dt_reg_log_job_fine", dtRegLogJobFine);
     }
 
     public BigDecimal getDurataGg() {
-	return getBigDecimal("durata_gg");
+        return getBigDecimal("durata_gg");
     }
 
     public void setDurataGg(BigDecimal durataGg) {
-	setObject("durata_gg", durataGg);
+        setObject("durata_gg", durataGg);
     }
 
     public BigDecimal getDurataOre() {
-	return getBigDecimal("durata_ore");
+        return getBigDecimal("durata_ore");
     }
 
     public void setDurataOre(BigDecimal durataOre) {
-	setObject("durata_ore", durataOre);
+        setObject("durata_ore", durataOre);
     }
 
     public BigDecimal getDurataMin() {
-	return getBigDecimal("durata_min");
+        return getBigDecimal("durata_min");
     }
 
     public void setDurataMin(BigDecimal durataMin) {
-	setObject("durata_min", durataMin);
+        setObject("durata_min", durataMin);
     }
 
     public BigDecimal getDurataSec() {
-	return getBigDecimal("durata_sec");
+        return getBigDecimal("durata_sec");
     }
 
     public void setDurataSec(BigDecimal durataSec) {
-	setObject("durata_sec", durataSec);
+        setObject("durata_sec", durataSec);
     }
 
     public String getDlMsgErr() {
-	return getString("dl_msg_err");
+        return getString("dl_msg_err");
     }
 
     public void setDlMsgErr(String dlMsgErr) {
-	setObject("dl_msg_err", dlMsgErr);
+        setObject("dl_msg_err", dlMsgErr);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVLisSchedJob entity = (MonVLisSchedJob) obj;
-	this.setIdLogJob(entity.getIdLogJob());
-	this.setNmJob(entity.getNmJob());
-	if (entity.getDtRegLogJobIni() != null) {
-	    this.setDtRegLogJobIni(new Timestamp(entity.getDtRegLogJobIni().getTime()));
-	}
-	if (entity.getDtRegLogJobFine() != null) {
-	    this.setDtRegLogJobFine(new Timestamp(entity.getDtRegLogJobFine().getTime()));
-	}
-	this.setDurataGg(entity.getDurataGg());
-	this.setDurataOre(entity.getDurataOre());
-	this.setDurataMin(entity.getDurataMin());
-	this.setDurataSec(entity.getDurataSec());
-	this.setDlMsgErr(entity.getDlMsgErr());
+        MonVLisSchedJob entity = (MonVLisSchedJob) obj;
+        this.setIdLogJob(entity.getIdLogJob());
+        this.setNmJob(entity.getNmJob());
+        if (entity.getDtRegLogJobIni() != null) {
+            this.setDtRegLogJobIni(new Timestamp(entity.getDtRegLogJobIni().getTime()));
+        }
+        if (entity.getDtRegLogJobFine() != null) {
+            this.setDtRegLogJobFine(new Timestamp(entity.getDtRegLogJobFine().getTime()));
+        }
+        this.setDurataGg(entity.getDurataGg());
+        this.setDurataOre(entity.getDurataOre());
+        this.setDurataMin(entity.getDurataMin());
+        this.setDurataSec(entity.getDurataSec());
+        this.setDlMsgErr(entity.getDlMsgErr());
     }
 
     @Override
     public MonVLisSchedJob rowBeanToEntity() {
-	MonVLisSchedJob entity = new MonVLisSchedJob();
-	entity.setIdLogJob(this.getIdLogJob());
-	entity.setNmJob(this.getNmJob());
-	entity.setDtRegLogJobIni(this.getDtRegLogJobIni());
-	entity.setDtRegLogJobFine(this.getDtRegLogJobFine());
-	entity.setDurataGg(this.getDurataGg());
-	entity.setDurataOre(this.getDurataOre());
-	entity.setDurataMin(this.getDurataMin());
-	entity.setDurataSec(this.getDurataSec());
-	entity.setDlMsgErr(this.getDlMsgErr());
-	return entity;
+        MonVLisSchedJob entity = new MonVLisSchedJob();
+        entity.setIdLogJob(this.getIdLogJob());
+        entity.setNmJob(this.getNmJob());
+        entity.setDtRegLogJobIni(this.getDtRegLogJobIni());
+        entity.setDtRegLogJobFine(this.getDtRegLogJobFine());
+        entity.setDurataGg(this.getDurataGg());
+        entity.setDurataOre(this.getDurataOre());
+        entity.setDurataMin(this.getDurataMin());
+        entity.setDurataSec(this.getDurataSec());
+        entity.setDlMsgErr(this.getDlMsgErr());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

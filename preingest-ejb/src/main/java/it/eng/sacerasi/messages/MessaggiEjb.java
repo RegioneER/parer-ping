@@ -58,62 +58,62 @@ public class MessaggiEjb {
      * @throws ParerUserError errore generico
      */
     public PigClasseErroreTableBean getPigClasseErroreTableBean(List<String> stati)
-	    throws ParerUserError {
-	PigClasseErroreTableBean table = new PigClasseErroreTableBean();
-	List<PigClasseErrore> list;
-	if (stati != null && !stati.isEmpty()) {
-	    if (stati.size() > 1) {
-		list = helper.retrieveListaClassi(stati);
-	    } else {
-		list = helper.retrieveListaClassi(stati.get(0));
-	    }
-	} else {
-	    list = helper.retrieveListaClassi((String) null);
-	}
-	if (list != null && !list.isEmpty()) {
-	    try {
-		for (PigClasseErrore pigClasseErrore : list) {
-		    PigClasseErroreRowBean row = (PigClasseErroreRowBean) Transform
-			    .entity2RowBean(pigClasseErrore);
-		    row.setString("ds_classe_composita",
-			    row.getCdClasseErrore() + " - " + row.getDsClasseErrore());
-		    table.add(row);
-		}
-	    } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-		    | IllegalAccessException | IllegalArgumentException
-		    | InvocationTargetException ex) {
-		String msg = "Errore durante il recupero della lista di classi di errore "
-			+ ExceptionUtils.getRootCauseMessage(ex);
-		logger.error(msg, ex);
-		throw new ParerUserError(msg);
-	    }
-	}
-	return table;
+            throws ParerUserError {
+        PigClasseErroreTableBean table = new PigClasseErroreTableBean();
+        List<PigClasseErrore> list;
+        if (stati != null && !stati.isEmpty()) {
+            if (stati.size() > 1) {
+                list = helper.retrieveListaClassi(stati);
+            } else {
+                list = helper.retrieveListaClassi(stati.get(0));
+            }
+        } else {
+            list = helper.retrieveListaClassi((String) null);
+        }
+        if (list != null && !list.isEmpty()) {
+            try {
+                for (PigClasseErrore pigClasseErrore : list) {
+                    PigClasseErroreRowBean row = (PigClasseErroreRowBean) Transform
+                            .entity2RowBean(pigClasseErrore);
+                    row.setString("ds_classe_composita",
+                            row.getCdClasseErrore() + " - " + row.getDsClasseErrore());
+                    table.add(row);
+                }
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                    | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException ex) {
+                String msg = "Errore durante il recupero della lista di classi di errore "
+                        + ExceptionUtils.getRootCauseMessage(ex);
+                logger.error(msg, ex);
+                throw new ParerUserError(msg);
+            }
+        }
+        return table;
     }
 
     public PigErroreTableBean getPigErroreTableBean(String cdClasseErrore) throws ParerUserError {
-	PigErroreTableBean table = new PigErroreTableBean();
-	if (StringUtils.isNotBlank(cdClasseErrore)) {
-	    List<PigErrore> list = helper.retrieveListaErrori(cdClasseErrore);
-	    if (list != null && !list.isEmpty()) {
-		try {
-		    for (PigErrore pigErrore : list) {
-			PigErroreRowBean row = (PigErroreRowBean) Transform
-				.entity2RowBean(pigErrore);
-			row.setString("ds_errore_composito", row.getCdErrore() + " - "
-				+ StringEscapeUtils.unescapeJava(row.getDsErroreFiltro()));
-			table.add(row);
-		    }
-		} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-			| IllegalAccessException | IllegalArgumentException
-			| InvocationTargetException ex) {
-		    String msg = "Errore durante il recupero della lista di errori "
-			    + ExceptionUtils.getRootCauseMessage(ex);
-		    logger.error(msg, ex);
-		    throw new ParerUserError(msg);
-		}
-	    }
-	}
-	return table;
+        PigErroreTableBean table = new PigErroreTableBean();
+        if (StringUtils.isNotBlank(cdClasseErrore)) {
+            List<PigErrore> list = helper.retrieveListaErrori(cdClasseErrore);
+            if (list != null && !list.isEmpty()) {
+                try {
+                    for (PigErrore pigErrore : list) {
+                        PigErroreRowBean row = (PigErroreRowBean) Transform
+                                .entity2RowBean(pigErrore);
+                        row.setString("ds_errore_composito", row.getCdErrore() + " - "
+                                + StringEscapeUtils.unescapeJava(row.getDsErroreFiltro()));
+                        table.add(row);
+                    }
+                } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+                        | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException ex) {
+                    String msg = "Errore durante il recupero della lista di errori "
+                            + ExceptionUtils.getRootCauseMessage(ex);
+                    logger.error(msg, ex);
+                    throw new ParerUserError(msg);
+                }
+            }
+        }
+        return table;
     }
 }

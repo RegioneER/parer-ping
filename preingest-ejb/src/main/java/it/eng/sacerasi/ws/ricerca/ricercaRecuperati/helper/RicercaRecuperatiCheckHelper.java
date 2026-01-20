@@ -37,71 +37,71 @@ public class RicercaRecuperatiCheckHelper {
     private ControlliRicerca controlliRicerca;
 
     public void checkSessione(RicercaRecuperatiExt ricercaRecuperatiExt,
-	    RispostaWSRicercaRecuperati rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	// Verifica Nome Ambiente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNomeAmbiente(
-		    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICRECUP_001);
-		    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
-			    MessaggiWSBundle.PING_RICRECUP_001,
-			    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    }
-	    // In ogni caso setto in risposta il nome ambiente ricevuto in input
-	    rispostaWs.getRicercaRecuperatiRisposta().setNmAmbiente(
-		    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente());
-	}
+            RispostaWSRicercaRecuperati rispostaWs) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        // Verifica Nome Ambiente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNomeAmbiente(
+                    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICRECUP_001);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                            MessaggiWSBundle.PING_RICRECUP_001,
+                            ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            }
+            // In ogni caso setto in risposta il nome ambiente ricevuto in input
+            rispostaWs.getRicercaRecuperatiRisposta().setNmAmbiente(
+                    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente());
+        }
 
-	// Verifica nome versatore nell'ambito dell'ambiente
-	Long idVersatore = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNomeVersatore(
-		    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente(),
-		    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICRECUP_002);
-		    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
-			    MessaggiWSBundle.PING_RICRECUP_002,
-			    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		// Setto l'id versatore per eventuali (in caso di assenza di errore) utilizzi
-		// successivi
-		idVersatore = rispostaControlli.getrLong();
-	    }
-	    // In ogni caso setto in risposta il nome versatore ricevuto in input
-	    rispostaWs.getRicercaRecuperatiRisposta().setNmVersatore(
-		    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore());
-	}
-	ricercaRecuperatiExt.setIdVersatore(idVersatore);
+        // Verifica nome versatore nell'ambito dell'ambiente
+        Long idVersatore = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNomeVersatore(
+                    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmAmbiente(),
+                    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICRECUP_002);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                            MessaggiWSBundle.PING_RICRECUP_002,
+                            ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                // Setto l'id versatore per eventuali (in caso di assenza di errore) utilizzi
+                // successivi
+                idVersatore = rispostaControlli.getrLong();
+            }
+            // In ogni caso setto in risposta il nome versatore ricevuto in input
+            rispostaWs.getRicercaRecuperatiRisposta().setNmVersatore(
+                    ricercaRecuperatiExt.getRicercaRecuperatiInput().getNmVersatore());
+        }
+        ricercaRecuperatiExt.setIdVersatore(idVersatore);
     }
 
     private void setRispostaWsError(RispostaWSRicercaRecuperati rispostaWs, SeverityEnum sev,
-	    EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getRicercaRecuperatiRisposta().setCdEsito(esito);
-	rispostaWs.getRicercaRecuperatiRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getRicercaRecuperatiRisposta().setDsErr(rispostaControlli.getDsErr());
+            EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getRicercaRecuperatiRisposta().setCdEsito(esito);
+        rispostaWs.getRicercaRecuperatiRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getRicercaRecuperatiRisposta().setDsErr(rispostaControlli.getDsErr());
     }
 }

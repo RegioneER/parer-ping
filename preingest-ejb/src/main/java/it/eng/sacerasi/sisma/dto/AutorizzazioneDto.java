@@ -23,26 +23,26 @@ public class AutorizzazioneDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public AutorizzazioneDto() {
-	super();
+        super();
     }
 
     private boolean autorizzato;
     private String messaggioDiErrore;
 
     public boolean isAutorizzato() {
-	return autorizzato;
+        return autorizzato;
     }
 
     public void setAutorizzato(boolean autorizzato) {
-	this.autorizzato = autorizzato;
+        this.autorizzato = autorizzato;
     }
 
     public String getMessaggioDiErrore() {
-	return messaggioDiErrore;
+        return messaggioDiErrore;
     }
 
     public void setMessaggioDiErrore(String messaggioDiErrore) {
-	this.messaggioDiErrore = messaggioDiErrore;
+        this.messaggioDiErrore = messaggioDiErrore;
     }
 
 }

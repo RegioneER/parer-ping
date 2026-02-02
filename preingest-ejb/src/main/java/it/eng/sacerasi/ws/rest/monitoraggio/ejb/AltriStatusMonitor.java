@@ -47,18 +47,18 @@ import it.eng.sacerasi.ws.util.Costanti;
 public class AltriStatusMonitor {
 
     private enum MonitorAltri {
-	STATO_CONNESSIONE_ORCL, PRESENZA_ERRORI_CODA_JMS
+        STATO_CONNESSIONE_ORCL, PRESENZA_ERRORI_CODA_JMS
     }
 
     private enum MonitorSondeGenEsiti {
-	OK, ERROR, WARNING
+        OK, ERROR, WARNING
     }
 
     private static final Logger log = LoggerFactory.getLogger(AltriStatusMonitor.class);
 
     private static final String ERROR_SEPARATOR = ", ";
     private static final String JMS_SELECTOR = Costanti.JMSMsgProperties.MSG_K_APP + " = '"
-	    + Costanti.PING + "'";
+            + Costanti.PING + "'";
 
     @EJB
     ControlliMonitor controlliMonitor;
@@ -66,95 +66,95 @@ public class AltriStatusMonitor {
     MonitorCoda monitorCoda;
 
     public void calcolaStatoDatabase(List<MonitorAltro> listaMon) {
-	MonitorAltro tmpAltro = new MonitorAltro();
-	tmpAltro.setNome(MonitorAltri.STATO_CONNESSIONE_ORCL.name());
-	if (controlliMonitor.controllaStatoDbOracle()) {
-	    tmpAltro.setStato(MonitorSondeGenEsiti.OK.name());
-	} else {
-	    tmpAltro.setStato(
-		    MonitorSondeGenEsiti.ERROR.name() + "|Il database Oracle non è raggiungibile ");
-	    log.error("Errore: Il database Oracle non è raggiungibile");
-	}
-	listaMon.add(tmpAltro);
+        MonitorAltro tmpAltro = new MonitorAltro();
+        tmpAltro.setNome(MonitorAltri.STATO_CONNESSIONE_ORCL.name());
+        if (controlliMonitor.controllaStatoDbOracle()) {
+            tmpAltro.setStato(MonitorSondeGenEsiti.OK.name());
+        } else {
+            tmpAltro.setStato(
+                    MonitorSondeGenEsiti.ERROR.name() + "|Il database Oracle non è raggiungibile ");
+            log.error("Errore: Il database Oracle non è raggiungibile");
+        }
+        listaMon.add(tmpAltro);
     }
 
     public void calcolaStatoCodaMorta(List<MonitorAltro> listaMon) {
-	MonitorAltro tmpAltro = new MonitorAltro();
-	tmpAltro.setNome(MonitorAltri.PRESENZA_ERRORI_CODA_JMS.name());
-	try {
-	    List<InfoCoda> infoCodas = monitorCoda
-		    .retrieveGenericMsgInQueue(Constants.NomeCoda.dmqQueue.name(), JMS_SELECTOR);
-	    this.elabJmsMessage(tmpAltro, infoCodas);
-	} catch (JMSException e) {
-	    log.error("Errore nel recupero delle informazioni della DMQ", e);
-	    throw new RuntimeException("Errore nel recupero delle informazioni della DMQ");
-	}
-	listaMon.add(tmpAltro);
+        MonitorAltro tmpAltro = new MonitorAltro();
+        tmpAltro.setNome(MonitorAltri.PRESENZA_ERRORI_CODA_JMS.name());
+        try {
+            List<InfoCoda> infoCodas = monitorCoda
+                    .retrieveGenericMsgInQueue(Constants.NomeCoda.dmqQueue.name(), JMS_SELECTOR);
+            this.elabJmsMessage(tmpAltro, infoCodas);
+        } catch (JMSException e) {
+            log.error("Errore nel recupero delle informazioni della DMQ", e);
+            throw new RuntimeException("Errore nel recupero delle informazioni della DMQ");
+        }
+        listaMon.add(tmpAltro);
     }
 
     private void elabJmsMessage(MonitorAltro tmpAltro, List<InfoCoda> infoCodas) {
-	/*
-	 * if (infoCodas.size() == 0) { tmpAltro.setStato(MonitorSondeGenEsiti.OK.name()); } else {
-	 * tmpAltro.setStato(MonitorSondeGenEsiti.ERROR.name() + "|ci sono " + infoCodas.size() +
-	 * " messaggi nella DMQ del server "); log.error("Errore: ci sono " + infoCodas.size() +
-	 * " messaggi nella DMQ del server"); }
-	 */
+        /*
+         * if (infoCodas.size() == 0) { tmpAltro.setStato(MonitorSondeGenEsiti.OK.name()); } else {
+         * tmpAltro.setStato(MonitorSondeGenEsiti.ERROR.name() + "|ci sono " + infoCodas.size() +
+         * " messaggi nella DMQ del server "); log.error("Errore: ci sono " + infoCodas.size() +
+         * " messaggi nella DMQ del server"); }
+         */
 
-	// non esistono messaggi su DLQ
-	if (infoCodas.size() == 0) {
-	    tmpAltro.setStato(MonitorSondeGenEsiti.OK.name());
-	} else {
-	    // preparo messaggio da inviare di ERROR
-	    StringBuffer koMsg = new StringBuffer();
-	    koMsg.append(MonitorSondeGenEsiti.ERROR.name() + "| messaggi rilevati in DLQ: ");
+        // non esistono messaggi su DLQ
+        if (infoCodas.size() == 0) {
+            tmpAltro.setStato(MonitorSondeGenEsiti.OK.name());
+        } else {
+            // preparo messaggio da inviare di ERROR
+            StringBuffer koMsg = new StringBuffer();
+            koMsg.append(MonitorSondeGenEsiti.ERROR.name() + "| messaggi rilevati in DLQ: ");
 
-	    // creazione messaggio raggruppando per payloadType/state
-	    Map<String, InfoCodaExt> mapInfos = this.buildInfoCodaMap(infoCodas);
-	    // per ogni payloadType creo parte del messaggio da inviare al trapper Zabbix
-	    for (Iterator<String> it = mapInfos.keySet().iterator(); it.hasNext();) {
-		String key = it.next();
-		InfoCodaExt tmpInfoCoda = mapInfos.get(key);
-		koMsg.append(tmpInfoCoda.getCountMsg() + " messaggi/o");
-		if (StringUtils.isNotBlank(tmpInfoCoda.getMessageSelector())) {
-		    koMsg.append(" di queue type " + tmpInfoCoda.getMessageSelector());
-		} /*
-		   * else { koMsg.append(" di tipo non rilevato"); }
-		   */
+            // creazione messaggio raggruppando per payloadType/state
+            Map<String, InfoCodaExt> mapInfos = this.buildInfoCodaMap(infoCodas);
+            // per ogni payloadType creo parte del messaggio da inviare al trapper Zabbix
+            for (Iterator<String> it = mapInfos.keySet().iterator(); it.hasNext();) {
+                String key = it.next();
+                InfoCodaExt tmpInfoCoda = mapInfos.get(key);
+                koMsg.append(tmpInfoCoda.getCountMsg() + " messaggi/o");
+                if (StringUtils.isNotBlank(tmpInfoCoda.getMessageSelector())) {
+                    koMsg.append(" di queue type " + tmpInfoCoda.getMessageSelector());
+                } /*
+                   * else { koMsg.append(" di tipo non rilevato"); }
+                   */
 
-		koMsg.append(ERROR_SEPARATOR);
-	    }
-	    // preparazione messaggio di errore (inviato a Zabbix)
-	    String msg = koMsg.toString().substring(0,
-		    koMsg.toString().length() - ERROR_SEPARATOR.length());// remove
-									  // last
-									  // char
-	    tmpAltro.setStato(msg);
-	    log.error(msg);
-	}
+                koMsg.append(ERROR_SEPARATOR);
+            }
+            // preparazione messaggio di errore (inviato a Zabbix)
+            String msg = koMsg.toString().substring(0,
+                    koMsg.toString().length() - ERROR_SEPARATOR.length());// remove
+            // last
+            // char
+            tmpAltro.setStato(msg);
+            log.error(msg);
+        }
     }
 
     private Map<String, InfoCodaExt> buildInfoCodaMap(List<InfoCoda> infoCodas) {
-	Map<String, InfoCodaExt> mapInfos = new HashMap<>();
-	for (InfoCoda info : infoCodas) {
-	    String key = this.elabMapInfoKey(info);
-	    if (mapInfos.containsKey(key)) {
-		// estrae oggetto e aggiorna
-		InfoCodaExt tmpInfoCoda = mapInfos.get(key);
-		tmpInfoCoda.incCountMsg(); // incremento contatore msg in DLQ
-		mapInfos.put(key, tmpInfoCoda);
-	    } else {
-		// init
-		InfoCodaExt tmpInfoCoda = new InfoCodaExt();
-		tmpInfoCoda.setMessageSelector(info.getMessageSelector());
-		mapInfos.put(key, tmpInfoCoda);
-	    }
-	}
-	return mapInfos;
+        Map<String, InfoCodaExt> mapInfos = new HashMap<>();
+        for (InfoCoda info : infoCodas) {
+            String key = this.elabMapInfoKey(info);
+            if (mapInfos.containsKey(key)) {
+                // estrae oggetto e aggiorna
+                InfoCodaExt tmpInfoCoda = mapInfos.get(key);
+                tmpInfoCoda.incCountMsg(); // incremento contatore msg in DLQ
+                mapInfos.put(key, tmpInfoCoda);
+            } else {
+                // init
+                InfoCodaExt tmpInfoCoda = new InfoCodaExt();
+                tmpInfoCoda.setMessageSelector(info.getMessageSelector());
+                mapInfos.put(key, tmpInfoCoda);
+            }
+        }
+        return mapInfos;
     }
 
     private String elabMapInfoKey(InfoCoda info) {
-	StringBuffer tmpKey = new StringBuffer();
-	tmpKey.append(info.getMessageSelector());
-	return tmpKey.toString();
+        StringBuffer tmpKey = new StringBuffer();
+        tmpKey.append(info.getMessageSelector());
+        return tmpKey.toString();
     }
 }

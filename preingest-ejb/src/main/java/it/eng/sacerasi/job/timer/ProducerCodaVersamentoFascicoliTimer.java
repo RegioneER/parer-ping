@@ -39,92 +39,92 @@ import org.slf4j.LoggerFactory;
 public class ProducerCodaVersamentoFascicoliTimer extends JobTimer {
 
     private static final Logger logger = LoggerFactory
-	    .getLogger(ProducerCodaVersamentoFascicoliTimer.class);
+            .getLogger(ProducerCodaVersamentoFascicoliTimer.class);
     @EJB
     private ProducerCodaVersamentoFascicoliTimer thisTimer;
     @EJB
     private ProducerCodaVersamentoFascicoliEjb producerCodaVersamentoFascicoliEjb;
 
     public ProducerCodaVersamentoFascicoliTimer() {
-	super(NomiJob.PRODUCER_CODA_VERS_FASCICOLI);
-	logger.debug("{} creato", this.getClass().getName());
+        super(NomiJob.PRODUCER_CODA_VERS_FASCICOLI);
+        logger.debug("{} creato", this.getClass().getName());
     }
 
     @Override
     @Lock(LockType.WRITE)
     // @Interceptors({JbossTimerNodeInterceptor.class})
     public void startSingleAction(String applicationName) {
-	if (!isActive()) {
-	    timerService.createTimer(TIME_DURATION, jobName);
-	}
+        if (!isActive()) {
+            timerService.createTimer(TIME_DURATION, jobName);
+        }
     }
 
     @Override
     @Lock(LockType.WRITE)
     // @Interceptors({JbossTimerNodeInterceptor.class, JbossTimerStartInterceptor.class})
     public void startCronScheduled(CronSchedule sched, String applicationName) {
-	ScheduleExpression tmpScheduleExpression;
+        ScheduleExpression tmpScheduleExpression;
 
-	if (!isActive()) {
-	    logger.info("Schedulazione: Ore: {}", sched.getHour());
-	    logger.info("Schedulazione: Minuti: {}", sched.getMinute());
-	    logger.info("Schedulazione: DOW: {}", sched.getDayOfWeek());
-	    logger.info("Schedulazione: Mese: {}", sched.getMonth());
-	    logger.info("Schedulazione: DOM: {}", sched.getDayOfMonth());
+        if (!isActive()) {
+            logger.info("Schedulazione: Ore: {}", sched.getHour());
+            logger.info("Schedulazione: Minuti: {}", sched.getMinute());
+            logger.info("Schedulazione: DOW: {}", sched.getDayOfWeek());
+            logger.info("Schedulazione: Mese: {}", sched.getMonth());
+            logger.info("Schedulazione: DOM: {}", sched.getDayOfMonth());
 
-	    tmpScheduleExpression = new ScheduleExpression();
-	    tmpScheduleExpression.hour(sched.getHour());
-	    tmpScheduleExpression.minute(sched.getMinute());
-	    tmpScheduleExpression.dayOfWeek(sched.getDayOfWeek());
-	    tmpScheduleExpression.month(sched.getMonth());
-	    tmpScheduleExpression.dayOfMonth(sched.getDayOfMonth());
-	    logger.info("Lancio il timer ProducerCodaVersamentoFascicoliTimer...");
-	    timerService.createCalendarTimer(tmpScheduleExpression,
-		    new TimerConfig(jobName, false));
-	}
+            tmpScheduleExpression = new ScheduleExpression();
+            tmpScheduleExpression.hour(sched.getHour());
+            tmpScheduleExpression.minute(sched.getMinute());
+            tmpScheduleExpression.dayOfWeek(sched.getDayOfWeek());
+            tmpScheduleExpression.month(sched.getMonth());
+            tmpScheduleExpression.dayOfMonth(sched.getDayOfMonth());
+            logger.info("Lancio il timer ProducerCodaVersamentoFascicoliTimer...");
+            timerService.createCalendarTimer(tmpScheduleExpression,
+                    new TimerConfig(jobName, false));
+        }
     }
 
     @Override
     @Lock(LockType.WRITE)
     // @Interceptors({JbossTimerNodeInterceptor.class})
     public void stop(String applicationName) {
-	for (Timer timer : timerService.getTimers()) {
-	    String scheduled = (String) timer.getInfo();
-	    if (scheduled.equals(jobName)) {
-		timer.cancel();
-	    }
-	}
+        for (Timer timer : timerService.getTimers()) {
+            String scheduled = (String) timer.getInfo();
+            if (scheduled.equals(jobName)) {
+                timer.cancel();
+            }
+        }
     }
 
     @Timeout
     // @Interceptors({JbossTimerTimeoutInterceptor.class})
     public void doJob(Timer timer) {
-	if (timer.getInfo().equals(jobName)) {
-	    try {
-		thisTimer.startProcess(timer);
-	    } catch (Exception e) {
-		logger.error("Errore nell'esecuzione del job ProducerCodaVersamentoFascicoli", e);
-	    }
-	}
+        if (timer.getInfo().equals(jobName)) {
+            try {
+                thisTimer.startProcess(timer);
+            } catch (Exception e) {
+                logger.error("Errore nell'esecuzione del job ProducerCodaVersamentoFascicoli", e);
+            }
+        }
     }
 
     @Override
     public void startProcess(Timer timer) throws Exception {
-	jobLogger.writeAtomicLog(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI,
-		Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
-	try {
-	    producerCodaVersamentoFascicoliEjb.produceQueue();
-	} catch (Exception e) {
-	    // questo log viene scritto solo in caso di errore.
-	    String message = null;
-	    if (e.getCause() != null) {
-		message = e.getCause().getMessage();
-	    }
-	    jobLogger.writeAtomicLog(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI,
-		    Constants.TipiRegLogJob.ERRORE, message);
-	    logger.error("Errore nell'esecuzione del job ProducerCodaVersamentoFascicoli", e);
-	    logger.info("Timer cancellato");
-	    timer.cancel();
-	}
+        jobLogger.writeAtomicLog(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI,
+                Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
+        try {
+            producerCodaVersamentoFascicoliEjb.produceQueue();
+        } catch (Exception e) {
+            // questo log viene scritto solo in caso di errore.
+            String message = null;
+            if (e.getCause() != null) {
+                message = e.getCause().getMessage();
+            }
+            jobLogger.writeAtomicLog(Constants.NomiJob.PRODUCER_CODA_VERS_FASCICOLI,
+                    Constants.TipiRegLogJob.ERRORE, message);
+            logger.error("Errore nell'esecuzione del job ProducerCodaVersamentoFascicoli", e);
+            logger.info("Timer cancellato");
+            timer.cancel();
+        }
     }
 }

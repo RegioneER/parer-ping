@@ -34,19 +34,19 @@ public class PigXmlSessioneIngestTableBean extends AbstractBaseTable<PigXmlSessi
     public static PigXmlSessioneIngestTableDescriptor TABLE_DESCRIPTOR = new PigXmlSessioneIngestTableDescriptor();
 
     public PigXmlSessioneIngestTableBean() {
-	super();
+        super();
     }
 
     protected PigXmlSessioneIngestRowBean createRow() {
-	return new PigXmlSessioneIngestRowBean();
+        return new PigXmlSessioneIngestRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigXmlSessioneIngestRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

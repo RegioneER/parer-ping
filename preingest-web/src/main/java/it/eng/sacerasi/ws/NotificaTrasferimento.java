@@ -48,23 +48,23 @@ public class NotificaTrasferimento {
 
     @WebMethod(operationName = "notificaAvvenutoTrasferimentoFile")
     public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFile(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject,
-	    @WebParam(name = "listaFileDepositati") ListaFileDepositatoType listaFileDepositati)
-	    throws ObjectStorageException {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "cdKeyObject") String cdKeyObject,
+            @WebParam(name = "listaFileDepositati") ListaFileDepositatoType listaFileDepositati)
+            throws ObjectStorageException {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	NotificaTrasferimentoRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.notificaAvvenutoTrasferimentoFile(nmAmbiente, nmVersatore,
-		    cdKeyObject, listaFileDepositati);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        NotificaTrasferimentoRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.notificaAvvenutoTrasferimentoFile(nmAmbiente, nmVersatore,
+                    cdKeyObject, listaFileDepositati);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 }

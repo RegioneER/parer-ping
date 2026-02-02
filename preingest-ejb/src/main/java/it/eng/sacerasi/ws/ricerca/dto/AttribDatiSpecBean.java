@@ -27,34 +27,34 @@ public class AttribDatiSpecBean {
     private AttribDatiSpecDataType dataType;
 
     public String getNmAttribDatiSpec() {
-	return nmAttribDatiSpec;
+        return nmAttribDatiSpec;
     }
 
     public AttribDatiSpecDataType getDataType() {
-	return dataType;
+        return dataType;
     }
 
     public void setDataType(AttribDatiSpecDataType dataType) {
-	this.dataType = dataType;
+        this.dataType = dataType;
     }
 
     public void setNmAttribDatiSpec(String nmAttribDatiSpec) {
-	this.nmAttribDatiSpec = nmAttribDatiSpec;
+        this.nmAttribDatiSpec = nmAttribDatiSpec;
     }
 
     public String getNomeColonna() {
-	return nomeColonna;
+        return nomeColonna;
     }
 
     public void setNomeColonna(String nomeColonna) {
-	this.nomeColonna = nomeColonna;
+        this.nomeColonna = nomeColonna;
     }
 
     public String getFlFiltroDiario() {
-	return flFiltroDiario;
+        return flFiltroDiario;
     }
 
     public void setFlFiltroDiario(String flFiltroDiario) {
-	this.flFiltroDiario = flFiltroDiario;
+        this.flFiltroDiario = flFiltroDiario;
     }
 }

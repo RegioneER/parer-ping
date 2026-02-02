@@ -27,31 +27,31 @@ public class NavigazioneSismaDto extends GenericDto {
     private boolean fileMancante;
 
     public NavigazioneSismaDto() {
-	super();
+        super();
     }
 
     public boolean isVerificaInCorso() {
-	return verificaInCorso;
+        return verificaInCorso;
     }
 
     public void setVerificaInCorso(boolean verificaInCorso) {
-	this.verificaInCorso = verificaInCorso;
+        this.verificaInCorso = verificaInCorso;
     }
 
     public boolean isVerificaErrata() {
-	return verificaErrata;
+        return verificaErrata;
     }
 
     public void setVerificaErrata(boolean verificaErrata) {
-	this.verificaErrata = verificaErrata;
+        this.verificaErrata = verificaErrata;
     }
 
     public boolean isFileMancante() {
-	return fileMancante;
+        return fileMancante;
     }
 
     public void setFileMancante(boolean fileMancante) {
-	this.fileMancante = fileMancante;
+        this.fileMancante = fileMancante;
     }
 
 }

@@ -28,50 +28,50 @@ public class MonVObjNonVersId implements Serializable {
 
     @Column(name = "CD_KEY_OBJECT")
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     private BigDecimal idVers;
 
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-	return idVers;
+        return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 97 * hash + Objects.hashCode(this.cdKeyObject);
-	hash = 97 * hash + Objects.hashCode(this.idVers);
-	return hash;
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.cdKeyObject);
+        hash = 97 * hash + Objects.hashCode(this.idVers);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final MonVObjNonVersId other = (MonVObjNonVersId) obj;
-	if (!Objects.equals(this.cdKeyObject, other.cdKeyObject)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idVers, other.idVers)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MonVObjNonVersId other = (MonVObjNonVersId) obj;
+        if (!Objects.equals(this.cdKeyObject, other.cdKeyObject)) {
+            return false;
+        }
+        if (!Objects.equals(this.idVers, other.idVers)) {
+            return false;
+        }
+        return true;
     }
 }

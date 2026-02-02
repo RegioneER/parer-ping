@@ -153,6 +153,10 @@
     <Section Description="Monitoraggio server trasformazioni" Legend="Monitoraggio server trasformazioni" LoadOpened="true" Name="MonitoraggioServerTrasformazioniSection" ShowButton="true"/>
     <Fields Name="MonitoraggioServerTrasformazioniDetail" Description="Monitoraggio server trasformazioni">
         <ComboBox Name="fl_set_server" Description="Server selezionato" Type="STRING" AddBlank="false"/>
+        <Input Name="id_obj" Description="Id oggetto" Type="INTEGER" />
+        <Input Name="cd_trasf" Description="Nome trasformazione" Type="STRING" MaxLength="95"/>
+        <Input Name="dt_inizio_trasf" Description="Data inizio" Type="DATE" Required="true"/>
+        <Input Name="dt_fine_trasf" Description="Data fine" Type="DATE" Required="true"/>
         <Button Name="updateKettleServersStatus" Description="Aggiorna" Type="STRING"/>
     </Fields>
     
@@ -164,7 +168,7 @@
         <Input Name="nm_trasf" Description="Nome trasformazione" Type="STRING" />
         <Input Name="ds_stato_trasf" Description="Stato trasformazione" Type="STRING" />
         <Input Name="dt_inizio_trasf" Description="Data inizio trasformazione" Type="DATETIME" />
-        <Input Name="dt_fine_trasf" Description="Data fine " Type="DATETIME" />
+        <Input Name="dt_fine_trasf" Description="Data fine" Type="DATETIME" />
     </List>
     
     <Section Description="Trasformazioni in coda" Legend="Trasformazioni in coda" LoadOpened="true" Name="MonitoraggioServerTrasformazioniInCodaSection" ShowButton="true"/>

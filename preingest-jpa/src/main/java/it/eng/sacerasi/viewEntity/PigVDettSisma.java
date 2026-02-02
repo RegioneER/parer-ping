@@ -40,38 +40,38 @@ public class PigVDettSisma implements Serializable {
 
     @Column(name = "FL_DELETED", columnDefinition = "CHAR")
     public String getFlDeleted() {
-	return this.flDeleted;
+        return this.flDeleted;
     }
 
     public void setFlDeleted(String flDeleted) {
-	this.flDeleted = flDeleted;
+        this.flDeleted = flDeleted;
     }
 
     @Column(name = "FL_ESITO_VERIFICA", columnDefinition = "CHAR")
     public String getFlEsitoVerifica() {
-	return this.flEsitoVerifica;
+        return this.flEsitoVerifica;
     }
 
     public void setFlEsitoVerifica(String flEsitoVerifica) {
-	this.flEsitoVerifica = flEsitoVerifica;
+        this.flEsitoVerifica = flEsitoVerifica;
     }
 
     @Column(name = "ID_DOCUMENTO")
     public BigDecimal getIdDocumento() {
-	return this.idDocumento;
+        return this.idDocumento;
     }
 
     public void setIdDocumento(BigDecimal idDocumento) {
-	this.idDocumento = idDocumento;
+        this.idDocumento = idDocumento;
     }
 
     @Id
     @Column(name = "ID_SISMA")
     public BigDecimal getIdSisma() {
-	return this.idSisma;
+        return this.idSisma;
     }
 
     public void setIdSisma(BigDecimal idSisma) {
-	this.idSisma = idSisma;
+        this.idSisma = idSisma;
     }
 }

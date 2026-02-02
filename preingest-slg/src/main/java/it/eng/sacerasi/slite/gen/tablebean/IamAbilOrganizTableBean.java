@@ -33,19 +33,19 @@ public class IamAbilOrganizTableBean extends AbstractBaseTable<IamAbilOrganizRow
     public static IamAbilOrganizTableDescriptor TABLE_DESCRIPTOR = new IamAbilOrganizTableDescriptor();
 
     public IamAbilOrganizTableBean() {
-	super();
+        super();
     }
 
     protected IamAbilOrganizRowBean createRow() {
-	return new IamAbilOrganizRowBean();
+        return new IamAbilOrganizRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamAbilOrganizRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -59,112 +59,112 @@ public class VersamentoOggettoHelper extends GenericHelper {
      */
     @SuppressWarnings("unchecked")
     public List<MonVLisStatoVers> getMonVLisStatoVers(long idUtente, BigDecimal idAmbiente,
-	    BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject, String cdKeyObject,
-	    String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
-	    List<String> tiStatoObject, List<String> tiVersFile, String note,
-	    String tiContenutoOggetto) {
-	StringBuilder queryStr = new StringBuilder(
-		"SELECT m FROM MonVLisStatoVers m WHERE m.id.idUserIam =:idUserIam AND m.idAmbienteVers = :idAmbiente");
-	String clause = " AND ";
-	if (idVers != null) {
-	    queryStr.append(clause).append("m.idVers = :idVers");
-	}
-	if (idTipoOggetto != null) {
-	    queryStr.append(clause).append("m.idTipoObject = :idTipoOggetto");
-	}
-	if (idObject != null) {
-	    queryStr.append(clause).append("m.idObject = :idObject");
-	}
-	if (StringUtils.isNotBlank(cdKeyObject)) {
-	    queryStr.append(clause).append("LOWER(m.cdKeyObject) LIKE LOWER(:cdKeyObject)");
-	}
-	if (StringUtils.isNotBlank(dsObject)) {
-	    queryStr.append(clause).append("LOWER(m.dsObject) LIKE LOWER(:dsObject)");
-	}
-	if (dataDa != null && dataA != null) {
-	    queryStr.append(clause).append("m.dtVers BETWEEN :dataDa AND :dataA");
-	}
-	if (StringUtils.isNotBlank(tiStatoEsterno)) {
-	    queryStr.append(clause).append("m.tiStatoEsterno LIKE :tiStatoEsterno");
-	}
-	if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
-	    // MEV 29266 - Gestione degli stati fittizi in ricerca oggetto
-	    queryStr.append(clause).append("m.tiStatoCalcolato IN (:tiStatoObject)");
-	}
-	if (tiVersFile != null && !tiVersFile.isEmpty()) {
-	    queryStr.append(clause).append("m.tiVersFile IN (:tiVersFile)");
-	}
-	// MEV 30343
-	if (StringUtils.isNotBlank(note)) {
-	    queryStr.append(clause).append("LOWER(m.note) like LOWER(:note)");
-	}
+            BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject, String cdKeyObject,
+            String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
+            List<String> tiStatoObject, List<String> tiVersFile, String note,
+            String tiContenutoOggetto) {
+        StringBuilder queryStr = new StringBuilder(
+                "SELECT m FROM MonVLisStatoVers m WHERE m.id.idUserIam =:idUserIam AND m.idAmbienteVers = :idAmbiente");
+        String clause = " AND ";
+        if (idVers != null) {
+            queryStr.append(clause).append("m.idVers = :idVers");
+        }
+        if (idTipoOggetto != null) {
+            queryStr.append(clause).append("m.idTipoObject = :idTipoOggetto");
+        }
+        if (idObject != null) {
+            queryStr.append(clause).append("m.idObject = :idObject");
+        }
+        if (StringUtils.isNotBlank(cdKeyObject)) {
+            queryStr.append(clause).append("LOWER(m.cdKeyObject) LIKE LOWER(:cdKeyObject)");
+        }
+        if (StringUtils.isNotBlank(dsObject)) {
+            queryStr.append(clause).append("LOWER(m.dsObject) LIKE LOWER(:dsObject)");
+        }
+        if (dataDa != null && dataA != null) {
+            queryStr.append(clause).append("m.dtVers BETWEEN :dataDa AND :dataA");
+        }
+        if (StringUtils.isNotBlank(tiStatoEsterno)) {
+            queryStr.append(clause).append("m.tiStatoEsterno LIKE :tiStatoEsterno");
+        }
+        if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
+            // MEV 29266 - Gestione degli stati fittizi in ricerca oggetto
+            queryStr.append(clause).append("m.tiStatoCalcolato IN (:tiStatoObject)");
+        }
+        if (tiVersFile != null && !tiVersFile.isEmpty()) {
+            queryStr.append(clause).append("m.tiVersFile IN (:tiVersFile)");
+        }
+        // MEV 30343
+        if (StringUtils.isNotBlank(note)) {
+            queryStr.append(clause).append("LOWER(m.note) like LOWER(:note)");
+        }
 
-	// MEV 39090
-	if (StringUtils.isNotBlank(tiContenutoOggetto)) {
-	    queryStr.append(clause).append("m.tiContenutoOggetto = :tiContenutoOggetto");
-	}
+        // MEV 39090
+        if (StringUtils.isNotBlank(tiContenutoOggetto)) {
+            queryStr.append(clause).append("m.tiContenutoOggetto = :tiContenutoOggetto");
+        }
 
-	queryStr.append(" ORDER BY m.dtVers DESC");
-	Query query = getEntityManager().createQuery(queryStr.toString());
-	query.setParameter("idUserIam", HibernateUtils.bigDecimalFrom(idUtente));
-	query.setParameter("idAmbiente", idAmbiente);
-	if (idVers != null) {
-	    query.setParameter("idVers", idVers);
-	}
-	if (idTipoOggetto != null) {
-	    query.setParameter("idTipoOggetto", idTipoOggetto);
-	}
-	if (idObject != null) {
-	    query.setParameter("idObject", idObject);
-	}
-	if (StringUtils.isNotBlank(cdKeyObject)) {
-	    query.setParameter("cdKeyObject", "%" + cdKeyObject + "%");
-	}
-	if (StringUtils.isNotBlank(dsObject)) {
-	    query.setParameter("dsObject", "%" + dsObject + "%");
-	}
-	if (dataDa != null && dataA != null) {
-	    query.setParameter("dataDa", dataDa);
-	    query.setParameter("dataA", dataA);
-	}
-	if (StringUtils.isNotBlank(tiStatoEsterno)) {
-	    query.setParameter("tiStatoEsterno", "%" + tiStatoEsterno + "%");
-	}
-	if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
-	    query.setParameter("tiStatoObject", tiStatoObject);
-	}
-	if (tiVersFile != null && !tiVersFile.isEmpty()) {
-	    query.setParameter("tiVersFile", tiVersFile);
-	}
-	if (StringUtils.isNotBlank(note)) {
-	    query.setParameter("note", "%" + note + "%");
-	}
-	if (StringUtils.isNotBlank(tiContenutoOggetto)) {
-	    query.setParameter("tiContenutoOggetto", tiContenutoOggetto);
-	}
-	return query.getResultList();
+        queryStr.append(" ORDER BY m.dtVers DESC");
+        Query query = getEntityManager().createQuery(queryStr.toString());
+        query.setParameter("idUserIam", HibernateUtils.bigDecimalFrom(idUtente));
+        query.setParameter("idAmbiente", idAmbiente);
+        if (idVers != null) {
+            query.setParameter("idVers", idVers);
+        }
+        if (idTipoOggetto != null) {
+            query.setParameter("idTipoOggetto", idTipoOggetto);
+        }
+        if (idObject != null) {
+            query.setParameter("idObject", idObject);
+        }
+        if (StringUtils.isNotBlank(cdKeyObject)) {
+            query.setParameter("cdKeyObject", "%" + cdKeyObject + "%");
+        }
+        if (StringUtils.isNotBlank(dsObject)) {
+            query.setParameter("dsObject", "%" + dsObject + "%");
+        }
+        if (dataDa != null && dataA != null) {
+            query.setParameter("dataDa", dataDa);
+            query.setParameter("dataA", dataA);
+        }
+        if (StringUtils.isNotBlank(tiStatoEsterno)) {
+            query.setParameter("tiStatoEsterno", "%" + tiStatoEsterno + "%");
+        }
+        if (tiStatoObject != null && !tiStatoObject.isEmpty()) {
+            query.setParameter("tiStatoObject", tiStatoObject);
+        }
+        if (tiVersFile != null && !tiVersFile.isEmpty()) {
+            query.setParameter("tiVersFile", tiVersFile);
+        }
+        if (StringUtils.isNotBlank(note)) {
+            query.setParameter("note", "%" + note + "%");
+        }
+        if (StringUtils.isNotBlank(tiContenutoOggetto)) {
+            query.setParameter("tiContenutoOggetto", tiContenutoOggetto);
+        }
+        return query.getResultList();
     }
 
     public List<Object[]> getColumnFromPigObject(BigDecimal idTipoObject, String... columns) {
-	StringBuilder builder = new StringBuilder("SELECT ");
-	String concatenated = "";
-	int i = 0;
-	for (String column : columns) {
-	    String columnCamelCase = Utils.convertSnakeCaseToCamelCase(column);
-	    if (i > 0) {
-		builder.append(",");
-		concatenated += ",";
-	    }
-	    builder.append("u.").append(columnCamelCase);
-	    concatenated += "u." + columnCamelCase;
-	    i++;
-	}
-	builder.append(
-		" FROM PigObject u JOIN u.pigSessioneIngests ses WHERE ses.idSessioneIngest = u.idLastSessioneIngest AND u.pigTipoObject.idTipoObject = :idTipoObject AND u.tiStatoObject = 'DA_TRASFORMARE' AND ses.tiStatoVerificaHash = 'OK' AND u.tiGestOggettiFigli = 'MANUALE'")
-		.append(" ORDER BY ").append(concatenated);
-	final TypedQuery<Object[]> query = getEntityManager()
-		.createQuery(builder.toString(), Object[].class)
-		.setParameter("idTipoObject", HibernateUtils.longFrom(idTipoObject));
-	return query.getResultList();
+        StringBuilder builder = new StringBuilder("SELECT ");
+        String concatenated = "";
+        int i = 0;
+        for (String column : columns) {
+            String columnCamelCase = Utils.convertSnakeCaseToCamelCase(column);
+            if (i > 0) {
+                builder.append(",");
+                concatenated += ",";
+            }
+            builder.append("u.").append(columnCamelCase);
+            concatenated += "u." + columnCamelCase;
+            i++;
+        }
+        builder.append(
+                " FROM PigObject u JOIN u.pigSessioneIngests ses WHERE ses.idSessioneIngest = u.idLastSessioneIngest AND u.pigTipoObject.idTipoObject = :idTipoObject AND u.tiStatoObject = 'DA_TRASFORMARE' AND ses.tiStatoVerificaHash = 'OK' AND u.tiGestOggettiFigli = 'MANUALE'")
+                .append(" ORDER BY ").append(concatenated);
+        final TypedQuery<Object[]> query = getEntityManager()
+                .createQuery(builder.toString(), Object[].class)
+                .setParameter("idTipoObject", HibernateUtils.longFrom(idTipoObject));
+        return query.getResultList();
     }
 }

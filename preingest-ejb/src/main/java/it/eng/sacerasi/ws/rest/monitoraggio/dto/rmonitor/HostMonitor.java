@@ -34,43 +34,43 @@ public class HostMonitor {
     private List<MonitorAltro> altri;
 
     public String getVersione() {
-	return versione;
+        return versione;
     }
 
     public void setVersione(String versione) {
-	this.versione = versione;
+        this.versione = versione;
     }
 
     public String getCodiceErrore() {
-	return codiceErrore;
+        return codiceErrore;
     }
 
     public void setCodiceErrore(String codiceErrore) {
-	this.codiceErrore = codiceErrore;
+        this.codiceErrore = codiceErrore;
     }
 
     public String getDescrErrore() {
-	return descrErrore;
+        return descrErrore;
     }
 
     public void setDescrErrore(String descrErrore) {
-	this.descrErrore = descrErrore;
+        this.descrErrore = descrErrore;
     }
 
     public List<MonitorJob> getJob() {
-	return job;
+        return job;
     }
 
     public void setJob(List<MonitorJob> job) {
-	this.job = job;
+        this.job = job;
     }
 
     public List<MonitorAltro> getAltri() {
-	return altri;
+        return altri;
     }
 
     public void setAltri(List<MonitorAltro> altri) {
-	this.altri = altri;
+        this.altri = altri;
     }
 
 }

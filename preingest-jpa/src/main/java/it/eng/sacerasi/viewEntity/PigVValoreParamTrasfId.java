@@ -28,50 +28,50 @@ public class PigVValoreParamTrasfId implements Serializable {
 
     @Column(name = "ID_PARAM_TRASF")
     public BigDecimal getIdParamTrasf() {
-	return idParamTrasf;
+        return idParamTrasf;
     }
 
     public void setIdParamTrasf(BigDecimal idParamTrasf) {
-	this.idParamTrasf = idParamTrasf;
+        this.idParamTrasf = idParamTrasf;
     }
 
     private BigDecimal idVersTipoObjectDaTrasf;
 
     @Column(name = "ID_VERS_TIPO_OBJECT_DA_TRASF")
     public BigDecimal getIdVersTipoObjectDaTrasf() {
-	return idVersTipoObjectDaTrasf;
+        return idVersTipoObjectDaTrasf;
     }
 
     public void setIdVersTipoObjectDaTrasf(BigDecimal idVersTipoObjectDaTrasf) {
-	this.idVersTipoObjectDaTrasf = idVersTipoObjectDaTrasf;
+        this.idVersTipoObjectDaTrasf = idVersTipoObjectDaTrasf;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 29 * hash + Objects.hashCode(this.idParamTrasf);
-	hash = 29 * hash + Objects.hashCode(this.idVersTipoObjectDaTrasf);
-	return hash;
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.idParamTrasf);
+        hash = 29 * hash + Objects.hashCode(this.idVersTipoObjectDaTrasf);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final PigVValoreParamTrasfId other = (PigVValoreParamTrasfId) obj;
-	if (!Objects.equals(this.idParamTrasf, other.idParamTrasf)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idVersTipoObjectDaTrasf, other.idVersTipoObjectDaTrasf)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PigVValoreParamTrasfId other = (PigVValoreParamTrasfId) obj;
+        if (!Objects.equals(this.idParamTrasf, other.idParamTrasf)) {
+            return false;
+        }
+        if (!Objects.equals(this.idVersTipoObjectDaTrasf, other.idVersTipoObjectDaTrasf)) {
+            return false;
+        }
+        return true;
     }
 }

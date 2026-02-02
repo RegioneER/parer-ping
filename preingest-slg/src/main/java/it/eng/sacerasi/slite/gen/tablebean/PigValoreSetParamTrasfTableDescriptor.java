@@ -42,24 +42,24 @@ public class PigValoreSetParamTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VALORE_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_ID_VALORE_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_ID_VERS_TIPO_OBJECT_DA_TRASF,
-		new ColumnDescriptor(COL_ID_VERS_TIPO_OBJECT_DA_TRASF, Types.DECIMAL, 22, false));
-	map.put(COL_ID_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, false));
+        map.put(COL_ID_VALORE_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_ID_VALORE_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_ID_VERS_TIPO_OBJECT_DA_TRASF,
+                new ColumnDescriptor(COL_ID_VERS_TIPO_OBJECT_DA_TRASF, Types.DECIMAL, 22, false));
+        map.put(COL_ID_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

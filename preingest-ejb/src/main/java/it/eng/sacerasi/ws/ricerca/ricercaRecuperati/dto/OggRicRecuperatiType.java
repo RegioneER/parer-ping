@@ -25,11 +25,11 @@ public class OggRicRecuperatiType {
     private String cdKeyObject;
 
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
 }

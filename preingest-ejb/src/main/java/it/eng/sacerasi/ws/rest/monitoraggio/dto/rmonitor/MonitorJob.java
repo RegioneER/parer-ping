@@ -29,15 +29,15 @@ import java.util.Date;
 public class MonitorJob {
 
     public enum StatiTimer {
-	ON, OFF
+        ON, OFF
     }
 
     public enum StatiJob {
-	CHIUSA_OK, CHIUSA_ERR, IN_CORSO
+        CHIUSA_OK, CHIUSA_ERR, IN_CORSO
     }
 
     public enum Allarmi {
-	NESSUN_ALLARME, ERRORE_SCHEDULAZIONE
+        NESSUN_ALLARME, ERRORE_SCHEDULAZIONE
     }
 
     private String nomeJob;
@@ -47,35 +47,35 @@ public class MonitorJob {
     private Date tSUltimaAttivita;
 
     public String getNomeJob() {
-	return nomeJob;
+        return nomeJob;
     }
 
     public void setNomeJob(String nomeJob) {
-	this.nomeJob = nomeJob;
+        this.nomeJob = nomeJob;
     }
 
     public StatiTimer getStatoTimer() {
-	return statoTimer;
+        return statoTimer;
     }
 
     public void setStatoTimer(StatiTimer statoTimer) {
-	this.statoTimer = statoTimer;
+        this.statoTimer = statoTimer;
     }
 
     public StatiJob getStatoJob() {
-	return statoJob;
+        return statoJob;
     }
 
     public void setStatoJob(StatiJob statoJob) {
-	this.statoJob = statoJob;
+        this.statoJob = statoJob;
     }
 
     public Allarmi getAllarmiDaUltimaChiamata() {
-	return allarmiDaUltimaChiamata;
+        return allarmiDaUltimaChiamata;
     }
 
     public void setAllarmiDaUltimaChiamata(Allarmi allarmiDaUltimaChiamata) {
-	this.allarmiDaUltimaChiamata = allarmiDaUltimaChiamata;
+        this.allarmiDaUltimaChiamata = allarmiDaUltimaChiamata;
     }
 
     // NOTA: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" questo è il formato RFC3339, analogo al più celebre
@@ -87,11 +87,11 @@ public class MonitorJob {
     // timezone = "GMT")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "CET")
     public Date gettSUltimaAttivita() {
-	return tSUltimaAttivita;
+        return tSUltimaAttivita;
     }
 
     public void settSUltimaAttivita(Date tSUltimaAttivita) {
-	this.tSUltimaAttivita = tSUltimaAttivita;
+        this.tSUltimaAttivita = tSUltimaAttivita;
     }
 
 }

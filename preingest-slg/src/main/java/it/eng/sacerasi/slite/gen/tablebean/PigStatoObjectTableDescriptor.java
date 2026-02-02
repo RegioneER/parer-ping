@@ -42,24 +42,24 @@ public class PigStatoObjectTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_STATO_OBJECT,
-		new ColumnDescriptor(COL_ID_STATO_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_TI_STATO_OBJECT,
-		new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, false));
-	map.put(COL_DS_TI_STATO_OBJECT,
-		new ColumnDescriptor(COL_DS_TI_STATO_OBJECT, Types.VARCHAR, 254, false));
+        map.put(COL_ID_STATO_OBJECT,
+                new ColumnDescriptor(COL_ID_STATO_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_TI_STATO_OBJECT,
+                new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, false));
+        map.put(COL_DS_TI_STATO_OBJECT,
+                new ColumnDescriptor(COL_DS_TI_STATO_OBJECT, Types.VARCHAR, 254, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

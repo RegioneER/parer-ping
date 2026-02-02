@@ -36,167 +36,167 @@ public class MonVLisFascicoloObjectRowBean extends BaseRow implements JEEBaseRow
     public static MonVLisFascicoloObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisFascicoloObjectTableDescriptor();
 
     public MonVLisFascicoloObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdFascicoloObject() {
-	return getBigDecimal("id_fascicolo_object");
+        return getBigDecimal("id_fascicolo_object");
     }
 
     public void setIdFascicoloObject(BigDecimal idFascicoloObject) {
-	setObject("id_fascicolo_object", idFascicoloObject);
+        setObject("id_fascicolo_object", idFascicoloObject);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public BigDecimal getAaFascicoloSacer() {
-	return getBigDecimal("aa_fascicolo_sacer");
+        return getBigDecimal("aa_fascicolo_sacer");
     }
 
     public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
-	setObject("aa_fascicolo_sacer", aaFascicoloSacer);
+        setObject("aa_fascicolo_sacer", aaFascicoloSacer);
     }
 
     public String getCdKeyFascicoloSacer() {
-	return getString("cd_key_fascicolo_sacer");
+        return getString("cd_key_fascicolo_sacer");
     }
 
     public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
-	setObject("cd_key_fascicolo_sacer", cdKeyFascicoloSacer);
+        setObject("cd_key_fascicolo_sacer", cdKeyFascicoloSacer);
     }
 
     public BigDecimal getNiSizeFileByte() {
-	return getBigDecimal("ni_size_file_byte");
+        return getBigDecimal("ni_size_file_byte");
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	setObject("ni_size_file_byte", niSizeFileByte);
+        setObject("ni_size_file_byte", niSizeFileByte);
     }
 
     public String getTiStatoFascicoloObject() {
-	return getString("ti_stato_fascicolo_object");
+        return getString("ti_stato_fascicolo_object");
     }
 
     public void setTiStatoFascicoloObject(String tiStatoFascicoloObject) {
-	setObject("ti_stato_fascicolo_object", tiStatoFascicoloObject);
+        setObject("ti_stato_fascicolo_object", tiStatoFascicoloObject);
     }
 
     public String getCdErrSacer() {
-	return getString("cd_err_sacer");
+        return getString("cd_err_sacer");
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	setObject("cd_err_sacer", cdErrSacer);
+        setObject("cd_err_sacer", cdErrSacer);
     }
 
     public String getDlErrSacer() {
-	return getString("dl_err_sacer");
+        return getString("dl_err_sacer");
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	setObject("dl_err_sacer", dlErrSacer);
+        setObject("dl_err_sacer", dlErrSacer);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getFlVersSimulato() {
-	return getString("fl_vers_simulato");
+        return getString("fl_vers_simulato");
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	setObject("fl_vers_simulato", flVersSimulato);
+        setObject("fl_vers_simulato", flVersSimulato);
     }
 
     public String getDlCompositoOrganiz() {
-	return getString("dl_composito_organiz");
+        return getString("dl_composito_organiz");
     }
 
     public void setDlCompositoOrganiz(String dlCompositoOrganiz) {
-	setObject("dl_composito_organiz", dlCompositoOrganiz);
+        setObject("dl_composito_organiz", dlCompositoOrganiz);
     }
 
     public String getCdConcatDlErrSacer() {
-	return getString("cd_concat_dl_err_sacer");
+        return getString("cd_concat_dl_err_sacer");
     }
 
     public void setCdConcatDlErrSacer(String cdConcatDlErrSacer) {
-	setObject("cd_concat_dl_err_sacer", cdConcatDlErrSacer);
+        setObject("cd_concat_dl_err_sacer", cdConcatDlErrSacer);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVLisFascicoloObject entity = (MonVLisFascicoloObject) obj;
-	this.setIdFascicoloObject(entity.getIdFascicoloObject());
-	this.setIdObject(entity.getIdObject());
-	this.setAaFascicoloSacer(entity.getAaFascicoloSacer());
-	this.setCdKeyFascicoloSacer(entity.getCdKeyFascicoloSacer());
-	this.setNiSizeFileByte(entity.getNiSizeFileByte());
-	this.setTiStatoFascicoloObject(entity.getTiStatoFascicoloObject());
-	this.setCdErrSacer(entity.getCdErrSacer());
-	this.setDlErrSacer(entity.getDlErrSacer());
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setFlVersSimulato(entity.getFlVersSimulato());
-	this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
-	this.setCdConcatDlErrSacer(entity.getCdConcatDlErrSacer());
+        MonVLisFascicoloObject entity = (MonVLisFascicoloObject) obj;
+        this.setIdFascicoloObject(entity.getIdFascicoloObject());
+        this.setIdObject(entity.getIdObject());
+        this.setAaFascicoloSacer(entity.getAaFascicoloSacer());
+        this.setCdKeyFascicoloSacer(entity.getCdKeyFascicoloSacer());
+        this.setNiSizeFileByte(entity.getNiSizeFileByte());
+        this.setTiStatoFascicoloObject(entity.getTiStatoFascicoloObject());
+        this.setCdErrSacer(entity.getCdErrSacer());
+        this.setDlErrSacer(entity.getDlErrSacer());
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setFlVersSimulato(entity.getFlVersSimulato());
+        this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
+        this.setCdConcatDlErrSacer(entity.getCdConcatDlErrSacer());
     }
 
     @Override
     public MonVLisFascicoloObject rowBeanToEntity() {
-	MonVLisFascicoloObject entity = new MonVLisFascicoloObject();
-	entity.setIdFascicoloObject(this.getIdFascicoloObject());
-	entity.setIdObject(this.getIdObject());
-	entity.setAaFascicoloSacer(this.getAaFascicoloSacer());
-	entity.setCdKeyFascicoloSacer(this.getCdKeyFascicoloSacer());
-	entity.setNiSizeFileByte(this.getNiSizeFileByte());
-	entity.setTiStatoFascicoloObject(this.getTiStatoFascicoloObject());
-	entity.setCdErrSacer(this.getCdErrSacer());
-	entity.setDlErrSacer(this.getDlErrSacer());
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setFlVersSimulato(this.getFlVersSimulato());
-	entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
-	entity.setCdConcatDlErrSacer(this.getCdConcatDlErrSacer());
-	return entity;
+        MonVLisFascicoloObject entity = new MonVLisFascicoloObject();
+        entity.setIdFascicoloObject(this.getIdFascicoloObject());
+        entity.setIdObject(this.getIdObject());
+        entity.setAaFascicoloSacer(this.getAaFascicoloSacer());
+        entity.setCdKeyFascicoloSacer(this.getCdKeyFascicoloSacer());
+        entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setTiStatoFascicoloObject(this.getTiStatoFascicoloObject());
+        entity.setCdErrSacer(this.getCdErrSacer());
+        entity.setDlErrSacer(this.getDlErrSacer());
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
+        entity.setCdConcatDlErrSacer(this.getCdConcatDlErrSacer());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

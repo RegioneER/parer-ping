@@ -33,19 +33,19 @@ public class PigDichVersSacerTableBean extends AbstractBaseTable<PigDichVersSace
     public static PigDichVersSacerTableDescriptor TABLE_DESCRIPTOR = new PigDichVersSacerTableDescriptor();
 
     public PigDichVersSacerTableBean() {
-	super();
+        super();
     }
 
     protected PigDichVersSacerRowBean createRow() {
-	return new PigDichVersSacerRowBean();
+        return new PigDichVersSacerRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigDichVersSacerRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

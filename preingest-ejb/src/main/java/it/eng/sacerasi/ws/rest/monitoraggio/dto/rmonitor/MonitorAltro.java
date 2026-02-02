@@ -30,19 +30,19 @@ public class MonitorAltro {
     private String stato;
 
     public String getNome() {
-	return nome;
+        return nome;
     }
 
     public void setNome(String nome) {
-	this.nome = nome;
+        this.nome = nome;
     }
 
     public String getStato() {
-	return stato;
+        return stato;
     }
 
     public void setStato(String stato) {
-	this.stato = stato;
+        this.stato = stato;
     }
 
 }

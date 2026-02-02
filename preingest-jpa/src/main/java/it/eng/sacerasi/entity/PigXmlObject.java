@@ -45,61 +45,61 @@ public class PigXmlObject implements Serializable {
     private Long idVers;
 
     public PigXmlObject() {
-	// hibernate
+        // hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_OBJECT_IDXMLOBJECT_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_OBJECT"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_OBJECT"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_OBJECT_IDXMLOBJECT_GENERATOR")
     @Column(name = "ID_XML_OBJECT")
     public Long getIdXmlObject() {
-	return this.idXmlObject;
+        return this.idXmlObject;
     }
 
     public void setIdXmlObject(Long idXmlObject) {
-	this.idXmlObject = idXmlObject;
+        this.idXmlObject = idXmlObject;
     }
 
     @Lob()
     @Column(name = "BL_XML")
     public String getBlXml() {
-	return this.blXml;
+        return this.blXml;
     }
 
     public void setBlXml(String blXml) {
-	this.blXml = blXml;
+        this.blXml = blXml;
     }
 
     @Column(name = "CD_VERSIONE_XML_VERS")
     public String getCdVersioneXmlVers() {
-	return this.cdVersioneXmlVers;
+        return this.cdVersioneXmlVers;
     }
 
     public void setCdVersioneXmlVers(String cdVersioneXmlVers) {
-	this.cdVersioneXmlVers = cdVersioneXmlVers;
+        this.cdVersioneXmlVers = cdVersioneXmlVers;
     }
 
     // bi-directional many-to-one association to PigObject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_OBJECT")
     public PigObject getPigObject() {
-	return this.pigObject;
+        return this.pigObject;
     }
 
     public void setPigObject(PigObject pigObject) {
-	this.pigObject = pigObject;
+        this.pigObject = pigObject;
     }
 
     // usata solo come chiave di partizionamento, non voglio la join con PigVers
     @Column(name = "ID_VERS")
     public Long getIdVers() {
-	return this.idVers;
+        return this.idVers;
     }
 
     public void setIdVers(Long idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
 }

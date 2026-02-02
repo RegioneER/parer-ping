@@ -60,51 +60,51 @@ public class DownloadSismaServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
+            throws ServletException, IOException {
 
-	String chiave = request.getParameter("chiave");
-	String fileType = "application/zip";
-	response.setContentType(fileType);
-	response.setHeader("Content-disposition", "attachment; filename=" + chiave);
-	SismaForm form = (SismaForm) request.getSession().getAttribute("###_FORM_CONTAINER");
-	BigDecimal idSisma = null;
-	try {
-	    idSisma = form.getDatiGeneraliOutput().getId_sisma_out().parse();
-	} catch (EMFError ex) {
-	}
+        String chiave = request.getParameter("chiave");
+        String fileType = "application/zip";
+        response.setContentType(fileType);
+        response.setHeader("Content-disposition", "attachment; filename=" + chiave);
+        SismaForm form = (SismaForm) request.getSession().getAttribute("###_FORM_CONTAINER");
+        BigDecimal idSisma = null;
+        try {
+            idSisma = form.getDatiGeneraliOutput().getId_sisma_out().parse();
+        } catch (EMFError ex) {
+        }
 
-	try {
+        try {
 
-	    PigSismaDocumenti pigSismaDocumenti = sismaHelper.getPigSismaDocumentiByName(chiave,
-		    idSisma);
-	    if (pigSismaDocumenti != null) {
-		// MEV 34843
-		PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
-			.getPigSismaDocumentiStorage();
-		BackendStorage backend = salvataggioBackendHelper
-			.getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-		ObjectStorageBackend config = salvataggioBackendHelper
-			.getObjectStorageConfigurationForSisma(backend.getBackendName(),
-				pigSismaDocumentiStorage.getNmBucket());
+            PigSismaDocumenti pigSismaDocumenti = sismaHelper.getPigSismaDocumentiByName(chiave,
+                    idSisma);
+            if (pigSismaDocumenti != null) {
+                // MEV 34843
+                PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
+                        .getPigSismaDocumentiStorage();
+                BackendStorage backend = salvataggioBackendHelper
+                        .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
+                ObjectStorageBackend config = salvataggioBackendHelper
+                        .getObjectStorageConfigurationForSisma(backend.getBackendName(),
+                                pigSismaDocumentiStorage.getNmBucket());
 
-		ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper
-			.getObject(config, pigSismaDocumentiStorage.getCdKeyFile());
+                ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper
+                        .getObject(config, pigSismaDocumentiStorage.getCdKeyFile());
 
-		byte[] buf = new byte[1024];
-		int count = 0;
-		// This should send the file to browser
-		OutputStream out = response.getOutputStream();
-		while ((count = inStream.read(buf)) != -1) {
-		    out.write(buf, 0, count);
-		}
-		out.flush();
-		inStream.close();
-	    }
-	} catch (ObjectStorageException e) {
-	    log.error(
-		    "DownloadSismaServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
-		    e);
-	}
+                byte[] buf = new byte[1024];
+                int count = 0;
+                // This should send the file to browser
+                OutputStream out = response.getOutputStream();
+                while ((count = inStream.read(buf)) != -1) {
+                    out.write(buf, 0, count);
+                }
+                out.flush();
+                inStream.close();
+            }
+        } catch (ObjectStorageException e) {
+            log.error(
+                    "DownloadSismaServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
+                    e);
+        }
     }
 
 }

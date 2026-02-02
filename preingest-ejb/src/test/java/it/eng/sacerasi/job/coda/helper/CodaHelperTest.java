@@ -52,246 +52,246 @@ public class CodaHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(CodaHelper.class)
-		.addClass("it.eng.sacerasi.web.util.Constants");
+        return ArquillianUtils.createPingJar(CodaHelper.class)
+                .addClass("it.eng.sacerasi.web.util.Constants");
     }
 
     @Test
     void retrieveVersatori_queryIsOk() {
-	helper.retrieveVersatori();
-	assertTrue(true);
+        helper.retrieveVersatori();
+        assertTrue(true);
     }
 
     @Test
     void retrieveObjectsIdByIdVersAndState_3args_queryIsOk() {
-	Long idVers = aLong();
-	String state1 = aString();
-	String state2 = aString();
-	helper.retrieveObjectsIdByIdVersAndState(idVers, state1, state2);
-	assertTrue(true);
+        Long idVers = aLong();
+        String state1 = aString();
+        String state2 = aString();
+        helper.retrieveObjectsIdByIdVersAndState(idVers, state1, state2);
+        assertTrue(true);
     }
 
     @Test
     void retrieveObjectsIdByIdVersAndState_Long_String_queryIsOk() {
-	Long idVers = aLong();
-	String state = aString();
-	helper.retrieveObjectsIdByIdVersAndState(idVers, state);
-	assertTrue(true);
+        Long idVers = aLong();
+        String state = aString();
+        helper.retrieveObjectsIdByIdVersAndState(idVers, state);
+        assertTrue(true);
     }
 
     @Test
     void findPigObjectById_queryIsOk() {
-	Long pigObjectId = aLong();
-	helper.findPigObjectById(pigObjectId);
-	assertTrue(true);
+        Long pigObjectId = aLong();
+        helper.findPigObjectById(pigObjectId);
+        assertTrue(true);
     }
 
     @Test
     void findPigObjectByIdWithLock_queryIsOk() {
-	Long pigObjectId = aLong();
-	helper.findPigObjectByIdWithLock(pigObjectId);
-	assertTrue(true);
+        Long pigObjectId = aLong();
+        helper.findPigObjectByIdWithLock(pigObjectId);
+        assertTrue(true);
     }
 
     @Test
     void retrieveUnitaDocsIdByIdObjAndState_queryIsOk() {
-	Long objId = aLong();
-	String state = aString();
-	helper.retrieveUnitaDocsIdByIdObjAndState(objId, state);
-	assertTrue(true);
+        Long objId = aLong();
+        String state = aString();
+        helper.retrieveUnitaDocsIdByIdObjAndState(objId, state);
+        assertTrue(true);
     }
 
     @Test
     void findPigUnitaDocObjectById_queryIsOk() {
-	Long unitaDocId = aLong();
-	helper.findPigUnitaDocObjectById(unitaDocId);
-	assertTrue(true);
+        Long unitaDocId = aLong();
+        helper.findPigUnitaDocObjectById(unitaDocId);
+        assertTrue(true);
     }
 
     @Test
     void findLockPigUnitaDocObjectById_queryIsOk() {
-	Long unitaDocId = aLong();
-	helper.findLockPigUnitaDocObjectById(unitaDocId);
-	assertTrue(true);
+        Long unitaDocId = aLong();
+        helper.findLockPigUnitaDocObjectById(unitaDocId);
+        assertTrue(true);
     }
 
     @Test
     void selectQueue_queryIsOk() {
-	BigDecimal niSizeFileByte = aBigDecimal();
+        BigDecimal niSizeFileByte = aBigDecimal();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.selectQueue(niSizeFileByte);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.selectQueue(niSizeFileByte);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 
     @Test
     void retrieveXmlIdByUdIdAndType_queryIsOk() {
-	long idUnitaDocObject = aLong();
-	String type = aString();
+        long idUnitaDocObject = aLong();
+        String type = aString();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.retrieveXmlIdByUdIdAndType(idUnitaDocObject, type);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.retrieveXmlIdByUdIdAndType(idUnitaDocObject, type);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 
     @Test
     void contaStudiDicomVersatiOggiEInCodaVers_queryIsOk() {
-	helper.contaStudiDicomVersatiOggiEInCodaVers();
-	assertTrue(true);
+        helper.contaStudiDicomVersatiOggiEInCodaVers();
+        assertTrue(true);
     }
 
     @Test
     void retrieveSessionByObject_queryIsOk() {
-	PigObject object = aPigObject();
+        PigObject object = aPigObject();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.retrieveSessionByObject(object);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.retrieveSessionByObject(object);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 
     private PigObject aPigObject() {
-	PigObject object = new PigObject();
-	object.setIdObject(aLong());
-	return object;
+        PigObject object = new PigObject();
+        object.setIdObject(aLong());
+        return object;
     }
 
     @Test
     void countUdInObj_queryIsOk() {
-	PigObject object = aPigObject();
-	String state = aString();
-	String errCode = aString();
-	helper.countUdInObj(object, state, errCode);
-	assertTrue(true);
+        PigObject object = aPigObject();
+        String state = aString();
+        String errCode = aString();
+        helper.countUdInObj(object, state, errCode);
+        assertTrue(true);
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void incrementaVersateOk_queryIsOk() {
-	PigSessioneIngest session = aPigSessioneIngest();
+        PigSessioneIngest session = aPigSessioneIngest();
 
-	assertThrows(RollbackException.class, () -> {
-	    try {
-		helper.incrementaVersateOk(session);
-	    } catch (Exception e) {
-		throwExceptionIf(RollbackException.class, e, "Entity not managed");
-	    }
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            try {
+                helper.incrementaVersateOk(session);
+            } catch (Exception e) {
+                throwExceptionIf(RollbackException.class, e, "Entity not managed");
+            }
+            throw new RollbackException();
+        });
     }
 
     private PigSessioneIngest aPigSessioneIngest() {
-	PigSessioneIngest session = new PigSessioneIngest();
-	session.setIdSessioneIngest(aLong());
-	return session;
+        PigSessioneIngest session = new PigSessioneIngest();
+        session.setIdSessioneIngest(aLong());
+        return session;
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void incrementaVersateTimeout_queryIsOk() {
-	PigSessioneIngest session = aPigSessioneIngest();
+        PigSessioneIngest session = aPigSessioneIngest();
 
-	assertThrows(RollbackException.class, () -> {
-	    try {
-		helper.incrementaVersateTimeout(session);
-	    } catch (Exception e) {
-		throwExceptionIf(RollbackException.class, e, "Entity not managed");
-	    }
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            try {
+                helper.incrementaVersateTimeout(session);
+            } catch (Exception e) {
+                throwExceptionIf(RollbackException.class, e, "Entity not managed");
+            }
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void incrementaVersateErr_queryIsOk() {
-	PigSessioneIngest session = aPigSessioneIngest();
+        PigSessioneIngest session = aPigSessioneIngest();
 
-	assertThrows(RollbackException.class, () -> {
-	    try {
-		helper.incrementaVersateErr(session);
-	    } catch (Exception e) {
-		throwExceptionIf(RollbackException.class, e, "Entity not managed");
-	    }
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            try {
+                helper.incrementaVersateErr(session);
+            } catch (Exception e) {
+                throwExceptionIf(RollbackException.class, e, "Entity not managed");
+            }
+            throw new RollbackException();
+        });
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     void incrementaVersate_queryIsOk() {
-	PigSessioneIngest session = aPigSessioneIngest();
+        PigSessioneIngest session = aPigSessioneIngest();
 
-	assertThrows(RollbackException.class, () -> {
-	    try {
-		helper.incrementaVersate(session);
-	    } catch (Exception e) {
-		throwExceptionIf(RollbackException.class, e, "Entity not managed");
-	    }
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            try {
+                helper.incrementaVersate(session);
+            } catch (Exception e) {
+                throwExceptionIf(RollbackException.class, e, "Entity not managed");
+            }
+            throw new RollbackException();
+        });
     }
 
     @Test
     void findPigUnitaDocSessioneById_queryIsOk() {
-	Long unitaDocSessionId = aLong();
-	helper.findPigUnitaDocSessioneById(unitaDocSessionId);
-	assertTrue(true);
+        Long unitaDocSessionId = aLong();
+        helper.findPigUnitaDocSessioneById(unitaDocSessionId);
+        assertTrue(true);
     }
 
     @Test
     void findLockPigUnitaDocSessioneById_queryIsOk() {
-	Long unitaDocSessionId = aLong();
-	helper.findLockPigUnitaDocSessioneById(unitaDocSessionId);
-	assertTrue(true);
+        Long unitaDocSessionId = aLong();
+        helper.findLockPigUnitaDocSessioneById(unitaDocSessionId);
+        assertTrue(true);
     }
 
     @Test
     void retrievePigUnitaDocSessioneByKeyUD_queryIsOk() {
-	BigDecimal idSessioneIngest = aBigDecimal();
-	BigDecimal aaUnitaDocSacer = aBigDecimal();
-	String cdKeyUnitaDocSacer = aString();
-	String cdRegistroUnitaDocSacer = aString();
+        BigDecimal idSessioneIngest = aBigDecimal();
+        BigDecimal aaUnitaDocSacer = aBigDecimal();
+        String cdKeyUnitaDocSacer = aString();
+        String cdRegistroUnitaDocSacer = aString();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.retrievePigUnitaDocSessioneByKeyUD(idSessioneIngest, aaUnitaDocSacer,
-			cdKeyUnitaDocSacer, cdRegistroUnitaDocSacer);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.retrievePigUnitaDocSessioneByKeyUD(idSessioneIngest, aaUnitaDocSacer,
+                        cdKeyUnitaDocSacer, cdRegistroUnitaDocSacer);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 
     @Test
     void checkConsumed_queryIsOk() {
-	String messageSelector = aString();
-	BigDecimal paramToCheck = aBigDecimal();
-	helper.checkConsumed(messageSelector, paramToCheck);
-	assertTrue(true);
+        String messageSelector = aString();
+        BigDecimal paramToCheck = aBigDecimal();
+        helper.checkConsumed(messageSelector, paramToCheck);
+        assertTrue(true);
     }
 
     @Test
     void findPigSessioneIngestById_queryIsOk() {
-	Long idSessione = aLong();
-	helper.findPigSessioneIngestById(idSessione);
-	assertTrue(true);
+        Long idSessione = aLong();
+        helper.findPigSessioneIngestById(idSessione);
+        assertTrue(true);
     }
 
     @Test
     void getCalcoloStatoObjDaTrasf_queryIsOk() {
-	Long idObjectPadre = aLong();
-	helper.getCalcoloStatoObjDaTrasf(idObjectPadre);
-	assertTrue(true);
+        Long idObjectPadre = aLong();
+        helper.getCalcoloStatoObjDaTrasf(idObjectPadre);
+        assertTrue(true);
     }
 }

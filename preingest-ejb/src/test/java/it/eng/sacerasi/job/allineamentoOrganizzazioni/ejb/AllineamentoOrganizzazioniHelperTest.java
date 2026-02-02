@@ -59,75 +59,75 @@ public class AllineamentoOrganizzazioniHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(AllineamentoOrganizzazioniHelper.class);
+        return ArquillianUtils.createPingJar(AllineamentoOrganizzazioniHelper.class);
     }
 
     @Test
     void getIamOrganizDaReplic_queryIsOk() {
 
-	helper.getIamOrganizDaReplic();
-	assertTrue(true);
+        helper.getIamOrganizDaReplic();
+        assertTrue(true);
     }
 
     @Test
     void getPigAmbienteVers_queryIsOk() {
-	BigDecimal idAmbienteVers = aBigDecimal();
+        BigDecimal idAmbienteVers = aBigDecimal();
 
-	helper.getPigAmbienteVers(idAmbienteVers);
-	assertTrue(true);
+        helper.getPigAmbienteVers(idAmbienteVers);
+        assertTrue(true);
     }
 
     @Test
     void getPigVers_queryIsOk() {
-	BigDecimal idVers = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
 
-	helper.getPigVers(idVers);
-	assertTrue(true);
+        helper.getPigVers(idVers);
+        assertTrue(true);
     }
 
     @Test
     void getPigTipoObjectList_queryIsOk() {
-	List<Long> idVers = aListOfLong(2);
+        List<Long> idVers = aListOfLong(2);
 
-	helper.getPigTipoObjectList(idVers);
-	assertTrue(true);
+        helper.getPigTipoObjectList(idVers);
+        assertTrue(true);
     }
 
     @Test
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Disabled("non si può fare rollback perché apre una transazione separata ")
     void writeEsitoIamOrganizDaReplic_queryIsOk() {
-	Long idOrganizDaReplic = 326L;
-	String dsErr = aString();
+        Long idOrganizDaReplic = 326L;
+        String dsErr = aString();
 
-	assertThrows(RollbackException.class, () -> {
-	    for (Constants.EsitoServizio esitoServizio : Constants.EsitoServizio.values()) {
-		String cdErr = SERVIZI_ORG_001;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_002;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_003;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_004;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_005;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_006;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = SERVIZI_ORG_007;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-		cdErr = REPLICA_ORG_001;
-		helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
-	    }
-	    throw new RollbackException();
-	});
+        assertThrows(RollbackException.class, () -> {
+            for (Constants.EsitoServizio esitoServizio : Constants.EsitoServizio.values()) {
+                String cdErr = SERVIZI_ORG_001;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_002;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_003;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_004;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_005;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_006;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = SERVIZI_ORG_007;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+                cdErr = REPLICA_ORG_001;
+                helper.writeEsitoIamOrganizDaReplic(idOrganizDaReplic, esitoServizio, cdErr, dsErr);
+            }
+            throw new RollbackException();
+        });
     }
 
     @Test
     void getEnteConvenzInfo_queryIsOk() {
-	BigDecimal idVers = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
 
-	helper.getEnteConvenzInfo(idVers);
-	assertTrue(true);
+        helper.getEnteConvenzInfo(idVers);
+        assertTrue(true);
     }
 }

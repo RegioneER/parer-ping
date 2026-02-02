@@ -34,19 +34,19 @@ public class XfoSetParamTrasfTableBean extends AbstractBaseTable<XfoSetParamTras
     public static XfoSetParamTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoSetParamTrasfTableDescriptor();
 
     public XfoSetParamTrasfTableBean() {
-	super();
+        super();
     }
 
     protected XfoSetParamTrasfRowBean createRow() {
-	return new XfoSetParamTrasfRowBean();
+        return new XfoSetParamTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<XfoSetParamTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

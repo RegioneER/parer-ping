@@ -44,28 +44,28 @@ public class PigVValoreSetParamTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_VERS_TIPO_OBJECT_DA_TRASF,
-		new ColumnDescriptor(COL_ID_VERS_TIPO_OBJECT_DA_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_NM_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_NM_SET_PARAM_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_ID_VALORE_SET_PARAM_TRASF,
-		new ColumnDescriptor(COL_ID_VALORE_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_DS_LISTA_VALORE_PARAM,
-		new ColumnDescriptor(COL_DS_LISTA_VALORE_PARAM, Types.VARCHAR, 4000, true));
+        map.put(COL_ID_VERS_TIPO_OBJECT_DA_TRASF,
+                new ColumnDescriptor(COL_ID_VERS_TIPO_OBJECT_DA_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_ID_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_NM_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_NM_SET_PARAM_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_ID_VALORE_SET_PARAM_TRASF,
+                new ColumnDescriptor(COL_ID_VALORE_SET_PARAM_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_DS_LISTA_VALORE_PARAM,
+                new ColumnDescriptor(COL_DS_LISTA_VALORE_PARAM, Types.VARCHAR, 4000, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

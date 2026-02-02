@@ -38,103 +38,103 @@ public class DocUploadDto extends GenericDto {
     private boolean flDocRicaricato;
 
     public DocUploadDto() {
-	super();
+        super();
     }
 
     public String getNmTipoDocumento() {
-	return nmTipoDocumento;
+        return nmTipoDocumento;
     }
 
     public void setNmTipoDocumento(String nmTipoDocumento) {
-	this.nmTipoDocumento = nmTipoDocumento;
+        this.nmTipoDocumento = nmTipoDocumento;
     }
 
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public boolean isFlEsitoVerifica() {
-	return flEsitoVerifica;
+        return flEsitoVerifica;
     }
 
     public void setFlEsitoVerifica(boolean flEsitoVerifica) {
-	this.flEsitoVerifica = flEsitoVerifica;
+        this.flEsitoVerifica = flEsitoVerifica;
     }
 
     public boolean isObbligatorio() {
-	return obbligatorio;
+        return obbligatorio;
     }
 
     public void setObbligatorio(boolean obbligatorio) {
-	this.obbligatorio = obbligatorio;
+        this.obbligatorio = obbligatorio;
     }
 
     public boolean isPrincipale() {
-	return principale;
+        return principale;
     }
 
     public void setPrincipale(boolean principale) {
-	this.principale = principale;
+        this.principale = principale;
     }
 
     public String getNmFileOrig() {
-	return nmFileOrig;
+        return nmFileOrig;
     }
 
     public void setNmFileOrig(String nmFileOrig) {
-	this.nmFileOrig = nmFileOrig;
+        this.nmFileOrig = nmFileOrig;
     }
 
     public BigDecimal getDimensione() {
-	return dimensione;
+        return dimensione;
     }
 
     public void setDimensione(BigDecimal dimensione) {
-	this.dimensione = dimensione;
+        this.dimensione = dimensione;
     }
 
     public String getDimensioneStringa() {
-	return dimensioneStringa;
+        return dimensioneStringa;
     }
 
     public void setDimensioneStringa(String dimensioneStringa) {
-	this.dimensioneStringa = dimensioneStringa;
+        this.dimensioneStringa = dimensioneStringa;
     }
 
     public String getDataDoc() {
-	return dataDoc;
+        return dataDoc;
     }
 
     public void setDataDoc(String dataDoc) {
-	this.dataDoc = dataDoc;
+        this.dataDoc = dataDoc;
     }
 
     public String getTiVerificaAgenzia() {
-	return tiVerificaAgenzia;
+        return tiVerificaAgenzia;
     }
 
     public void setTiVerificaAgenzia(String tiVerificaAgenzia) {
-	this.tiVerificaAgenzia = tiVerificaAgenzia;
+        this.tiVerificaAgenzia = tiVerificaAgenzia;
     }
 
     public boolean isFlDocRicaricato() {
-	return flDocRicaricato;
+        return flDocRicaricato;
     }
 
     public void setFlDocRicaricato(boolean flDocRicaricato) {
-	this.flDocRicaricato = flDocRicaricato;
+        this.flDocRicaricato = flDocRicaricato;
     }
 
 }

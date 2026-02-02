@@ -30,7 +30,7 @@ import java.util.Date;
 public class MonitoraggioValidator extends TypeValidator {
 
     public MonitoraggioValidator(MessageBox messageBox) {
-	super(messageBox);
+        super(messageBox);
     }
 
     /**
@@ -44,47 +44,47 @@ public class MonitoraggioValidator extends TypeValidator {
      * @throws EMFError errore generico
      */
     public void validaChiaveUnitaDoc(String registro, BigDecimal anno, String numero)
-	    throws EMFError {
-	// Se almeno uno dei 3 campi è diverso da null e almeno uno è uguale a null genera errore
-	// Per essere corretto o tutti sono diversi da null o tutti sono uguali a null
-	if ((registro != null || anno != null || numero != null)
-		&& (registro == null || anno == null || numero == null)) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Uno dei campi della chiave unit� documentaria non è stato impostato"));
-	}
+            throws EMFError {
+        // Se almeno uno dei 3 campi è diverso da null e almeno uno è uguale a null genera errore
+        // Per essere corretto o tutti sono diversi da null o tutti sono uguali a null
+        if ((registro != null || anno != null || numero != null)
+                && (registro == null || anno == null || numero == null)) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Uno dei campi della chiave unit� documentaria non è stato impostato"));
+        }
     }
 
     public void validaSceltaPeriodoGiornoVersamento(String periodo, Date data) {
-	if (periodo != null && data != null) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Filtri periodo e giorno versamento entrambi valorizzati!"));
-	} else if (periodo == null && data == null) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Attenzione: E' necessario valorizzare almeno uno tra i campi periodo e giorno versamento"));
-	}
+        if (periodo != null && data != null) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Filtri periodo e giorno versamento entrambi valorizzati!"));
+        } else if (periodo == null && data == null) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Attenzione: E' necessario valorizzare almeno uno tra i campi periodo e giorno versamento"));
+        }
     }
 
     public void validaSceltaPeriodoGiornoVersamento(String periodo, Date giorno_vers_da,
-	    BigDecimal ore_vers_da, BigDecimal minuti_vers_da, Date giorno_vers_a,
-	    BigDecimal ore_vers_a, BigDecimal minuti_vers_a) {
-	if (periodo != null
-		&& (giorno_vers_da != null || ore_vers_da != null || minuti_vers_da != null
-			|| giorno_vers_a != null || ore_vers_a != null || minuti_vers_a != null)) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Campi periodo e giorno versamento entrambi valorizzati!"));
-	} else if (periodo == null && giorno_vers_da == null && ore_vers_da == null
-		&& minuti_vers_da == null && giorno_vers_a == null && ore_vers_a == null
-		&& minuti_vers_a == null) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Attenzione: E' necessario valorizzare almeno uno tra i campi periodo e giorno versamento"));
-	}
+            BigDecimal ore_vers_da, BigDecimal minuti_vers_da, Date giorno_vers_a,
+            BigDecimal ore_vers_a, BigDecimal minuti_vers_a) {
+        if (periodo != null
+                && (giorno_vers_da != null || ore_vers_da != null || minuti_vers_da != null
+                        || giorno_vers_a != null || ore_vers_a != null || minuti_vers_a != null)) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Campi periodo e giorno versamento entrambi valorizzati!"));
+        } else if (periodo == null && giorno_vers_da == null && ore_vers_da == null
+                && minuti_vers_da == null && giorno_vers_a == null && ore_vers_a == null
+                && minuti_vers_a == null) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Attenzione: E' necessario valorizzare almeno uno tra i campi periodo e giorno versamento"));
+        }
     }
 
     public void validaSceltaCodiceGruppoErrori(String codiceErrore, String gruppoErrori) {
-	if (codiceErrore != null && gruppoErrori != null) {
-	    getMessageBox().addMessage(new Message(MessageLevel.ERR,
-		    "Filtri codice errore e gruppo errori entrambi valorizzati!"));
-	}
+        if (codiceErrore != null && gruppoErrori != null) {
+            getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                    "Filtri codice errore e gruppo errori entrambi valorizzati!"));
+        }
     }
 
     /**
@@ -96,16 +96,16 @@ public class MonitoraggioValidator extends TypeValidator {
      * @param nonRisolto    true/false
      */
     public void validaFlagVerificatoNonRisolubile(String verificato, String nonRisolubile,
-	    Boolean nonRisolto) {
-	if (nonRisolubile != null) {
-	    if ((verificato.equals("0") && nonRisolubile.equals("1"))) {
-		getMessageBox().addMessage(new Message(MessageLevel.ERR,
-			"Una sessione può essere definita non risolubile o risolubile solo se è stata verificata"));
-	    }
-	    if (nonRisolto != null && !nonRisolto && nonRisolubile.equals("1")) {
-		getMessageBox().addMessage(new Message(MessageLevel.ERR,
-			"Una sessione può essere definita non risolubile solo se ha stato di risoluzione NON_RISOLTO"));
-	    }
-	}
+            Boolean nonRisolto) {
+        if (nonRisolubile != null) {
+            if ((verificato.equals("0") && nonRisolubile.equals("1"))) {
+                getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                        "Una sessione può essere definita non risolubile o risolubile solo se è stata verificata"));
+            }
+            if (nonRisolto != null && !nonRisolto && nonRisolubile.equals("1")) {
+                getMessageBox().addMessage(new Message(MessageLevel.ERR,
+                        "Una sessione può essere definita non risolubile solo se ha stato di risoluzione NON_RISOLTO"));
+            }
+        }
     }
 }

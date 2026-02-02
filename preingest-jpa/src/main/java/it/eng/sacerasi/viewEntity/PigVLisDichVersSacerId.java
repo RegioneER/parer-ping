@@ -28,65 +28,65 @@ public class PigVLisDichVersSacerId implements Serializable {
 
     @Column(name = "ID_DICH_VERS_SACER")
     public BigDecimal getIdDichVersSacer() {
-	return idDichVersSacer;
+        return idDichVersSacer;
     }
 
     public void setIdDichVersSacer(BigDecimal idDichVersSacer) {
-	this.idDichVersSacer = idDichVersSacer;
+        this.idDichVersSacer = idDichVersSacer;
     }
 
     private BigDecimal idOrganizIamDich;
 
     @Column(name = "ID_ORGANIZ_IAM_DICH")
     public BigDecimal getIdOrganizIamDich() {
-	return idOrganizIamDich;
+        return idOrganizIamDich;
     }
 
     public void setIdOrganizIamDich(BigDecimal idOrganizIamDich) {
-	this.idOrganizIamDich = idOrganizIamDich;
+        this.idOrganizIamDich = idOrganizIamDich;
     }
 
     private String tiDichVersTiObj;
 
     @Column(name = "TI_DICH_VERS_TI_OBJ")
     public String getTiDichVersTiObj() {
-	return tiDichVersTiObj;
+        return tiDichVersTiObj;
     }
 
     public void setTiDichVersTiObj(String tiDichVersTiObj) {
-	this.tiDichVersTiObj = tiDichVersTiObj;
+        this.tiDichVersTiObj = tiDichVersTiObj;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 23 * hash + Objects.hashCode(this.idDichVersSacer);
-	hash = 23 * hash + Objects.hashCode(this.idOrganizIamDich);
-	hash = 23 * hash + Objects.hashCode(this.tiDichVersTiObj);
-	return hash;
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.idDichVersSacer);
+        hash = 23 * hash + Objects.hashCode(this.idOrganizIamDich);
+        hash = 23 * hash + Objects.hashCode(this.tiDichVersTiObj);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final PigVLisDichVersSacerId other = (PigVLisDichVersSacerId) obj;
-	if (!Objects.equals(this.tiDichVersTiObj, other.tiDichVersTiObj)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idDichVersSacer, other.idDichVersSacer)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idOrganizIamDich, other.idOrganizIamDich)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PigVLisDichVersSacerId other = (PigVLisDichVersSacerId) obj;
+        if (!Objects.equals(this.tiDichVersTiObj, other.tiDichVersTiObj)) {
+            return false;
+        }
+        if (!Objects.equals(this.idDichVersSacer, other.idDichVersSacer)) {
+            return false;
+        }
+        if (!Objects.equals(this.idOrganizIamDich, other.idOrganizIamDich)) {
+            return false;
+        }
+        return true;
     }
 }

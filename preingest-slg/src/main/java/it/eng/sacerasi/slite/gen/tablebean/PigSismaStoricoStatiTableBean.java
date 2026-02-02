@@ -32,19 +32,19 @@ public class PigSismaStoricoStatiTableBean extends AbstractBaseTable<PigSismaSto
     public static PigSismaStoricoStatiTableDescriptor TABLE_DESCRIPTOR = new PigSismaStoricoStatiTableDescriptor();
 
     public PigSismaStoricoStatiTableBean() {
-	super();
+        super();
     }
 
     protected PigSismaStoricoStatiRowBean createRow() {
-	return new PigSismaStoricoStatiRowBean();
+        return new PigSismaStoricoStatiRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigSismaStoricoStatiRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -33,19 +33,19 @@ public class PigAmbienteVersTableBean extends AbstractBaseTable<PigAmbienteVersR
     public static PigAmbienteVersTableDescriptor TABLE_DESCRIPTOR = new PigAmbienteVersTableDescriptor();
 
     public PigAmbienteVersTableBean() {
-	super();
+        super();
     }
 
     protected PigAmbienteVersRowBean createRow() {
-	return new PigAmbienteVersRowBean();
+        return new PigAmbienteVersRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigAmbienteVersRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

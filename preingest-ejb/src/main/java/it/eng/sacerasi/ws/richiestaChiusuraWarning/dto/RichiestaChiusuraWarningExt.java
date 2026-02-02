@@ -35,69 +35,69 @@ public class RichiestaChiusuraWarningExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * @return the richiestaChiusuraWarningInput
      */
     public RichiestaChiusuraWarningInput getRichiestaChiusuraWarningInput() {
-	return richiestaChiusuraWarningInput;
+        return richiestaChiusuraWarningInput;
     }
 
     /**
      * @param richiestaChiusuraWarningInput the richiestaChiusuraWarningInput to set
      */
     public void setRichiestaChiusuraWarningInput(
-	    RichiestaChiusuraWarningInput richiestaChiusuraWarningInput) {
-	this.richiestaChiusuraWarningInput = richiestaChiusuraWarningInput;
+            RichiestaChiusuraWarningInput richiestaChiusuraWarningInput) {
+        this.richiestaChiusuraWarningInput = richiestaChiusuraWarningInput;
     }
 
     /**
      * @return the idObject
      */
     public Long getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     /**
      * @param idObject the idObject to set
      */
     public void setIdObject(Long idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     /**
      * @return the idLastSession
      */
     public Long getIdLastSession() {
-	return idLastSession;
+        return idLastSession;
     }
 
     /**
      * @param idLastSession the idLastSession to set
      */
     public void setIdLastSession(Long idLastSession) {
-	this.idLastSession = idLastSession;
+        this.idLastSession = idLastSession;
     }
 }

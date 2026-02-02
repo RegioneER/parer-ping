@@ -36,97 +36,97 @@ public class MonVObjAnnulRangeDtRowBean extends BaseRow implements JEEBaseRowInt
     public static MonVObjAnnulRangeDtTableDescriptor TABLE_DESCRIPTOR = new MonVObjAnnulRangeDtTableDescriptor();
 
     public MonVObjAnnulRangeDtRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public BigDecimal getIdTipoObject() {
-	return getBigDecimal("id_tipo_object");
+        return getBigDecimal("id_tipo_object");
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	setObject("id_tipo_object", idTipoObject);
+        setObject("id_tipo_object", idTipoObject);
     }
 
     public String getTiStatoObject() {
-	return getString("ti_stato_object");
+        return getString("ti_stato_object");
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	setObject("ti_stato_object", tiStatoObject);
+        setObject("ti_stato_object", tiStatoObject);
     }
 
     public String getTiDtCreazione() {
-	return getString("ti_dt_creazione");
+        return getString("ti_dt_creazione");
     }
 
     public void setTiDtCreazione(String tiDtCreazione) {
-	setObject("ti_dt_creazione", tiDtCreazione);
+        setObject("ti_dt_creazione", tiDtCreazione);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVObjAnnulRangeDt entity = (MonVObjAnnulRangeDt) obj;
-	this.setIdVers(entity.getIdVers());
-	this.setIdObject(entity.getIdObject());
-	this.setIdTipoObject(entity.getIdTipoObject());
-	this.setTiStatoObject(entity.getTiStatoObject());
-	this.setTiDtCreazione(entity.getTiDtCreazione());
+        MonVObjAnnulRangeDt entity = (MonVObjAnnulRangeDt) obj;
+        this.setIdVers(entity.getIdVers());
+        this.setIdObject(entity.getIdObject());
+        this.setIdTipoObject(entity.getIdTipoObject());
+        this.setTiStatoObject(entity.getTiStatoObject());
+        this.setTiDtCreazione(entity.getTiDtCreazione());
     }
 
     @Override
     public MonVObjAnnulRangeDt rowBeanToEntity() {
-	MonVObjAnnulRangeDt entity = new MonVObjAnnulRangeDt();
-	entity.setIdVers(this.getIdVers());
-	entity.setIdObject(this.getIdObject());
-	entity.setIdTipoObject(this.getIdTipoObject());
-	entity.setTiStatoObject(this.getTiStatoObject());
-	entity.setTiDtCreazione(this.getTiDtCreazione());
-	return entity;
+        MonVObjAnnulRangeDt entity = new MonVObjAnnulRangeDt();
+        entity.setIdVers(this.getIdVers());
+        entity.setIdObject(this.getIdObject());
+        entity.setIdTipoObject(this.getIdTipoObject());
+        entity.setTiStatoObject(this.getTiStatoObject());
+        entity.setTiDtCreazione(this.getTiDtCreazione());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

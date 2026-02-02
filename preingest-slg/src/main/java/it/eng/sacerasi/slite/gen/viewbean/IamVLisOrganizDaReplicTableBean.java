@@ -27,7 +27,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class IamVLisOrganizDaReplicTableBean
-	extends AbstractBaseTable<IamVLisOrganizDaReplicRowBean> {
+        extends AbstractBaseTable<IamVLisOrganizDaReplicRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +39,19 @@ public class IamVLisOrganizDaReplicTableBean
     public static IamVLisOrganizDaReplicTableDescriptor TABLE_DESCRIPTOR = new IamVLisOrganizDaReplicTableDescriptor();
 
     public IamVLisOrganizDaReplicTableBean() {
-	super();
+        super();
     }
 
     protected IamVLisOrganizDaReplicRowBean createRow() {
-	return new IamVLisOrganizDaReplicRowBean();
+        return new IamVLisOrganizDaReplicRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamVLisOrganizDaReplicRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

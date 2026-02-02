@@ -42,23 +42,23 @@ public class IamIndIpUserTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_IND_IP_USER,
-		new ColumnDescriptor(COL_ID_IND_IP_USER, Types.DECIMAL, 22, true));
-	map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, false));
-	map.put(COL_CD_IND_IP_USER,
-		new ColumnDescriptor(COL_CD_IND_IP_USER, Types.VARCHAR, 100, false));
+        map.put(COL_ID_IND_IP_USER,
+                new ColumnDescriptor(COL_ID_IND_IP_USER, Types.DECIMAL, 22, true));
+        map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, false));
+        map.put(COL_CD_IND_IP_USER,
+                new ColumnDescriptor(COL_CD_IND_IP_USER, Types.VARCHAR, 100, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

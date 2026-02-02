@@ -26,27 +26,27 @@ public class SopClassRespType {
      * @return the cdSopClass
      */
     public String getCdSopClass() {
-	return cdSopClass;
+        return cdSopClass;
     }
 
     /**
      * @param cdSopClass the cdSopClass to set
      */
     public void setCdSopClass(String cdSopClass) {
-	this.cdSopClass = cdSopClass;
+        this.cdSopClass = cdSopClass;
     }
 
     /**
      * @return the dsSopClass
      */
     public String getDsSopClass() {
-	return dsSopClass;
+        return dsSopClass;
     }
 
     /**
      * @param dsSopClass the dsSopClass to set
      */
     public void setDsSopClass(String dsSopClass) {
-	this.dsSopClass = dsSopClass;
+        this.dsSopClass = dsSopClass;
     }
 }

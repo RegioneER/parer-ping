@@ -34,132 +34,132 @@ public class Constants {
 
     public enum NomeCoda {
 
-	producerCodaVersQueue, dmqQueue;
+        producerCodaVersQueue, dmqQueue;
     }
 
     public enum TipoSelettore {
 
-	CODA1, CODA2, CODA3, CODA_VER_HASH;
+        CODA1, CODA2, CODA3, CODA_VER_HASH;
     }
 
     public enum ComboFlag {
 
-	SI("1"), NO("0");
+        SI("1"), NO("0");
 
-	private String value;
+        private String value;
 
-	private ComboFlag(String value) {
-	    this.value = value;
-	}
+        private ComboFlag(String value) {
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
     }
 
     public enum ComboFlagOk {
 
-	OK("1"), KO("0");
+        OK("1"), KO("0");
 
-	private String value;
+        private String value;
 
-	private ComboFlagOk(String value) {
-	    this.value = value;
-	}
+        private ComboFlagOk(String value) {
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
     }
 
     public enum TiOperReplic {
-	INS, MOD, CANC
+        INS, MOD, CANC
     }
 
     public enum TiStatoReplic {
-	DA_REPLICARE, REPLICA_OK, REPLICA_NON_POSSIBILE, REPLICA_IN_ERRORE, REPLICA_IN_TIMEOUT
+        DA_REPLICARE, REPLICA_OK, REPLICA_NON_POSSIBILE, REPLICA_IN_ERRORE, REPLICA_IN_TIMEOUT
     }
 
     public enum TiDichVers {
-	AMBIENTE, ENTE, STRUTTURA
+        AMBIENTE, ENTE, STRUTTURA
     }
 
     public enum ComboFlagPrioTrasfType {
-	IMMEDIATA("0-IMMEDIATA"), ALTA("1-ALTA"), NORMALE("2-NORMALE"), BASSA("3-BASSA");
+        IMMEDIATA("0-IMMEDIATA"), ALTA("1-ALTA"), NORMALE("2-NORMALE"), BASSA("3-BASSA");
 
-	private final String value;
+        private final String value;
 
-	private ComboFlagPrioTrasfType(String value) {
-	    this.value = value;
-	}
+        private ComboFlagPrioTrasfType(String value) {
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
 
-	public static String getEnumByString(String code) {
-	    for (ComboFlagPrioTrasfType e : ComboFlagPrioTrasfType.values()) {
-		if (code.equals(e.getValue())) {
-		    return e.name();
-		}
-	    }
-	    return null;
-	}
+        public static String getEnumByString(String code) {
+            for (ComboFlagPrioTrasfType e : ComboFlagPrioTrasfType.values()) {
+                if (code.equals(e.getValue())) {
+                    return e.name();
+                }
+            }
+            return null;
+        }
     }
 
     public enum ComboFlagPrioVersType {
-	IMMEDIATA("0-IMMEDIATA", null), ALTA("1-ALTA", IMMEDIATA), NORMALE("2-NORMALE", ALTA),
-	BASSA("3-BASSA", NORMALE);
+        IMMEDIATA("0-IMMEDIATA", null), ALTA("1-ALTA", IMMEDIATA), NORMALE("2-NORMALE", ALTA),
+        BASSA("3-BASSA", NORMALE);
 
-	// prossima priorità
-	private final ComboFlagPrioVersType next;
+        // prossima priorità
+        private final ComboFlagPrioVersType next;
 
-	private final String value;
+        private final String value;
 
-	ComboFlagPrioVersType(String value, ComboFlagPrioVersType next) {
-	    this.next = next;
-	    this.value = value;
-	}
+        ComboFlagPrioVersType(String value, ComboFlagPrioVersType next) {
+            this.next = next;
+            this.value = value;
+        }
 
-	public ComboFlagPrioVersType getNext() {
-	    return next;
-	}
+        public ComboFlagPrioVersType getNext() {
+            return next;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
 
-	public static String getEnumByString(String code) {
-	    for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
-		if (code.equals(e.getValue())) {
-		    return e.name();
-		}
-	    }
-	    return null;
-	}
+        public static String getEnumByString(String code) {
+            for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
+                if (code.equals(e.getValue())) {
+                    return e.name();
+                }
+            }
+            return null;
+        }
 
-	public static ComboFlagPrioVersType getByString(String code) {
-	    for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
-		if (code.equals(e.getValue())) {
-		    return e;
-		}
-	    }
-	    throw new IllegalArgumentException("Nessun ComboFlagPrioVersType con valore " + code);
-	}
+        public static ComboFlagPrioVersType getByString(String code) {
+            for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
+                if (code.equals(e.getValue())) {
+                    return e;
+                }
+            }
+            throw new IllegalArgumentException("Nessun ComboFlagPrioVersType con valore " + code);
+        }
 
-	public static String getValueByEnumName(String code) {
-	    for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
-		if (code.equals(e.name())) {
-		    return e.getValue();
-		}
-	    }
-	    return null;
-	}
+        public static String getValueByEnumName(String code) {
+            for (ComboFlagPrioVersType e : ComboFlagPrioVersType.values()) {
+                if (code.equals(e.name())) {
+                    return e.getValue();
+                }
+            }
+            return null;
+        }
     }
 
     // MEV22933
     public enum ComboValueParamentersType {
-	STRINGA, PASSWORD;
+        STRINGA, PASSWORD;
     }
 
     public static final String OBFUSCATED_STRING = "********";

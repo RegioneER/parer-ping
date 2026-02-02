@@ -37,227 +37,227 @@ public class MonVVisFascicoloObjectRowBean extends BaseRow implements JEEBaseRow
     public static MonVVisFascicoloObjectTableDescriptor TABLE_DESCRIPTOR = new MonVVisFascicoloObjectTableDescriptor();
 
     public MonVVisFascicoloObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public String getNmAmbienteVers() {
-	return getString("nm_ambiente_vers");
+        return getString("nm_ambiente_vers");
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-	setObject("nm_ambiente_vers", nmAmbienteVers);
+        setObject("nm_ambiente_vers", nmAmbienteVers);
     }
 
     public String getNmVers() {
-	return getString("nm_vers");
+        return getString("nm_vers");
     }
 
     public void setNmVers(String nmVers) {
-	setObject("nm_vers", nmVers);
+        setObject("nm_vers", nmVers);
     }
 
     public String getCdKeyObject() {
-	return getString("cd_key_object");
+        return getString("cd_key_object");
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	setObject("cd_key_object", cdKeyObject);
+        setObject("cd_key_object", cdKeyObject);
     }
 
     public String getNmTipoObject() {
-	return getString("nm_tipo_object");
+        return getString("nm_tipo_object");
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	setObject("nm_tipo_object", nmTipoObject);
+        setObject("nm_tipo_object", nmTipoObject);
     }
 
     public String getDsInfoObject() {
-	return getString("ds_info_object");
+        return getString("ds_info_object");
     }
 
     public void setDsInfoObject(String dsInfoObject) {
-	setObject("ds_info_object", dsInfoObject);
+        setObject("ds_info_object", dsInfoObject);
     }
 
     public String getTiStatoObject() {
-	return getString("ti_stato_object");
+        return getString("ti_stato_object");
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	setObject("ti_stato_object", tiStatoObject);
+        setObject("ti_stato_object", tiStatoObject);
     }
 
     public BigDecimal getIdFascicoloObject() {
-	return getBigDecimal("id_fascicolo_object");
+        return getBigDecimal("id_fascicolo_object");
     }
 
     public void setIdFascicoloObject(BigDecimal idFascicoloObject) {
-	setObject("id_fascicolo_object", idFascicoloObject);
+        setObject("id_fascicolo_object", idFascicoloObject);
     }
 
     public BigDecimal getAaFascicoloSacer() {
-	return getBigDecimal("aa_fascicolo_sacer");
+        return getBigDecimal("aa_fascicolo_sacer");
     }
 
     public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
-	setObject("aa_fascicolo_sacer", aaFascicoloSacer);
+        setObject("aa_fascicolo_sacer", aaFascicoloSacer);
     }
 
     public String getCdKeyFascicoloSacer() {
-	return getString("cd_key_fascicolo_sacer");
+        return getString("cd_key_fascicolo_sacer");
     }
 
     public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
-	setObject("cd_key_fascicolo_sacer", cdKeyFascicoloSacer);
+        setObject("cd_key_fascicolo_sacer", cdKeyFascicoloSacer);
     }
 
     public BigDecimal getNiSizeFileByte() {
-	return getBigDecimal("ni_size_file_byte");
+        return getBigDecimal("ni_size_file_byte");
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	setObject("ni_size_file_byte", niSizeFileByte);
+        setObject("ni_size_file_byte", niSizeFileByte);
     }
 
     public String getTiStatoFascicoloObject() {
-	return getString("ti_stato_fascicolo_object");
+        return getString("ti_stato_fascicolo_object");
     }
 
     public void setTiStatoFascicoloObject(String tiStatoFascicoloObject) {
-	setObject("ti_stato_fascicolo_object", tiStatoFascicoloObject);
+        setObject("ti_stato_fascicolo_object", tiStatoFascicoloObject);
     }
 
     public String getCdErrSacer() {
-	return getString("cd_err_sacer");
+        return getString("cd_err_sacer");
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	setObject("cd_err_sacer", cdErrSacer);
+        setObject("cd_err_sacer", cdErrSacer);
     }
 
     public String getDlErrSacer() {
-	return getString("dl_err_sacer");
+        return getString("dl_err_sacer");
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	setObject("dl_err_sacer", dlErrSacer);
+        setObject("dl_err_sacer", dlErrSacer);
     }
 
     public String getBlXmlVersSacer() {
-	return getString("bl_xml_vers_sacer");
+        return getString("bl_xml_vers_sacer");
     }
 
     public void setBlXmlVersSacer(String blXmlVersSacer) {
-	setObject("bl_xml_vers_sacer", blXmlVersSacer);
+        setObject("bl_xml_vers_sacer", blXmlVersSacer);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public String getDlCompositoOrganiz() {
-	return getString("dl_composito_organiz");
+        return getString("dl_composito_organiz");
     }
 
     public void setDlCompositoOrganiz(String dlCompositoOrganiz) {
-	setObject("dl_composito_organiz", dlCompositoOrganiz);
+        setObject("dl_composito_organiz", dlCompositoOrganiz);
     }
 
     public String getFlVersSimulato() {
-	return getString("fl_vers_simulato");
+        return getString("fl_vers_simulato");
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	setObject("fl_vers_simulato", flVersSimulato);
+        setObject("fl_vers_simulato", flVersSimulato);
     }
 
     public String getFlXmlMod() {
-	return getString("fl_xml_mod");
+        return getString("fl_xml_mod");
     }
 
     public void setFlXmlMod(String flXmlMod) {
-	setObject("fl_xml_mod", flXmlMod);
+        setObject("fl_xml_mod", flXmlMod);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVVisFascicoloObject entity = (MonVVisFascicoloObject) obj;
-	this.setNmAmbienteVers(entity.getNmAmbienteVers());
-	this.setNmVers(entity.getNmVers());
-	this.setCdKeyObject(entity.getCdKeyObject());
-	this.setNmTipoObject(entity.getNmTipoObject());
-	this.setDsInfoObject(entity.getDsInfoObject());
-	this.setTiStatoObject(entity.getTiStatoObject());
-	this.setIdFascicoloObject(entity.getIdFascicoloObject());
-	this.setAaFascicoloSacer(entity.getAaFascicoloSacer());
-	this.setCdKeyFascicoloSacer(entity.getCdKeyFascicoloSacer());
-	this.setNiSizeFileByte(entity.getNiSizeFileByte());
-	this.setTiStatoFascicoloObject(entity.getTiStatoFascicoloObject());
-	this.setCdErrSacer(entity.getCdErrSacer());
-	this.setDlErrSacer(entity.getDlErrSacer());
-	this.setBlXmlVersSacer(entity.getBlXmlVersSacer());
-	this.setIdOrganizIam(entity.getIdOrganizIam());
-	this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
-	this.setFlVersSimulato(entity.getFlVersSimulato());
-	this.setFlXmlMod(entity.getFlXMlMod());
+        MonVVisFascicoloObject entity = (MonVVisFascicoloObject) obj;
+        this.setNmAmbienteVers(entity.getNmAmbienteVers());
+        this.setNmVers(entity.getNmVers());
+        this.setCdKeyObject(entity.getCdKeyObject());
+        this.setNmTipoObject(entity.getNmTipoObject());
+        this.setDsInfoObject(entity.getDsInfoObject());
+        this.setTiStatoObject(entity.getTiStatoObject());
+        this.setIdFascicoloObject(entity.getIdFascicoloObject());
+        this.setAaFascicoloSacer(entity.getAaFascicoloSacer());
+        this.setCdKeyFascicoloSacer(entity.getCdKeyFascicoloSacer());
+        this.setNiSizeFileByte(entity.getNiSizeFileByte());
+        this.setTiStatoFascicoloObject(entity.getTiStatoFascicoloObject());
+        this.setCdErrSacer(entity.getCdErrSacer());
+        this.setDlErrSacer(entity.getDlErrSacer());
+        this.setBlXmlVersSacer(entity.getBlXmlVersSacer());
+        this.setIdOrganizIam(entity.getIdOrganizIam());
+        this.setDlCompositoOrganiz(entity.getDlCompositoOrganiz());
+        this.setFlVersSimulato(entity.getFlVersSimulato());
+        this.setFlXmlMod(entity.getFlXMlMod());
     }
 
     @Override
     public MonVVisFascicoloObject rowBeanToEntity() {
-	MonVVisFascicoloObject entity = new MonVVisFascicoloObject();
-	entity.setNmAmbienteVers(this.getNmAmbienteVers());
-	entity.setNmVers(this.getNmVers());
-	entity.setCdKeyObject(this.getCdKeyObject());
-	entity.setNmTipoObject(this.getNmTipoObject());
-	entity.setDsInfoObject(this.getDsInfoObject());
-	entity.setTiStatoObject(this.getTiStatoObject());
-	entity.setIdFascicoloObject(this.getIdFascicoloObject());
-	entity.setAaFascicoloSacer(this.getAaFascicoloSacer());
-	entity.setCdKeyFascicoloSacer(this.getCdKeyFascicoloSacer());
-	entity.setNiSizeFileByte(this.getNiSizeFileByte());
-	entity.setTiStatoFascicoloObject(this.getTiStatoFascicoloObject());
-	entity.setCdErrSacer(this.getCdErrSacer());
-	entity.setDlErrSacer(this.getDlErrSacer());
-	entity.setBlXmlVersSacer(this.getBlXmlVersSacer());
-	entity.setIdOrganizIam(this.getIdOrganizIam());
-	entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
-	entity.setFlVersSimulato(this.getFlVersSimulato());
-	entity.setFlXMlMod(this.getFlXmlMod());
-	return entity;
+        MonVVisFascicoloObject entity = new MonVVisFascicoloObject();
+        entity.setNmAmbienteVers(this.getNmAmbienteVers());
+        entity.setNmVers(this.getNmVers());
+        entity.setCdKeyObject(this.getCdKeyObject());
+        entity.setNmTipoObject(this.getNmTipoObject());
+        entity.setDsInfoObject(this.getDsInfoObject());
+        entity.setTiStatoObject(this.getTiStatoObject());
+        entity.setIdFascicoloObject(this.getIdFascicoloObject());
+        entity.setAaFascicoloSacer(this.getAaFascicoloSacer());
+        entity.setCdKeyFascicoloSacer(this.getCdKeyFascicoloSacer());
+        entity.setNiSizeFileByte(this.getNiSizeFileByte());
+        entity.setTiStatoFascicoloObject(this.getTiStatoFascicoloObject());
+        entity.setCdErrSacer(this.getCdErrSacer());
+        entity.setDlErrSacer(this.getDlErrSacer());
+        entity.setBlXmlVersSacer(this.getBlXmlVersSacer());
+        entity.setIdOrganizIam(this.getIdOrganizIam());
+        entity.setDlCompositoOrganiz(this.getDlCompositoOrganiz());
+        entity.setFlVersSimulato(this.getFlVersSimulato());
+        entity.setFlXMlMod(this.getFlXmlMod());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

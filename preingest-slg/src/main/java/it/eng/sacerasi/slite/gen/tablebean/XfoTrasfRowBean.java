@@ -37,155 +37,155 @@ public class XfoTrasfRowBean extends BaseRow implements JEEBaseRowInterface {
     public static XfoTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoTrasfTableDescriptor();
 
     public XfoTrasfRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdTrasf() {
-	return getBigDecimal("id_trasf");
+        return getBigDecimal("id_trasf");
     }
 
     public void setIdTrasf(BigDecimal idTrasf) {
-	setObject("id_trasf", idTrasf);
+        setObject("id_trasf", idTrasf);
     }
 
     public String getCdTrasf() {
-	return getString("cd_trasf");
+        return getString("cd_trasf");
     }
 
     public void setCdTrasf(String cdTrasf) {
-	setObject("cd_trasf", cdTrasf);
+        setObject("cd_trasf", cdTrasf);
     }
 
     public String getDsTrasf() {
-	return getString("ds_trasf");
+        return getString("ds_trasf");
     }
 
     public void setDsTrasf(String dsTrasf) {
-	setObject("ds_trasf", dsTrasf);
+        setObject("ds_trasf", dsTrasf);
     }
 
     public String getFlAttiva() {
-	return getString("fl_attiva");
+        return getString("fl_attiva");
     }
 
     public void setFlAttiva(String flAttiva) {
-	setObject("fl_attiva", flAttiva);
+        setObject("fl_attiva", flAttiva);
     }
 
     public String getCdVersioneCor() {
-	return getString("cd_versione_cor");
+        return getString("cd_versione_cor");
     }
 
     public void setCdVersioneCor(String cdVersioneCor) {
-	setObject("cd_versione_cor", cdVersioneCor);
+        setObject("cd_versione_cor", cdVersioneCor);
     }
 
     public String getDsVersioneCor() {
-	return getString("ds_versione_cor");
+        return getString("ds_versione_cor");
     }
 
     public void setDsVersioneCor(String dsVersioneCor) {
-	setObject("ds_versione_cor", dsVersioneCor);
+        setObject("ds_versione_cor", dsVersioneCor);
     }
 
     public Timestamp getDtIstituz() {
-	return getTimestamp("dt_istituz");
+        return getTimestamp("dt_istituz");
     }
 
     public void setDtIstituz(Timestamp dtIstituz) {
-	setObject("dt_istituz", dtIstituz);
+        setObject("dt_istituz", dtIstituz);
     }
 
     public Timestamp getDtSoppres() {
-	return getTimestamp("dt_soppres");
+        return getTimestamp("dt_soppres");
     }
 
     public void setDtSoppres(Timestamp dtSoppres) {
-	setObject("dt_soppres", dtSoppres);
+        setObject("dt_soppres", dtSoppres);
     }
 
     public String getCdKettleId() {
-	return getString("cd_kettle_id");
+        return getString("cd_kettle_id");
     }
 
     public void setCdKettleId(String cdKettleId) {
-	setObject("cd_kettle_id", cdKettleId);
+        setObject("cd_kettle_id", cdKettleId);
     }
 
     // FIXME: in pratica gestisce i Blob come stringhe, per i blob veri e' da implementare
     public byte[] getBlTrasf() {
-	return (byte[]) getObject("bl_trasf");
+        return (byte[]) getObject("bl_trasf");
     }
 
     public void setBlTrasf(byte[] blTrasf) {
-	setObject("bl_trasf", blTrasf);
+        setObject("bl_trasf", blTrasf);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	XfoTrasf entity = (XfoTrasf) obj;
+        XfoTrasf entity = (XfoTrasf) obj;
 
-	this.setIdTrasf(new BigDecimal(entity.getIdTrasf()));
-	this.setCdTrasf(entity.getCdTrasf());
-	this.setDsTrasf(entity.getDsTrasf());
-	this.setFlAttiva(entity.getFlAttiva());
-	this.setCdVersioneCor(entity.getCdVersioneCor());
-	this.setDsVersioneCor(entity.getDsVersioneCor());
-	if (entity.getDtIstituz() != null) {
-	    this.setDtIstituz(new Timestamp(entity.getDtIstituz().getTime()));
-	}
-	if (entity.getDtSoppres() != null) {
-	    this.setDtSoppres(new Timestamp(entity.getDtSoppres().getTime()));
-	}
-	this.setBlTrasf(entity.getBlTrasf());
-	this.setCdKettleId(entity.getCdKettleId());
+        this.setIdTrasf(new BigDecimal(entity.getIdTrasf()));
+        this.setCdTrasf(entity.getCdTrasf());
+        this.setDsTrasf(entity.getDsTrasf());
+        this.setFlAttiva(entity.getFlAttiva());
+        this.setCdVersioneCor(entity.getCdVersioneCor());
+        this.setDsVersioneCor(entity.getDsVersioneCor());
+        if (entity.getDtIstituz() != null) {
+            this.setDtIstituz(new Timestamp(entity.getDtIstituz().getTime()));
+        }
+        if (entity.getDtSoppres() != null) {
+            this.setDtSoppres(new Timestamp(entity.getDtSoppres().getTime()));
+        }
+        this.setBlTrasf(entity.getBlTrasf());
+        this.setCdKettleId(entity.getCdKettleId());
     }
 
     @Override
     public XfoTrasf rowBeanToEntity() {
-	XfoTrasf entity = new XfoTrasf();
-	if (this.getIdTrasf() != null) {
-	    entity.setIdTrasf(this.getIdTrasf().longValue());
-	}
-	entity.setCdTrasf(this.getCdTrasf());
-	entity.setDsTrasf(this.getDsTrasf());
-	entity.setFlAttiva(this.getFlAttiva());
-	entity.setCdVersioneCor(this.getCdVersioneCor());
-	entity.setDsVersioneCor(this.getDsVersioneCor());
-	entity.setDtIstituz(this.getDtIstituz());
-	entity.setDtSoppres(this.getDtSoppres());
-	entity.setBlTrasf(this.getBlTrasf());
-	entity.setCdKettleId(this.getCdKettleId());
-	return entity;
+        XfoTrasf entity = new XfoTrasf();
+        if (this.getIdTrasf() != null) {
+            entity.setIdTrasf(this.getIdTrasf().longValue());
+        }
+        entity.setCdTrasf(this.getCdTrasf());
+        entity.setDsTrasf(this.getDsTrasf());
+        entity.setFlAttiva(this.getFlAttiva());
+        entity.setCdVersioneCor(this.getCdVersioneCor());
+        entity.setDsVersioneCor(this.getDsVersioneCor());
+        entity.setDtIstituz(this.getDtIstituz());
+        entity.setDtSoppres(this.getDtSoppres());
+        entity.setBlTrasf(this.getBlTrasf());
+        entity.setCdKettleId(this.getCdKettleId());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 }

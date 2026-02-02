@@ -34,19 +34,19 @@ public class XfoStoricoTrasfTableBean extends AbstractBaseTable<XfoStoricoTrasfR
     public static XfoStoricoTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoStoricoTrasfTableDescriptor();
 
     public XfoStoricoTrasfTableBean() {
-	super();
+        super();
     }
 
     protected XfoStoricoTrasfRowBean createRow() {
-	return new XfoStoricoTrasfRowBean();
+        return new XfoStoricoTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<XfoStoricoTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

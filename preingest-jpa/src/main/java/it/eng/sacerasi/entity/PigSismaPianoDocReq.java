@@ -41,7 +41,7 @@ public class PigSismaPianoDocReq implements Serializable {
     private PigSismaFaseProgetto pigSismaFaseProgetto;
 
     public PigSismaPianoDocReq() {
-	// hibernate
+        // hibernate
     }
 
     @Id
@@ -49,41 +49,41 @@ public class PigSismaPianoDocReq implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_PIANO_DOC_REQ_IDSISMAPIANODOCREQ_GENERATOR")
     @Column(name = "ID_SISMA_PIANO_DOC_REQ")
     public Long getIdSismaPianoDocReq() {
-	return this.idSismaPianoDocReq;
+        return this.idSismaPianoDocReq;
     }
 
     public void setIdSismaPianoDocReq(Long idSismaPianoDocReq) {
-	this.idSismaPianoDocReq = idSismaPianoDocReq;
+        this.idSismaPianoDocReq = idSismaPianoDocReq;
     }
 
     @Column(name = "FL_DOC_OBBLIGATORIO", columnDefinition = "CHAR")
     public String getFlDocObbligatorio() {
-	return this.flDocObbligatorio;
+        return this.flDocObbligatorio;
     }
 
     public void setFlDocObbligatorio(String flDocObbligatorio) {
-	this.flDocObbligatorio = flDocObbligatorio;
+        this.flDocObbligatorio = flDocObbligatorio;
     }
 
     // bi-directional many-to-one association to PigSismaValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PIG_SISMA_VAL_DOC")
     public PigSismaValDoc getPigSismaValDoc() {
-	return this.pigSismaValDoc;
+        return this.pigSismaValDoc;
     }
 
     public void setPigSismaValDoc(PigSismaValDoc pigSismaValDoc) {
-	this.pigSismaValDoc = pigSismaValDoc;
+        this.pigSismaValDoc = pigSismaValDoc;
     }
 
     // bi-directional many-to-one association to PigSismaValDoc
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_FASE_PROGETTO")
     public PigSismaFaseProgetto getPigSismaFaseProgetto() {
-	return pigSismaFaseProgetto;
+        return pigSismaFaseProgetto;
     }
 
     public void setPigSismaFaseProgetto(PigSismaFaseProgetto pigSismaFaseProgetto) {
-	this.pigSismaFaseProgetto = pigSismaFaseProgetto;
+        this.pigSismaFaseProgetto = pigSismaFaseProgetto;
     }
 }

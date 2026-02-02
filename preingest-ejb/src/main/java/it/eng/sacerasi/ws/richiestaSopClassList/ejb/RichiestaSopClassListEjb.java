@@ -41,39 +41,39 @@ public class RichiestaSopClassListEjb {
     private RichiestaSopClassListCheckHelper richiestaSopClassListCheckHelper;
 
     public RichiestaSopClassListRisposta richiestaSopClassList(String nmAmbiente,
-	    String nmVersatore) {
+            String nmVersatore) {
 
-	// Istanzio la risposta
-	RispostaWSRichiestaSopClassList rispostaWs = new RispostaWSRichiestaSopClassList();
-	rispostaWs.setRichiestaSopClassListRisposta(new RichiestaSopClassListRisposta());
-	// Imposto l'esito della risposta di default OK
-	rispostaWs.getRichiestaSopClassListRisposta().setCdEsito(Constants.EsitoServizio.OK);
-	// Istanzio l'oggetto che contiene i parametri ricevuti
-	// RichiestaSopClassListInput inputParameters = new RichiestaSopClassListInput(nmAmbiente,
-	// nmVersatore,
-	// cdPassword);
-	RichiestaSopClassListInput inputParameters = new RichiestaSopClassListInput(nmAmbiente,
-		nmVersatore);
-	// Istanzio l'Ext con l'oggetto creato
-	RichiestaSopClassListExt rsclExt = new RichiestaSopClassListExt();
-	rsclExt.setDescrizione(new WSDescRichiestaSopClassList());
-	rsclExt.setRichiestaSopClassListInput(inputParameters);
-	// Chiamo la classe RichiestaSopClassListCheck che gestisce i controlli e popola la
-	// rispostaWs
-	richiestaSopClassListCheckHelper.checkRichiesta(rsclExt, rispostaWs);
+        // Istanzio la risposta
+        RispostaWSRichiestaSopClassList rispostaWs = new RispostaWSRichiestaSopClassList();
+        rispostaWs.setRichiestaSopClassListRisposta(new RichiestaSopClassListRisposta());
+        // Imposto l'esito della risposta di default OK
+        rispostaWs.getRichiestaSopClassListRisposta().setCdEsito(Constants.EsitoServizio.OK);
+        // Istanzio l'oggetto che contiene i parametri ricevuti
+        // RichiestaSopClassListInput inputParameters = new RichiestaSopClassListInput(nmAmbiente,
+        // nmVersatore,
+        // cdPassword);
+        RichiestaSopClassListInput inputParameters = new RichiestaSopClassListInput(nmAmbiente,
+                nmVersatore);
+        // Istanzio l'Ext con l'oggetto creato
+        RichiestaSopClassListExt rsclExt = new RichiestaSopClassListExt();
+        rsclExt.setDescrizione(new WSDescRichiestaSopClassList());
+        rsclExt.setRichiestaSopClassListInput(inputParameters);
+        // Chiamo la classe RichiestaSopClassListCheck che gestisce i controlli e popola la
+        // rispostaWs
+        richiestaSopClassListCheckHelper.checkRichiesta(rsclExt, rispostaWs);
 
-	if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-	    if (rsclExt.getListaSopClass() != null) {
-		for (PigSopClassDicom sop : rsclExt.getListaSopClass()) {
-		    SopClassRespType sopResp = new SopClassRespType();
-		    sopResp.setCdSopClass(sop.getCdSopClassDicom());
-		    sopResp.setDsSopClass(sop.getDsSopClassDicom());
-		    rispostaWs.getRichiestaSopClassListRisposta().getListaSOPClass().getSopClass()
-			    .add(sopResp);
-		}
-	    }
-	}
+        if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+            if (rsclExt.getListaSopClass() != null) {
+                for (PigSopClassDicom sop : rsclExt.getListaSopClass()) {
+                    SopClassRespType sopResp = new SopClassRespType();
+                    sopResp.setCdSopClass(sop.getCdSopClassDicom());
+                    sopResp.setDsSopClass(sop.getDsSopClassDicom());
+                    rispostaWs.getRichiestaSopClassListRisposta().getListaSOPClass().getSopClass()
+                            .add(sopResp);
+                }
+            }
+        }
 
-	return rispostaWs.getRichiestaSopClassListRisposta();
+        return rispostaWs.getRichiestaSopClassListRisposta();
     }
 }

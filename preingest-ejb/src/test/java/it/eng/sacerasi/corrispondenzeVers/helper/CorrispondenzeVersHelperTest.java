@@ -46,45 +46,45 @@ public class CorrispondenzeVersHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(CorrispondenzeVersHelper.class);
+        return ArquillianUtils.createPingJar(CorrispondenzeVersHelper.class);
     }
 
     @Test
     void getIdOrganizIamStrut_long_queryIsOk() {
-	long idTipoObj = aLong();
-	helper.getIdOrganizIamStrut(idTipoObj);
-	assertTrue(true);
+        long idTipoObj = aLong();
+        helper.getIdOrganizIamStrut(idTipoObj);
+        assertTrue(true);
     }
 
     @Test
     void getIdOrganizIamStrut_long_BigDecimal_queryIsOk() {
-	long idTipoObj = aLong();
-	BigDecimal idOrganizIamStrut = aBigDecimal();
-	helper.getIdOrganizIamStrut(idTipoObj, idOrganizIamStrut);
-	assertTrue(true);
+        long idTipoObj = aLong();
+        BigDecimal idOrganizIamStrut = aBigDecimal();
+        helper.getIdOrganizIamStrut(idTipoObj, idOrganizIamStrut);
+        assertTrue(true);
     }
 
     @Test
     void getStrutturaAbilitata_BigDecimal_String_queryIsOk() {
-	BigDecimal idOrganizIam = aBigDecimal();
-	String nmUserId = aString();
+        BigDecimal idOrganizIam = aBigDecimal();
+        String nmUserId = aString();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getStrutturaAbilitata(idOrganizIam, nmUserId);
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e, " No entity found for query");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getStrutturaAbilitata(idOrganizIam, nmUserId);
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e, " No entity found for query");
+            }
+        });
     }
 
     @Test
     void getStrutturaAbilitata_4args_queryIsOk() {
-	String nmAmbiente = aString();
-	String nmEnte = aString();
-	String nmStrut = aString();
-	String nmUserId = aString();
-	helper.getStrutturaAbilitata(nmAmbiente, nmEnte, nmStrut, nmUserId);
-	assertTrue(true);
+        String nmAmbiente = aString();
+        String nmEnte = aString();
+        String nmStrut = aString();
+        String nmUserId = aString();
+        helper.getStrutturaAbilitata(nmAmbiente, nmEnte, nmStrut, nmUserId);
+        assertTrue(true);
     }
 }

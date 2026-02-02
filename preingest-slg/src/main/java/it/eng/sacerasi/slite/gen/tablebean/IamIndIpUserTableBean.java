@@ -33,19 +33,19 @@ public class IamIndIpUserTableBean extends AbstractBaseTable<IamIndIpUserRowBean
     public static IamIndIpUserTableDescriptor TABLE_DESCRIPTOR = new IamIndIpUserTableDescriptor();
 
     public IamIndIpUserTableBean() {
-	super();
+        super();
     }
 
     protected IamIndIpUserRowBean createRow() {
-	return new IamIndIpUserRowBean();
+        return new IamIndIpUserRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamIndIpUserRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

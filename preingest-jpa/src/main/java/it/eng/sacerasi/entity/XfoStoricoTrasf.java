@@ -62,112 +62,112 @@ public class XfoStoricoTrasf implements Serializable {
     }
 
     public XfoStoricoTrasf(long idStoricoTrasf) {
-	this.idStoricoTrasf = idStoricoTrasf;
+        this.idStoricoTrasf = idStoricoTrasf;
     }
 
     public XfoStoricoTrasf(long idStoricoTrasf, String cdTrasf, String cdVersione,
-	    String dsVersione, Date dtIstituz, Date dtSoppres, byte[] blTrasf) {
-	this.idStoricoTrasf = idStoricoTrasf;
-	this.cdTrasf = cdTrasf;
-	this.cdVersione = cdVersione;
-	this.dsVersione = dsVersione;
-	this.dtIstituz = dtIstituz;
-	this.dtSoppres = dtSoppres;
-	this.blTrasf = blTrasf;
+            String dsVersione, Date dtIstituz, Date dtSoppres, byte[] blTrasf) {
+        this.idStoricoTrasf = idStoricoTrasf;
+        this.cdTrasf = cdTrasf;
+        this.cdVersione = cdVersione;
+        this.dsVersione = dsVersione;
+        this.dtIstituz = dtIstituz;
+        this.dtSoppres = dtSoppres;
+        this.blTrasf = blTrasf;
     }
 
     @Id
     @GenericGenerator(name = "XFO_STORICO_TRASF_IDTRASF_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_STORICO_TRASF"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SXFO_STORICO_TRASF"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "XFO_STORICO_TRASF_IDTRASF_GENERATOR")
     @Column(name = "ID_STORICO_TRASF")
     public Long getIdStoricoTrasf() {
-	return idStoricoTrasf;
+        return idStoricoTrasf;
     }
 
     public void setIdStoricoTrasf(Long idStoricoTrasf) {
-	this.idStoricoTrasf = idStoricoTrasf;
+        this.idStoricoTrasf = idStoricoTrasf;
     }
 
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "CD_TRASF")
     public String getCdTrasf() {
-	return cdTrasf;
+        return cdTrasf;
     }
 
     public void setCdTrasf(String cdTrasf) {
-	this.cdTrasf = cdTrasf;
+        this.cdTrasf = cdTrasf;
     }
 
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "CD_VERSIONE")
     public String getCdVersione() {
-	return cdVersione;
+        return cdVersione;
     }
 
     public void setCdVersione(String cdVersione) {
-	this.cdVersione = cdVersione;
+        this.cdVersione = cdVersione;
     }
 
     @NotNull
     @Size(min = 1, max = 4000)
     @Column(name = "DS_VERSIONE")
     public String getDsVersione() {
-	return dsVersione;
+        return dsVersione;
     }
 
     public void setDsVersione(String dsVersione) {
-	this.dsVersione = dsVersione;
+        this.dsVersione = dsVersione;
     }
 
     @NotNull
     @Column(name = "DT_ISTITUZ")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDtIstituz() {
-	return dtIstituz;
+        return dtIstituz;
     }
 
     public void setDtIstituz(Date dtIstituz) {
-	this.dtIstituz = dtIstituz;
+        this.dtIstituz = dtIstituz;
     }
 
     @NotNull
     @Column(name = "DT_SOPPRES")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getDtSoppres() {
-	return dtSoppres;
+        return dtSoppres;
     }
 
     public void setDtSoppres(Date dtSoppres) {
-	this.dtSoppres = dtSoppres;
+        this.dtSoppres = dtSoppres;
     }
 
     @Lob
     @Column(name = "BL_TRASF")
     public byte[] getBlTrasf() {
-	return blTrasf;
+        return blTrasf;
     }
 
     public void setBlTrasf(byte[] blTrasf) {
-	this.blTrasf = blTrasf;
+        this.blTrasf = blTrasf;
     }
 
     @JoinColumn(name = "ID_TRASF", referencedColumnName = "ID_TRASF")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     public XfoTrasf getXfoTrasf() {
-	return xfoTrasf;
+        return xfoTrasf;
     }
 
     public void setXfoTrasf(XfoTrasf xfoTrasf) {
-	this.xfoTrasf = xfoTrasf;
+        this.xfoTrasf = xfoTrasf;
     }
 
     @Override
     public String toString() {
-	return "it.eng.xformer.entity.XfoStoricoTrasf[ idStoricoTrasf=" + idStoricoTrasf + " ]";
+        return "it.eng.xformer.entity.XfoStoricoTrasf[ idStoricoTrasf=" + idStoricoTrasf + " ]";
     }
 
 }

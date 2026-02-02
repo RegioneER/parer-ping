@@ -33,49 +33,49 @@ public class RispostaWSRicercaRecuperati implements IRispostaWS {
 
     @Override
     public String getErrorCode() {
-	return errorCode;
+        return errorCode;
     }
 
     @Override
     public String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     @Override
     public ErrorTypeEnum getErrorType() {
-	return errorType;
+        return errorType;
     }
 
     @Override
     public SeverityEnum getSeverity() {
-	return severity;
+        return severity;
     }
 
     @Override
     public void setErrorCode(String errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     @Override
     public void setErrorMessage(String errorMessage) {
-	this.errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     @Override
     public void setErrorType(ErrorTypeEnum errorType) {
-	this.errorType = errorType;
+        this.errorType = errorType;
     }
 
     @Override
     public void setSeverity(SeverityEnum severity) {
-	this.severity = severity;
+        this.severity = severity;
     }
 
     public RicercaRecuperatiRisposta getRicercaRecuperatiRisposta() {
-	return ricercaRecuperatiRisposta;
+        return ricercaRecuperatiRisposta;
     }
 
     public void setRicercaRecuperatiRisposta(RicercaRecuperatiRisposta ricercaRecuperatiRisposta) {
-	this.ricercaRecuperatiRisposta = ricercaRecuperatiRisposta;
+        this.ricercaRecuperatiRisposta = ricercaRecuperatiRisposta;
     }
 }

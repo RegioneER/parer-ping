@@ -34,19 +34,19 @@ public class PigValoreParamApplicTableBean extends AbstractBaseTable<PigValorePa
     public static PigValoreParamApplicTableDescriptor TABLE_DESCRIPTOR = new PigValoreParamApplicTableDescriptor();
 
     public PigValoreParamApplicTableBean() {
-	super();
+        super();
     }
 
     protected PigValoreParamApplicRowBean createRow() {
-	return new PigValoreParamApplicRowBean();
+        return new PigValoreParamApplicRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigValoreParamApplicRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -47,111 +47,111 @@ public class GenericJobHelper extends GenericJobQueryHelper {
     private TrasformazioniHelper trasformazioniHelper;
 
     public GenericJobHelper() {
-	/**
-	 * SONAR
-	 */
+        /**
+         * SONAR
+         */
     }
 
     public PigSessioneIngest searchCurrentSession(PigObject po) {
-	for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
-	    if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
-		return psi;
-	    }
-	}
-	return null;
+        for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
+            if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
+                return psi;
+            }
+        }
+        return null;
     }
 
     /*
      * calcolo l'hash in streaming, lento ma mi tutela da eventuali out of memory
      */
     public String calculateHash(InputStream is) throws NoSuchAlgorithmException, IOException {
-	MessageDigest md = MessageDigest.getInstance(Constants.TipoHash.SHA_1);
-	DigestInputStream dis = null;
-	int bufferSize = 100 * 1024 * 1024; // 100 MB
+        MessageDigest md = MessageDigest.getInstance(Constants.TipoHash.SHA_1);
+        DigestInputStream dis = null;
+        int bufferSize = 100 * 1024 * 1024; // 100 MB
 
-	try {
-	    dis = new DigestInputStream(is, md);
-	    byte[] buffer = new byte[bufferSize];
-	    while (dis.read(buffer) != -1) {
-	    }
-	} finally {
-	    IOUtils.closeQuietly(dis);
-	}
+        try {
+            dis = new DigestInputStream(is, md);
+            byte[] buffer = new byte[bufferSize];
+            while (dis.read(buffer) != -1) {
+            }
+        } finally {
+            IOUtils.closeQuietly(dis);
+        }
 
-	byte[] pwdHash = md.digest();
-	return toHexBinary(pwdHash);
+        byte[] pwdHash = md.digest();
+        return toHexBinary(pwdHash);
     }
 
     public String toHexBinary(byte[] dati) {
-	if (dati != null) {
-	    StringBuilder sb = new StringBuilder();
-	    for (byte b : dati) {
-		sb.append(String.format("%02x", b));
-	    }
-	    return sb.toString();
-	} else {
-	    return "";
-	}
+        if (dati != null) {
+            StringBuilder sb = new StringBuilder();
+            for (byte b : dati) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void changePigObjectAndSessionStateAtomic(long pigId, String stato) {
-	PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
-	this.changePigObjectAndSessionState(po, stato, null, null);
+        PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
+        this.changePigObjectAndSessionState(po, stato, null, null);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public PigObject setPigObjectAndSessionChoosenTransformationAtomic(long pigId,
-	    XfoTrasf transformation) {
-	PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
+            XfoTrasf transformation) {
+        PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
 
-	// salva nome e versione della trasformazione nell'oggetto e nella sua sessione.
-	po.setCdTrasf(transformation.getCdTrasf());
-	po.setCdVersioneTrasf(transformation.getCdVersioneCor());
+        // salva nome e versione della trasformazione nell'oggetto e nella sua sessione.
+        po.setCdTrasf(transformation.getCdTrasf());
+        po.setCdVersioneTrasf(transformation.getCdVersioneCor());
 
-	PigSessioneIngest currentSession = this.searchCurrentSession(po);
-	currentSession.setCdTrasf(transformation.getCdTrasf());
-	currentSession.setCdVersioneTrasf(transformation.getCdVersioneCor());
+        PigSessioneIngest currentSession = this.searchCurrentSession(po);
+        currentSession.setCdTrasf(transformation.getCdTrasf());
+        currentSession.setCdVersioneTrasf(transformation.getCdVersioneCor());
 
-	return po;
+        return po;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void changePigObjectAndSessionStateAtomic(long pigId, String stato, String codiceErrore,
-	    String descrizioneErrore) {
-	PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
-	this.changePigObjectAndSessionState(po, stato, codiceErrore, descrizioneErrore);
+            String descrizioneErrore) {
+        PigObject po = trasformazioniHelper.findById(PigObject.class, pigId);
+        this.changePigObjectAndSessionState(po, stato, codiceErrore, descrizioneErrore);
     }
 
     public void changePigObjectAndSessionState(PigObject po, String stato) {
-	this.changePigObjectAndSessionState(po, stato, null, null);
+        this.changePigObjectAndSessionState(po, stato, null, null);
     }
 
     public void changePigObjectAndSessionState(PigObject po, String stato, String codiceErrore,
-	    String descrizioneErrore) {
-	PigSessioneIngest currentSession = searchCurrentSession(po);
+            String descrizioneErrore) {
+        PigSessioneIngest currentSession = searchCurrentSession(po);
 
-	po.setTiStatoObject(stato);
-	currentSession.setTiStato(stato);
+        po.setTiStatoObject(stato);
+        currentSession.setTiStato(stato);
 
-	// Il campo id_stato_sessione_ingest_corrente andrà riempito con l’identificatore di una
-	// nuova riga creata
-	// appositamente nella tabella “PIG_STATO_SESSIONE_INGEST”.
-	Date now = new Date();
+        // Il campo id_stato_sessione_ingest_corrente andrà riempito con l’identificatore di una
+        // nuova riga creata
+        // appositamente nella tabella “PIG_STATO_SESSIONE_INGEST”.
+        Date now = new Date();
 
-	PigStatoSessioneIngest updatedStatoSessione = new PigStatoSessioneIngest();
-	updatedStatoSessione.setPigSessioneIngest(currentSession);
-	updatedStatoSessione.setIdVers(currentSession.getPigVer().getIdVers());
-	updatedStatoSessione.setTsRegStato(new Timestamp(now.getTime()));
-	updatedStatoSessione.setTiStato(stato);
+        PigStatoSessioneIngest updatedStatoSessione = new PigStatoSessioneIngest();
+        updatedStatoSessione.setPigSessioneIngest(currentSession);
+        updatedStatoSessione.setIdVers(currentSession.getPigVer().getIdVers());
+        updatedStatoSessione.setTsRegStato(new Timestamp(now.getTime()));
+        updatedStatoSessione.setTiStato(stato);
 
-	entityManager.persist(updatedStatoSessione);
+        entityManager.persist(updatedStatoSessione);
 
-	currentSession.addPigStatoSessioneIngest(updatedStatoSessione);
-	currentSession.setIdStatoSessioneIngestCor(
-		new BigDecimal(updatedStatoSessione.getIdStatoSessioneIngest()));
+        currentSession.addPigStatoSessioneIngest(updatedStatoSessione);
+        currentSession.setIdStatoSessioneIngestCor(
+                new BigDecimal(updatedStatoSessione.getIdStatoSessioneIngest()));
 
-	currentSession.setCdErr(codiceErrore);
-	currentSession.setDlErr(descrizioneErrore);
+        currentSession.setCdErr(codiceErrore);
+        currentSession.setDlErr(descrizioneErrore);
     }
 }

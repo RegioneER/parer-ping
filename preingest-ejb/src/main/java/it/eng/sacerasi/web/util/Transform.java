@@ -38,56 +38,56 @@ public class Transform {
     }
 
     public static AbstractBaseTable entities2TableBean(List entities)
-	    throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
-	    IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-	String entityClassName = entities.get(0).getClass().getName()
-		.substring(entities.get(0).getClass().getName().lastIndexOf("."));
-	String tbClassName = null;
-	if (entities.get(0).getClass().getName().startsWith(Constants.ENTITY_PACKAGE_NAME)) {
-	    tbClassName = Constants.ROWBEAN_PACKAGE_NAME + entityClassName + "TableBean";
-	} else {
-	    tbClassName = Constants.VIEWROWBEAN_PACKAGE_NAME + entityClassName + "TableBean";
-	}
-	Class clazz = Class.forName(tbClassName);
-	Constructor constructor = clazz.getConstructor();
-	AbstractBaseTable tableBean = (AbstractBaseTable) constructor.newInstance();
-	for (Object entity : entities) {
-	    tableBean.add(Transform.entity2RowBean(entity));
-	}
-	return tableBean;
+            throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        String entityClassName = entities.get(0).getClass().getName()
+                .substring(entities.get(0).getClass().getName().lastIndexOf("."));
+        String tbClassName = null;
+        if (entities.get(0).getClass().getName().startsWith(Constants.ENTITY_PACKAGE_NAME)) {
+            tbClassName = Constants.ROWBEAN_PACKAGE_NAME + entityClassName + "TableBean";
+        } else {
+            tbClassName = Constants.VIEWROWBEAN_PACKAGE_NAME + entityClassName + "TableBean";
+        }
+        Class clazz = Class.forName(tbClassName);
+        Constructor constructor = clazz.getConstructor();
+        AbstractBaseTable tableBean = (AbstractBaseTable) constructor.newInstance();
+        for (Object entity : entities) {
+            tableBean.add(Transform.entity2RowBean(entity));
+        }
+        return tableBean;
     }
 
     public static BaseRowInterface entity2RowBean(Object entity)
-	    throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
-	    IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-	String entityClassName = getClassName(entity);
-	String rbClassName = null;
-	if (entity.getClass().getName().startsWith(Constants.ENTITY_PACKAGE_NAME)) {
-	    rbClassName = Constants.ROWBEAN_PACKAGE_NAME + "." + entityClassName + "RowBean";
-	} else {
-	    rbClassName = Constants.VIEWROWBEAN_PACKAGE_NAME + "." + entityClassName + "RowBean";
-	}
-	Class clazz = Class.forName(rbClassName);
-	Constructor constructor = clazz.getConstructor();
-	Object rowBean = constructor.newInstance();
-	((JEEBaseRowInterface) rowBean).entityToRowBean(entity);
-	return (BaseRowInterface) rowBean;
+            throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        String entityClassName = getClassName(entity);
+        String rbClassName = null;
+        if (entity.getClass().getName().startsWith(Constants.ENTITY_PACKAGE_NAME)) {
+            rbClassName = Constants.ROWBEAN_PACKAGE_NAME + "." + entityClassName + "RowBean";
+        } else {
+            rbClassName = Constants.VIEWROWBEAN_PACKAGE_NAME + "." + entityClassName + "RowBean";
+        }
+        Class clazz = Class.forName(rbClassName);
+        Constructor constructor = clazz.getConstructor();
+        Object rowBean = constructor.newInstance();
+        ((JEEBaseRowInterface) rowBean).entityToRowBean(entity);
+        return (BaseRowInterface) rowBean;
     }
 
     public static Object rowBean2Entity(Object rowBean) {
-	return ((JEEBaseRowInterface) rowBean).rowBeanToEntity();
+        return ((JEEBaseRowInterface) rowBean).rowBeanToEntity();
     }
 
     private static String getClassName(Object obj) {
-	final List<String> proxySuffixes = Arrays.asList("_$$", "$HibernateProxy");
-	String className = obj.getClass().getSimpleName();
-	for (String s : proxySuffixes) {
-	    if (className.contains(s)) {
-		className = className.substring(0, className.indexOf(s));
-		break;
-	    }
-	}
-	return className;
+        final List<String> proxySuffixes = Arrays.asList("_$$", "$HibernateProxy");
+        String className = obj.getClass().getSimpleName();
+        for (String s : proxySuffixes) {
+            if (className.contains(s)) {
+                className = className.substring(0, className.indexOf(s));
+                break;
+            }
+        }
+        return className;
     }
 
 }

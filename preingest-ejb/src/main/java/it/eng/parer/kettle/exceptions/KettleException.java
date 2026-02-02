@@ -23,11 +23,11 @@ public class KettleException extends Exception {
     private static final long serialVersionUID = 3887872103606119659L;
 
     public KettleException(String message) {
-	super(message);
+        super(message);
     }
 
     public KettleException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
 }

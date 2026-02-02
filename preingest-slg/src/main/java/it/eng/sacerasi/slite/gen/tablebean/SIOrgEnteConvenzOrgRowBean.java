@@ -38,122 +38,122 @@ public class SIOrgEnteConvenzOrgRowBean extends BaseRow implements JEEBaseRowInt
     public static SIOrgEnteConvenzOrgTableDescriptor TABLE_DESCRIPTOR = new SIOrgEnteConvenzOrgTableDescriptor();
 
     public SIOrgEnteConvenzOrgRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdEnteConvenzOrg() {
-	return getBigDecimal("id_ente_convenz_org");
+        return getBigDecimal("id_ente_convenz_org");
     }
 
     public void setIdEnteConvenzOrg(BigDecimal idEnteConvenzOrg) {
-	setObject("id_ente_convenz_org", idEnteConvenzOrg);
+        setObject("id_ente_convenz_org", idEnteConvenzOrg);
     }
 
     public BigDecimal getIdEnteConvenz() {
-	return getBigDecimal("id_ente_convenz");
+        return getBigDecimal("id_ente_convenz");
     }
 
     public void setIdEnteConvenz(BigDecimal idEnteConvenz) {
-	setObject("id_ente_convenz", idEnteConvenz);
+        setObject("id_ente_convenz", idEnteConvenz);
     }
 
     public BigDecimal getIdOrganizIam() {
-	return getBigDecimal("id_organiz_iam");
+        return getBigDecimal("id_organiz_iam");
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	setObject("id_organiz_iam", idOrganizIam);
+        setObject("id_organiz_iam", idOrganizIam);
     }
 
     public Timestamp getDtIniVal() {
-	return getTimestamp("dt_ini_val");
+        return getTimestamp("dt_ini_val");
     }
 
     public void setDtIniVal(Timestamp dtIniVal) {
-	setObject("dt_ini_val", dtIniVal);
+        setObject("dt_ini_val", dtIniVal);
     }
 
     public Timestamp getDtFineVal() {
-	return getTimestamp("dt_fine_val");
+        return getTimestamp("dt_fine_val");
     }
 
     public void setDtFineVal(Timestamp dtFineVal) {
-	setObject("dt_fine_val", dtFineVal);
+        setObject("dt_fine_val", dtFineVal);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	SIOrgEnteConvenzOrg entity = (SIOrgEnteConvenzOrg) obj;
+        SIOrgEnteConvenzOrg entity = (SIOrgEnteConvenzOrg) obj;
 
-	this.setIdEnteConvenzOrg(new BigDecimal(entity.getIdEnteConvenzOrg()));
+        this.setIdEnteConvenzOrg(new BigDecimal(entity.getIdEnteConvenzOrg()));
 
-	if (entity.getSiOrgEnteConvenz() != null) {
-	    this.setIdEnteConvenz(new BigDecimal(entity.getSiOrgEnteConvenz().getIdEnteSiam()));
-	}
+        if (entity.getSiOrgEnteConvenz() != null) {
+            this.setIdEnteConvenz(new BigDecimal(entity.getSiOrgEnteConvenz().getIdEnteSiam()));
+        }
 
-	if (entity.getSiUsrOrganizIam() != null) {
-	    this.setIdOrganizIam(new BigDecimal(entity.getSiUsrOrganizIam().getIdOrganizIam()));
-	}
+        if (entity.getSiUsrOrganizIam() != null) {
+            this.setIdOrganizIam(new BigDecimal(entity.getSiUsrOrganizIam().getIdOrganizIam()));
+        }
 
-	if (entity.getDtIniVal() != null) {
-	    this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
-	}
-	if (entity.getDtFineVal() != null) {
-	    this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
-	}
+        if (entity.getDtIniVal() != null) {
+            this.setDtIniVal(new Timestamp(entity.getDtIniVal().getTime()));
+        }
+        if (entity.getDtFineVal() != null) {
+            this.setDtFineVal(new Timestamp(entity.getDtFineVal().getTime()));
+        }
     }
 
     @Override
     public SIOrgEnteConvenzOrg rowBeanToEntity() {
-	SIOrgEnteConvenzOrg entity = new SIOrgEnteConvenzOrg();
-	if (this.getIdEnteConvenzOrg() != null) {
-	    entity.setIdEnteConvenzOrg(this.getIdEnteConvenzOrg().longValue());
-	}
-	if (this.getIdEnteConvenz() != null) {
-	    if (entity.getSiOrgEnteConvenz() == null) {
-		entity.setSiOrgEnteConvenz(new SIOrgEnteSiam());
-	    }
-	    entity.getSiOrgEnteConvenz().setIdEnteSiam(this.getIdEnteConvenz().longValue());
-	}
-	if (this.getIdOrganizIam() != null) {
-	    if (entity.getSiUsrOrganizIam() == null) {
-		entity.setSiUsrOrganizIam(new SIUsrOrganizIam());
-	    }
-	    entity.getSiUsrOrganizIam().setIdOrganizIam(this.getIdOrganizIam().longValue());
-	}
-	entity.setDtIniVal(this.getDtIniVal());
-	entity.setDtFineVal(this.getDtFineVal());
-	return entity;
+        SIOrgEnteConvenzOrg entity = new SIOrgEnteConvenzOrg();
+        if (this.getIdEnteConvenzOrg() != null) {
+            entity.setIdEnteConvenzOrg(this.getIdEnteConvenzOrg().longValue());
+        }
+        if (this.getIdEnteConvenz() != null) {
+            if (entity.getSiOrgEnteConvenz() == null) {
+                entity.setSiOrgEnteConvenz(new SIOrgEnteSiam());
+            }
+            entity.getSiOrgEnteConvenz().setIdEnteSiam(this.getIdEnteConvenz().longValue());
+        }
+        if (this.getIdOrganizIam() != null) {
+            if (entity.getSiUsrOrganizIam() == null) {
+                entity.setSiUsrOrganizIam(new SIUsrOrganizIam());
+            }
+            entity.getSiUsrOrganizIam().setIdOrganizIam(this.getIdOrganizIam().longValue());
+        }
+        entity.setDtIniVal(this.getDtIniVal());
+        entity.setDtFineVal(this.getDtFineVal());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

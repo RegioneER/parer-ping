@@ -47,30 +47,30 @@ public class PigXsdDatiSpecTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_TI_ENTITA, new ColumnDescriptor(COL_TI_ENTITA, Types.VARCHAR, 20, false));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_ID_TIPO_FILE_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_FILE_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_CD_VERSIONE_XSD,
-		new ColumnDescriptor(COL_CD_VERSIONE_XSD, Types.VARCHAR, 100, false));
-	map.put(COL_DT_VERSIONE_XSD,
-		new ColumnDescriptor(COL_DT_VERSIONE_XSD, Types.TIMESTAMP, 7, false));
-	map.put(COL_BL_XSD, new ColumnDescriptor(COL_BL_XSD, Types.CLOB, 4000, false));
+        map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_TI_ENTITA, new ColumnDescriptor(COL_TI_ENTITA, Types.VARCHAR, 20, false));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_ID_TIPO_FILE_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_FILE_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_CD_VERSIONE_XSD,
+                new ColumnDescriptor(COL_CD_VERSIONE_XSD, Types.VARCHAR, 100, false));
+        map.put(COL_DT_VERSIONE_XSD,
+                new ColumnDescriptor(COL_DT_VERSIONE_XSD, Types.TIMESTAMP, 7, false));
+        map.put(COL_BL_XSD, new ColumnDescriptor(COL_BL_XSD, Types.CLOB, 4000, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

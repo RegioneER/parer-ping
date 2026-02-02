@@ -38,151 +38,151 @@ public class PigFileObjectRowBean extends BaseRow implements JEEBaseRowInterface
     public static PigFileObjectTableDescriptor TABLE_DESCRIPTOR = new PigFileObjectTableDescriptor();
 
     public PigFileObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdFileObject() {
-	return getBigDecimal("id_file_object");
+        return getBigDecimal("id_file_object");
     }
 
     public void setIdFileObject(BigDecimal idFileObject) {
-	setObject("id_file_object", idFileObject);
+        setObject("id_file_object", idFileObject);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public String getNmFileObject() {
-	return getString("nm_file_object");
+        return getString("nm_file_object");
     }
 
     public void setNmFileObject(String nmFileObject) {
-	setObject("nm_file_object", nmFileObject);
+        setObject("nm_file_object", nmFileObject);
     }
 
     public BigDecimal getIdTipoFileObject() {
-	return getBigDecimal("id_tipo_file_object");
+        return getBigDecimal("id_tipo_file_object");
     }
 
     public void setIdTipoFileObject(BigDecimal idTipoFileObject) {
-	setObject("id_tipo_file_object", idTipoFileObject);
+        setObject("id_tipo_file_object", idTipoFileObject);
     }
 
     public String getDsHashFileVers() {
-	return getString("ds_hash_file_vers");
+        return getString("ds_hash_file_vers");
     }
 
     public void setDsHashFileVers(String dsHashFileVers) {
-	setObject("ds_hash_file_vers", dsHashFileVers);
+        setObject("ds_hash_file_vers", dsHashFileVers);
     }
 
     public String getTiAlgoHashFileVers() {
-	return getString("ti_algo_hash_file_vers");
+        return getString("ti_algo_hash_file_vers");
     }
 
     public void setTiAlgoHashFileVers(String tiAlgoHashFileVers) {
-	setObject("ti_algo_hash_file_vers", tiAlgoHashFileVers);
+        setObject("ti_algo_hash_file_vers", tiAlgoHashFileVers);
     }
 
     public String getCdEncodingHashFileVers() {
-	return getString("cd_encoding_hash_file_vers");
+        return getString("cd_encoding_hash_file_vers");
     }
 
     public void setCdEncodingHashFileVers(String cdEncodingHashFileVers) {
-	setObject("cd_encoding_hash_file_vers", cdEncodingHashFileVers);
+        setObject("cd_encoding_hash_file_vers", cdEncodingHashFileVers);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigFileObject entity = (PigFileObject) obj;
+        PigFileObject entity = (PigFileObject) obj;
 
-	this.setIdFileObject(new BigDecimal(entity.getIdFileObject()));
-	if (entity.getPigObject() != null) {
-	    this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
-	}
+        this.setIdFileObject(new BigDecimal(entity.getIdFileObject()));
+        if (entity.getPigObject() != null) {
+            this.setIdObject(new BigDecimal(entity.getPigObject().getIdObject()));
+        }
 
-	this.setNmFileObject(entity.getNmFileObject());
-	if (entity.getPigTipoFileObject() != null) {
-	    this.setIdTipoFileObject(
-		    new BigDecimal(entity.getPigTipoFileObject().getIdTipoFileObject()));
+        this.setNmFileObject(entity.getNmFileObject());
+        if (entity.getPigTipoFileObject() != null) {
+            this.setIdTipoFileObject(
+                    new BigDecimal(entity.getPigTipoFileObject().getIdTipoFileObject()));
 
-	}
-	this.setDsHashFileVers(entity.getDsHashFileVers());
-	this.setTiAlgoHashFileVers(entity.getTiAlgoHashFileVers());
-	this.setCdEncodingHashFileVers(entity.getCdEncodingHashFileVers());
-	this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
-		: null);
+        }
+        this.setDsHashFileVers(entity.getDsHashFileVers());
+        this.setTiAlgoHashFileVers(entity.getTiAlgoHashFileVers());
+        this.setCdEncodingHashFileVers(entity.getCdEncodingHashFileVers());
+        this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
+                : null);
 
     }
 
     @Override
     public PigFileObject rowBeanToEntity() {
-	PigFileObject entity = new PigFileObject();
-	if (this.getIdFileObject() != null) {
-	    entity.setIdFileObject(this.getIdFileObject().longValue());
-	}
-	if (this.getIdObject() != null) {
-	    if (entity.getPigObject() == null) {
-		entity.setPigObject(new PigObject());
-	    }
-	    entity.getPigObject().setIdObject(this.getIdObject().longValue());
-	}
-	entity.setNmFileObject(this.getNmFileObject());
-	if (this.getIdTipoFileObject() != null) {
-	    if (entity.getPigTipoFileObject() == null) {
-		entity.setPigTipoFileObject(new PigTipoFileObject());
-	    }
-	    entity.getPigTipoFileObject()
-		    .setIdTipoFileObject(this.getIdTipoFileObject().longValue());
-	}
-	entity.setDsHashFileVers(this.getDsHashFileVers());
-	entity.setTiAlgoHashFileVers(this.getTiAlgoHashFileVers());
-	entity.setCdEncodingHashFileVers(this.getCdEncodingHashFileVers());
-	entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
-	return entity;
+        PigFileObject entity = new PigFileObject();
+        if (this.getIdFileObject() != null) {
+            entity.setIdFileObject(this.getIdFileObject().longValue());
+        }
+        if (this.getIdObject() != null) {
+            if (entity.getPigObject() == null) {
+                entity.setPigObject(new PigObject());
+            }
+            entity.getPigObject().setIdObject(this.getIdObject().longValue());
+        }
+        entity.setNmFileObject(this.getNmFileObject());
+        if (this.getIdTipoFileObject() != null) {
+            if (entity.getPigTipoFileObject() == null) {
+                entity.setPigTipoFileObject(new PigTipoFileObject());
+            }
+            entity.getPigTipoFileObject()
+                    .setIdTipoFileObject(this.getIdTipoFileObject().longValue());
+        }
+        entity.setDsHashFileVers(this.getDsHashFileVers());
+        entity.setTiAlgoHashFileVers(this.getTiAlgoHashFileVers());
+        entity.setCdEncodingHashFileVers(this.getCdEncodingHashFileVers());
+        entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

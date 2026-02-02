@@ -36,149 +36,149 @@ public class PigAttribDatiSpecRowBean extends BaseRow implements JEEBaseRowInter
     public static PigAttribDatiSpecTableDescriptor TABLE_DESCRIPTOR = new PigAttribDatiSpecTableDescriptor();
 
     public PigAttribDatiSpecRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdAttribDatiSpec() {
-	return getBigDecimal("id_attrib_dati_spec");
+        return getBigDecimal("id_attrib_dati_spec");
     }
 
     public void setIdAttribDatiSpec(BigDecimal idAttribDatiSpec) {
-	setObject("id_attrib_dati_spec", idAttribDatiSpec);
+        setObject("id_attrib_dati_spec", idAttribDatiSpec);
     }
 
     public BigDecimal getIdXsdSpec() {
-	return getBigDecimal("id_xsd_spec");
+        return getBigDecimal("id_xsd_spec");
     }
 
     public void setIdXsdSpec(BigDecimal idXsdSpec) {
-	setObject("id_xsd_spec", idXsdSpec);
+        setObject("id_xsd_spec", idXsdSpec);
     }
 
     public String getNmAttribDatiSpec() {
-	return getString("nm_attrib_dati_spec");
+        return getString("nm_attrib_dati_spec");
     }
 
     public void setNmAttribDatiSpec(String nmAttribDatiSpec) {
-	setObject("nm_attrib_dati_spec", nmAttribDatiSpec);
+        setObject("nm_attrib_dati_spec", nmAttribDatiSpec);
     }
 
     public BigDecimal getNiOrd() {
-	return getBigDecimal("ni_ord");
+        return getBigDecimal("ni_ord");
     }
 
     public void setNiOrd(BigDecimal niOrd) {
-	setObject("ni_ord", niOrd);
+        setObject("ni_ord", niOrd);
     }
 
     public String getFlFiltroDiario() {
-	return getString("fl_filtro_diario");
+        return getString("fl_filtro_diario");
     }
 
     public void setFlFiltroDiario(String flFiltroDiario) {
-	setObject("fl_filtro_diario", flFiltroDiario);
+        setObject("fl_filtro_diario", flFiltroDiario);
     }
 
     public String getFlVersSacer() {
-	return getString("fl_vers_sacer");
+        return getString("fl_vers_sacer");
     }
 
     public void setFlVersSacer(String flVersSacer) {
-	setObject("fl_vers_sacer", flVersSacer);
+        setObject("fl_vers_sacer", flVersSacer);
     }
 
     public String getNmColDatiSpec() {
-	return getString("nm_col_dati_spec");
+        return getString("nm_col_dati_spec");
     }
 
     public void setNmColDatiSpec(String nmColDatiSpec) {
-	setObject("nm_col_dati_spec", nmColDatiSpec);
+        setObject("nm_col_dati_spec", nmColDatiSpec);
     }
 
     public String getCdDatatypeXsd() {
-	return getString("cd_datatype_xsd");
+        return getString("cd_datatype_xsd");
     }
 
     public void setCdDatatypeXsd(String cdDatatypeXsd) {
-	setObject("cd_datatype_xsd", cdDatatypeXsd);
+        setObject("cd_datatype_xsd", cdDatatypeXsd);
     }
 
     public String getTiDatatypeCol() {
-	return getString("ti_datatype_col");
+        return getString("ti_datatype_col");
     }
 
     public void setTiDatatypeCol(String tiDatatypeCol) {
-	setObject("ti_datatype_col", tiDatatypeCol);
+        setObject("ti_datatype_col", tiDatatypeCol);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigAttribDatiSpec entity = (PigAttribDatiSpec) obj;
+        PigAttribDatiSpec entity = (PigAttribDatiSpec) obj;
 
-	this.setIdAttribDatiSpec(new BigDecimal(entity.getIdAttribDatiSpec()));
-	if (entity.getPigXsdDatiSpec() != null) {
-	    this.setIdXsdSpec(new BigDecimal(entity.getPigXsdDatiSpec().getIdXsdSpec()));
-	}
+        this.setIdAttribDatiSpec(new BigDecimal(entity.getIdAttribDatiSpec()));
+        if (entity.getPigXsdDatiSpec() != null) {
+            this.setIdXsdSpec(new BigDecimal(entity.getPigXsdDatiSpec().getIdXsdSpec()));
+        }
 
-	this.setNmAttribDatiSpec(entity.getNmAttribDatiSpec());
-	this.setNiOrd(entity.getNiOrd());
-	this.setFlFiltroDiario(entity.getFlFiltroDiario());
-	this.setFlVersSacer(entity.getFlVersSacer());
-	this.setNmColDatiSpec(entity.getNmColDatiSpec());
-	this.setCdDatatypeXsd(entity.getCdDatatypeXsd());
-	this.setTiDatatypeCol(entity.getTiDatatypeCol());
+        this.setNmAttribDatiSpec(entity.getNmAttribDatiSpec());
+        this.setNiOrd(entity.getNiOrd());
+        this.setFlFiltroDiario(entity.getFlFiltroDiario());
+        this.setFlVersSacer(entity.getFlVersSacer());
+        this.setNmColDatiSpec(entity.getNmColDatiSpec());
+        this.setCdDatatypeXsd(entity.getCdDatatypeXsd());
+        this.setTiDatatypeCol(entity.getTiDatatypeCol());
     }
 
     @Override
     public PigAttribDatiSpec rowBeanToEntity() {
-	PigAttribDatiSpec entity = new PigAttribDatiSpec();
-	if (this.getIdAttribDatiSpec() != null) {
-	    entity.setIdAttribDatiSpec(this.getIdAttribDatiSpec().longValue());
-	}
-	if (this.getIdXsdSpec() != null) {
-	    if (entity.getPigXsdDatiSpec() == null) {
-		entity.setPigXsdDatiSpec(new PigXsdDatiSpec());
-	    }
-	    entity.getPigXsdDatiSpec().setIdXsdSpec(this.getIdXsdSpec().longValue());
-	}
-	entity.setNmAttribDatiSpec(this.getNmAttribDatiSpec());
-	entity.setNiOrd(this.getNiOrd());
-	entity.setFlFiltroDiario(this.getFlFiltroDiario());
-	entity.setFlVersSacer(this.getFlVersSacer());
-	entity.setNmColDatiSpec(this.getNmColDatiSpec());
-	entity.setCdDatatypeXsd(this.getCdDatatypeXsd());
-	entity.setTiDatatypeCol(this.getTiDatatypeCol());
-	return entity;
+        PigAttribDatiSpec entity = new PigAttribDatiSpec();
+        if (this.getIdAttribDatiSpec() != null) {
+            entity.setIdAttribDatiSpec(this.getIdAttribDatiSpec().longValue());
+        }
+        if (this.getIdXsdSpec() != null) {
+            if (entity.getPigXsdDatiSpec() == null) {
+                entity.setPigXsdDatiSpec(new PigXsdDatiSpec());
+            }
+            entity.getPigXsdDatiSpec().setIdXsdSpec(this.getIdXsdSpec().longValue());
+        }
+        entity.setNmAttribDatiSpec(this.getNmAttribDatiSpec());
+        entity.setNiOrd(this.getNiOrd());
+        entity.setFlFiltroDiario(this.getFlFiltroDiario());
+        entity.setFlVersSacer(this.getFlVersSacer());
+        entity.setNmColDatiSpec(this.getNmColDatiSpec());
+        entity.setCdDatatypeXsd(this.getCdDatatypeXsd());
+        entity.setTiDatatypeCol(this.getTiDatatypeCol());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

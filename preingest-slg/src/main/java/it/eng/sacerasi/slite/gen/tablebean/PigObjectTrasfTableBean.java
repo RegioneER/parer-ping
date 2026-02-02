@@ -34,19 +34,19 @@ public class PigObjectTrasfTableBean extends AbstractBaseTable<PigObjectTrasfRow
     public static PigObjectTrasfTableDescriptor TABLE_DESCRIPTOR = new PigObjectTrasfTableDescriptor();
 
     public PigObjectTrasfTableBean() {
-	super();
+        super();
     }
 
     protected PigObjectTrasfRowBean createRow() {
-	return new PigObjectTrasfRowBean();
+        return new PigObjectTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigObjectTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

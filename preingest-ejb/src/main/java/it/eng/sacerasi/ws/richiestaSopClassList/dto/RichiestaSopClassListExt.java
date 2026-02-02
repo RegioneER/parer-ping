@@ -35,70 +35,70 @@ public class RichiestaSopClassListExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * @return the richiestaSopClassListInput
      */
     public RichiestaSopClassListInput getRichiestaSopClassListInput() {
-	return richiestaSopClassListInput;
+        return richiestaSopClassListInput;
     }
 
     /**
      * @param richiestaSopClassListInput the richiestaSopClassListInput to set
      */
     public void setRichiestaSopClassListInput(
-	    RichiestaSopClassListInput richiestaSopClassListInput) {
-	this.richiestaSopClassListInput = richiestaSopClassListInput;
+            RichiestaSopClassListInput richiestaSopClassListInput) {
+        this.richiestaSopClassListInput = richiestaSopClassListInput;
     }
 
     /**
      * @return the idVersatore
      */
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     /**
      * @param idVersatore the idVersatore to set
      */
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     /**
      * @return the listaSopClass
      */
     public List<PigSopClassDicom> getListaSopClass() {
-	return listaSopClass;
+        return listaSopClass;
     }
 
     /**
      * @param listaSopClass the listaSopClass to set
      */
     public void setListaSopClass(List<PigSopClassDicom> listaSopClass) {
-	this.listaSopClass = listaSopClass;
+        this.listaSopClass = listaSopClass;
     }
 
 }

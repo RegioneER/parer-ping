@@ -50,32 +50,32 @@ public class PigSessioneRecupTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_SESSIONE_RECUP,
-		new ColumnDescriptor(COL_ID_SESSIONE_RECUP, Types.DECIMAL, 22, true));
-	map.put(COL_NM_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, false));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, false));
-	map.put(COL_CD_KEY_OBJECT,
-		new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, false));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_DT_APERTURA, new ColumnDescriptor(COL_DT_APERTURA, Types.TIMESTAMP, 7, false));
-	map.put(COL_DT_CHIUSURA, new ColumnDescriptor(COL_DT_CHIUSURA, Types.TIMESTAMP, 7, false));
-	map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
-	map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, false));
-	map.put(COL_DL_ERR, new ColumnDescriptor(COL_DL_ERR, Types.VARCHAR, 1024, false));
+        map.put(COL_ID_SESSIONE_RECUP,
+                new ColumnDescriptor(COL_ID_SESSIONE_RECUP, Types.DECIMAL, 22, true));
+        map.put(COL_NM_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, false));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, false));
+        map.put(COL_CD_KEY_OBJECT,
+                new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, false));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_DT_APERTURA, new ColumnDescriptor(COL_DT_APERTURA, Types.TIMESTAMP, 7, false));
+        map.put(COL_DT_CHIUSURA, new ColumnDescriptor(COL_DT_CHIUSURA, Types.TIMESTAMP, 7, false));
+        map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
+        map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, false));
+        map.put(COL_DL_ERR, new ColumnDescriptor(COL_DL_ERR, Types.VARCHAR, 1024, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

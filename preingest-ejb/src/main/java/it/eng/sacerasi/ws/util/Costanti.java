@@ -40,35 +40,35 @@ public class Costanti {
     public static final String WS_STATUS_MONITOR_VRSN = "1.0";
     //
     public static final String[] WS_INVIO_OGGETTO_ASYNC_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_NOTIFICA_TRASF_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RICERCA_DIARIO_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RICERCA_RESTIT_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RICH_CHIUS_WARN_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RICH_REST_OGGETTO_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_NOTIFICA_PREL_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_NOTIFICA_IN_ATTESA_PREL_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RICH_SOPCLASS_LIST_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_PULIZIA_NOTIF_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_CANCELLA_UTENTE_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_MODIFICA_UTENTE_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_INSERIMENTO_UTENTE_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_RECUPERO_STATO_OGGETTO_COMP = {
-	    "1.0" };
+            "1.0" };
     public static final String[] WS_STATUS_MONITOR_COMP = {
-	    "1.0" };
+            "1.0" };
     //
     public static final String WS_INVIO_OGGETTO_ASYNC = "InvioOggettoAsincrono";
     public static final String WS_NOTIFICA_TRASF_ASYNC = "NotificaTrasferimentoFile";
@@ -96,27 +96,27 @@ public class Costanti {
     public final static String PAYLOAD_TYPE_CODA_VERS_FASCICOLO = "PayloadCodaVersamentoFascicolo";
 
     public enum ModificatoriWS {
-	// TAG_VERIFICA_FORMATI_OLD,
-	// TAG_VERIFICA_FORMATI_1_25,
-	// TAG_MIGRAZIONE,
-	// TAG_DATISPEC_EXT,
-	// TAG_ESTESI_1_3_OUT // ID documento, tag Versatore
+        // TAG_VERIFICA_FORMATI_OLD,
+        // TAG_VERIFICA_FORMATI_1_25,
+        // TAG_MIGRAZIONE,
+        // TAG_DATISPEC_EXT,
+        // TAG_ESTESI_1_3_OUT // ID documento, tag Versatore
     }
 
     public enum AttribDatiSpecDataType {
 
-	ALFANUMERICO, NUMERICO, DATA, DATETIME
+        ALFANUMERICO, NUMERICO, DATA, DATETIME
     }
 
     //
     public class JMSMsgProperties {
 
-	// msg properties
-	public final static String MSG_K_QUEUETYPE = "queueType";
-	public final static String MSG_K_APP = "fromApplication";
+        // msg properties
+        public final static String MSG_K_QUEUETYPE = "queueType";
+        public final static String MSG_K_APP = "fromApplication";
 
-	// payload Type
-	public final static String MSG_K_PAYLOAD_TYPE = "PayloadType";
+        // payload Type
+        public final static String MSG_K_PAYLOAD_TYPE = "PayloadType";
 
     }
 }

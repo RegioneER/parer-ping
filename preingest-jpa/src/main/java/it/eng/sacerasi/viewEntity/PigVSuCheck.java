@@ -40,39 +40,39 @@ public class PigVSuCheck implements Serializable {
 
     @Column(name = "FL_FILE_MANCANTE", columnDefinition = "char")
     public String getFlFileMancante() {
-	return this.flFileMancante;
+        return this.flFileMancante;
     }
 
     public void setFlFileMancante(String flFileMancante) {
-	this.flFileMancante = flFileMancante;
+        this.flFileMancante = flFileMancante;
     }
 
     @Column(name = "FL_VERIFICA_ERRATA", columnDefinition = "char")
     public String getFlVerificaErrata() {
-	return this.flVerificaErrata;
+        return this.flVerificaErrata;
     }
 
     public void setFlVerificaErrata(String flVerificaErrata) {
-	this.flVerificaErrata = flVerificaErrata;
+        this.flVerificaErrata = flVerificaErrata;
     }
 
     @Column(name = "FL_VERIFICA_IN_CORSO", columnDefinition = "char")
     public String getFlVerificaInCorso() {
-	return this.flVerificaInCorso;
+        return this.flVerificaInCorso;
     }
 
     public void setFlVerificaInCorso(String flVerificaInCorso) {
-	this.flVerificaInCorso = flVerificaInCorso;
+        this.flVerificaInCorso = flVerificaInCorso;
     }
 
     @Id
     @Column(name = "ID_STRUMENTI_URBANISTICI")
     public BigDecimal getIdStrumentiUrbanistici() {
-	return this.idStrumentiUrbanistici;
+        return this.idStrumentiUrbanistici;
     }
 
     public void setIdStrumentiUrbanistici(BigDecimal idStrumentiUrbanistici) {
-	this.idStrumentiUrbanistici = idStrumentiUrbanistici;
+        this.idStrumentiUrbanistici = idStrumentiUrbanistici;
     }
 
 }

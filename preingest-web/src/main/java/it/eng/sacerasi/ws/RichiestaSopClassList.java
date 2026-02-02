@@ -45,20 +45,20 @@ public class RichiestaSopClassList {
 
     @WebMethod(operationName = "richiestaSopClassList")
     public RichiestaSopClassListRisposta richiestaSopClassList(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore) {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	RichiestaSopClassListRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.richiestaSopClassList(nmAmbiente, nmVersatore);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        RichiestaSopClassListRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.richiestaSopClassList(nmAmbiente, nmVersatore);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

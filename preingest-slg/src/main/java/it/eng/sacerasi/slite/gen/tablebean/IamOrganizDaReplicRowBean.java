@@ -36,155 +36,155 @@ public class IamOrganizDaReplicRowBean extends BaseRow implements JEEBaseRowInte
     public static IamOrganizDaReplicTableDescriptor TABLE_DESCRIPTOR = new IamOrganizDaReplicTableDescriptor();
 
     public IamOrganizDaReplicRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdOrganizDaReplic() {
-	return getBigDecimal("id_organiz_da_replic");
+        return getBigDecimal("id_organiz_da_replic");
     }
 
     public void setIdOrganizDaReplic(BigDecimal idOrganizDaReplic) {
-	setObject("id_organiz_da_replic", idOrganizDaReplic);
+        setObject("id_organiz_da_replic", idOrganizDaReplic);
     }
 
     public BigDecimal getIdOrganizApplic() {
-	return getBigDecimal("id_organiz_applic");
+        return getBigDecimal("id_organiz_applic");
     }
 
     public void setIdOrganizApplic(BigDecimal idOrganizApplic) {
-	setObject("id_organiz_applic", idOrganizApplic);
+        setObject("id_organiz_applic", idOrganizApplic);
     }
 
     public String getNmTipoOrganiz() {
-	return getString("nm_tipo_organiz");
+        return getString("nm_tipo_organiz");
     }
 
     public void setNmTipoOrganiz(String nmTipoOrganiz) {
-	setObject("nm_tipo_organiz", nmTipoOrganiz);
+        setObject("nm_tipo_organiz", nmTipoOrganiz);
     }
 
     public String getNmOrganiz() {
-	return getString("nm_organiz");
+        return getString("nm_organiz");
     }
 
     public void setNmOrganiz(String nmOrganiz) {
-	setObject("nm_organiz", nmOrganiz);
+        setObject("nm_organiz", nmOrganiz);
     }
 
     public String getTiOperReplic() {
-	return getString("ti_oper_replic");
+        return getString("ti_oper_replic");
     }
 
     public void setTiOperReplic(String tiOperReplic) {
-	setObject("ti_oper_replic", tiOperReplic);
+        setObject("ti_oper_replic", tiOperReplic);
     }
 
     public String getTiStatoReplic() {
-	return getString("ti_stato_replic");
+        return getString("ti_stato_replic");
     }
 
     public void setTiStatoReplic(String tiStatoReplic) {
-	setObject("ti_stato_replic", tiStatoReplic);
+        setObject("ti_stato_replic", tiStatoReplic);
     }
 
     public Timestamp getDtLogOrganizDaReplic() {
-	return getTimestamp("dt_log_organiz_da_replic");
+        return getTimestamp("dt_log_organiz_da_replic");
     }
 
     public void setDtLogOrganizDaReplic(Timestamp dtLogOrganizDaReplic) {
-	setObject("dt_log_organiz_da_replic", dtLogOrganizDaReplic);
+        setObject("dt_log_organiz_da_replic", dtLogOrganizDaReplic);
     }
 
     public String getCdErr() {
-	return getString("cd_err");
+        return getString("cd_err");
     }
 
     public void setCdErr(String cdErr) {
-	setObject("cd_err", cdErr);
+        setObject("cd_err", cdErr);
     }
 
     public String getDsMsgErr() {
-	return getString("ds_msg_err");
+        return getString("ds_msg_err");
     }
 
     public void setDsMsgErr(String dsMsgErr) {
-	setObject("ds_msg_err", dsMsgErr);
+        setObject("ds_msg_err", dsMsgErr);
     }
 
     public Timestamp getDtErr() {
-	return getTimestamp("dt_err");
+        return getTimestamp("dt_err");
     }
 
     public void setDtErr(Timestamp dtErr) {
-	setObject("dt_err", dtErr);
+        setObject("dt_err", dtErr);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	IamOrganizDaReplic entity = (IamOrganizDaReplic) obj;
+        IamOrganizDaReplic entity = (IamOrganizDaReplic) obj;
 
-	this.setIdOrganizDaReplic(new BigDecimal(entity.getIdOrganizDaReplic()));
-	this.setIdOrganizApplic(entity.getIdOrganizApplic());
-	this.setNmTipoOrganiz(entity.getNmTipoOrganiz());
-	this.setNmOrganiz(entity.getNmOrganiz());
-	this.setTiOperReplic(entity.getTiOperReplic());
-	this.setTiStatoReplic(entity.getTiStatoReplic());
-	if (entity.getDtLogOrganizDaReplic() != null) {
-	    this.setDtLogOrganizDaReplic(new Timestamp(entity.getDtLogOrganizDaReplic().getTime()));
-	}
-	this.setCdErr(entity.getCdErr());
-	this.setDsMsgErr(entity.getDsMsgErr());
-	if (entity.getDtErr() != null) {
-	    this.setDtErr(new Timestamp(entity.getDtErr().getTime()));
-	}
+        this.setIdOrganizDaReplic(new BigDecimal(entity.getIdOrganizDaReplic()));
+        this.setIdOrganizApplic(entity.getIdOrganizApplic());
+        this.setNmTipoOrganiz(entity.getNmTipoOrganiz());
+        this.setNmOrganiz(entity.getNmOrganiz());
+        this.setTiOperReplic(entity.getTiOperReplic());
+        this.setTiStatoReplic(entity.getTiStatoReplic());
+        if (entity.getDtLogOrganizDaReplic() != null) {
+            this.setDtLogOrganizDaReplic(new Timestamp(entity.getDtLogOrganizDaReplic().getTime()));
+        }
+        this.setCdErr(entity.getCdErr());
+        this.setDsMsgErr(entity.getDsMsgErr());
+        if (entity.getDtErr() != null) {
+            this.setDtErr(new Timestamp(entity.getDtErr().getTime()));
+        }
     }
 
     @Override
     public IamOrganizDaReplic rowBeanToEntity() {
-	IamOrganizDaReplic entity = new IamOrganizDaReplic();
-	if (this.getIdOrganizDaReplic() != null) {
-	    entity.setIdOrganizDaReplic(this.getIdOrganizDaReplic().longValue());
-	}
-	entity.setIdOrganizApplic(this.getIdOrganizApplic());
-	entity.setNmTipoOrganiz(this.getNmTipoOrganiz());
-	entity.setNmOrganiz(this.getNmOrganiz());
-	entity.setTiOperReplic(this.getTiOperReplic());
-	entity.setTiStatoReplic(this.getTiStatoReplic());
-	entity.setDtLogOrganizDaReplic(this.getDtLogOrganizDaReplic());
-	entity.setCdErr(this.getCdErr());
-	entity.setDsMsgErr(this.getDsMsgErr());
-	entity.setDtErr(this.getDtErr());
-	return entity;
+        IamOrganizDaReplic entity = new IamOrganizDaReplic();
+        if (this.getIdOrganizDaReplic() != null) {
+            entity.setIdOrganizDaReplic(this.getIdOrganizDaReplic().longValue());
+        }
+        entity.setIdOrganizApplic(this.getIdOrganizApplic());
+        entity.setNmTipoOrganiz(this.getNmTipoOrganiz());
+        entity.setNmOrganiz(this.getNmOrganiz());
+        entity.setTiOperReplic(this.getTiOperReplic());
+        entity.setTiStatoReplic(this.getTiStatoReplic());
+        entity.setDtLogOrganizDaReplic(this.getDtLogOrganizDaReplic());
+        entity.setCdErr(this.getCdErr());
+        entity.setDsMsgErr(this.getDsMsgErr());
+        entity.setDtErr(this.getDtErr());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

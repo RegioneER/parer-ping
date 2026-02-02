@@ -36,7 +36,7 @@ public class Utils {
     private static final String CARATTERI_SOSTITUTIVO_PER_NOME_FILE = "_";
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-	    .ofPattern("dd/MM/yyyy hh:mm");
+            .ofPattern("dd/MM/yyyy hh:mm");
 
     /**
      * Metodo statico per ordinare un enum tramite il valore
@@ -47,47 +47,47 @@ public class Utils {
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {
-	SortedMap<String, T> map = new TreeMap<>();
-	for (T l : enumValues) {
-	    map.put(l.name(), l);
-	}
-	return map.values();
+        SortedMap<String, T> map = new TreeMap<>();
+        for (T l : enumValues) {
+            map.put(l.name(), l);
+        }
+        return map.values();
     }
 
     public static String convertSnakeCaseToCamelCase(String word) {
-	String camelCaseString = word.toLowerCase();
-	camelCaseString = WordUtils.capitalizeFully(camelCaseString, '_');
-	camelCaseString = StringUtils.remove(camelCaseString, '_');
-	camelCaseString = StringUtils.uncapitalize(camelCaseString);
-	return camelCaseString;
+        String camelCaseString = word.toLowerCase();
+        camelCaseString = WordUtils.capitalizeFully(camelCaseString, '_');
+        camelCaseString = StringUtils.remove(camelCaseString, '_');
+        camelCaseString = StringUtils.uncapitalize(camelCaseString);
+        return camelCaseString;
     }
 
     /*
      * Restituisce una stringa formattata con i MB o i GB in base a quanto è grande il numero
      */
     public static String convertBytesToFormattedString(BigDecimal dimensione) {
-	String dimen = "0 Bytes";
-	if (dimensione != null && !dimensione.equals(BigDecimal.ZERO)) {
-	    double k = 1000;
-	    // long decimalPoint
-	    String[] sizes = {
-		    "Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-	    double i = Math.floor(Math.log(dimensione.doubleValue()) / Math.log(k));
-	    dimen = String.format("%.2f %s", (dimensione.doubleValue() / Math.pow(k, i)),
-		    sizes[(int) i]);
-	}
-	return dimen;
+        String dimen = "0 Bytes";
+        if (dimensione != null && !dimensione.equals(BigDecimal.ZERO)) {
+            double k = 1000;
+            // long decimalPoint
+            String[] sizes = {
+                    "Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+            double i = Math.floor(Math.log(dimensione.doubleValue()) / Math.log(k));
+            dimen = String.format("%.2f %s", (dimensione.doubleValue() / Math.pow(k, i)),
+                    sizes[(int) i]);
+        }
+        return dimen;
     }
 
     /*
      * Restituisce una stringa formattata con i MB
      */
     public static BigDecimal convertBytesToMb(BigDecimal dimensione) {
-	BigDecimal dimenMb = BigDecimal.ZERO;
-	if (dimensione != null && !dimensione.equals(BigDecimal.ZERO)) {
-	    dimenMb = BigDecimal.valueOf(dimensione.doubleValue() / Math.pow(1000, 2));
-	}
-	return dimenMb;
+        BigDecimal dimenMb = BigDecimal.ZERO;
+        if (dimensione != null && !dimensione.equals(BigDecimal.ZERO)) {
+            dimenMb = BigDecimal.valueOf(dimensione.doubleValue() / Math.pow(1000, 2));
+        }
+        return dimenMb;
     }
 
     /*
@@ -95,16 +95,16 @@ public class Utils {
      * filesystem
      */
     public static String normalizzaNomeFile(String nomeFile) {
-	return nomeFile.replaceAll(CARATTERI_AMMESSI_PER_NOME_FILE,
-		CARATTERI_SOSTITUTIVO_PER_NOME_FILE);
+        return nomeFile.replaceAll(CARATTERI_AMMESSI_PER_NOME_FILE,
+                CARATTERI_SOSTITUTIVO_PER_NOME_FILE);
     }
 
     public static String eliminaPunteggiatureSpaziNomeFile(String nomeFile) {
-	return nomeFile.replaceAll(CARATTERI_PUNTEGGIATURA_IN_NOME_FILE,
-		CARATTERI_SOSTITUTIVO_PER_NOME_FILE);
+        return nomeFile.replaceAll(CARATTERI_PUNTEGGIATURA_IN_NOME_FILE,
+                CARATTERI_SOSTITUTIVO_PER_NOME_FILE);
     }
 
     public static String convertiLettereAccentate(String nomeFile) {
-	return Normalizer.normalize(nomeFile, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        return Normalizer.normalize(nomeFile, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

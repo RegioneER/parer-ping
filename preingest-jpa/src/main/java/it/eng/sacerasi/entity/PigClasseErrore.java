@@ -44,88 +44,88 @@ public class PigClasseErrore implements Serializable {
     private List<PigStatoClasseErrore> pigStatoClasseErrores = new ArrayList<>();
 
     public PigClasseErrore() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_CLASSE_ERRORE_IDCLASSEERRORE_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_CLASSE_ERRORE"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_CLASSE_ERRORE"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_CLASSE_ERRORE_IDCLASSEERRORE_GENERATOR")
     @Column(name = "ID_CLASSE_ERRORE")
     public Long getIdClasseErrore() {
-	return this.idClasseErrore;
+        return this.idClasseErrore;
     }
 
     public void setIdClasseErrore(Long idClasseErrore) {
-	this.idClasseErrore = idClasseErrore;
+        this.idClasseErrore = idClasseErrore;
     }
 
     @Column(name = "CD_CLASSE_ERRORE")
     public String getCdClasseErrore() {
-	return this.cdClasseErrore;
+        return this.cdClasseErrore;
     }
 
     public void setCdClasseErrore(String cdClasseErrore) {
-	this.cdClasseErrore = cdClasseErrore;
+        this.cdClasseErrore = cdClasseErrore;
     }
 
     @Column(name = "DS_CLASSE_ERRORE")
     public String getDsClasseErrore() {
-	return this.dsClasseErrore;
+        return this.dsClasseErrore;
     }
 
     public void setDsClasseErrore(String dsClasseErrore) {
-	this.dsClasseErrore = dsClasseErrore;
+        this.dsClasseErrore = dsClasseErrore;
     }
 
     // bi-directional many-to-one association to PigErrore
     @OneToMany(mappedBy = "pigClasseErrore")
     public List<PigErrore> getPigErrores() {
-	return this.pigErrores;
+        return this.pigErrores;
     }
 
     public void setPigErrores(List<PigErrore> pigErrores) {
-	this.pigErrores = pigErrores;
+        this.pigErrores = pigErrores;
     }
 
     public PigErrore addPigErrore(PigErrore pigErrore) {
-	getPigErrores().add(pigErrore);
-	pigErrore.setPigClasseErrore(this);
+        getPigErrores().add(pigErrore);
+        pigErrore.setPigClasseErrore(this);
 
-	return pigErrore;
+        return pigErrore;
     }
 
     public PigErrore removePigErrore(PigErrore pigErrore) {
-	getPigErrores().remove(pigErrore);
-	pigErrore.setPigClasseErrore(null);
+        getPigErrores().remove(pigErrore);
+        pigErrore.setPigClasseErrore(null);
 
-	return pigErrore;
+        return pigErrore;
     }
 
     // bi-directional many-to-one association to PigStatoClasseErrore
     @OneToMany(mappedBy = "pigClasseErrore")
     public List<PigStatoClasseErrore> getPigStatoClasseErrores() {
-	return this.pigStatoClasseErrores;
+        return this.pigStatoClasseErrores;
     }
 
     public void setPigStatoClasseErrores(List<PigStatoClasseErrore> pigStatoClasseErrores) {
-	this.pigStatoClasseErrores = pigStatoClasseErrores;
+        this.pigStatoClasseErrores = pigStatoClasseErrores;
     }
 
     public PigStatoClasseErrore addPigStatoClasseErrore(PigStatoClasseErrore pigStatoClasseErrore) {
-	getPigStatoClasseErrores().add(pigStatoClasseErrore);
-	pigStatoClasseErrore.setPigClasseErrore(this);
+        getPigStatoClasseErrores().add(pigStatoClasseErrore);
+        pigStatoClasseErrore.setPigClasseErrore(this);
 
-	return pigStatoClasseErrore;
+        return pigStatoClasseErrore;
     }
 
     public PigStatoClasseErrore removePigStatoClasseErrore(
-	    PigStatoClasseErrore pigStatoClasseErrore) {
-	getPigStatoClasseErrores().remove(pigStatoClasseErrore);
-	pigStatoClasseErrore.setPigClasseErrore(null);
+            PigStatoClasseErrore pigStatoClasseErrore) {
+        getPigStatoClasseErrores().remove(pigStatoClasseErrore);
+        pigStatoClasseErrore.setPigClasseErrore(null);
 
-	return pigStatoClasseErrore;
+        return pigStatoClasseErrore;
     }
 
 }

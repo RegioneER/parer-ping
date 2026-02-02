@@ -1,3 +1,20 @@
+<%--
+ Engineering Ingegneria Informatica S.p.A.
+
+ Copyright (C) 2023 Regione Emilia-Romagna
+ <p/>
+ This program is free software: you can redistribute it and/or modify it under the terms of
+ the GNU Affero General Public License as published by the Free Software Foundation,
+ either version 3 of the License, or (at your option) any later version.
+ <p/>
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU Affero General Public License for more details.
+ <p/>
+ You should have received a copy of the GNU Affero General Public License along with this program.
+ If not, see <https://www.gnu.org/licenses/>.
+ --%>
+
 <%@ page import="it.eng.sacerasi.slite.gen.form.MonitoraggioForm" pageEncoding="UTF-8"%>
 <%@ include file="../../include.jsp"%>
 <c:set scope="request" var="navTable" value="${(empty param.mainNavTable) ? fn:escapeXml(param.table) : fn:escapeXml(param.mainNavTable)  }" />
@@ -365,19 +382,19 @@
             <c:if test="${!empty requestScope.confermaAnnullamentoOggetto}">
                 <div class="messages confermaAnnullamentoOggetto">
                     <div class="message info ">
-                                        <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
-                                            <c:choose>
-                                                <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
-                        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche.</p>
-                                                </c:when>
-                                                <c:otherwise>
-                        <p>Procedere con l'annullamento dell'Oggetto in PING? Le UD versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:if>
-                                        <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
-                        <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
-                                        </c:if>
+                        <c:if test="${empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <c:choose>
+                                <c:when test="${(form.oggettoDetail.ti_vers_file.value eq 'DA_TRASFORMARE')}">
+                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le entità versate in SACER non subiranno modifiche.</p>
+                                </c:when>
+                                <c:otherwise>
+                                    <p>Procedere con l'annullamento dell'Oggetto in PING? Le entità versate in SACER non subiranno modifiche ma procedendo il sistema eliminerà il file dell'oggetto ZIP_CON_XML_SACER e non sarà più possibile rimetterlo in versamento o in trasformazione.</p>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                        <c:if test="${!empty requestScope.confermaAnnullamentoOggettoSisma}">
+                            <p>Il versamento da annullare sul soggetto attuatore è già stato versato in agenzia, si vuole continuare?</p>
+                        </c:if>
                     </div>
                 </div>
             </c:if>

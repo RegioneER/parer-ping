@@ -36,91 +36,91 @@ public class RispostaControlli implements java.io.Serializable {
     private String dsErr = null;
 
     public void init() {
-	codErr = null;
-	dsErr = null;
+        codErr = null;
+        dsErr = null;
     }
 
     public void reset() {
-	rLong = -1;
-	rLongExtended = -1;
-	rInt = -1;
-	rBoolean = false;
-	rString = null;
-	codErr = null;
-	dsErr = null;
-	rObject = null;
-	rDate = null;
+        rLong = -1;
+        rLongExtended = -1;
+        rInt = -1;
+        rBoolean = false;
+        rString = null;
+        codErr = null;
+        dsErr = null;
+        rObject = null;
+        rDate = null;
     }
 
     public String getCodErr() {
-	return codErr;
+        return codErr;
     }
 
     public void setCodErr(String codErr) {
-	this.codErr = codErr;
+        this.codErr = codErr;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public boolean isrBoolean() {
-	return rBoolean;
+        return rBoolean;
     }
 
     public void setrBoolean(boolean rBoolean) {
-	this.rBoolean = rBoolean;
+        this.rBoolean = rBoolean;
     }
 
     public Date getrDate() {
-	return rDate;
+        return rDate;
     }
 
     public void setrDate(Date rDateTime) {
-	this.rDate = rDateTime;
+        this.rDate = rDateTime;
     }
 
     public int getrInt() {
-	return rInt;
+        return rInt;
     }
 
     public void setrInt(int rInt) {
-	this.rInt = rInt;
+        this.rInt = rInt;
     }
 
     public long getrLong() {
-	return rLong;
+        return rLong;
     }
 
     public void setrLong(long rLong) {
-	this.rLong = rLong;
+        this.rLong = rLong;
     }
 
     public long getrLongExtended() {
-	return rLongExtended;
+        return rLongExtended;
     }
 
     public void setrLongExtended(long rLongExtended) {
-	this.rLongExtended = rLongExtended;
+        this.rLongExtended = rLongExtended;
     }
 
     public Object getrObject() {
-	return rObject;
+        return rObject;
     }
 
     public void setrObject(Object rObject) {
-	this.rObject = rObject;
+        this.rObject = rObject;
     }
 
     public String getrString() {
-	return rString;
+        return rString;
     }
 
     public void setrString(String rString) {
-	this.rString = rString;
+        this.rString = rString;
     }
 }

@@ -53,43 +53,43 @@ public class MonVLisObjTrasfTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_OBJECT_TRASF,
-		new ColumnDescriptor(COL_ID_OBJECT_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_ID_OBJECT_DA_TRASF_PING,
-		new ColumnDescriptor(COL_ID_OBJECT_DA_TRASF_PING, Types.DECIMAL, 22, true));
-	map.put(COL_ID_VERS_TRASF,
-		new ColumnDescriptor(COL_ID_VERS_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_NM_AMBIENTE_VERS_TRASF,
-		new ColumnDescriptor(COL_NM_AMBIENTE_VERS_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_NM_VERS_TRASF,
-		new ColumnDescriptor(COL_NM_VERS_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_CD_KEY_OBJECT_TRASF,
-		new ColumnDescriptor(COL_CD_KEY_OBJECT_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_PG_OGGETTO_TRASF,
-		new ColumnDescriptor(COL_PG_OGGETTO_TRASF, Types.DECIMAL, 22, true));
-	map.put(COL_NM_TIPO_OBJECT_TRASF,
-		new ColumnDescriptor(COL_NM_TIPO_OBJECT_TRASF, Types.VARCHAR, 100, true));
-	map.put(COL_DS_OBJECT_TRASF,
-		new ColumnDescriptor(COL_DS_OBJECT_TRASF, Types.VARCHAR, 1024, true));
-	map.put(COL_DS_PATH, new ColumnDescriptor(COL_DS_PATH, Types.VARCHAR, 254, true));
-	map.put(COL_DS_PATH_TRASF,
-		new ColumnDescriptor(COL_DS_PATH_TRASF, Types.VARCHAR, 254, true));
-	map.put(COL_TI_STATO_TRASF,
-		new ColumnDescriptor(COL_TI_STATO_TRASF, Types.VARCHAR, 30, true));
-	map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, true));
-	map.put(COL_DL_ERR, new ColumnDescriptor(COL_DL_ERR, Types.VARCHAR, 1024, true));
+        map.put(COL_ID_OBJECT_TRASF,
+                new ColumnDescriptor(COL_ID_OBJECT_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_ID_OBJECT_DA_TRASF_PING,
+                new ColumnDescriptor(COL_ID_OBJECT_DA_TRASF_PING, Types.DECIMAL, 22, true));
+        map.put(COL_ID_VERS_TRASF,
+                new ColumnDescriptor(COL_ID_VERS_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_NM_AMBIENTE_VERS_TRASF,
+                new ColumnDescriptor(COL_NM_AMBIENTE_VERS_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_NM_VERS_TRASF,
+                new ColumnDescriptor(COL_NM_VERS_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_CD_KEY_OBJECT_TRASF,
+                new ColumnDescriptor(COL_CD_KEY_OBJECT_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_PG_OGGETTO_TRASF,
+                new ColumnDescriptor(COL_PG_OGGETTO_TRASF, Types.DECIMAL, 22, true));
+        map.put(COL_NM_TIPO_OBJECT_TRASF,
+                new ColumnDescriptor(COL_NM_TIPO_OBJECT_TRASF, Types.VARCHAR, 100, true));
+        map.put(COL_DS_OBJECT_TRASF,
+                new ColumnDescriptor(COL_DS_OBJECT_TRASF, Types.VARCHAR, 1024, true));
+        map.put(COL_DS_PATH, new ColumnDescriptor(COL_DS_PATH, Types.VARCHAR, 254, true));
+        map.put(COL_DS_PATH_TRASF,
+                new ColumnDescriptor(COL_DS_PATH_TRASF, Types.VARCHAR, 254, true));
+        map.put(COL_TI_STATO_TRASF,
+                new ColumnDescriptor(COL_TI_STATO_TRASF, Types.VARCHAR, 30, true));
+        map.put(COL_CD_ERR, new ColumnDescriptor(COL_CD_ERR, Types.VARCHAR, 100, true));
+        map.put(COL_DL_ERR, new ColumnDescriptor(COL_DL_ERR, Types.VARCHAR, 1024, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

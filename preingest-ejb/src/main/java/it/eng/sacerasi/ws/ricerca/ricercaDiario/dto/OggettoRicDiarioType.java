@@ -40,146 +40,146 @@ public class OggettoRicDiarioType {
     private String xmlDatiSpecResult;
 
     public Long getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     public void setIdObject(Long idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     public String getTiStatoObject() {
-	return tiStatoObject;
+        return tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	this.tiStatoObject = tiStatoObject;
+        this.tiStatoObject = tiStatoObject;
     }
 
     public String getTiStatoSessione() {
-	return tiStatoSessione;
+        return tiStatoSessione;
     }
 
     public void setTiStatoSessione(String tiStatoSessione) {
-	this.tiStatoSessione = tiStatoSessione;
+        this.tiStatoSessione = tiStatoSessione;
     }
 
     public Date getDtAperturaSessione() {
-	return dtAperturaSessione;
+        return dtAperturaSessione;
     }
 
     public void setDtAperturaSessione(Date dtAperturaSessione) {
-	this.dtAperturaSessione = dtAperturaSessione;
+        this.dtAperturaSessione = dtAperturaSessione;
     }
 
     public Date getDtChiusuraSessione() {
-	return dtChiusuraSessione;
+        return dtChiusuraSessione;
     }
 
     public void setDtChiusuraSessione(Date dtChiusuraSessione) {
-	this.dtChiusuraSessione = dtChiusuraSessione;
+        this.dtChiusuraSessione = dtChiusuraSessione;
     }
 
     public Long getIdSessione() {
-	return idSessione;
+        return idSessione;
     }
 
     public void setIdSessione(Long idSessione) {
-	this.idSessione = idSessione;
+        this.idSessione = idSessione;
     }
 
     public boolean isFlForzaAccettazione() {
-	return flForzaAccettazione;
+        return flForzaAccettazione;
     }
 
     public void setFlForzaAccettazione(boolean flForzaAccettazione) {
-	this.flForzaAccettazione = flForzaAccettazione;
+        this.flForzaAccettazione = flForzaAccettazione;
     }
 
     public boolean isFlForzaWarning() {
-	return flForzaWarning;
+        return flForzaWarning;
     }
 
     public void setFlForzaWarning(boolean flForzaWarning) {
-	this.flForzaWarning = flForzaWarning;
+        this.flForzaWarning = flForzaWarning;
     }
 
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public String getXmlDatiSpecResult() {
-	return xmlDatiSpecResult;
+        return xmlDatiSpecResult;
     }
 
     public void setXmlDatiSpecResult(String xmlDatiSpecResult) {
-	this.xmlDatiSpecResult = xmlDatiSpecResult;
+        this.xmlDatiSpecResult = xmlDatiSpecResult;
     }
 
     public String getDlMotivoForzaAccettazione() {
-	return dlMotivoForzaAccettazione;
+        return dlMotivoForzaAccettazione;
     }
 
     public void setDlMotivoForzaAccettazione(String dlMotivoForzaAccettazione) {
-	this.dlMotivoForzaAccettazione = dlMotivoForzaAccettazione;
+        this.dlMotivoForzaAccettazione = dlMotivoForzaAccettazione;
     }
 
     public String getDlMotivoChiusoWarning() {
-	return dlMotivoChiusoWarning;
+        return dlMotivoChiusoWarning;
     }
 
     public void setDlMotivoChiusoWarning(String dlMotivoChiusoWarning) {
-	this.dlMotivoChiusoWarning = dlMotivoChiusoWarning;
+        this.dlMotivoChiusoWarning = dlMotivoChiusoWarning;
     }
 
     public String getTiStatoSessioneRecup() {
-	return tiStatoSessioneRecup;
+        return tiStatoSessioneRecup;
     }
 
     public void setTiStatoSessioneRecup(String tiStatoSessioneRecup) {
-	this.tiStatoSessioneRecup = tiStatoSessioneRecup;
+        this.tiStatoSessioneRecup = tiStatoSessioneRecup;
     }
 
     public Date getDtAperturaSessioneRecup() {
-	return dtAperturaSessioneRecup;
+        return dtAperturaSessioneRecup;
     }
 
     public void setDtAperturaSessioneRecup(Date dtAperturaSessioneRecup) {
-	this.dtAperturaSessioneRecup = dtAperturaSessioneRecup;
+        this.dtAperturaSessioneRecup = dtAperturaSessioneRecup;
     }
 
     public String getChiaveUnitaDoc() {
-	return chiaveUnitaDoc;
+        return chiaveUnitaDoc;
     }
 
     public void setChiaveUnitaDoc(String chiaveUnitaDoc) {
-	this.chiaveUnitaDoc = chiaveUnitaDoc;
+        this.chiaveUnitaDoc = chiaveUnitaDoc;
     }
 
     @Override
     public String toString() {
-	return getIdObject() + " " + getCdKeyObject() + " " + getTiStatoSessione() + " "
-		+ getDtAperturaSessione() + " " + getDtChiusuraSessione() + " " + getIdSessione()
-		+ " " + isFlForzaAccettazione() + " " + isFlForzaWarning() + " " + getCdErr() + " "
-		+ getDsErr() + " " + getXmlDatiSpecResult();
+        return getIdObject() + " " + getCdKeyObject() + " " + getTiStatoSessione() + " "
+                + getDtAperturaSessione() + " " + getDtChiusuraSessione() + " " + getIdSessione()
+                + " " + isFlForzaAccettazione() + " " + isFlForzaWarning() + " " + getCdErr() + " "
+                + getDsErr() + " " + getXmlDatiSpecResult();
     }
 }

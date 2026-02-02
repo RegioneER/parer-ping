@@ -76,7 +76,7 @@
         <Input Name="ti_stato_visualizzato" Description="Dettaglio stato" Type="STRING" />
         <Input Name="ni_byte_file_vers" Description="Size" Type="INTEGER" GroupingDecimal="true" />
         <Input Type="STRING" Description="Gestione figli" Name="ti_gestione_figli" />
-        <Input Type="INTEGER" Description="Num. UD" Name="ni_ud_prodotte" />
+        <Input Type="INTEGER" Description="Num Doc" Name="ni_ud_prodotte" />
         <Input Name="note" Description="Note" Type="STRING" />
         <Input Name="ti_contenuto_oggetto" Description="Contenuto" Type="STRING" />
         <Input Name="nm_userid_vers" Description="Utente" Type="STRING" />

@@ -42,47 +42,47 @@ public class MonVObjAnnulRangeDt implements Serializable {
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return this.idObject;
+        return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     @Column(name = "ID_TIPO_OBJECT")
     public BigDecimal getIdTipoObject() {
-	return this.idTipoObject;
+        return this.idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     @Column(name = "ID_VERS")
     public BigDecimal getIdVers() {
-	return this.idVers;
+        return this.idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     @Column(name = "TI_DT_CREAZIONE")
     public String getTiDtCreazione() {
-	return this.tiDtCreazione;
+        return this.tiDtCreazione;
     }
 
     public void setTiDtCreazione(String tiDtCreazione) {
-	this.tiDtCreazione = tiDtCreazione;
+        this.tiDtCreazione = tiDtCreazione;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-	return this.tiStatoObject;
+        return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	this.tiStatoObject = tiStatoObject;
+        this.tiStatoObject = tiStatoObject;
     }
 
 }

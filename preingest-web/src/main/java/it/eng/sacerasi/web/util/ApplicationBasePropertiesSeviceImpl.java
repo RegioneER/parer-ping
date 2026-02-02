@@ -33,18 +33,18 @@ public class ApplicationBasePropertiesSeviceImpl implements IApplicationBaseProp
     @Override
     public ApplicationBaseProperties getApplicationBaseProperties() {
 
-	String nmApplic = configHelper.getParamApplicApplicationName(); // NM_APPLIC
-	String user = configHelper
-		.getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.USERID_RECUP_INFO); // USERID_RECUP_INFO
-	String password = configHelper
-		.getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.PSW_RECUP_INFO); // PSW_RECUP_INFO
-	String url = configHelper
-		.getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.URL_RECUP_HELP); // URL_RECUP_HELP
+        String nmApplic = configHelper.getParamApplicApplicationName(); // NM_APPLIC
+        String user = configHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.USERID_RECUP_INFO); // USERID_RECUP_INFO
+        String password = configHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.PSW_RECUP_INFO); // PSW_RECUP_INFO
+        String url = configHelper
+                .getValoreParamApplicByApplic(it.eng.sacerasi.common.Constants.URL_RECUP_HELP); // URL_RECUP_HELP
 
-	ApplicationBaseProperties prop = new ApplicationBaseProperties(nmApplic, user, password,
-		url);
+        ApplicationBaseProperties prop = new ApplicationBaseProperties(nmApplic, user, password,
+                url);
 
-	return prop;
+        return prop;
     }
 
 }

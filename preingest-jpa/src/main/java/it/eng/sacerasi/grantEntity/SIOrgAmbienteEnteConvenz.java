@@ -48,68 +48,68 @@ public class SIOrgAmbienteEnteConvenz implements Serializable {
     }
 
     public SIOrgAmbienteEnteConvenz(long idAmbienteEnteConvenz) {
-	this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
+        this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
     }
 
     @Basic
     @Column(name = "DS_AMBIENTE_ENTE_CONVENZ", nullable = false, length = 254)
     public String getDsAmbienteEnteConvenz() {
-	return dsAmbienteEnteConvenz;
+        return dsAmbienteEnteConvenz;
     }
 
     public void setDsAmbienteEnteConvenz(String dsAmbienteEnteConvenz) {
-	this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
+        this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
     }
 
     @Id
     @Column(name = "ID_AMBIENTE_ENTE_CONVENZ")
     public Long getIdAmbienteEnteConvenz() {
-	return idAmbienteEnteConvenz;
+        return idAmbienteEnteConvenz;
     }
 
     public void setIdAmbienteEnteConvenz(Long idAmbienteEnteConvenz) {
-	this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
+        this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
     }
 
     @Basic
     @Column(name = "NM_AMBIENTE_ENTE_CONVENZ", nullable = false, length = 100)
     public String getNmAmbienteEnteConvenz() {
-	return nmAmbienteEnteConvenz;
+        return nmAmbienteEnteConvenz;
     }
 
     public void setNmAmbienteEnteConvenz(String nmAmbienteEnteConvenz) {
-	this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
+        this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
     }
 
     // bi-directional many-to-one association to OrgEnteSiam
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENTE_CONSERV")
     public SIOrgEnteSiam getOrgEnteSiamByIdEnteConserv() {
-	return this.orgEnteSiamByIdEnteConserv;
+        return this.orgEnteSiamByIdEnteConserv;
     }
 
     public void setOrgEnteSiamByIdEnteConserv(SIOrgEnteSiam orgEnteSiamByIdEnteConserv) {
-	this.orgEnteSiamByIdEnteConserv = orgEnteSiamByIdEnteConserv;
+        this.orgEnteSiamByIdEnteConserv = orgEnteSiamByIdEnteConserv;
     }
 
     // bi-directional many-to-one association to OrgEnteSiam
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ENTE_GESTORE")
     public SIOrgEnteSiam getOrgEnteSiamByIdEnteGestore() {
-	return this.orgEnteSiamByIdEnteGestore;
+        return this.orgEnteSiamByIdEnteGestore;
     }
 
     public void setOrgEnteSiamByIdEnteGestore(SIOrgEnteSiam orgEnteSiamByIdEnteGestore) {
-	this.orgEnteSiamByIdEnteGestore = orgEnteSiamByIdEnteGestore;
+        this.orgEnteSiamByIdEnteGestore = orgEnteSiamByIdEnteGestore;
     }
 
     @OneToMany(mappedBy = "siOrgAmbienteEnteConvenz", cascade = CascadeType.MERGE)
     public List<SIOrgEnteSiam> getOrgEnteConvenzs() {
-	return orgEnteConvenzs;
+        return orgEnteConvenzs;
     }
 
     public void setOrgEnteConvenzs(List<SIOrgEnteSiam> orgEnteConvenzs) {
-	this.orgEnteConvenzs = orgEnteConvenzs;
+        this.orgEnteConvenzs = orgEnteConvenzs;
     }
 
 }

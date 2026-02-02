@@ -27,16 +27,16 @@ public class WSDescRichiestaChiusuraWarning implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_RICH_CHIUS_WARN_ASYNC;
+        return Costanti.WS_RICH_CHIUS_WARN_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_RICH_CHIUS_WARN_VRSN;
+        return Costanti.WS_RICH_CHIUS_WARN_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_RICH_CHIUS_WARN_COMP;
+        return Costanti.WS_RICH_CHIUS_WARN_COMP;
     }
 }

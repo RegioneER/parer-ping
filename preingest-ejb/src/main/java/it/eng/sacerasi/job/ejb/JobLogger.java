@@ -53,38 +53,38 @@ public class JobLogger {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void writeAtomicLog(NomiJob nomeJob, TipiRegLogJob tipoReg, String messaggioErr) {
-	me.writeLog(nomeJob, tipoReg, messaggioErr);
+        me.writeLog(nomeJob, tipoReg, messaggioErr);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void writeAtomicLog(NomiJob nomeJob, TipiRegLogJob tipoReg, String messaggioErr,
-	    BigDecimal idRecord) {
-	me.writeLog(nomeJob, tipoReg, messaggioErr, idRecord);
+            BigDecimal idRecord) {
+        me.writeLog(nomeJob, tipoReg, messaggioErr, idRecord);
     }
 
     public void writeLog(NomiJob nomeJob, TipiRegLogJob tipoReg, String messaggioErr) {
-	PigLogJob tmpLogJob = new PigLogJob();
-	tmpLogJob.setNmJob(nomeJob.toString());
-	tmpLogJob.setTiRegLogJob(tipoReg.toString());
-	tmpLogJob.setDtRegLogJob(new Date());
-	tmpLogJob.setDlMsgErr(messaggioErr);
-	tmpLogJob.setCdIndServer(appServerInstance.getName());
+        PigLogJob tmpLogJob = new PigLogJob();
+        tmpLogJob.setNmJob(nomeJob.toString());
+        tmpLogJob.setTiRegLogJob(tipoReg.toString());
+        tmpLogJob.setDtRegLogJob(new Date());
+        tmpLogJob.setDlMsgErr(messaggioErr);
+        tmpLogJob.setCdIndServer(appServerInstance.getName());
 
-	entityManager.persist(tmpLogJob);
-	entityManager.flush();
+        entityManager.persist(tmpLogJob);
+        entityManager.flush();
     }
 
     public void writeLog(NomiJob nomeJob, TipiRegLogJob tipoReg, String messaggioErr,
-	    BigDecimal idRecord) {
-	PigLogJob tmpLogJob = new PigLogJob();
-	tmpLogJob.setNmJob(nomeJob.toString());
-	tmpLogJob.setTiRegLogJob(tipoReg.toString());
-	tmpLogJob.setDtRegLogJob(new Date());
-	tmpLogJob.setDlMsgErr(messaggioErr);
-	tmpLogJob.setIdRecord(idRecord);
-	tmpLogJob.setCdIndServer(appServerInstance.getName());
+            BigDecimal idRecord) {
+        PigLogJob tmpLogJob = new PigLogJob();
+        tmpLogJob.setNmJob(nomeJob.toString());
+        tmpLogJob.setTiRegLogJob(tipoReg.toString());
+        tmpLogJob.setDtRegLogJob(new Date());
+        tmpLogJob.setDlMsgErr(messaggioErr);
+        tmpLogJob.setIdRecord(idRecord);
+        tmpLogJob.setCdIndServer(appServerInstance.getName());
 
-	entityManager.persist(tmpLogJob);
-	entityManager.flush();
+        entityManager.persist(tmpLogJob);
+        entityManager.flush();
     }
 }

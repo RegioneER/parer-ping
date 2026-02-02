@@ -22,26 +22,26 @@ public class LogoutAction extends ActionBase {
 
     @Override
     public String getControllerName() {
-	return Application.Actions.LOGOUT;
+        return Application.Actions.LOGOUT;
     }
 
     @Override
     public void process() throws EMFError {
-	redirectToAction("Login.html", "?operation=logout", null);
+        redirectToAction("Login.html", "?operation=logout", null);
     }
 
     @Override
     protected String getDefaultPublsherName() {
-	return Application.Publisher.LOGIN;
+        return Application.Publisher.LOGIN;
     }
 
     @Override
     protected boolean isAuthorized(String destination) {
-	return true;
+        return true;
     }
 
     @Override
     public void reloadAfterGoBack(String publisherName) {
-	//
+        //
     }
 }

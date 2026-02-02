@@ -38,19 +38,19 @@ public class MonVSesRangeDtTableBean extends AbstractBaseTable<MonVSesRangeDtRow
     public static MonVSesRangeDtTableDescriptor TABLE_DESCRIPTOR = new MonVSesRangeDtTableDescriptor();
 
     public MonVSesRangeDtTableBean() {
-	super();
+        super();
     }
 
     protected MonVSesRangeDtRowBean createRow() {
-	return new MonVSesRangeDtRowBean();
+        return new MonVSesRangeDtRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVSesRangeDtRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

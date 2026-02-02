@@ -33,19 +33,19 @@ public class PigInfoDicomTableBean extends AbstractBaseTable<PigInfoDicomRowBean
     public static PigInfoDicomTableDescriptor TABLE_DESCRIPTOR = new PigInfoDicomTableDescriptor();
 
     public PigInfoDicomTableBean() {
-	super();
+        super();
     }
 
     protected PigInfoDicomRowBean createRow() {
-	return new PigInfoDicomRowBean();
+        return new PigInfoDicomRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigInfoDicomRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

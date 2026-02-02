@@ -36,76 +36,76 @@ public class PuliziaNotificatoExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * @return the puliziaNotificatoInput
      */
     public PuliziaNotificatoInput getPuliziaNotificatoInput() {
-	return puliziaNotificatoInput;
+        return puliziaNotificatoInput;
     }
 
     /**
      * @param puliziaNotificatoInput the puliziaNotificatoInput to set
      */
     public void setPuliziaNotificatoInput(PuliziaNotificatoInput puliziaNotificatoInput) {
-	this.puliziaNotificatoInput = puliziaNotificatoInput;
+        this.puliziaNotificatoInput = puliziaNotificatoInput;
     }
 
     /**
      * @return the idObject
      */
     public Long getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     /**
      * @param idObject the idObject to set
      */
     public void setIdObject(Long idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     /**
      * @return the idVersatore
      */
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     /**
      * @param idVersatore the idVersatore to set
      */
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     public Long getIdSessioneRecup() {
-	return idSessioneRecup;
+        return idSessioneRecup;
     }
 
     public void setIdSessioneRecup(Long idSessioneRecup) {
-	this.idSessioneRecup = idSessioneRecup;
+        this.idSessioneRecup = idSessioneRecup;
     }
 }

@@ -38,19 +38,19 @@ public class MonVVisObjTableBean extends AbstractBaseTable<MonVVisObjRowBean> {
     public static MonVVisObjTableDescriptor TABLE_DESCRIPTOR = new MonVVisObjTableDescriptor();
 
     public MonVVisObjTableBean() {
-	super();
+        super();
     }
 
     protected MonVVisObjRowBean createRow() {
-	return new MonVVisObjRowBean();
+        return new MonVVisObjRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVVisObjRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -34,19 +34,19 @@ public class PigUnitaDocSessioneTableBean extends AbstractBaseTable<PigUnitaDocS
     public static PigUnitaDocSessioneTableDescriptor TABLE_DESCRIPTOR = new PigUnitaDocSessioneTableDescriptor();
 
     public PigUnitaDocSessioneTableBean() {
-	super();
+        super();
     }
 
     protected PigUnitaDocSessioneRowBean createRow() {
-	return new PigUnitaDocSessioneRowBean();
+        return new PigUnitaDocSessioneRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigUnitaDocSessioneRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

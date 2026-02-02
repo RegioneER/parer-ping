@@ -29,40 +29,40 @@ public class RichiestaChiusuraWarningInput {
     // CdPassword, String
     // CdKeyObject, String DlMotivazione) {
     public RichiestaChiusuraWarningInput(String NmAmbiente, String NmVersatore, String CdKeyObject,
-	    String DlMotivazione) {
-	this.NmAmbiente = NmAmbiente;
-	this.NmVersatore = NmVersatore;
-	// this.CdPassword = CdPassword;
-	this.CdKeyObject = CdKeyObject;
-	this.DlMotivazione = DlMotivazione;
+            String DlMotivazione) {
+        this.NmAmbiente = NmAmbiente;
+        this.NmVersatore = NmVersatore;
+        // this.CdPassword = CdPassword;
+        this.CdKeyObject = CdKeyObject;
+        this.DlMotivazione = DlMotivazione;
     }
 
     /**
      * @return the NmAmbiente
      */
     public String getNmAmbiente() {
-	return NmAmbiente;
+        return NmAmbiente;
     }
 
     /**
      * @param NmAmbiente the NmAmbiente to set
      */
     public void setNmAmbiente(String NmAmbiente) {
-	this.NmAmbiente = NmAmbiente;
+        this.NmAmbiente = NmAmbiente;
     }
 
     /**
      * @return the NmVersatore
      */
     public String getNmVersatore() {
-	return NmVersatore;
+        return NmVersatore;
     }
 
     /**
      * @param NmVersatore the NmVersatore to set
      */
     public void setNmVersatore(String NmVersatore) {
-	this.NmVersatore = NmVersatore;
+        this.NmVersatore = NmVersatore;
     }
 
     // /**
@@ -83,27 +83,27 @@ public class RichiestaChiusuraWarningInput {
      * @return the CdKeyObject
      */
     public String getCdKeyObject() {
-	return CdKeyObject;
+        return CdKeyObject;
     }
 
     /**
      * @param CdKeyObject the CdKeyObject to set
      */
     public void setCdKeyObject(String CdKeyObject) {
-	this.CdKeyObject = CdKeyObject;
+        this.CdKeyObject = CdKeyObject;
     }
 
     /**
      * @return the DlMotivazione
      */
     public String getDlMotivazione() {
-	return DlMotivazione;
+        return DlMotivazione;
     }
 
     /**
      * @param DlMotivazione the DlMotivazione to set
      */
     public void setDlMotivazione(String DlMotivazione) {
-	this.DlMotivazione = DlMotivazione;
+        this.DlMotivazione = DlMotivazione;
     }
 }

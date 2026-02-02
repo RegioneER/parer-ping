@@ -46,61 +46,61 @@ public class PigXmlSacerFascicoloSes implements Serializable {
     private Long idVers;
 
     public PigXmlSacerFascicoloSes() {
-	// hibernate
+        // hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_SACER_FASCICOLO_SES_IDXMLSACERFASCICOLOSES_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SACER_FASCICOLO_SES"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_SACER_FASCICOLO_SES"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_SACER_FASCICOLO_SES_IDXMLSACERFASCICOLOSES_GENERATOR")
     @Column(name = "ID_XML_SACER_FASCICOLO_SES")
     public Long getIdXmlSacerFascicoloSes() {
-	return this.idXmlSacerFascicoloSes;
+        return this.idXmlSacerFascicoloSes;
     }
 
     public void setIdXmlSacerFascicoloSes(Long idXmlSacerFascicoloSes) {
-	this.idXmlSacerFascicoloSes = idXmlSacerFascicoloSes;
+        this.idXmlSacerFascicoloSes = idXmlSacerFascicoloSes;
     }
 
     @Lob
     @Column(name = "BL_XML_SACER")
     public String getBlXmlSacer() {
-	return this.blXmlSacer;
+        return this.blXmlSacer;
     }
 
     public void setBlXmlSacer(String blXmlSacer) {
-	this.blXmlSacer = blXmlSacer;
+        this.blXmlSacer = blXmlSacer;
     }
 
     @Column(name = "TI_XML_SACER")
     public String getTiXmlSacer() {
-	return this.tiXmlSacer;
+        return this.tiXmlSacer;
     }
 
     public void setTiXmlSacer(String tiXmlSacer) {
-	this.tiXmlSacer = tiXmlSacer;
+        this.tiXmlSacer = tiXmlSacer;
     }
 
     // bi-directional many-to-one association to PigUnitaDocSessione
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_FASCICOLO_SESSIONE")
     public PigFascicoloSessione getPigFascicoloSessione() {
-	return this.pigFascicoloSessione;
+        return this.pigFascicoloSessione;
     }
 
     public void setPigFascicoloSessione(PigFascicoloSessione pigFascicoloSessione) {
-	this.pigFascicoloSessione = pigFascicoloSessione;
+        this.pigFascicoloSessione = pigFascicoloSessione;
     }
 
     // usata solo come chiave di partizionamento, non voglio la join con PigVers
     @Column(name = "ID_VERS")
     public Long getIdVers() {
-	return this.idVers;
+        return this.idVers;
     }
 
     public void setIdVers(Long idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
 }

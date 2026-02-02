@@ -37,11 +37,11 @@ public class Util {
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {
-	SortedMap<String, T> map = new TreeMap<String, T>();
-	for (T l : enumValues) {
-	    map.put(l.name(), l);
-	}
-	return map.values();
+        SortedMap<String, T> map = new TreeMap<>();
+        for (T l : enumValues) {
+            map.put(l.name(), l);
+        }
+        return map.values();
     }
 
     /*
@@ -50,24 +50,24 @@ public class Util {
      * @return DecodeMap per i flag contenente la codifica utilizzata nel DB
      */
     public static DecodeMap getFlagComboDecodeMap() {
-	// Imposto i valori della combo FL_ATTIVO per i Filtri Utenti
-	BaseTable bt = new BaseTable();
-	BaseRow br = new BaseRow();
-	BaseRow br1 = new BaseRow();
-	br.setString("flag", "SI");
-	br.setString("valore", WebConstants.DB_TRUE);
-	bt.add(br);
-	br1.setString("flag", "NO");
-	br1.setString("valore", WebConstants.DB_FALSE);
-	bt.add(br1);
-	DecodeMap combo = DecodeMap.Factory.newInstance(bt, "valore", "flag");
-	return combo;
+        // Imposto i valori della combo FL_ATTIVO per i Filtri Utenti
+        BaseTable bt = new BaseTable();
+        BaseRow br = new BaseRow();
+        BaseRow br1 = new BaseRow();
+        br.setString("flag", "SI");
+        br.setString("valore", WebConstants.DB_TRUE);
+        bt.add(br);
+        br1.setString("flag", "NO");
+        br1.setString("valore", WebConstants.DB_FALSE);
+        bt.add(br1);
+        DecodeMap combo = DecodeMap.Factory.newInstance(bt, "valore", "flag");
+        return combo;
     }
 
     public static BaseRow createKeyValueBaseRow(String key, String value) {
-	BaseRow br = new BaseRow();
-	br.setString(key, value);
-	return br;
+        BaseRow br = new BaseRow();
+        br.setString(key, value);
+        return br;
     }
 
     /**
@@ -80,25 +80,25 @@ public class Util {
      * @return mappa con codifica chiave/valore
      */
     public static <T extends Enum<?>> DecodeMap createDataDecodeMap(String key, T[] enumValues) {
-	// Inizializzo le combo di supporto
-	BaseTable bt = new BaseTable();
+        // Inizializzo le combo di supporto
+        BaseTable bt = new BaseTable();
 
-	// Imposto i valori della combo ordinati
-	DecodeMap mappa = new DecodeMap();
+        // Imposto i valori della combo ordinati
+        DecodeMap mappa = new DecodeMap();
 
-	for (T value : Util.sortEnum(enumValues)) {
-	    bt.add(Util.createKeyValueBaseRow(key, value.name()));
-	}
-	mappa.populatedMap(bt, key, key);
-	return mappa;
+        for (T value : Util.sortEnum(enumValues)) {
+            bt.add(Util.createKeyValueBaseRow(key, value.name()));
+        }
+        mappa.populatedMap(bt, key, key);
+        return mappa;
     }
 
     public static <T extends AbstractBaseTable<?>> DecodeMap createDataDecodeMap(T tableBean,
-	    String key, String desc) {
-	// Imposto i valori della combo ordinati
-	DecodeMap mappa = new DecodeMap();
-	mappa.populatedMap(tableBean, key, desc);
-	return mappa;
+            String key, String desc) {
+        // Imposto i valori della combo ordinati
+        DecodeMap mappa = new DecodeMap();
+        mappa.populatedMap(tableBean, key, desc);
+        return mappa;
     }
 
 }

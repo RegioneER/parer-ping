@@ -38,50 +38,50 @@ import it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping;
 public class CorrispondenzeVersHelper extends GenericHelper {
 
     public List<PigVLisStrutVersSacer> getIdOrganizIamStrut(long idTipoObj) {
-	final TypedQuery<PigVLisStrutVersSacer> query = getEntityManager().createQuery(
-		"SELECT DISTINCT new it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer(pigv.id.idOrganizIamStrut, pigv.nmUseridSacer) "
-			+ "FROM PigVLisStrutVersSacer pigv WHERE pigv.idTipoObject = :idTipoObject",
-		PigVLisStrutVersSacer.class)
-		.setParameter("idTipoObject", HibernateUtils.bigDecimalFrom(idTipoObj));
-	return query.getResultList();
+        final TypedQuery<PigVLisStrutVersSacer> query = getEntityManager().createQuery(
+                "SELECT DISTINCT new it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer(pigv.id.idOrganizIamStrut, pigv.nmUseridSacer) "
+                        + "FROM PigVLisStrutVersSacer pigv WHERE pigv.idTipoObject = :idTipoObject",
+                PigVLisStrutVersSacer.class)
+                .setParameter("idTipoObject", HibernateUtils.bigDecimalFrom(idTipoObj));
+        return query.getResultList();
     }
 
     // Metodi replicati anche in ControlliPrepXml
     public List<PigVLisStrutVersSacer> getIdOrganizIamStrut(long idTipoObj,
-	    BigDecimal idOrganizIamStrut) {
-	final TypedQuery<PigVLisStrutVersSacer> query = getEntityManager().createQuery(
-		"SELECT DISTINCT new it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer(pigv.id.idOrganizIamStrut, pigv.nmUseridSacer, pigv.cdPasswordSacer) "
-			+ "FROM PigVLisStrutVersSacer pigv WHERE pigv.idTipoObject = :idTipoObject AND pigv.id.idOrganizIamStrut = :idOrganizIamStrut",
-		PigVLisStrutVersSacer.class)
-		.setParameter("idTipoObject", HibernateUtils.bigDecimalFrom(idTipoObj))
-		.setParameter("idOrganizIamStrut", idOrganizIamStrut);
-	return query.getResultList();
+            BigDecimal idOrganizIamStrut) {
+        final TypedQuery<PigVLisStrutVersSacer> query = getEntityManager().createQuery(
+                "SELECT DISTINCT new it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer(pigv.id.idOrganizIamStrut, pigv.nmUseridSacer, pigv.cdPasswordSacer) "
+                        + "FROM PigVLisStrutVersSacer pigv WHERE pigv.idTipoObject = :idTipoObject AND pigv.id.idOrganizIamStrut = :idOrganizIamStrut",
+                PigVLisStrutVersSacer.class)
+                .setParameter("idTipoObject", HibernateUtils.bigDecimalFrom(idTipoObj))
+                .setParameter("idOrganizIamStrut", idOrganizIamStrut);
+        return query.getResultList();
     }
 
     // Metodi replicati anche in ControlliPrepXml
     public UsrVAbilStrutSacerXping getStrutturaAbilitata(BigDecimal idOrganizIam, String nmUserId) {
-	final TypedQuery<UsrVAbilStrutSacerXping> query = getEntityManager().createQuery(
-		"SELECT DISTINCT new it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping(u.idAmbiente, u.nmAmbiente, u.idEnte, u.nmEnte, u.id.idStrut, u.nmStrut) "
-			+ "FROM UsrVAbilStrutSacerXping u WHERE u.idOrganizIamStrut = :idOrganizIam AND u.nmUserid = :nmUserId",
-		UsrVAbilStrutSacerXping.class).setParameter("idOrganizIam", idOrganizIam)
-		.setParameter("nmUserId", nmUserId);
-	return query.getSingleResult();
+        final TypedQuery<UsrVAbilStrutSacerXping> query = getEntityManager().createQuery(
+                "SELECT DISTINCT new it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping(u.idAmbiente, u.nmAmbiente, u.idEnte, u.nmEnte, u.id.idStrut, u.nmStrut) "
+                        + "FROM UsrVAbilStrutSacerXping u WHERE u.idOrganizIamStrut = :idOrganizIam AND u.nmUserid = :nmUserId",
+                UsrVAbilStrutSacerXping.class).setParameter("idOrganizIam", idOrganizIam)
+                .setParameter("nmUserId", nmUserId);
+        return query.getSingleResult();
     }
 
     // Metodi replicati anche in ControlliPrepXml
     public BigDecimal getStrutturaAbilitata(String nmAmbiente, String nmEnte, String nmStrut,
-	    String nmUserId) {
-	BigDecimal idOrganizIam = null;
-	List<BigDecimal> organizs = getEntityManager()
-		.createQuery("SELECT DISTINCT (u.idOrganizIamStrut) "
-			+ "FROM UsrVAbilStrutSacerXping u WHERE u.nmAmbiente = :nmAmbiente AND u.nmEnte = :nmEnte AND u.nmStrut = :nmStrut AND u.nmUserid = :nmUserId",
-			BigDecimal.class)
-		.setParameter("nmAmbiente", nmAmbiente).setParameter("nmEnte", nmEnte)
-		.setParameter("nmStrut", nmStrut).setParameter("nmUserId", nmUserId)
-		.getResultList();
-	if (organizs != null && !organizs.isEmpty()) {
-	    idOrganizIam = organizs.get(0);
-	}
-	return idOrganizIam;
+            String nmUserId) {
+        BigDecimal idOrganizIam = null;
+        List<BigDecimal> organizs = getEntityManager()
+                .createQuery("SELECT DISTINCT (u.idOrganizIamStrut) "
+                        + "FROM UsrVAbilStrutSacerXping u WHERE u.nmAmbiente = :nmAmbiente AND u.nmEnte = :nmEnte AND u.nmStrut = :nmStrut AND u.nmUserid = :nmUserId",
+                        BigDecimal.class)
+                .setParameter("nmAmbiente", nmAmbiente).setParameter("nmEnte", nmEnte)
+                .setParameter("nmStrut", nmStrut).setParameter("nmUserId", nmUserId)
+                .getResultList();
+        if (organizs != null && !organizs.isEmpty()) {
+            idOrganizIam = organizs.get(0);
+        }
+        return idOrganizIam;
     }
 }

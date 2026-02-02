@@ -50,41 +50,41 @@ import org.springframework.web.servlet.view.JstlView;
  */
 @EnableWebMvc
 @ComponentScan(basePackages = {
-	"it.eng.sacerasi.web", "it.eng.sacerasi.web.rest.controller", "it.eng.sacerasi.ws",
-	"it.eng.sacerasi.spring", "it.eng.sacerasi.web.action", "it.eng.sacerasi.slite.gen.action",
-	"it.eng.spagoCore", "it.eng.spagoLite" })
+        "it.eng.sacerasi.web", "it.eng.sacerasi.web.rest.controller", "it.eng.sacerasi.ws",
+        "it.eng.sacerasi.spring", "it.eng.sacerasi.web.action", "it.eng.sacerasi.slite.gen.action",
+        "it.eng.spagoCore", "it.eng.spagoLite" })
 @Configuration
 public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-	registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	/*
-	 * qui si dichiarano le risorse statiche
-	 */
-	registry.addResourceHandler("/css/**", "/images/**", "/img/**", "/js/**", "/webjars/**")
-		.addResourceLocations("/css/", "/images/", "/img/", "/js/", "/webjars/")
-		.setCachePeriod(0);
-	registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        /*
+         * qui si dichiarano le risorse statiche
+         */
+        registry.addResourceHandler("/css/**", "/images/**", "/img/**", "/js/**", "/webjars/**")
+                .addResourceLocations("/css/", "/images/", "/img/", "/js/", "/webjars/")
+                .setCachePeriod(0);
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 
     @Bean
     public InternalResourceViewResolver resolver() {
-	InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-	resolver.setViewClass(JstlView.class);
-	resolver.setPrefix("/jsp/");
-	resolver.setSuffix(".jsp");
-	resolver.setExposedContextBeanNames("ricercheLoader");
-	return resolver;
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setViewClass(JstlView.class);
+        resolver.setPrefix("/jsp/");
+        resolver.setSuffix(".jsp");
+        resolver.setExposedContextBeanNames("ricercheLoader");
+        return resolver;
     }
 
     @Bean(name = "paginator")
     PaginatorImpl paginatorImpl() {
-	return new PaginatorImpl();
+        return new PaginatorImpl();
     }
 
     /*
@@ -92,15 +92,15 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
      */
     @Bean(name = "authenticator")
     PreingestAuthenticator preingestAuthenticator() {
-	return new PreingestAuthenticator();
+        return new PreingestAuthenticator();
     }
 
     @Bean
     RestTemplate restTemplate() {
-	SimpleClientHttpRequestFactory c = new SimpleClientHttpRequestFactory();
-	c.setReadTimeout(10000);
-	c.setConnectTimeout(10000);
-	return new RestTemplate(c);
+        SimpleClientHttpRequestFactory c = new SimpleClientHttpRequestFactory();
+        c.setReadTimeout(10000);
+        c.setConnectTimeout(10000);
+        return new RestTemplate(c);
     }
 
     /*
@@ -110,7 +110,7 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
      */
     @Bean
     ApplicationBasePropertiesSeviceImpl applicationBasePropertiesSeviceImpl() {
-	return new ApplicationBasePropertiesSeviceImpl();
+        return new ApplicationBasePropertiesSeviceImpl();
     }
 
     /*
@@ -119,7 +119,7 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
      */
     @Bean
     String nomeApplicazione() {
-	return "sacerping";
+        return "sacerping";
     }
 
     /*
@@ -129,32 +129,32 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
     @Bean(value = "/View.html")
     @Scope("prototype")
     RedirectAction redirectAction() {
-	return new RedirectAction();
+        return new RedirectAction();
     }
 
     @Bean(value = "/Login.html")
     @Scope("prototype")
     LoginAction loginAction() {
-	return new LoginAction();
+        return new LoginAction();
     }
 
     @Bean(value = "/Logout.html")
     @Scope("prototype")
     LogoutAction logoutAction() {
-	return new LogoutAction();
+        return new LogoutAction();
     }
 
     /* Configurazione delle action specifiche del modulo web */
     @Bean(value = "/Home.html")
     @Scope("prototype")
     HomeAction homeAction() {
-	return new HomeAction();
+        return new HomeAction();
     }
 
     @Bean(value = "/SceltaOrganizzazione.html")
     @Scope("prototype")
     SceltaOrganizzazioneAction sceltaOrganizzazioneAction() {
-	return new SceltaOrganizzazioneAction();
+        return new SceltaOrganizzazioneAction();
     }
 
     /* Action specifiche di sacerping */
@@ -162,31 +162,31 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
     @Bean(value = "/Amministrazione.html")
     @Scope("prototype")
     AmministrazioneAction amministrazioneAction() {
-	return new AmministrazioneAction();
+        return new AmministrazioneAction();
     }
 
     @Bean(value = "/Monitoraggio.html")
     @Scope("prototype")
     MonitoraggioAction monitoraggioAction() {
-	return new MonitoraggioAction();
+        return new MonitoraggioAction();
     }
 
     @Bean(value = "/GestioneJob.html")
     @Scope("prototype")
     GestioneJobAction gestioneJobAction() {
-	return new GestioneJobAction();
+        return new GestioneJobAction();
     }
 
     @Bean(value = "/VersamentoOggetto.html")
     @Scope("prototype")
     VersamentoOggettoAction versamentoOggettoAction() {
-	return new VersamentoOggettoAction();
+        return new VersamentoOggettoAction();
     }
 
     @Bean(value = "/EntiConvenzionati.html")
     @Scope("prototype")
     EntiConvenzionatiAction entiConvenzionatiAction() {
-	return new EntiConvenzionatiAction();
+        return new EntiConvenzionatiAction();
     }
 
     /** xFormer **/
@@ -194,31 +194,31 @@ public class WebMvcConfiguration extends SpagoliteWebMvcConfiguration implements
     @Bean(value = "/Trasformazioni.html")
     @Scope("prototype")
     TrasformazioniAction trasformazioniAction() {
-	return new TrasformazioniAction();
+        return new TrasformazioniAction();
     }
 
     @Bean(value = "/RicercaTrasformazioni.html")
     @Scope("prototype")
     TrasformazioniAction ricercaTrasformazioniAction() {
-	return new TrasformazioniAction();
+        return new TrasformazioniAction();
     }
 
     @Bean(value = "/MonitoraggioServerTrasformazioni.html")
     @Scope("prototype")
     TrasformazioniAction monitoraggioServerTrasformazioni() {
-	return new TrasformazioniAction();
+        return new TrasformazioniAction();
     }
 
     @Bean(value = "/StrumentiUrbanistici.html")
     @Scope("prototype")
     StrumentiUrbanisticiAction strumentiUrbanisticiAction() {
-	return new StrumentiUrbanisticiAction();
+        return new StrumentiUrbanisticiAction();
     }
 
     @Bean(value = "/Sisma.html")
     @Scope("prototype")
     SismaAction sismaAction() {
-	return new SismaAction();
+        return new SismaAction();
     }
 
 }

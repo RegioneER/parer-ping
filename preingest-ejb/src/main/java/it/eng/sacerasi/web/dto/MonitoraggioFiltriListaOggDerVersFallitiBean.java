@@ -33,75 +33,75 @@ public class MonitoraggioFiltriListaOggDerVersFallitiBean implements Serializabl
     private String chiave;
 
     public BigDecimal getIdAmbienteVers() {
-	return idAmbienteVers;
+        return idAmbienteVers;
     }
 
     public void setIdAmbienteVers(BigDecimal idAmbienteVers) {
-	this.idAmbienteVers = idAmbienteVers;
+        this.idAmbienteVers = idAmbienteVers;
     }
 
     public BigDecimal getIdVers() {
-	return idVers;
+        return idVers;
     }
 
     public void setIdVers(BigDecimal idVers) {
-	this.idVers = idVers;
+        this.idVers = idVers;
     }
 
     public BigDecimal getIdTipoObject() {
-	return idTipoObject;
+        return idTipoObject;
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     public String getNmTipoObject() {
-	return nmTipoObject;
+        return nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     public String getVerificati() {
-	return verificati;
+        return verificati;
     }
 
     public void setVerificati(String verificati) {
-	this.verificati = verificati;
+        this.verificati = verificati;
     }
 
     public String getNonRisolubili() {
-	return nonRisolubili;
+        return nonRisolubili;
     }
 
     public void setNonRisolubili(String nonRisolubili) {
-	this.nonRisolubili = nonRisolubili;
+        this.nonRisolubili = nonRisolubili;
     }
 
     public String getDaRecuperare() {
-	return daRecuperare;
+        return daRecuperare;
     }
 
     public void setDaRecuperare(String daRecuperare) {
-	this.daRecuperare = daRecuperare;
+        this.daRecuperare = daRecuperare;
     }
 
     // MEV 26979
     public BigDecimal getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     public String getChiave() {
-	return chiave;
+        return chiave;
     }
 
     public void setChiave(String chiave) {
-	this.chiave = chiave;
+        this.chiave = chiave;
     }
 }

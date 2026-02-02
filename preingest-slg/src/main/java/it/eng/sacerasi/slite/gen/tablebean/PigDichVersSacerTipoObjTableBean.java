@@ -23,7 +23,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class PigDichVersSacerTipoObjTableBean
-	extends AbstractBaseTable<PigDichVersSacerTipoObjRowBean> {
+        extends AbstractBaseTable<PigDichVersSacerTipoObjRowBean> {
 
     /*
      * @Generated( value = "it.eg.dbtool.db.oracle.beangen.Oracle4JPAClientBeanGen$TableBeanWriter",
@@ -34,19 +34,19 @@ public class PigDichVersSacerTipoObjTableBean
     public static PigDichVersSacerTipoObjTableDescriptor TABLE_DESCRIPTOR = new PigDichVersSacerTipoObjTableDescriptor();
 
     public PigDichVersSacerTipoObjTableBean() {
-	super();
+        super();
     }
 
     protected PigDichVersSacerTipoObjRowBean createRow() {
-	return new PigDichVersSacerTipoObjRowBean();
+        return new PigDichVersSacerTipoObjRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigDichVersSacerTipoObjRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -23,7 +23,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class PigXmlAnnulSessioneIngestTableBean
-	extends AbstractBaseTable<PigXmlAnnulSessioneIngestRowBean> {
+        extends AbstractBaseTable<PigXmlAnnulSessioneIngestRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,19 +35,19 @@ public class PigXmlAnnulSessioneIngestTableBean
     public static PigXmlAnnulSessioneIngestTableDescriptor TABLE_DESCRIPTOR = new PigXmlAnnulSessioneIngestTableDescriptor();
 
     public PigXmlAnnulSessioneIngestTableBean() {
-	super();
+        super();
     }
 
     protected PigXmlAnnulSessioneIngestRowBean createRow() {
-	return new PigXmlAnnulSessioneIngestRowBean();
+        return new PigXmlAnnulSessioneIngestRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigXmlAnnulSessioneIngestRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

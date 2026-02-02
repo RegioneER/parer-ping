@@ -47,86 +47,86 @@ public class MonVLisSchedJob implements Serializable {
 
     @Column(name = "DL_MSG_ERR")
     public String getDlMsgErr() {
-	return this.dlMsgErr;
+        return this.dlMsgErr;
     }
 
     public void setDlMsgErr(String dlMsgErr) {
-	this.dlMsgErr = dlMsgErr;
+        this.dlMsgErr = dlMsgErr;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REG_LOG_JOB_FINE")
     public Date getDtRegLogJobFine() {
-	return this.dtRegLogJobFine;
+        return this.dtRegLogJobFine;
     }
 
     public void setDtRegLogJobFine(Date dtRegLogJobFine) {
-	this.dtRegLogJobFine = dtRegLogJobFine;
+        this.dtRegLogJobFine = dtRegLogJobFine;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REG_LOG_JOB_INI")
     public Date getDtRegLogJobIni() {
-	return this.dtRegLogJobIni;
+        return this.dtRegLogJobIni;
     }
 
     public void setDtRegLogJobIni(Date dtRegLogJobIni) {
-	this.dtRegLogJobIni = dtRegLogJobIni;
+        this.dtRegLogJobIni = dtRegLogJobIni;
     }
 
     @Column(name = "DURATA_GG")
     public BigDecimal getDurataGg() {
-	return this.durataGg;
+        return this.durataGg;
     }
 
     public void setDurataGg(BigDecimal durataGg) {
-	this.durataGg = durataGg;
+        this.durataGg = durataGg;
     }
 
     @Column(name = "DURATA_MIN")
     public BigDecimal getDurataMin() {
-	return this.durataMin;
+        return this.durataMin;
     }
 
     public void setDurataMin(BigDecimal durataMin) {
-	this.durataMin = durataMin;
+        this.durataMin = durataMin;
     }
 
     @Column(name = "DURATA_ORE")
     public BigDecimal getDurataOre() {
-	return this.durataOre;
+        return this.durataOre;
     }
 
     public void setDurataOre(BigDecimal durataOre) {
-	this.durataOre = durataOre;
+        this.durataOre = durataOre;
     }
 
     @Column(name = "DURATA_SEC")
     public BigDecimal getDurataSec() {
-	return this.durataSec;
+        return this.durataSec;
     }
 
     public void setDurataSec(BigDecimal durataSec) {
-	this.durataSec = durataSec;
+        this.durataSec = durataSec;
     }
 
     @Id
     @Column(name = "ID_LOG_JOB")
     public BigDecimal getIdLogJob() {
-	return this.idLogJob;
+        return this.idLogJob;
     }
 
     public void setIdLogJob(BigDecimal idLogJob) {
-	this.idLogJob = idLogJob;
+        this.idLogJob = idLogJob;
     }
 
     @Column(name = "NM_JOB")
     public String getNmJob() {
-	return this.nmJob;
+        return this.nmJob;
     }
 
     public void setNmJob(String nmJob) {
-	this.nmJob = nmJob;
+        this.nmJob = nmJob;
     }
 
 }

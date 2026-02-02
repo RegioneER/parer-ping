@@ -43,25 +43,25 @@ public class PigDichVersSacerTipoObjTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_DICH_VERS_SACER_TIPO_OBJ,
-		new ColumnDescriptor(COL_ID_DICH_VERS_SACER_TIPO_OBJ, Types.DECIMAL, 22, true));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_ID_ORGANIZ_IAM,
-		new ColumnDescriptor(COL_ID_ORGANIZ_IAM, Types.DECIMAL, 22, false));
-	map.put(COL_TI_DICH_VERS, new ColumnDescriptor(COL_TI_DICH_VERS, Types.VARCHAR, 20, false));
+        map.put(COL_ID_DICH_VERS_SACER_TIPO_OBJ,
+                new ColumnDescriptor(COL_ID_DICH_VERS_SACER_TIPO_OBJ, Types.DECIMAL, 22, true));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_ID_ORGANIZ_IAM,
+                new ColumnDescriptor(COL_ID_ORGANIZ_IAM, Types.DECIMAL, 22, false));
+        map.put(COL_TI_DICH_VERS, new ColumnDescriptor(COL_TI_DICH_VERS, Types.VARCHAR, 20, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

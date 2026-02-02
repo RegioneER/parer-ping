@@ -42,48 +42,48 @@ public class PigVSuLisDocsPiano implements Serializable {
 
     @Column(name = "FL_DOC_OBBLIGATORIO", columnDefinition = "char")
     public String getFlDocObbligatorio() {
-	return flDocObbligatorio;
+        return flDocObbligatorio;
     }
 
     public void setFlDocObbligatorio(String flDocObbligatorio) {
-	this.flDocObbligatorio = flDocObbligatorio;
+        this.flDocObbligatorio = flDocObbligatorio;
     }
 
     @Column(name = "FL_DOC_PRINCIPALE", columnDefinition = "char")
     public String getFlDocPrincipale() {
-	return flDocPrincipale;
+        return flDocPrincipale;
     }
 
     public void setFlDocPrincipale(String flDocPrincipale) {
-	this.flDocPrincipale = flDocPrincipale;
+        this.flDocPrincipale = flDocPrincipale;
     }
 
     @Column(name = "TI_TIPO_ATTO_COMUNE")
     public String getTiTipoAttoComune() {
-	return tiTipoAttoComune;
+        return tiTipoAttoComune;
     }
 
     public void setTiTipoAttoComune(String tiTipoAttoComune) {
-	this.tiTipoAttoComune = tiTipoAttoComune;
+        this.tiTipoAttoComune = tiTipoAttoComune;
     }
 
     @Column(name = "TI_TIPO_ATTO_UNIONE")
     public String getTiTipoAttoUnione() {
-	return tiTipoAttoUnione;
+        return tiTipoAttoUnione;
     }
 
     public void setTiTipoAttoUnione(String tiTipoAttoUnione) {
-	this.tiTipoAttoUnione = tiTipoAttoUnione;
+        this.tiTipoAttoUnione = tiTipoAttoUnione;
     }
 
     private PigVSuLisDocsPianoId pigVSuLisDocsPianoId;
 
     @EmbeddedId()
     public PigVSuLisDocsPianoId getPigVSuLisDocsPianoId() {
-	return pigVSuLisDocsPianoId;
+        return pigVSuLisDocsPianoId;
     }
 
     public void setPigVSuLisDocsPianoId(PigVSuLisDocsPianoId pigVSuLisDocsPianoId) {
-	this.pigVSuLisDocsPianoId = pigVSuLisDocsPianoId;
+        this.pigVSuLisDocsPianoId = pigVSuLisDocsPianoId;
     }
 }

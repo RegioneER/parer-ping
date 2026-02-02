@@ -38,92 +38,92 @@ public class VerificaDocumentiSUHelper extends GenericHelper {
     private EntityManager entityManager;
 
     public List<PigVSuLisDocDaVerif> getDocumentiDaVerificare() {
-	Query q = entityManager.createNamedQuery("PigVSuLisDocDaVerif.findAll");
-	return q.getResultList();
+        Query q = entityManager.createNamedQuery("PigVSuLisDocDaVerif.findAll");
+        return q.getResultList();
     }
 
     public List<PigVSuLisDocDaVerif> getDocumentiDaVerificare(BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager.createQuery(
-		"SELECT lisDocDaVerif FROM PigVSuLisDocDaVerif lisDocDaVerif WHERE lisDocDaVerif.id.idStrumentiUrbanistici = :idStrumentoUrbanistico ");
-	q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
-	return q.getResultList();
+        Query q = entityManager.createQuery(
+                "SELECT lisDocDaVerif FROM PigVSuLisDocDaVerif lisDocDaVerif WHERE lisDocDaVerif.id.idStrumentiUrbanistici = :idStrumentoUrbanistico ");
+        q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
+        return q.getResultList();
     }
 
     public boolean isVerificaTerminata(BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager.createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
-		+ "(logJob.idRecord = :idStrumentoUrbanistico "
-		+ "AND logJob.tiRegLogJob = 'INIZIO_SCHEDULAZIONE')"
-		+ "AND (logJob.idRecord = :idStrumentoUrbanistico "
-		+ "AND logJob.tiRegLogJob != 'FINE_SCHEDULAZIONE') ");
-	q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
-	return ((Long) q.getSingleResult()) == 2;
+        Query q = entityManager.createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
+                + "(logJob.idRecord = :idStrumentoUrbanistico "
+                + "AND logJob.tiRegLogJob = 'INIZIO_SCHEDULAZIONE')"
+                + "AND (logJob.idRecord = :idStrumentoUrbanistico "
+                + "AND logJob.tiRegLogJob != 'FINE_SCHEDULAZIONE') ");
+        q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
+        return ((Long) q.getSingleResult()) == 2;
     }
 
     public boolean verificaInCorso(BigDecimal idStrumentoUrbanistico) {
-	Query qInizio = entityManager
-		.createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
-			+ "logJob.idRecord = :idStrumentoUrbanistico "
-			+ "AND logJob.tiRegLogJob = 'INIZIO_SCHEDULAZIONE' ");
-	qInizio.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
-	Long numInizio = (Long) qInizio.getSingleResult();
+        Query qInizio = entityManager
+                .createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
+                        + "logJob.idRecord = :idStrumentoUrbanistico "
+                        + "AND logJob.tiRegLogJob = 'INIZIO_SCHEDULAZIONE' ");
+        qInizio.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
+        Long numInizio = (Long) qInizio.getSingleResult();
 
-	Query qFine = entityManager.createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
-		+ "logJob.idRecord = :idStrumentoUrbanistico "
-		+ "AND logJob.tiRegLogJob IN ('FINE_SCHEDULAZIONE', 'ERRORE') ");
-	qFine.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
-	Long numFine = (Long) qFine.getSingleResult();
+        Query qFine = entityManager.createQuery("SELECT COUNT(logJob) FROM PigLogJob logJob WHERE "
+                + "logJob.idRecord = :idStrumentoUrbanistico "
+                + "AND logJob.tiRegLogJob IN ('FINE_SCHEDULAZIONE', 'ERRORE') ");
+        qFine.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
+        Long numFine = (Long) qFine.getSingleResult();
 
-	return numInizio.compareTo(numFine) != 0;
+        return numInizio.compareTo(numFine) != 0;
     }
 
     public boolean existsDocumentiDaVerificarePerStrumentoUrbanistico(
-	    BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager
-		.createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
-			+ "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
-			+ "AND lisDocDaVerif.flEsitoVerifica = '0' "
-			+ "AND lisDocDaVerif.flDeleted = '0' ");
-	q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
-	return ((Long) q.getSingleResult()) > 0;
+            BigDecimal idStrumentoUrbanistico) {
+        Query q = entityManager
+                .createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
+                        + "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
+                        + "AND lisDocDaVerif.flEsitoVerifica = '0' "
+                        + "AND lisDocDaVerif.flDeleted = '0' ");
+        q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
+        return ((Long) q.getSingleResult()) > 0;
     }
 
     public boolean existsDocumentiDaVerificareSenzaErrorePerStrumentoUrbanistico(
-	    BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager
-		.createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
-			+ "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
-			+ "AND lisDocDaVerif.flEsitoVerifica = '0' "
-			+ "AND lisDocDaVerif.cdErr IS NULL ");
-	q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
-	return ((Long) q.getSingleResult()) > 0;
+            BigDecimal idStrumentoUrbanistico) {
+        Query q = entityManager
+                .createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
+                        + "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
+                        + "AND lisDocDaVerif.flEsitoVerifica = '0' "
+                        + "AND lisDocDaVerif.cdErr IS NULL ");
+        q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
+        return ((Long) q.getSingleResult()) > 0;
     }
 
     public boolean existsDocumentiVerificatiConErrorePerStrumentoUrbanistico(
-	    BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager
-		.createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
-			+ "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
-			+ "AND lisDocDaVerif.cdErr IS NOT NULL ");
-	q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
-	return ((Long) q.getSingleResult()) > 0;
+            BigDecimal idStrumentoUrbanistico) {
+        Query q = entityManager
+                .createQuery("SELECT COUNT(lisDocDaVerif) FROM PigStrumUrbDocumenti lisDocDaVerif "
+                        + "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
+                        + "AND lisDocDaVerif.cdErr IS NOT NULL ");
+        q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
+        return ((Long) q.getSingleResult()) > 0;
     }
 
     public boolean existsDocumentiDaVerificarePerStrumentoUrbanisticoByVista(
-	    BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager.createQuery(
-		"SELECT COUNT(lisDocDaVerif) FROM PigVSuLisDocDaVerif lisDocDaVerif WHERE lisDocDaVerif.id.idStrumentiUrbanistici = :idStrumentoUrbanistico ");
-	q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
-	return ((Long) q.getSingleResult()) > 0;
+            BigDecimal idStrumentoUrbanistico) {
+        Query q = entityManager.createQuery(
+                "SELECT COUNT(lisDocDaVerif) FROM PigVSuLisDocDaVerif lisDocDaVerif WHERE lisDocDaVerif.id.idStrumentiUrbanistici = :idStrumentoUrbanistico ");
+        q.setParameter("idStrumentoUrbanistico", idStrumentoUrbanistico);
+        return ((Long) q.getSingleResult()) > 0;
     }
 
     public List<String> getDocumentiVerificatiConErrorePerStrumentoUrbanistico(
-	    BigDecimal idStrumentoUrbanistico) {
-	Query q = entityManager.createQuery(
-		"SELECT lisDocDaVerif.nmFileOrig FROM PigStrumUrbDocumenti lisDocDaVerif "
-			+ "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
-			+ "AND lisDocDaVerif.cdErr IS NOT NULL "
-			+ "AND lisDocDaVerif.flDeleted = '0' ");
-	q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
-	return q.getResultList();
+            BigDecimal idStrumentoUrbanistico) {
+        Query q = entityManager.createQuery(
+                "SELECT lisDocDaVerif.nmFileOrig FROM PigStrumUrbDocumenti lisDocDaVerif "
+                        + "WHERE lisDocDaVerif.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentoUrbanistico "
+                        + "AND lisDocDaVerif.cdErr IS NOT NULL "
+                        + "AND lisDocDaVerif.flDeleted = '0' ");
+        q.setParameter("idStrumentoUrbanistico", HibernateUtils.longFrom(idStrumentoUrbanistico));
+        return q.getResultList();
     }
 }

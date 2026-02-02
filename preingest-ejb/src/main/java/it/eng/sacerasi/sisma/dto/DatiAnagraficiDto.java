@@ -33,71 +33,71 @@ public class DatiAnagraficiDto implements Serializable {
     private boolean soggettoATutela;
 
     public DatiAnagraficiDto() {
-	super();
+        super();
     }
 
     public BigDecimal getIdEnteSiam() {
-	return idEnteSiam;
+        return idEnteSiam;
     }
 
     public void setIdEnteSiam(BigDecimal idEnteSiam) {
-	this.idEnteSiam = idEnteSiam;
+        this.idEnteSiam = idEnteSiam;
     }
 
     public String getSoggettoAttuatore() {
-	return soggettoAttuatore;
+        return soggettoAttuatore;
     }
 
     public void setSoggettoAttuatore(String soggettoAttuatore) {
-	this.soggettoAttuatore = soggettoAttuatore;
+        this.soggettoAttuatore = soggettoAttuatore;
     }
 
     public String getNaturaSoggettoAttuatore() {
-	return naturaSoggettoAttuatore;
+        return naturaSoggettoAttuatore;
     }
 
     public void setNaturaSoggettoAttuatore(String naturaSoggettoAttuatore) {
-	this.naturaSoggettoAttuatore = naturaSoggettoAttuatore;
+        this.naturaSoggettoAttuatore = naturaSoggettoAttuatore;
     }
 
     public String getEnteProprietario() {
-	return enteProprietario;
+        return enteProprietario;
     }
 
     public void setEnteProprietario(String enteProprietario) {
-	this.enteProprietario = enteProprietario;
+        this.enteProprietario = enteProprietario;
     }
 
     public String getNaturaEnteProprietario() {
-	return naturaEnteProprietario;
+        return naturaEnteProprietario;
     }
 
     public void setNaturaEnteProprietario(String naturaEnteProprietario) {
-	this.naturaEnteProprietario = naturaEnteProprietario;
+        this.naturaEnteProprietario = naturaEnteProprietario;
     }
 
     public String getUbicazioneComune() {
-	return ubicazioneComune;
+        return ubicazioneComune;
     }
 
     public void setUbicazioneComune(String ubicazioneComune) {
-	this.ubicazioneComune = ubicazioneComune;
+        this.ubicazioneComune = ubicazioneComune;
     }
 
     public String getUbicazioneProvincia() {
-	return ubicazioneProvincia;
+        return ubicazioneProvincia;
     }
 
     public void setUbicazioneProvincia(String ubicazioneProvincia) {
-	this.ubicazioneProvincia = ubicazioneProvincia;
+        this.ubicazioneProvincia = ubicazioneProvincia;
     }
 
     public boolean isSoggettoATutela() {
-	return soggettoATutela;
+        return soggettoATutela;
     }
 
     public void setSoggettoATutela(boolean soggettoATutela) {
-	this.soggettoATutela = soggettoATutela;
+        this.soggettoATutela = soggettoATutela;
     }
 
 }

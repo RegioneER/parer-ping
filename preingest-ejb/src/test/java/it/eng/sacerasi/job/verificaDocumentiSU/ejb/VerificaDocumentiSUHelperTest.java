@@ -42,74 +42,74 @@ public class VerificaDocumentiSUHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(VerificaDocumentiSUHelper.class);
+        return ArquillianUtils.createPingJar(VerificaDocumentiSUHelper.class);
     }
 
     @Test
     void entityManagerNotNull() {
-	assertNotNull(helper.getEntityManager());
+        assertNotNull(helper.getEntityManager());
     }
 
     @Test
     void getDocumentiDaVerificare_0args_queryIsOk() {
-	helper.getDocumentiDaVerificare();
-	assertTrue(true);
+        helper.getDocumentiDaVerificare();
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiDaVerificare_BigDecimal_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.getDocumentiDaVerificare(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.getDocumentiDaVerificare(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void isVerificaTerminata_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.isVerificaTerminata(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.isVerificaTerminata(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void verificaInCorso_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.verificaInCorso(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.verificaInCorso(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiDaVerificarePerStrumentoUrbanistico_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.existsDocumentiDaVerificarePerStrumentoUrbanistico(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.existsDocumentiDaVerificarePerStrumentoUrbanistico(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiDaVerificareSenzaErrorePerStrumentoUrbanistico_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.existsDocumentiDaVerificareSenzaErrorePerStrumentoUrbanistico(
-		idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.existsDocumentiDaVerificareSenzaErrorePerStrumentoUrbanistico(
+                idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiVerificatiConErrorePerStrumentoUrbanistico_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.existsDocumentiVerificatiConErrorePerStrumentoUrbanistico(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.existsDocumentiVerificatiConErrorePerStrumentoUrbanistico(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void existsDocumentiDaVerificarePerStrumentoUrbanisticoByVista_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.existsDocumentiDaVerificarePerStrumentoUrbanisticoByVista(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.existsDocumentiDaVerificarePerStrumentoUrbanisticoByVista(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiVerificatiConErrorePerStrumentoUrbanistico_queryIsOk() {
-	BigDecimal idStrumentoUrbanistico = aBigDecimal();
-	helper.getDocumentiVerificatiConErrorePerStrumentoUrbanistico(idStrumentoUrbanistico);
-	assertTrue(true);
+        BigDecimal idStrumentoUrbanistico = aBigDecimal();
+        helper.getDocumentiVerificatiConErrorePerStrumentoUrbanistico(idStrumentoUrbanistico);
+        assertTrue(true);
     }
 }

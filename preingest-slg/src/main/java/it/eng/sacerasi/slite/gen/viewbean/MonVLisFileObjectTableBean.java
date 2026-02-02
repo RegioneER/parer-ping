@@ -38,19 +38,19 @@ public class MonVLisFileObjectTableBean extends AbstractBaseTable<MonVLisFileObj
     public static MonVLisFileObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisFileObjectTableDescriptor();
 
     public MonVLisFileObjectTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisFileObjectRowBean createRow() {
-	return new MonVLisFileObjectRowBean();
+        return new MonVLisFileObjectRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisFileObjectRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

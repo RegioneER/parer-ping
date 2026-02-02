@@ -43,24 +43,24 @@ public class PigXmlSacerUnitaDocTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_XML_SACER_UNITA_DOC,
-		new ColumnDescriptor(COL_ID_XML_SACER_UNITA_DOC, Types.DECIMAL, 22, true));
-	map.put(COL_ID_UNITA_DOC_OBJECT,
-		new ColumnDescriptor(COL_ID_UNITA_DOC_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_TI_XML_SACER, new ColumnDescriptor(COL_TI_XML_SACER, Types.VARCHAR, 20, false));
-	map.put(COL_BL_XML_SACER, new ColumnDescriptor(COL_BL_XML_SACER, Types.CLOB, 4000, false));
+        map.put(COL_ID_XML_SACER_UNITA_DOC,
+                new ColumnDescriptor(COL_ID_XML_SACER_UNITA_DOC, Types.DECIMAL, 22, true));
+        map.put(COL_ID_UNITA_DOC_OBJECT,
+                new ColumnDescriptor(COL_ID_UNITA_DOC_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_TI_XML_SACER, new ColumnDescriptor(COL_TI_XML_SACER, Types.VARCHAR, 20, false));
+        map.put(COL_BL_XML_SACER, new ColumnDescriptor(COL_BL_XML_SACER, Types.CLOB, 4000, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

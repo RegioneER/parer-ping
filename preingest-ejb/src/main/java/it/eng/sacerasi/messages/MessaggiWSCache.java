@@ -44,29 +44,29 @@ public class MessaggiWSCache {
 
     @PostConstruct
     public void initSingleton() {
-	log.info("Inizializzazione singleton MessaggiWSCache...");
-	try {
-	    List<PigErrore> list = messaggiHelper.retrieveListaErrori((String) null);
-	    errorMap = new HashMap<>();
-	    for (PigErrore err : list) {
-		errorMap.put(err.getCdErrore(), err.getDsErrore());
-	    }
-	} catch (RuntimeException ex) {
-	    // log.fatal("Inizializzazione singleton MessaggiWSCache fallita! ", ex);
-	    log.error("Inizializzazione singleton MessaggiWSCache fallita! ", ex);
-	    throw ex;
-	}
-	log.info("Inizializzazione singleton MessaggiWSCache... completata.");
+        log.info("Inizializzazione singleton MessaggiWSCache...");
+        try {
+            List<PigErrore> list = messaggiHelper.retrieveListaErrori((String) null);
+            errorMap = new HashMap<>();
+            for (PigErrore err : list) {
+                errorMap.put(err.getCdErrore(), err.getDsErrore());
+            }
+        } catch (RuntimeException ex) {
+            // log.fatal("Inizializzazione singleton MessaggiWSCache fallita! ", ex);
+            log.error("Inizializzazione singleton MessaggiWSCache fallita! ", ex);
+            throw ex;
+        }
+        log.info("Inizializzazione singleton MessaggiWSCache... completata.");
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public String getString(String key) {
-	return StringEscapeUtils.unescapeJava(errorMap.get(key));
+        return StringEscapeUtils.unescapeJava(errorMap.get(key));
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public String getString(String key, Object... params) {
-	return StringEscapeUtils.unescapeJava(MessageFormat.format(errorMap.get(key), params));
+        return StringEscapeUtils.unescapeJava(MessageFormat.format(errorMap.get(key), params));
     }
 
 }

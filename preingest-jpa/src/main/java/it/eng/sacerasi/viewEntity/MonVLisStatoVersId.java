@@ -28,51 +28,51 @@ public class MonVLisStatoVersId implements Serializable {
 
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     private BigDecimal idUserIam;
 
     @Column(name = "ID_USER_IAM")
     public BigDecimal getIdUserIam() {
-	return idUserIam;
+        return idUserIam;
     }
 
     public void setIdUserIam(BigDecimal idUserIam) {
-	this.idUserIam = idUserIam;
+        this.idUserIam = idUserIam;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 29 * hash + Objects.hashCode(this.idObject);
-	hash = 29 * hash + Objects.hashCode(this.idUserIam);
-	return hash;
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.idObject);
+        hash = 29 * hash + Objects.hashCode(this.idUserIam);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final MonVLisStatoVersId other = (MonVLisStatoVersId) obj;
-	if (!Objects.equals(this.idObject, other.idObject)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idUserIam, other.idUserIam)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MonVLisStatoVersId other = (MonVLisStatoVersId) obj;
+        if (!Objects.equals(this.idObject, other.idObject)) {
+            return false;
+        }
+        if (!Objects.equals(this.idUserIam, other.idUserIam)) {
+            return false;
+        }
+        return true;
     }
 
 }

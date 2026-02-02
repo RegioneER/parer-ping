@@ -34,7 +34,7 @@ import static it.eng.sacerasi.web.util.Utils.DATE_TIME_FORMATTER;
 @Stateless(mappedName = "PrioritaEjb")
 @LocalBean
 @Interceptors({
-	TransactionInterceptor.class })
+        TransactionInterceptor.class })
 public class PrioritaEjb {
     Logger log = LoggerFactory.getLogger(PrioritaEjb.class);
     @EJB
@@ -49,38 +49,38 @@ public class PrioritaEjb {
      * @param object {@link PigObject} oggetto da analizzare
      */
     public void valutaEscalation(PigObject object) {
-	ComboFlagPrioVersType prioritaAttuale = ComboFlagPrioVersType
-		.getByString(object.getTiPrioritaVersamento());
-	log.debug("Verifico se serve aumentare la priorità id_object={} priorita={}",
-		object.getIdObject(), prioritaAttuale);
-	// procedo solo se non sono già alla massima priorità
-	if (prioritaAttuale.getNext() != null) {
-	    Integer numGiorniEscalation = Integer.parseInt(
-		    configurationHelper.getValoreParamApplicByTipoObj(NUM_GIORNI_ESCALATION,
-			    BigDecimal.valueOf(
-				    object.getPigVer().getPigAmbienteVer().getIdAmbienteVers()),
-			    BigDecimal.valueOf(object.getPigVer().getIdVers()),
-			    BigDecimal.valueOf(object.getPigTipoObject().getIdTipoObject())));
-	    log.debug("Parametro numGiorniEscalation={} ambiente={} versatore={} tipo_object={}",
-		    numGiorniEscalation, object.getPigVer().getPigAmbienteVer().getNmAmbienteVers(),
-		    object.getPigVer().getNmVers(), object.getPigTipoObject().getNmTipoObject());
-	    Optional<LocalDateTime> ultimaModifica = object.getPigPrioritaObjects().stream()
-		    .map(PigPrioritaObject::getDtModifica).max(LocalDateTime::compareTo);
-	    if (ultimaModifica.isPresent()) {
-		LocalDateTime dataProssimaEscalation = ultimaModifica.get()
-			.plus(numGiorniEscalation, ChronoUnit.DAYS);
-		log.debug("ultima_modifica_priorita={} prossima_escalation={}", ultimaModifica,
-			dataProssimaEscalation);
-		if (LocalDateTime.now().isAfter(dataProssimaEscalation)) {
-		    log.info(
-			    "Escalation id_obbject={} num_giorni_escalation={} ultimo_aggiornamento={} priorita_attuale={} priorita_escalation={}",
-			    object.getIdObject(), numGiorniEscalation,
-			    ultimaModifica.get().format(DATE_TIME_FORMATTER),
-			    object.getTiPrioritaVersamento(), prioritaAttuale.getNext().getValue());
-		    codaHelper.updatePrioritaOggetto(object.getIdObject(),
-			    prioritaAttuale.getNext().getValue(), "escalation");
-		}
-	    }
-	}
+        ComboFlagPrioVersType prioritaAttuale = ComboFlagPrioVersType
+                .getByString(object.getTiPrioritaVersamento());
+        log.debug("Verifico se serve aumentare la priorità id_object={} priorita={}",
+                object.getIdObject(), prioritaAttuale);
+        // procedo solo se non sono già alla massima priorità
+        if (prioritaAttuale.getNext() != null) {
+            Integer numGiorniEscalation = Integer.parseInt(
+                    configurationHelper.getValoreParamApplicByTipoObj(NUM_GIORNI_ESCALATION,
+                            BigDecimal.valueOf(
+                                    object.getPigVer().getPigAmbienteVer().getIdAmbienteVers()),
+                            BigDecimal.valueOf(object.getPigVer().getIdVers()),
+                            BigDecimal.valueOf(object.getPigTipoObject().getIdTipoObject())));
+            log.debug("Parametro numGiorniEscalation={} ambiente={} versatore={} tipo_object={}",
+                    numGiorniEscalation, object.getPigVer().getPigAmbienteVer().getNmAmbienteVers(),
+                    object.getPigVer().getNmVers(), object.getPigTipoObject().getNmTipoObject());
+            Optional<LocalDateTime> ultimaModifica = object.getPigPrioritaObjects().stream()
+                    .map(PigPrioritaObject::getDtModifica).max(LocalDateTime::compareTo);
+            if (ultimaModifica.isPresent()) {
+                LocalDateTime dataProssimaEscalation = ultimaModifica.get()
+                        .plus(numGiorniEscalation, ChronoUnit.DAYS);
+                log.debug("ultima_modifica_priorita={} prossima_escalation={}", ultimaModifica,
+                        dataProssimaEscalation);
+                if (LocalDateTime.now().isAfter(dataProssimaEscalation)) {
+                    log.info(
+                            "Escalation id_obbject={} num_giorni_escalation={} ultimo_aggiornamento={} priorita_attuale={} priorita_escalation={}",
+                            object.getIdObject(), numGiorniEscalation,
+                            ultimaModifica.get().format(DATE_TIME_FORMATTER),
+                            object.getTiPrioritaVersamento(), prioritaAttuale.getNext().getValue());
+                    codaHelper.updatePrioritaOggetto(object.getIdObject(),
+                            prioritaAttuale.getNext().getValue(), "escalation");
+                }
+            }
+        }
     }
 }

@@ -25,23 +25,23 @@ public class DatoSpecOrderConNomeColonna {
     private OrderType datoSpecificoOrder;
 
     public DatoSpecOrderConNomeColonna(OrderType datoSpecificoOrder, String columnName) {
-	this.datoSpecificoOrder = datoSpecificoOrder;
-	this.columnName = columnName;
+        this.datoSpecificoOrder = datoSpecificoOrder;
+        this.columnName = columnName;
     }
 
     public String getColumnName() {
-	return columnName;
+        return columnName;
     }
 
     public void setColumnName(String columnName) {
-	this.columnName = columnName;
+        this.columnName = columnName;
     }
 
     public OrderType getDatoSpecificoOrder() {
-	return datoSpecificoOrder;
+        return datoSpecificoOrder;
     }
 
     public void setDatoSpecificoOrder(OrderType datoSpecificoOrder) {
-	this.datoSpecificoOrder = datoSpecificoOrder;
+        this.datoSpecificoOrder = datoSpecificoOrder;
     }
 }

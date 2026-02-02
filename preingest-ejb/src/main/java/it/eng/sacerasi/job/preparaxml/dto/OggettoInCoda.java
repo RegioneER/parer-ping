@@ -37,42 +37,42 @@ public class OggettoInCoda implements IRispostaWS {
 
     public class ContUnitaDocSacer {
 
-	private BigDecimal valore;
-	private long rifIdPigContUnitaDocSacer;
-	private long rifIdPigTipoObject;
-	private BigDecimal annoUnitaDocSacer;
+        private BigDecimal valore;
+        private long rifIdPigContUnitaDocSacer;
+        private long rifIdPigTipoObject;
+        private BigDecimal annoUnitaDocSacer;
 
-	public BigDecimal getValore() {
-	    return valore;
-	}
+        public BigDecimal getValore() {
+            return valore;
+        }
 
-	public void setValore(BigDecimal valore) {
-	    this.valore = valore;
-	}
+        public void setValore(BigDecimal valore) {
+            this.valore = valore;
+        }
 
-	public long getRifIdPigContUnitaDocSacer() {
-	    return rifIdPigContUnitaDocSacer;
-	}
+        public long getRifIdPigContUnitaDocSacer() {
+            return rifIdPigContUnitaDocSacer;
+        }
 
-	public void setRifIdPigContUnitaDocSacer(long rifIdPigContUnitaDocSacer) {
-	    this.rifIdPigContUnitaDocSacer = rifIdPigContUnitaDocSacer;
-	}
+        public void setRifIdPigContUnitaDocSacer(long rifIdPigContUnitaDocSacer) {
+            this.rifIdPigContUnitaDocSacer = rifIdPigContUnitaDocSacer;
+        }
 
-	public long getRifIdPigTipoObject() {
-	    return rifIdPigTipoObject;
-	}
+        public long getRifIdPigTipoObject() {
+            return rifIdPigTipoObject;
+        }
 
-	public void setRifIdPigTipoObject(long rifIdPigTipoObject) {
-	    this.rifIdPigTipoObject = rifIdPigTipoObject;
-	}
+        public void setRifIdPigTipoObject(long rifIdPigTipoObject) {
+            this.rifIdPigTipoObject = rifIdPigTipoObject;
+        }
 
-	public BigDecimal getAnnoUnitaDocSacer() {
-	    return annoUnitaDocSacer;
-	}
+        public BigDecimal getAnnoUnitaDocSacer() {
+            return annoUnitaDocSacer;
+        }
 
-	public void setAnnoUnitaDocSacer(BigDecimal annoUnitaDocSacer) {
-	    this.annoUnitaDocSacer = annoUnitaDocSacer;
-	}
+        public void setAnnoUnitaDocSacer(BigDecimal annoUnitaDocSacer) {
+            this.annoUnitaDocSacer = annoUnitaDocSacer;
+        }
     }
 
     //
@@ -89,9 +89,9 @@ public class OggettoInCoda implements IRispostaWS {
     private PigObject rifPigObject;
     private List<FileObjectExt> listaFileObjectExt;
     private List<UnitaDocObject> listaUnitaDocObject; // lista delle UnitaDoc che dovranno
-						      // essere gestite
+    // essere gestite
     private List<FascicoloDocObject> listaFascicoloDocObject; // lista dei Fascicoli che
-							      // dovranno essere gestiti
+    // dovranno essere gestiti
 
     private String urnDirectoryOgg;
     //
@@ -99,122 +99,122 @@ public class OggettoInCoda implements IRispostaWS {
 
     @Override
     public SeverityEnum getSeverity() {
-	return severity;
+        return severity;
     }
 
     @Override
     public void setSeverity(SeverityEnum severity) {
-	this.severity = severity;
+        this.severity = severity;
     }
 
     @Override
     public ErrorTypeEnum getErrorType() {
-	return errorType;
+        return errorType;
     }
 
     @Override
     public void setErrorType(ErrorTypeEnum errorType) {
-	this.errorType = errorType;
+        this.errorType = errorType;
     }
 
     @Override
     public String getErrorCode() {
-	return errorCode;
+        return errorCode;
     }
 
     @Override
     public void setErrorCode(String errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     @Override
     public String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     @Override
     public void setErrorMessage(String errorMessage) {
-	this.errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     //
     public ListaUnitaDocumentarieType getParsedListaUnitaDoc() {
-	return parsedListaUnitaDoc;
+        return parsedListaUnitaDoc;
     }
 
     public void setParsedListaUnitaDoc(ListaUnitaDocumentarieType parsedListaUnitaDoc) {
-	this.parsedListaUnitaDoc = parsedListaUnitaDoc;
+        this.parsedListaUnitaDoc = parsedListaUnitaDoc;
     }
 
     public TipoVersamento getTipoVersamento() {
-	return tipoVersamento;
+        return tipoVersamento;
     }
 
     public void setTipoVersamento(TipoVersamento tipoVersamento) {
-	this.tipoVersamento = tipoVersamento;
+        this.tipoVersamento = tipoVersamento;
     }
 
     public PigObject getRifPigObject() {
-	return rifPigObject;
+        return rifPigObject;
     }
 
     public TipiOggetto getTipoOggetto() {
-	return tipoOggetto;
+        return tipoOggetto;
     }
 
     public void setTipoOggetto(TipiOggetto tipoOggetto) {
-	this.tipoOggetto = tipoOggetto;
+        this.tipoOggetto = tipoOggetto;
     }
 
     public TipoCalcolo getTipoCalcolo() {
-	return tipoCalcolo;
+        return tipoCalcolo;
     }
 
     public void setTipoCalcolo(TipoCalcolo tipoCalcolo) {
-	this.tipoCalcolo = tipoCalcolo;
+        this.tipoCalcolo = tipoCalcolo;
     }
 
     public void setRifPigObject(PigObject rifPigObject) {
-	this.rifPigObject = rifPigObject;
+        this.rifPigObject = rifPigObject;
     }
 
     public List<FileObjectExt> getListaFileObjectExt() {
-	return listaFileObjectExt;
+        return listaFileObjectExt;
     }
 
     public void setListaFileObjectExt(List<FileObjectExt> listaFileObjectExt) {
-	this.listaFileObjectExt = listaFileObjectExt;
+        this.listaFileObjectExt = listaFileObjectExt;
     }
 
     public List<UnitaDocObject> getListaUnitaDocObject() {
-	return listaUnitaDocObject;
+        return listaUnitaDocObject;
     }
 
     public void setListaUnitaDocObject(List<UnitaDocObject> listaUnitaDocObject) {
-	this.listaUnitaDocObject = listaUnitaDocObject;
+        this.listaUnitaDocObject = listaUnitaDocObject;
     }
 
     public List<FascicoloDocObject> getListaFascicoloDocObject() {
-	return listaFascicoloDocObject;
+        return listaFascicoloDocObject;
     }
 
     public void setListaFascicoloDocObject(List<FascicoloDocObject> listaFascicoloDocObject) {
-	this.listaFascicoloDocObject = listaFascicoloDocObject;
+        this.listaFascicoloDocObject = listaFascicoloDocObject;
     }
 
     public String getUrnDirectoryOgg() {
-	return urnDirectoryOgg;
+        return urnDirectoryOgg;
     }
 
     public void setUrnDirectoryOgg(String urnDirectoryOgg) {
-	this.urnDirectoryOgg = urnDirectoryOgg;
+        this.urnDirectoryOgg = urnDirectoryOgg;
     }
 
     public ContUnitaDocSacer getValoreContUnitaDocSacer() {
-	return valoreContUnitaDocSacer;
+        return valoreContUnitaDocSacer;
     }
 
     public void setValoreContUnitaDocSacer(ContUnitaDocSacer valoreContUnitaDocSacer) {
-	this.valoreContUnitaDocSacer = valoreContUnitaDocSacer;
+        this.valoreContUnitaDocSacer = valoreContUnitaDocSacer;
     }
 }

@@ -30,34 +30,34 @@ public class RicercaRecuperatiExt {
     private RicercaRecuperatiInput ricercaRecuperatiInput;
 
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     public Long getIdTipoObject() {
-	return idTipoObject;
+        return idTipoObject;
     }
 
     public void setIdTipoObject(Long idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     public RicercaRecuperatiInput getRicercaRecuperatiInput() {
-	return ricercaRecuperatiInput;
+        return ricercaRecuperatiInput;
     }
 
     public void setRicercaRecuperatiInput(RicercaRecuperatiInput ricercaRecuperatiInput) {
-	this.ricercaRecuperatiInput = ricercaRecuperatiInput;
+        this.ricercaRecuperatiInput = ricercaRecuperatiInput;
     }
 }

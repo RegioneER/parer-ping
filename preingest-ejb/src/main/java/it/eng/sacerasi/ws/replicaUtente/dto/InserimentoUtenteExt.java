@@ -26,18 +26,18 @@ public class InserimentoUtenteExt {
     private Utente inserimentoUtenteInput;
 
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     public Utente getInserimentoUtenteInput() {
-	return inserimentoUtenteInput;
+        return inserimentoUtenteInput;
     }
 
     public void setInserimentoUtenteInput(Utente utente) {
-	this.inserimentoUtenteInput = utente;
+        this.inserimentoUtenteInput = utente;
     }
 }

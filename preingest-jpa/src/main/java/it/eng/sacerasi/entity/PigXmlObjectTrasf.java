@@ -44,51 +44,51 @@ public class PigXmlObjectTrasf implements Serializable {
     private PigObjectTrasf pigObjectTrasf;
 
     public PigXmlObjectTrasf() {
-	// hibernate
+        // hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_XML_OBJECT_TRASF_IDXMLOBJECTTRASF_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_OBJECT_TRASF"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_XML_OBJECT_TRASF"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_XML_OBJECT_TRASF_IDXMLOBJECTTRASF_GENERATOR")
     @Column(name = "ID_XML_OBJECT_TRASF")
     public Long getIdXmlObjectTrasf() {
-	return this.idXmlObjectTrasf;
+        return this.idXmlObjectTrasf;
     }
 
     public void setIdXmlObjectTrasf(Long idXmlObjectTrasf) {
-	this.idXmlObjectTrasf = idXmlObjectTrasf;
+        this.idXmlObjectTrasf = idXmlObjectTrasf;
     }
 
     @Lob
     @Column(name = "BL_XML")
     public String getBlXml() {
-	return this.blXml;
+        return this.blXml;
     }
 
     public void setBlXml(String blXml) {
-	this.blXml = blXml;
+        this.blXml = blXml;
     }
 
     @Column(name = "CD_VERSIONE_XML_VERS")
     public String getCdVersioneXmlVers() {
-	return this.cdVersioneXmlVers;
+        return this.cdVersioneXmlVers;
     }
 
     public void setCdVersioneXmlVers(String cdVersioneXmlVers) {
-	this.cdVersioneXmlVers = cdVersioneXmlVers;
+        this.cdVersioneXmlVers = cdVersioneXmlVers;
     }
 
     // bi-directional many-to-one association to PigObjectTrasf
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_OBJECT_TRASF")
     public PigObjectTrasf getPigObjectTrasf() {
-	return this.pigObjectTrasf;
+        return this.pigObjectTrasf;
     }
 
     public void setPigObjectTrasf(PigObjectTrasf pigObjectTrasf) {
-	this.pigObjectTrasf = pigObjectTrasf;
+        this.pigObjectTrasf = pigObjectTrasf;
     }
 
 }

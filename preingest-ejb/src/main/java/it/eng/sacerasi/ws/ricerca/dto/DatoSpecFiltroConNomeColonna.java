@@ -27,31 +27,31 @@ public class DatoSpecFiltroConNomeColonna {
     private FiltroType filtro;
 
     public AttribDatiSpecDataType getDataType() {
-	return dataType;
+        return dataType;
     }
 
     public void setDataType(AttribDatiSpecDataType dataType) {
-	this.dataType = dataType;
+        this.dataType = dataType;
     }
 
     public DatoSpecFiltroConNomeColonna(FiltroType filtro, String columnName) {
-	this.filtro = filtro;
-	this.columnName = columnName;
+        this.filtro = filtro;
+        this.columnName = columnName;
     }
 
     public String getColumnName() {
-	return columnName;
+        return columnName;
     }
 
     public void setColumnName(String columnName) {
-	this.columnName = columnName;
+        this.columnName = columnName;
     }
 
     public FiltroType getFiltro() {
-	return filtro;
+        return filtro;
     }
 
     public void setFiltro(FiltroType filtro) {
-	this.filtro = filtro;
+        this.filtro = filtro;
     }
 }

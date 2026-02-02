@@ -38,19 +38,19 @@ public class MonVVisLastSchedJobTableBean extends AbstractBaseTable<MonVVisLastS
     public static MonVVisLastSchedJobTableDescriptor TABLE_DESCRIPTOR = new MonVVisLastSchedJobTableDescriptor();
 
     public MonVVisLastSchedJobTableBean() {
-	super();
+        super();
     }
 
     protected MonVVisLastSchedJobRowBean createRow() {
-	return new MonVVisLastSchedJobRowBean();
+        return new MonVVisLastSchedJobRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVVisLastSchedJobRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

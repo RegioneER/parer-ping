@@ -35,126 +35,126 @@ public class InvioOggettoAsincronoEstesoRisposta extends InvioOggettoAsincronoRi
      * @return the dsObject
      */
     public String getDsObject() {
-	return dsObject;
+        return dsObject;
     }
 
     /**
      * @param dsObject the dsObject to set
      */
     public void setDsObject(String dsObject) {
-	this.dsObject = dsObject;
+        this.dsObject = dsObject;
     }
 
     /**
      * @return the nmAmbienteObjectPadre
      */
     public String getNmAmbienteObjectPadre() {
-	return nmAmbienteObjectPadre;
+        return nmAmbienteObjectPadre;
     }
 
     /**
      * @param nmAmbienteObjectPadre the nmAmbienteObjectPadre to set
      */
     public void setNmAmbienteObjectPadre(String nmAmbienteObjectPadre) {
-	this.nmAmbienteObjectPadre = nmAmbienteObjectPadre;
+        this.nmAmbienteObjectPadre = nmAmbienteObjectPadre;
     }
 
     /**
      * @return the nmVersatoreObjectPadre
      */
     public String getNmVersatoreObjectPadre() {
-	return nmVersatoreObjectPadre;
+        return nmVersatoreObjectPadre;
     }
 
     /**
      * @param nmVersatoreObjectPadre the nmVersatoreObjectPadre to set
      */
     public void setNmVersatoreObjectPadre(String nmVersatoreObjectPadre) {
-	this.nmVersatoreObjectPadre = nmVersatoreObjectPadre;
+        this.nmVersatoreObjectPadre = nmVersatoreObjectPadre;
     }
 
     /**
      * @return the cdKeyObjectPadre
      */
     public String getCdKeyObjectPadre() {
-	return cdKeyObjectPadre;
+        return cdKeyObjectPadre;
     }
 
     /**
      * @param cdKeyObjectPadre the cdKeyObjectPadre to set
      */
     public void setCdKeyObjectPadre(String cdKeyObjectPadre) {
-	this.cdKeyObjectPadre = cdKeyObjectPadre;
+        this.cdKeyObjectPadre = cdKeyObjectPadre;
     }
 
     /**
      * @return the niTotObjectFigli
      */
     public BigDecimal getNiTotObjectFigli() {
-	return niTotObjectFigli;
+        return niTotObjectFigli;
     }
 
     /**
      * @param niTotObjectFigli the niTotObjectFigli to set
      */
     public void setNiTotObjectFigli(BigDecimal niTotObjectFigli) {
-	this.niTotObjectFigli = niTotObjectFigli;
+        this.niTotObjectFigli = niTotObjectFigli;
     }
 
     /**
      * @return the pgObjectFiglio
      */
     public BigDecimal getPgObjectFiglio() {
-	return pgObjectFiglio;
+        return pgObjectFiglio;
     }
 
     /**
      * @param pgObjectFiglio the pgObjectFiglio to set
      */
     public void setPgObjectFiglio(BigDecimal pgObjectFiglio) {
-	this.pgObjectFiglio = pgObjectFiglio;
+        this.pgObjectFiglio = pgObjectFiglio;
     }
 
     /**
      * @return the niUnitaDocAttese
      */
     public BigDecimal getNiUnitaDocAttese() {
-	return niUnitaDocAttese;
+        return niUnitaDocAttese;
     }
 
     /**
      * @param niUnitaDocAttese the niUnitaDocAttese to set
      */
     public void setNiUnitaDocAttese(BigDecimal niUnitaDocAttese) {
-	this.niUnitaDocAttese = niUnitaDocAttese;
+        this.niUnitaDocAttese = niUnitaDocAttese;
     }
 
     /**
      * @return the cdVersGen
      */
     public String getCdVersGen() {
-	return cdVersGen;
+        return cdVersGen;
     }
 
     /**
      * @param cdVersGen the cdVersGen to set
      */
     public void setCdVersGen(String cdVersGen) {
-	this.cdVersGen = cdVersGen;
+        this.cdVersGen = cdVersGen;
     }
 
     /**
      * @return the tiGestOggettiFigli
      */
     public String getTiGestOggettiFigli() {
-	return tiGestOggettiFigli;
+        return tiGestOggettiFigli;
     }
 
     /**
      * @param tiGestOggettiFigli the tiGestOggettiFigli to set
      */
     public void setTiGestOggettiFigli(String tiGestOggettiFigli) {
-	this.tiGestOggettiFigli = tiGestOggettiFigli;
+        this.tiGestOggettiFigli = tiGestOggettiFigli;
     }
 
 }

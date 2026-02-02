@@ -41,122 +41,122 @@ public class RicercaRestituzioniOggettiRisposta {
     private ListaOggRicRestOggType listaOggetti;
 
     public EsitoServizio getCdEsito() {
-	return cdEsito;
+        return cdEsito;
     }
 
     public void setCdEsito(EsitoServizio cdEsito) {
-	this.cdEsito = cdEsito;
+        this.cdEsito = cdEsito;
     }
 
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     public String getDsErr() {
-	return dsErr;
+        return dsErr;
     }
 
     public void setDsErr(String dsErr) {
-	this.dsErr = dsErr;
+        this.dsErr = dsErr;
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     public String getNmTipoObject() {
-	return nmTipoObject;
+        return nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     public String getTiStatoSessione() {
-	return tiStatoSessione;
+        return tiStatoSessione;
     }
 
     public void setTiStatoSessione(String tiStatoSessione) {
-	this.tiStatoSessione = tiStatoSessione;
+        this.tiStatoSessione = tiStatoSessione;
     }
 
     public Date getDtAperturaSessioneDa() {
-	return dtAperturaSessioneDa;
+        return dtAperturaSessioneDa;
     }
 
     public void setDtAperturaSessioneDa(Date dtAperturaSessioneDa) {
-	this.dtAperturaSessioneDa = dtAperturaSessioneDa;
+        this.dtAperturaSessioneDa = dtAperturaSessioneDa;
     }
 
     public Date getDtAperturaSessioneA() {
-	return dtAperturaSessioneA;
+        return dtAperturaSessioneA;
     }
 
     public void setDtAperturaSessioneA(Date dtAperturaSessioneA) {
-	this.dtAperturaSessioneA = dtAperturaSessioneA;
+        this.dtAperturaSessioneA = dtAperturaSessioneA;
     }
 
     public int getNiRecordInizio() {
-	return niRecordInizio;
+        return niRecordInizio;
     }
 
     public void setNiRecordInizio(int niRecordInizio) {
-	this.niRecordInizio = niRecordInizio;
+        this.niRecordInizio = niRecordInizio;
     }
 
     public int getNiRecordResultSet() {
-	return niRecordResultSet;
+        return niRecordResultSet;
     }
 
     public void setNiRecordResultSet(int niRecordResultSet) {
-	this.niRecordResultSet = niRecordResultSet;
+        this.niRecordResultSet = niRecordResultSet;
     }
 
     public int getNiRecordTotale() {
-	return niRecordTotale;
+        return niRecordTotale;
     }
 
     public void setNiRecordTotale(int niRecordTotale) {
-	this.niRecordTotale = niRecordTotale;
+        this.niRecordTotale = niRecordTotale;
     }
 
     public int getNiRecordOutput() {
-	return niRecordOutput;
+        return niRecordOutput;
     }
 
     public void setNiRecordOutput(int niRecordOutput) {
-	this.niRecordOutput = niRecordOutput;
+        this.niRecordOutput = niRecordOutput;
     }
 
     public ListaOggRicRestOggType getListaOggetti() {
-	return listaOggetti;
+        return listaOggetti;
     }
 
     public void setListaOggetti(ListaOggRicRestOggType listaOggetti) {
-	this.listaOggetti = listaOggetti;
+        this.listaOggetti = listaOggetti;
     }
 }

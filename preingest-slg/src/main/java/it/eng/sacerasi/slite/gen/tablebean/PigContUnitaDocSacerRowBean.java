@@ -36,98 +36,98 @@ public class PigContUnitaDocSacerRowBean extends BaseRow implements JEEBaseRowIn
     public static PigContUnitaDocSacerTableDescriptor TABLE_DESCRIPTOR = new PigContUnitaDocSacerTableDescriptor();
 
     public PigContUnitaDocSacerRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdContUnitaDocSacer() {
-	return getBigDecimal("id_cont_unita_doc_sacer");
+        return getBigDecimal("id_cont_unita_doc_sacer");
     }
 
     public void setIdContUnitaDocSacer(BigDecimal idContUnitaDocSacer) {
-	setObject("id_cont_unita_doc_sacer", idContUnitaDocSacer);
+        setObject("id_cont_unita_doc_sacer", idContUnitaDocSacer);
     }
 
     public BigDecimal getIdTipoObject() {
-	return getBigDecimal("id_tipo_object");
+        return getBigDecimal("id_tipo_object");
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	setObject("id_tipo_object", idTipoObject);
+        setObject("id_tipo_object", idTipoObject);
     }
 
     public BigDecimal getAaUnitaDocSacer() {
-	return getBigDecimal("aa_unita_doc_sacer");
+        return getBigDecimal("aa_unita_doc_sacer");
     }
 
     public void setAaUnitaDocSacer(BigDecimal aaUnitaDocSacer) {
-	setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
+        setObject("aa_unita_doc_sacer", aaUnitaDocSacer);
     }
 
     public BigDecimal getPgContUnitaDocSacer() {
-	return getBigDecimal("pg_cont_unita_doc_sacer");
+        return getBigDecimal("pg_cont_unita_doc_sacer");
     }
 
     public void setPgContUnitaDocSacer(BigDecimal pgContUnitaDocSacer) {
-	setObject("pg_cont_unita_doc_sacer", pgContUnitaDocSacer);
+        setObject("pg_cont_unita_doc_sacer", pgContUnitaDocSacer);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigContUnitaDocSacer entity = (PigContUnitaDocSacer) obj;
+        PigContUnitaDocSacer entity = (PigContUnitaDocSacer) obj;
 
-	this.setIdContUnitaDocSacer(new BigDecimal(entity.getIdContUnitaDocSacer()));
-	if (entity.getPigTipoObject() != null) {
-	    this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
-	}
-	this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
-	this.setPgContUnitaDocSacer(entity.getPgContUnitaDocSacer());
+        this.setIdContUnitaDocSacer(new BigDecimal(entity.getIdContUnitaDocSacer()));
+        if (entity.getPigTipoObject() != null) {
+            this.setIdTipoObject(new BigDecimal(entity.getPigTipoObject().getIdTipoObject()));
+        }
+        this.setAaUnitaDocSacer(entity.getAaUnitaDocSacer());
+        this.setPgContUnitaDocSacer(entity.getPgContUnitaDocSacer());
     }
 
     @Override
     public PigContUnitaDocSacer rowBeanToEntity() {
-	PigContUnitaDocSacer entity = new PigContUnitaDocSacer();
-	if (this.getIdContUnitaDocSacer() != null) {
-	    entity.setIdContUnitaDocSacer(this.getIdContUnitaDocSacer().longValue());
-	}
-	if (this.getIdTipoObject() != null) {
-	    if (entity.getPigTipoObject() == null) {
-		entity.setPigTipoObject(new PigTipoObject());
-	    }
-	    entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
-	}
-	entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
-	entity.setPgContUnitaDocSacer(this.getPgContUnitaDocSacer());
-	return entity;
+        PigContUnitaDocSacer entity = new PigContUnitaDocSacer();
+        if (this.getIdContUnitaDocSacer() != null) {
+            entity.setIdContUnitaDocSacer(this.getIdContUnitaDocSacer().longValue());
+        }
+        if (this.getIdTipoObject() != null) {
+            if (entity.getPigTipoObject() == null) {
+                entity.setPigTipoObject(new PigTipoObject());
+            }
+            entity.getPigTipoObject().setIdTipoObject(this.getIdTipoObject().longValue());
+        }
+        entity.setAaUnitaDocSacer(this.getAaUnitaDocSacer());
+        entity.setPgContUnitaDocSacer(this.getPgContUnitaDocSacer());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

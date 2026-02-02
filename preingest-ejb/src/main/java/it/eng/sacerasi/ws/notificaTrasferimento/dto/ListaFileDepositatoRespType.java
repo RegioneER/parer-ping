@@ -25,21 +25,21 @@ public class ListaFileDepositatoRespType {
     private List<FileDepositatoRespType> fileDepositato;
 
     public ListaFileDepositatoRespType() {
-	fileDepositato = new ArrayList<FileDepositatoRespType>();
+        fileDepositato = new ArrayList<FileDepositatoRespType>();
     }
 
     /**
      * @return the fileDepositato
      */
     public List<FileDepositatoRespType> getFileDepositato() {
-	return fileDepositato;
+        return fileDepositato;
     }
 
     /**
      * @param fileDepositato the fileDepositato to set
      */
     public void setFileDepositato(List<FileDepositatoRespType> fileDepositato) {
-	this.fileDepositato = fileDepositato;
+        this.fileDepositato = fileDepositato;
     }
 
 }

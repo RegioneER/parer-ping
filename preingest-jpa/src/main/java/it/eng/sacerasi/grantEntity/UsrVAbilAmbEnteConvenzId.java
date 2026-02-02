@@ -28,51 +28,51 @@ public class UsrVAbilAmbEnteConvenzId implements Serializable {
 
     @Column(name = "ID_AMBIENTE_ENTE_CONVENZ")
     public BigDecimal getIdAmbienteEnteConvenz() {
-	return idAmbienteEnteConvenz;
+        return idAmbienteEnteConvenz;
     }
 
     public void setIdAmbienteEnteConvenz(BigDecimal idAmbienteEnteConvenz) {
-	this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
+        this.idAmbienteEnteConvenz = idAmbienteEnteConvenz;
     }
 
     private BigDecimal idUserIam;
 
     @Column(name = "ID_USER_IAM")
     public BigDecimal getIdUserIam() {
-	return idUserIam;
+        return idUserIam;
     }
 
     public void setIdUserIam(BigDecimal idUserIam) {
-	this.idUserIam = idUserIam;
+        this.idUserIam = idUserIam;
     }
 
     @Override
     public int hashCode() {
-	int hash = 7;
-	hash = 53 * hash + Objects.hashCode(this.idAmbienteEnteConvenz);
-	hash = 53 * hash + Objects.hashCode(this.idUserIam);
-	return hash;
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.idAmbienteEnteConvenz);
+        hash = 53 * hash + Objects.hashCode(this.idUserIam);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final UsrVAbilAmbEnteConvenzId other = (UsrVAbilAmbEnteConvenzId) obj;
-	if (!Objects.equals(this.idAmbienteEnteConvenz, other.idAmbienteEnteConvenz)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idUserIam, other.idUserIam)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UsrVAbilAmbEnteConvenzId other = (UsrVAbilAmbEnteConvenzId) obj;
+        if (!Objects.equals(this.idAmbienteEnteConvenz, other.idAmbienteEnteConvenz)) {
+            return false;
+        }
+        if (!Objects.equals(this.idUserIam, other.idUserIam)) {
+            return false;
+        }
+        return true;
     }
 
 }

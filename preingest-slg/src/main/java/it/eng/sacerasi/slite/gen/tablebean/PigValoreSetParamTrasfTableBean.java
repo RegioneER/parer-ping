@@ -23,7 +23,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
  *
  */
 public class PigValoreSetParamTrasfTableBean
-	extends AbstractBaseTable<PigValoreSetParamTrasfRowBean> {
+        extends AbstractBaseTable<PigValoreSetParamTrasfRowBean> {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,19 +35,19 @@ public class PigValoreSetParamTrasfTableBean
     public static PigValoreSetParamTrasfTableDescriptor TABLE_DESCRIPTOR = new PigValoreSetParamTrasfTableDescriptor();
 
     public PigValoreSetParamTrasfTableBean() {
-	super();
+        super();
     }
 
     protected PigValoreSetParamTrasfRowBean createRow() {
-	return new PigValoreSetParamTrasfRowBean();
+        return new PigValoreSetParamTrasfRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigValoreSetParamTrasfRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

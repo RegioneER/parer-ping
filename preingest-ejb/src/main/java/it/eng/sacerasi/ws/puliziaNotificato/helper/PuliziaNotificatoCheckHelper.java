@@ -36,125 +36,125 @@ public class PuliziaNotificatoCheckHelper {
     private ControlliPuliziaNotificato controlliPulNotif;
 
     public void checkRichiesta(PuliziaNotificatoExt pnExt, RispostaWSPuliziaNotificato rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
+        RispostaControlli rispostaControlli = new RispostaControlli();
 
-	// Verifica Nome Ambiente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS
-		    .verificaNomeAmbiente(pnExt.getPuliziaNotificatoInput().getNmAmbiente());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_001);
-		    rispostaControlli.setDsErr(
-			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_001,
-				    pnExt.getPuliziaNotificatoInput().getNmAmbiente()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		rispostaWs.getPuliziaNotificatoRisposta()
-			.setNmAmbiente(pnExt.getPuliziaNotificatoInput().getNmAmbiente());
-	    }
-	}
+        // Verifica Nome Ambiente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS
+                    .verificaNomeAmbiente(pnExt.getPuliziaNotificatoInput().getNmAmbiente());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_001);
+                    rispostaControlli.setDsErr(
+                            MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_001,
+                                    pnExt.getPuliziaNotificatoInput().getNmAmbiente()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                rispostaWs.getPuliziaNotificatoRisposta()
+                        .setNmAmbiente(pnExt.getPuliziaNotificatoInput().getNmAmbiente());
+            }
+        }
 
-	Long idVersatore = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNomeVersatore(
-		    pnExt.getPuliziaNotificatoInput().getNmAmbiente(),
-		    pnExt.getPuliziaNotificatoInput().getNmVersatore());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_002);
-		    rispostaControlli.setDsErr(
-			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_002,
-				    pnExt.getPuliziaNotificatoInput().getNmVersatore()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		idVersatore = rispostaControlli.getrLong();
-		rispostaWs.getPuliziaNotificatoRisposta()
-			.setNmVersatore(pnExt.getPuliziaNotificatoInput().getNmVersatore());
-	    }
-	}
-	pnExt.setIdVersatore(idVersatore);
+        Long idVersatore = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNomeVersatore(
+                    pnExt.getPuliziaNotificatoInput().getNmAmbiente(),
+                    pnExt.getPuliziaNotificatoInput().getNmVersatore());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_002);
+                    rispostaControlli.setDsErr(
+                            MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_002,
+                                    pnExt.getPuliziaNotificatoInput().getNmVersatore()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                idVersatore = rispostaControlli.getrLong();
+                rispostaWs.getPuliziaNotificatoRisposta()
+                        .setNmVersatore(pnExt.getPuliziaNotificatoInput().getNmVersatore());
+            }
+        }
+        pnExt.setIdVersatore(idVersatore);
 
-	// Verifica che chiave object sia diverso da stringa vuota e spazi
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNotBlankCdKeyObject(
-		    pnExt.getPuliziaNotificatoInput().getCdKeyObject(),
-		    MessaggiWSBundle.PING_ELIMINAPREL_004);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    }
-	}
-	// Verifica che chiave object sia lungo meno di 96 caratteri
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaCdKeyObjectLength(
-		    pnExt.getPuliziaNotificatoInput().getCdKeyObject(),
-		    MessaggiWSBundle.PING_ELIMINAPREL_008);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    }
-	}
-	// Verifica esistenza oggetto su db
-	Long idObject = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaCdKeyObject(
-		    pnExt.getPuliziaNotificatoInput().getNmAmbiente(),
-		    pnExt.getPuliziaNotificatoInput().getNmVersatore(),
-		    pnExt.getPuliziaNotificatoInput().getCdKeyObject());
-	    if (!rispostaControlli.isrBoolean()) {
-		rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_005);
-		rispostaControlli
-			.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_005,
-				pnExt.getPuliziaNotificatoInput().getCdKeyObject()));
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    } else {
-		rispostaWs.getPuliziaNotificatoRisposta()
-			.setCdKeyObject(pnExt.getPuliziaNotificatoInput().getCdKeyObject());
-		idObject = rispostaControlli.getrLong();
-	    }
-	}
-	pnExt.setIdObject(idObject);
+        // Verifica che chiave object sia diverso da stringa vuota e spazi
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNotBlankCdKeyObject(
+                    pnExt.getPuliziaNotificatoInput().getCdKeyObject(),
+                    MessaggiWSBundle.PING_ELIMINAPREL_004);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            }
+        }
+        // Verifica che chiave object sia lungo meno di 96 caratteri
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaCdKeyObjectLength(
+                    pnExt.getPuliziaNotificatoInput().getCdKeyObject(),
+                    MessaggiWSBundle.PING_ELIMINAPREL_008);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            }
+        }
+        // Verifica esistenza oggetto su db
+        Long idObject = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaCdKeyObject(
+                    pnExt.getPuliziaNotificatoInput().getNmAmbiente(),
+                    pnExt.getPuliziaNotificatoInput().getNmVersatore(),
+                    pnExt.getPuliziaNotificatoInput().getCdKeyObject());
+            if (!rispostaControlli.isrBoolean()) {
+                rispostaControlli.setCodErr(MessaggiWSBundle.PING_ELIMINAPREL_005);
+                rispostaControlli
+                        .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_ELIMINAPREL_005,
+                                pnExt.getPuliziaNotificatoInput().getCdKeyObject()));
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            } else {
+                rispostaWs.getPuliziaNotificatoRisposta()
+                        .setCdKeyObject(pnExt.getPuliziaNotificatoInput().getCdKeyObject());
+                idObject = rispostaControlli.getrLong();
+            }
+        }
+        pnExt.setIdObject(idObject);
 
-	Long idSessione = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliPulNotif.verificaOggetto(idObject);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    } else {
-		idSessione = rispostaControlli.getrLong();
-	    }
-	}
-	pnExt.setIdSessioneRecup(idSessione);
+        Long idSessione = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliPulNotif.verificaOggetto(idObject);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            } else {
+                idSessione = rispostaControlli.getrLong();
+            }
+        }
+        pnExt.setIdSessioneRecup(idSessione);
     }
 
     private void setRispostaWsError(RispostaWSPuliziaNotificato rispostaWs, SeverityEnum sev,
-	    Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getPuliziaNotificatoRisposta().setCdEsito(esito);
-	rispostaWs.getPuliziaNotificatoRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getPuliziaNotificatoRisposta().setDlErr(rispostaControlli.getDsErr());
+            Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getPuliziaNotificatoRisposta().setCdEsito(esito);
+        rispostaWs.getPuliziaNotificatoRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getPuliziaNotificatoRisposta().setDlErr(rispostaControlli.getDsErr());
     }
 }

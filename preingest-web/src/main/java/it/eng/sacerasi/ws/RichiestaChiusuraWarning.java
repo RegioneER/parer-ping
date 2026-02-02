@@ -45,23 +45,23 @@ public class RichiestaChiusuraWarning {
 
     @WebMethod(operationName = "richiestaChiusuraWarning")
     public RichiestaChiusuraWarningRisposta richiestaChiusuraWarning(
-	    @WebParam(name = "nmAmbiente") String nmAmbiente,
-	    @WebParam(name = "nmVersatore") String nmVersatore,
-	    @WebParam(name = "cdKeyObject") String cdKeyObject,
-	    @WebParam(name = "dlMotivazione") String dlMotivazione) {
+            @WebParam(name = "nmAmbiente") String nmAmbiente,
+            @WebParam(name = "nmVersatore") String nmVersatore,
+            @WebParam(name = "cdKeyObject") String cdKeyObject,
+            @WebParam(name = "dlMotivazione") String dlMotivazione) {
 
-	MessageContext msgCtx = wsCtx.getMessageContext();
-	String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
-	String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
-	RichiestaChiusuraWarningRisposta risposta = null;
-	try {
-	    wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
-	    risposta = ejbRef.richiestaChiusuraWarning(nmAmbiente, nmVersatore, cdKeyObject,
-		    dlMotivazione);
-	} catch (AuthWSException e) {
-	    WSLoginHandler.throwSOAPFault(e);
-	}
-	return risposta;
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        String username = (String) msgCtx.get(AuthenticationHandlerConstants.USER);
+        String servizioWeb = ((QName) msgCtx.get(MessageContext.WSDL_SERVICE)).getLocalPart();
+        RichiestaChiusuraWarningRisposta risposta = null;
+        try {
+            wsHelper.checkAuthorizations(nmAmbiente, nmVersatore, username, servizioWeb);
+            risposta = ejbRef.richiestaChiusuraWarning(nmAmbiente, nmVersatore, cdKeyObject,
+                    dlMotivazione);
+        } catch (AuthWSException e) {
+            WSLoginHandler.throwSOAPFault(e);
+        }
+        return risposta;
     }
 
 }

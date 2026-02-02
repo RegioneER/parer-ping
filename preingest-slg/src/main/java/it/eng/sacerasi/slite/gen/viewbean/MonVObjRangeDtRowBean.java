@@ -36,107 +36,107 @@ public class MonVObjRangeDtRowBean extends BaseRow implements JEEBaseRowInterfac
     public static MonVObjRangeDtTableDescriptor TABLE_DESCRIPTOR = new MonVObjRangeDtTableDescriptor();
 
     public MonVObjRangeDtRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public BigDecimal getIdTipoObject() {
-	return getBigDecimal("id_tipo_object");
+        return getBigDecimal("id_tipo_object");
     }
 
     public void setIdTipoObject(BigDecimal idTipoObject) {
-	setObject("id_tipo_object", idTipoObject);
+        setObject("id_tipo_object", idTipoObject);
     }
 
     public String getTiStatoObject() {
-	return getString("ti_stato_object");
+        return getString("ti_stato_object");
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	setObject("ti_stato_object", tiStatoObject);
+        setObject("ti_stato_object", tiStatoObject);
     }
 
     public String getTiDtCreazione() {
-	return getString("ti_dt_creazione");
+        return getString("ti_dt_creazione");
     }
 
     public void setTiDtCreazione(String tiDtCreazione) {
-	setObject("ti_dt_creazione", tiDtCreazione);
+        setObject("ti_dt_creazione", tiDtCreazione);
     }
 
     public String getTiClasseVersFile() {
-	return getString("ti_classe_vers_file");
+        return getString("ti_classe_vers_file");
     }
 
     public void setTiClasseVersFile(String tiClasseVersFile) {
-	setObject("ti_classe_vers_file", tiClasseVersFile);
+        setObject("ti_classe_vers_file", tiClasseVersFile);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVObjRangeDt entity = (MonVObjRangeDt) obj;
-	this.setIdVers(entity.getIdVers());
-	this.setIdObject(entity.getIdObject());
-	this.setIdTipoObject(entity.getIdTipoObject());
-	this.setTiStatoObject(entity.getTiStatoObject());
-	this.setTiDtCreazione(entity.getTiDtCreazione());
-	this.setTiClasseVersFile(entity.getTiClasseVersFile());
+        MonVObjRangeDt entity = (MonVObjRangeDt) obj;
+        this.setIdVers(entity.getIdVers());
+        this.setIdObject(entity.getIdObject());
+        this.setIdTipoObject(entity.getIdTipoObject());
+        this.setTiStatoObject(entity.getTiStatoObject());
+        this.setTiDtCreazione(entity.getTiDtCreazione());
+        this.setTiClasseVersFile(entity.getTiClasseVersFile());
     }
 
     @Override
     public MonVObjRangeDt rowBeanToEntity() {
-	MonVObjRangeDt entity = new MonVObjRangeDt();
-	entity.setIdVers(this.getIdVers());
-	entity.setIdObject(this.getIdObject());
-	entity.setIdTipoObject(this.getIdTipoObject());
-	entity.setTiStatoObject(this.getTiStatoObject());
-	entity.setTiDtCreazione(this.getTiDtCreazione());
-	entity.setTiClasseVersFile(this.getTiClasseVersFile());
-	return entity;
+        MonVObjRangeDt entity = new MonVObjRangeDt();
+        entity.setIdVers(this.getIdVers());
+        entity.setIdObject(this.getIdObject());
+        entity.setIdTipoObject(this.getIdTipoObject());
+        entity.setTiStatoObject(this.getTiStatoObject());
+        entity.setTiDtCreazione(this.getTiDtCreazione());
+        entity.setTiClasseVersFile(this.getTiClasseVersFile());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

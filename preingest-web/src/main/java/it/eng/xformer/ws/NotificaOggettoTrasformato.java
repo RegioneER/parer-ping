@@ -50,22 +50,22 @@ public class NotificaOggettoTrasformato {
      */
     @WebMethod(operationName = "notificaOggettoTrasformato")
     public NotificaOggettoTrasformatoRisposta notificaOggettoTrasformato(
-	    @WebParam(name = "idOggetto") long idOggetto,
-	    @WebParam(name = "numeroErrori") int numeroErrori,
-	    @WebParam(name = "report") String report) {
-	NotificaOggettoTrasformatoRisposta risposta = new NotificaOggettoTrasformatoRisposta();
-	risposta.setEsito("OK");
+            @WebParam(name = "idOggetto") long idOggetto,
+            @WebParam(name = "numeroErrori") int numeroErrori,
+            @WebParam(name = "report") String report) {
+        NotificaOggettoTrasformatoRisposta risposta = new NotificaOggettoTrasformatoRisposta();
+        risposta.setEsito("OK");
 
-	try {
-	    eseguiTrasformazione.notificaOggettoTrasformato(idOggetto, numeroErrori, report);
-	} catch (Exception ex) {
-	    // il metodo notificaOggettoTrasformato è asincrono e restituisce void, nessuna
-	    // eccezione sarà mai catturata
-	    // qui
-	    // risposta.setEsito("KO");
-	    // risposta.setDettagli(ex.getMessage());
-	}
+        try {
+            eseguiTrasformazione.notificaOggettoTrasformato(idOggetto, numeroErrori, report);
+        } catch (Exception ex) {
+            // il metodo notificaOggettoTrasformato è asincrono e restituisce void, nessuna
+            // eccezione sarà mai catturata
+            // qui
+            // risposta.setEsito("KO");
+            // risposta.setDettagli(ex.getMessage());
+        }
 
-	return risposta;
+        return risposta;
     }
 }

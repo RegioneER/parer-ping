@@ -42,24 +42,24 @@ public class IamAutorServTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_AUTOR_SERV,
-		new ColumnDescriptor(COL_ID_AUTOR_SERV, Types.DECIMAL, 22, true));
-	map.put(COL_ID_ABIL_ORGANIZ,
-		new ColumnDescriptor(COL_ID_ABIL_ORGANIZ, Types.DECIMAL, 22, false));
-	map.put(COL_NM_SERVIZIO_WEB,
-		new ColumnDescriptor(COL_NM_SERVIZIO_WEB, Types.VARCHAR, 100, false));
+        map.put(COL_ID_AUTOR_SERV,
+                new ColumnDescriptor(COL_ID_AUTOR_SERV, Types.DECIMAL, 22, true));
+        map.put(COL_ID_ABIL_ORGANIZ,
+                new ColumnDescriptor(COL_ID_ABIL_ORGANIZ, Types.DECIMAL, 22, false));
+        map.put(COL_NM_SERVIZIO_WEB,
+                new ColumnDescriptor(COL_NM_SERVIZIO_WEB, Types.VARCHAR, 100, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 @Stateless(mappedName = "RecuperaVersErrEjb")
 @LocalBean
 @Interceptors({
-	it.eng.sacerasi.aop.TransactionInterceptor.class })
+        it.eng.sacerasi.aop.TransactionInterceptor.class })
 public class RecuperaVersErrEjb {
 
     Logger log = LoggerFactory.getLogger(RecuperaVersErrEjb.class);
@@ -49,42 +49,42 @@ public class RecuperaVersErrEjb {
     private ConfigurationHelper configurationHelper;
 
     public void recuperaVersErr() throws ParerInternalError, NamingException {
-	// MEV 31714
-	String olderThanMinutesStr = configurationHelper
-		.getValoreParamApplicByApplic(Constants.ETA_MINIMA_RECUPERO_ERRORI);
-	int olderThanMinutes;
+        // MEV 31714
+        String olderThanMinutesStr = configurationHelper
+                .getValoreParamApplicByApplic(Constants.ETA_MINIMA_RECUPERO_ERRORI);
+        int olderThanMinutes;
 
-	try {
-	    olderThanMinutes = Integer.parseInt(olderThanMinutesStr);
-	} catch (NumberFormatException nfe) {
-	    throw new ParerInternalError(nfe.getMessage());
-	}
-	// Recupero la lista di id dei versatori
-	List<Long> versatori = helper.getListaVersatori();
-	// Recupero, per ogni versatore, l’insieme degli oggetti con stato = CHIUSO_ERR_RECUPERABILE
-	// o
-	// CHIUSO_ERR_VERS con settato l’indicatore che segnala che l’oggetto è da recuperare,
-	// per i quali non siano presenti unità documentarie con stato = IN_CODA_VERS
-	// e non siano presenti unità documentarie con stato = DA_VERSARE
-	List<PigObject> tmpOggetti = recHelper.getListaObjects(versatori,
-		Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name(),
-		Constants.StatoOggetto.CHIUSO_ERR_VERS.name(), olderThanMinutes);
-	log.info("JOB " + Constants.NomiJob.RECUPERA_VERS_ERR.name() + " - ottenuti "
-		+ tmpOggetti.size() + " oggetti con stato CHIUSO_ERR_RECUPERABILE "
-		+ "o CHIUSO_ERR_VERS con settato l’indicatore che segnala che l’oggetto e’ da recuperare, senza UD con stato IN_CODA_VERS "
-		+ "e senza UD con stato DA_VERSARE");
-	if (!tmpOggetti.isEmpty()) {
-	    // Se la lista non è vuota, per ogni oggetto cambio lo stato in IN_ATTESA_VERS
-	    // Creo una nuova sessione e la assegno all'oggetto
-	    for (PigObject obj : tmpOggetti) {
-		recHelper.elaboraOggetto(obj);
-		// Registra una UD della sessione per ogni UD dell'oggetto con stato =
-		// VERSATA_TIMEOUT
-		// recHelper.registraUD(obj.getPigUnitaDocObjects());
-	    }
-	}
-	// Quando ho elaborato l'ultimo oggetto, scrivo sul log la fine esecuzione del job
-	jobLoggerEjb.writeAtomicLog(Constants.NomiJob.RECUPERA_VERS_ERR,
-		Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
+        try {
+            olderThanMinutes = Integer.parseInt(olderThanMinutesStr);
+        } catch (NumberFormatException nfe) {
+            throw new ParerInternalError(nfe.getMessage());
+        }
+        // Recupero la lista di id dei versatori
+        List<Long> versatori = helper.getListaVersatori();
+        // Recupero, per ogni versatore, l’insieme degli oggetti con stato = CHIUSO_ERR_RECUPERABILE
+        // o
+        // CHIUSO_ERR_VERS con settato l’indicatore che segnala che l’oggetto è da recuperare,
+        // per i quali non siano presenti unità documentarie con stato = IN_CODA_VERS
+        // e non siano presenti unità documentarie con stato = DA_VERSARE
+        List<PigObject> tmpOggetti = recHelper.getListaObjects(versatori,
+                Constants.StatoOggetto.CHIUSO_ERR_RECUPERABILE.name(),
+                Constants.StatoOggetto.CHIUSO_ERR_VERS.name(), olderThanMinutes);
+        log.info("JOB " + Constants.NomiJob.RECUPERA_VERS_ERR.name() + " - ottenuti "
+                + tmpOggetti.size() + " oggetti con stato CHIUSO_ERR_RECUPERABILE "
+                + "o CHIUSO_ERR_VERS con settato l’indicatore che segnala che l’oggetto e’ da recuperare, senza UD con stato IN_CODA_VERS "
+                + "e senza UD con stato DA_VERSARE");
+        if (!tmpOggetti.isEmpty()) {
+            // Se la lista non è vuota, per ogni oggetto cambio lo stato in IN_ATTESA_VERS
+            // Creo una nuova sessione e la assegno all'oggetto
+            for (PigObject obj : tmpOggetti) {
+                recHelper.elaboraOggetto(obj);
+                // Registra una UD della sessione per ogni UD dell'oggetto con stato =
+                // VERSATA_TIMEOUT
+                // recHelper.registraUD(obj.getPigUnitaDocObjects());
+            }
+        }
+        // Quando ho elaborato l'ultimo oggetto, scrivo sul log la fine esecuzione del job
+        jobLoggerEjb.writeAtomicLog(Constants.NomiJob.RECUPERA_VERS_ERR,
+                Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
     }
 }

@@ -40,12 +40,12 @@ public class AnnullamentoHelper extends GenericHelper {
 
     @SuppressWarnings("unchecked")
     public List<PigXmlAnnulSessioneIngest> retrievePigXmlAnnulSessioneIngests(
-	    BigDecimal idSessioneIngest, String tiXmlAnnul) {
-	Query query = getEntityManager().createQuery(
-		"SELECT xml FROM PigXmlAnnulSessioneIngest xml WHERE xml.pigSessioneIngest.idSessioneIngest = :idSessioneIngest AND xml.tiXmlAnnul = :tiXmlAnnul");
-	query.setParameter("idSessioneIngest", HibernateUtils.longFrom(idSessioneIngest));
-	query.setParameter("tiXmlAnnul", tiXmlAnnul);
-	return query.getResultList();
+            BigDecimal idSessioneIngest, String tiXmlAnnul) {
+        Query query = getEntityManager().createQuery(
+                "SELECT xml FROM PigXmlAnnulSessioneIngest xml WHERE xml.pigSessioneIngest.idSessioneIngest = :idSessioneIngest AND xml.tiXmlAnnul = :tiXmlAnnul");
+        query.setParameter("idSessioneIngest", HibernateUtils.longFrom(idSessioneIngest));
+        query.setParameter("tiXmlAnnul", tiXmlAnnul);
+        return query.getResultList();
     }
 
     /**
@@ -58,13 +58,13 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocSessione(BigDecimal idSessioneIngest, String oldState,
-	    String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState");
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String newState) {
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState");
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -77,35 +77,35 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliSessione(BigDecimal idSessioneIngest, String oldState,
-	    String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState");
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String newState) {
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState");
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocSessioneNoError(BigDecimal idSessioneIngest, String oldState,
-	    String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState AND udSes.cdErrSacer IS NULL");
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String newState) {
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState AND udSes.cdErrSacer IS NULL");
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliSessioneNoError(BigDecimal idSessioneIngest, String oldState,
-	    String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer IS NULL");
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String newState) {
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer IS NULL");
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -119,21 +119,21 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocSessioneWithError(BigDecimal idSessioneIngest, String oldState,
-	    String cdErrSacer, String newState) {
-	String query = "UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState AND udSes.cdErrSacer ";
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    query += " = :cdErrSacer";
-	} else {
-	    query += " IS NOT NULL";
-	}
-	Query q = getEntityManager().createQuery(query);
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    q.setParameter("cdErrSacer", cdErrSacer);
-	}
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String cdErrSacer, String newState) {
+        String query = "UPDATE PigUnitaDocSessione udSes SET udSes.tiStatoUnitaDocSessione = :newState WHERE udSes.pigSessioneIngest.idSessioneIngest = :sesId AND udSes.tiStatoUnitaDocSessione = :oldState AND udSes.cdErrSacer ";
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            query += " = :cdErrSacer";
+        } else {
+            query += " IS NOT NULL";
+        }
+        Query q = getEntityManager().createQuery(query);
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            q.setParameter("cdErrSacer", cdErrSacer);
+        }
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -147,21 +147,21 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliSessioneWithError(BigDecimal idSessioneIngest, String oldState,
-	    String cdErrSacer, String newState) {
-	String query = "UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer ";
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    query += " = :cdErrSacer";
-	} else {
-	    query += " IS NOT NULL";
-	}
-	Query q = getEntityManager().createQuery(query);
-	q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
-	q.setParameter("oldState", oldState);
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    q.setParameter("cdErrSacer", cdErrSacer);
-	}
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String cdErrSacer, String newState) {
+        String query = "UPDATE PigFascicoloSessione fasSes SET fasSes.tiStatoFascicoloSessione = :newState WHERE fasSes.pigSessioneIngest.idSessioneIngest = :sesId AND fasSes.tiStatoFascicoloSessione = :oldState AND fasSes.cdErrSacer ";
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            query += " = :cdErrSacer";
+        } else {
+            query += " IS NOT NULL";
+        }
+        Query q = getEntityManager().createQuery(query);
+        q.setParameter("sesId", HibernateUtils.longFrom(idSessioneIngest));
+        q.setParameter("oldState", oldState);
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            q.setParameter("cdErrSacer", cdErrSacer);
+        }
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -174,12 +174,12 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocObject(BigDecimal idObject, String oldState, String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState");
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState");
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -192,33 +192,33 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliObject(BigDecimal idObject, String oldState, String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState");
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState");
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocObjectNoError(BigDecimal idObject, String oldState, String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState AND udObj.cdErrSacer IS NULL");
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState AND udObj.cdErrSacer IS NULL");
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliObjectNoError(BigDecimal idObject, String oldState,
-	    String newState) {
-	Query q = getEntityManager().createQuery(
-		"UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer IS NULL");
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String newState) {
+        Query q = getEntityManager().createQuery(
+                "UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer IS NULL");
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -232,21 +232,21 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateUnitaDocObjectWithError(BigDecimal idObject, String oldState,
-	    String cdErrSacer, String newState) {
-	String query = "UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState AND udObj.cdErrSacer ";
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    query += " = :cdErrSacer";
-	} else {
-	    query += " IS NOT NULL";
-	}
-	Query q = getEntityManager().createQuery(query);
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    q.setParameter("cdErrSacer", cdErrSacer);
-	}
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String cdErrSacer, String newState) {
+        String query = "UPDATE PigUnitaDocObject udObj SET udObj.tiStatoUnitaDocObject = :newState WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :oldState AND udObj.cdErrSacer ";
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            query += " = :cdErrSacer";
+        } else {
+            query += " IS NOT NULL";
+        }
+        Query q = getEntityManager().createQuery(query);
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            q.setParameter("cdErrSacer", cdErrSacer);
+        }
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     /**
@@ -260,59 +260,59 @@ public class AnnullamentoHelper extends GenericHelper {
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateFascicoliObjectWithError(BigDecimal idObject, String oldState,
-	    String cdErrSacer, String newState) {
-	String query = "UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer ";
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    query += " = :cdErrSacer";
-	} else {
-	    query += " IS NOT NULL";
-	}
-	Query q = getEntityManager().createQuery(query);
-	q.setParameter("idObject", HibernateUtils.longFrom(idObject));
-	q.setParameter("oldState", oldState);
-	if (StringUtils.isNotBlank(cdErrSacer)) {
-	    q.setParameter("cdErrSacer", cdErrSacer);
-	}
-	q.setParameter("newState", newState);
-	q.executeUpdate();
+            String cdErrSacer, String newState) {
+        String query = "UPDATE PigFascicoloObject fasObj SET fasObj.tiStatoFascicoloObject = :newState WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :oldState AND fasObj.cdErrSacer ";
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            query += " = :cdErrSacer";
+        } else {
+            query += " IS NOT NULL";
+        }
+        Query q = getEntityManager().createQuery(query);
+        q.setParameter("idObject", HibernateUtils.longFrom(idObject));
+        q.setParameter("oldState", oldState);
+        if (StringUtils.isNotBlank(cdErrSacer)) {
+            q.setParameter("cdErrSacer", cdErrSacer);
+        }
+        q.setParameter("newState", newState);
+        q.executeUpdate();
     }
 
     @SuppressWarnings("unchecked")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<PigUnitaDocObject> retrievePigUnitaDocObject(long idObject, String state) {
-	Query q = getEntityManager().createQuery(
-		"SELECT udObj FROM PigUnitaDocObject udObj WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :state");
-	q.setParameter("idObject", idObject);
-	q.setParameter("state", state);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT udObj FROM PigUnitaDocObject udObj WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :state");
+        q.setParameter("idObject", idObject);
+        q.setParameter("state", state);
+        return q.getResultList();
     }
 
     @SuppressWarnings("unchecked")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public List<PigFascicoloObject> retrievePigFascicoloObject(long idObject, String state) {
-	Query q = getEntityManager().createQuery(
-		"SELECT fasObj FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
-	q.setParameter("idObject", idObject);
-	q.setParameter("state", state);
-	return q.getResultList();
+        Query q = getEntityManager().createQuery(
+                "SELECT fasObj FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
+        q.setParameter("idObject", idObject);
+        q.setParameter("state", state);
+        return q.getResultList();
     }
 
     // SUE26200
     public Long countPigUnitaDocObject(long idObject, String state) {
-	Query q = getEntityManager().createQuery(
-		"SELECT count(udObj) FROM PigUnitaDocObject udObj WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :state");
-	q.setParameter("idObject", idObject);
-	q.setParameter("state", state);
-	return (Long) q.getSingleResult();
+        Query q = getEntityManager().createQuery(
+                "SELECT count(udObj) FROM PigUnitaDocObject udObj WHERE udObj.pigObject.idObject = :idObject AND udObj.tiStatoUnitaDocObject = :state");
+        q.setParameter("idObject", idObject);
+        q.setParameter("state", state);
+        return (Long) q.getSingleResult();
     }
 
     // MV 39009
     public Long countPigFascicoloObject(long idObject, String state) {
-	Query q = getEntityManager().createQuery(
-		"SELECT count(fasObj) FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
-	q.setParameter("idObject", idObject);
-	q.setParameter("state", state);
-	return (Long) q.getSingleResult();
+        Query q = getEntityManager().createQuery(
+                "SELECT count(fasObj) FROM PigFascicoloObject fasObj WHERE fasObj.pigObject.idObject = :idObject AND fasObj.tiStatoFascicoloObject = :state");
+        q.setParameter("idObject", idObject);
+        q.setParameter("state", state);
+        return (Long) q.getSingleResult();
     }
 
     /**
@@ -323,12 +323,12 @@ public class AnnullamentoHelper extends GenericHelper {
      * @return count conteggio
      */
     public Long countFigliNonAnnullati(long idObjectPadre, BigDecimal idObjectFiglio) {
-	Query q = getEntityManager().createQuery(
-		"SELECT COUNT(figli) FROM PigObject figli WHERE figli.pigObjectPadre.idObject = :idObjectPadre AND figli.idObject != :idObjectFiglio AND figli.tiStatoObject != :statoAnnullato");
-	q.setParameter("idObjectPadre", idObjectPadre);
-	q.setParameter("idObjectFiglio", HibernateUtils.longFrom(idObjectFiglio));
-	q.setParameter("statoAnnullato", Constants.StatoOggetto.ANNULLATO.name());
-	return (Long) q.getSingleResult();
+        Query q = getEntityManager().createQuery(
+                "SELECT COUNT(figli) FROM PigObject figli WHERE figli.pigObjectPadre.idObject = :idObjectPadre AND figli.idObject != :idObjectFiglio AND figli.tiStatoObject != :statoAnnullato");
+        q.setParameter("idObjectPadre", idObjectPadre);
+        q.setParameter("idObjectFiglio", HibernateUtils.longFrom(idObjectFiglio));
+        q.setParameter("statoAnnullato", Constants.StatoOggetto.ANNULLATO.name());
+        return (Long) q.getSingleResult();
     }
 
     /**
@@ -339,29 +339,29 @@ public class AnnullamentoHelper extends GenericHelper {
      * @return count conteggio
      */
     public Long countFigliNonAnnullatiOCorretti(long idObjectPadre, BigDecimal idObjectFiglio) {
-	Query q = getEntityManager().createQuery(
-		"SELECT COUNT(figli) FROM PigObject figli WHERE figli.pigObjectPadre.idObject = :idObjectPadre AND figli.idObject != :idObjectFiglio AND figli.tiStatoObject NOT IN (:stati)");
-	q.setParameter("idObjectPadre", HibernateUtils.longFrom(idObjectPadre));
-	q.setParameter("idObjectFiglio", HibernateUtils.longFrom(idObjectFiglio));
-	String[] s = new String[] {
-		Constants.StatoOggetto.ANNULLATO.name(), Constants.StatoOggetto.CHIUSO_OK.name() };
-	q.setParameter("stati", Arrays.asList(s));
-	return (Long) q.getSingleResult();
+        Query q = getEntityManager().createQuery(
+                "SELECT COUNT(figli) FROM PigObject figli WHERE figli.pigObjectPadre.idObject = :idObjectPadre AND figli.idObject != :idObjectFiglio AND figli.tiStatoObject NOT IN (:stati)");
+        q.setParameter("idObjectPadre", HibernateUtils.longFrom(idObjectPadre));
+        q.setParameter("idObjectFiglio", HibernateUtils.longFrom(idObjectFiglio));
+        String[] s = new String[] {
+                Constants.StatoOggetto.ANNULLATO.name(), Constants.StatoOggetto.CHIUSO_OK.name() };
+        q.setParameter("stati", Arrays.asList(s));
+        return (Long) q.getSingleResult();
     }
 
     public BigDecimal getIdOrganizIamFromMonVLisUnitaDocObject(long idObject) {
-	final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
-		"SELECT DISTINCT (u.idOrganizIam) "
-			+ "FROM MonVLisUnitaDocObject u WHERE u.idObject = :idObject AND u.idOrganizIam IS NOT NULL",
-		BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
-	return idOrganizIam.getSingleResult();
+        final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
+                "SELECT DISTINCT (u.idOrganizIam) "
+                        + "FROM MonVLisUnitaDocObject u WHERE u.idObject = :idObject AND u.idOrganizIam IS NOT NULL",
+                BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
+        return idOrganizIam.getSingleResult();
     }
 
     public BigDecimal getIdOrganizIamFromMonVLisFascicoloObject(long idObject) {
-	final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
-		"SELECT DISTINCT (f.idOrganizIam) "
-			+ "FROM MonVLisFascicoloObject f WHERE f.idObject = :idObject AND f.idOrganizIam IS NOT NULL",
-		BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
-	return idOrganizIam.getSingleResult();
+        final TypedQuery<BigDecimal> idOrganizIam = getEntityManager().createQuery(
+                "SELECT DISTINCT (f.idOrganizIam) "
+                        + "FROM MonVLisFascicoloObject f WHERE f.idObject = :idObject AND f.idOrganizIam IS NOT NULL",
+                BigDecimal.class).setParameter("idObject", HibernateUtils.bigDecimalFrom(idObject));
+        return idOrganizIam.getSingleResult();
     }
 }

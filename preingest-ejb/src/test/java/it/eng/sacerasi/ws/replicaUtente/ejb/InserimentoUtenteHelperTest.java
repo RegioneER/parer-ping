@@ -38,16 +38,16 @@ public class InserimentoUtenteHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(InserimentoUtenteEjb.class)
-		.addPackages(true, "it.eng.sacerasi.ws.replicaUtente.dto")
-		.addClass("it.eng.integriam.server.ws.reputente.Utente")
-		.addClass("it.eng.sacerasi.ws.dto.IRispostaWS")
-		.addClass("it.eng.sacerasi.ws.replicaUtente.ejb.ModificaUtenteHelper");
+        return ArquillianUtils.createPingJar(InserimentoUtenteEjb.class)
+                .addPackages(true, "it.eng.sacerasi.ws.replicaUtente.dto")
+                .addClass("it.eng.integriam.server.ws.reputente.Utente")
+                .addClass("it.eng.sacerasi.ws.dto.IRispostaWS")
+                .addClass("it.eng.sacerasi.ws.replicaUtente.ejb.ModificaUtenteHelper");
     }
 
     @Test
     void existsUtente_queryIsOk() {
-	assertFalse(helper.existsUtente(-99L));
+        assertFalse(helper.existsUtente(-99L));
     }
 
 }

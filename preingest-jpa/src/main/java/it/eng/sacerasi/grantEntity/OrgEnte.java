@@ -51,86 +51,86 @@ public class OrgEnte implements Serializable {
     private Date dtIniValAppartAmbiente;
 
     public OrgEnte() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @Column(name = "ID_ENTE")
     public Long getIdEnte() {
-	return this.idEnte;
+        return this.idEnte;
     }
 
     public void setIdEnte(Long idEnte) {
-	this.idEnte = idEnte;
+        this.idEnte = idEnte;
     }
 
     @Column(name = "DS_ENTE")
     public String getDsEnte() {
-	return this.dsEnte;
+        return this.dsEnte;
     }
 
     public void setDsEnte(String dsEnte) {
-	this.dsEnte = dsEnte;
+        this.dsEnte = dsEnte;
     }
 
     @Column(name = "NM_ENTE")
     public String getNmEnte() {
-	return this.nmEnte;
+        return this.nmEnte;
     }
 
     public void setNmEnte(String nmEnte) {
-	this.nmEnte = nmEnte;
+        this.nmEnte = nmEnte;
     }
 
     @Column(name = "CD_ENTE_NORMALIZ")
     public String getCdEnteNormaliz() {
-	return this.cdEnteNormaliz;
+        return this.cdEnteNormaliz;
     }
 
     public void setCdEnteNormaliz(String cdEnteNormaliz) {
-	this.cdEnteNormaliz = cdEnteNormaliz;
+        this.cdEnteNormaliz = cdEnteNormaliz;
     }
 
     // bi-directional many-to-one association to OrgAmbiente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_AMBIENTE")
     public OrgAmbiente getOrgAmbiente() {
-	return this.orgAmbiente;
+        return this.orgAmbiente;
     }
 
     public void setOrgAmbiente(OrgAmbiente orgAmbiente) {
-	this.orgAmbiente = orgAmbiente;
+        this.orgAmbiente = orgAmbiente;
     }
 
     // bi-directional many-to-one association to OrgStrut
     @OneToMany(mappedBy = "orgEnte")
     @XmlTransient
     public List<OrgStrut> getOrgStruts() {
-	return this.orgStruts;
+        return this.orgStruts;
     }
 
     public void setOrgStruts(List<OrgStrut> orgStruts) {
-	this.orgStruts = orgStruts;
+        this.orgStruts = orgStruts;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_FIN_VAL_APPART_AMBIENTE")
     public Date getDtFinValAppartAmbiente() {
-	return this.dtFinValAppartAmbiente;
+        return this.dtFinValAppartAmbiente;
     }
 
     public void setDtFinValAppartAmbiente(Date dtFinValAppartAmbiente) {
-	this.dtFinValAppartAmbiente = dtFinValAppartAmbiente;
+        this.dtFinValAppartAmbiente = dtFinValAppartAmbiente;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_INI_VAL_APPART_AMBIENTE")
     public Date getDtIniValAppartAmbiente() {
-	return this.dtIniValAppartAmbiente;
+        return this.dtIniValAppartAmbiente;
     }
 
     public void setDtIniValAppartAmbiente(Date dtIniValAppartAmbiente) {
-	this.dtIniValAppartAmbiente = dtIniValAppartAmbiente;
+        this.dtIniValAppartAmbiente = dtIniValAppartAmbiente;
     }
 
 }

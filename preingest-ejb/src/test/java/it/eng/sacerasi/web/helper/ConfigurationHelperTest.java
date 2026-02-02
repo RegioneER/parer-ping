@@ -46,105 +46,105 @@ public class ConfigurationHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(ConfigurationHelper.class).addPackages(true,
-		"org.apache.commons.lang3");
+        return ArquillianUtils.createPingJar(ConfigurationHelper.class).addPackages(true,
+                "org.apache.commons.lang3");
     }
 
     @Test
     void getConfiguration_queryIsOk() {
-	helper.getConfiguration();
-	assertTrue(true);
+        helper.getConfiguration();
+        assertTrue(true);
     }
 
     @Test
     void getParamApplicApplicationName_queryIsOk() {
-	helper.getParamApplicApplicationName();
-	assertTrue(true);
+        helper.getParamApplicApplicationName();
+        assertTrue(true);
     }
 
     @Test
     void getValoreParamApplic_AMBIENTEVERS_queryIsOk() {
-	String nmParamApplic = "NON_ESISTE";
-	BigDecimal idAmbienteVers = aBigDecimal();
+        String nmParamApplic = "NON_ESISTE";
+        BigDecimal idAmbienteVers = aBigDecimal();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getValoreParamApplicByAmbienteVers(nmParamApplic, idAmbienteVers);
-		fail();
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e,
-			"ParamApplicNotFoundException: Parametro " + nmParamApplic
-				+ " non definito o non valorizzato");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getValoreParamApplicByAmbienteVers(nmParamApplic, idAmbienteVers);
+                fail();
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e,
+                        "ParamApplicNotFoundException: Parametro " + nmParamApplic
+                                + " non definito o non valorizzato");
+            }
+        });
     }
 
     @Test
     void getValoreParamApplic_APPLIC_queryIsOk() {
-	String nmParamApplic = "NON_ESISTE";
+        String nmParamApplic = "NON_ESISTE";
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getValoreParamApplicByApplic(nmParamApplic);
-		fail();
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e,
-			"ParamApplicNotFoundException: Parametro " + nmParamApplic
-				+ " non definito o non valorizzato");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getValoreParamApplicByApplic(nmParamApplic);
+                fail();
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e,
+                        "ParamApplicNotFoundException: Parametro " + nmParamApplic
+                                + " non definito o non valorizzato");
+            }
+        });
 
     }
 
     @Test
     void getValoreParamApplic_TIPOOBJECT_queryIsOk() {
-	String nmParamApplic = "NON_ESISTE";
-	BigDecimal idAmbienteVers = aBigDecimal();
-	BigDecimal idVers = aBigDecimal();
-	BigDecimal idTipoObject = aBigDecimal();
+        String nmParamApplic = "NON_ESISTE";
+        BigDecimal idAmbienteVers = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
+        BigDecimal idTipoObject = aBigDecimal();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getValoreParamApplicByTipoObj(nmParamApplic, idAmbienteVers, idVers,
-			idTipoObject);
-		fail();
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e,
-			"ParamApplicNotFoundException: Parametro " + nmParamApplic
-				+ " non definito o non valorizzato");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getValoreParamApplicByTipoObj(nmParamApplic, idAmbienteVers, idVers,
+                        idTipoObject);
+                fail();
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e,
+                        "ParamApplicNotFoundException: Parametro " + nmParamApplic
+                                + " non definito o non valorizzato");
+            }
+        });
     }
 
     @Test
     void getValoreParamApplic_VERS_queryIsOk() {
-	String nmParamApplic = "NON_ESISTE";
-	BigDecimal idAmbienteVers = aBigDecimal();
-	BigDecimal idVers = aBigDecimal();
+        String nmParamApplic = "NON_ESISTE";
+        BigDecimal idAmbienteVers = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getValoreParamApplicByIdVers(nmParamApplic, idAmbienteVers, idVers);
-		fail();
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e,
-			"ParamApplicNotFoundException: Parametro " + nmParamApplic
-				+ " non definito o non valorizzato");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getValoreParamApplicByIdVers(nmParamApplic, idAmbienteVers, idVers);
+                fail();
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e,
+                        "ParamApplicNotFoundException: Parametro " + nmParamApplic
+                                + " non definito o non valorizzato");
+            }
+        });
     }
 
     @Test
     void getValoreParamApplic_String_queryIsOk() {
-	String nmParamApplic = aString();
+        String nmParamApplic = aString();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getValoreParamApplicByApplic(nmParamApplic);
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e, "ParamApplicNotFoundException");
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getValoreParamApplicByApplic(nmParamApplic);
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e, "ParamApplicNotFoundException");
+            }
+        });
     }
 
 }

@@ -33,54 +33,54 @@ public class PigPrioritaObject implements Serializable {
     private String tiPrioritaVersamento;
 
     public PigPrioritaObject() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_PRIORITA_OBJECT")
     public Long getIdPrioritaObject() {
-	return this.idPrioritaObject;
+        return this.idPrioritaObject;
     }
 
     public void setIdPrioritaObject(Long idPrioritaObject) {
-	this.idPrioritaObject = idPrioritaObject;
+        this.idPrioritaObject = idPrioritaObject;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_OBJECT")
     public PigObject getPigObject() {
-	return this.pigObject;
+        return this.pigObject;
     }
 
     public void setPigObject(PigObject pigObject) {
-	this.pigObject = pigObject;
+        this.pigObject = pigObject;
     }
 
     @Column(name = "DT_MODIFICA")
     public LocalDateTime getDtModifica() {
-	return dtModifica;
+        return dtModifica;
     }
 
     public void setDtModifica(LocalDateTime dtModifica) {
-	this.dtModifica = dtModifica;
+        this.dtModifica = dtModifica;
     }
 
     @Column(name = "NM_USER")
     public String getNmUser() {
-	return nmUser;
+        return nmUser;
     }
 
     public void setNmUser(String nmUser) {
-	this.nmUser = nmUser;
+        this.nmUser = nmUser;
     }
 
     @Column(name = "TI_PRIORITA_VERSAMENTO")
     public String getTiPrioritaVersamento() {
-	return tiPrioritaVersamento;
+        return tiPrioritaVersamento;
     }
 
     public void setTiPrioritaVersamento(String tiPrioritaVersamento) {
-	this.tiPrioritaVersamento = tiPrioritaVersamento;
+        this.tiPrioritaVersamento = tiPrioritaVersamento;
     }
 }

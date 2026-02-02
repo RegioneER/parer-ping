@@ -28,50 +28,50 @@ public class UsrVAbilEnteConvenzId implements Serializable {
 
     @Column(name = "ID_ENTE_CONVENZ")
     public BigDecimal getIdEnteConvenz() {
-	return idEnteConvenz;
+        return idEnteConvenz;
     }
 
     public void setIdEnteConvenz(BigDecimal idEnteConvenz) {
-	this.idEnteConvenz = idEnteConvenz;
+        this.idEnteConvenz = idEnteConvenz;
     }
 
     private BigDecimal idUserIam;
 
     @Column(name = "ID_USER_IAM")
     public BigDecimal getIdUserIam() {
-	return idUserIam;
+        return idUserIam;
     }
 
     public void setIdUserIam(BigDecimal idUserIam) {
-	this.idUserIam = idUserIam;
+        this.idUserIam = idUserIam;
     }
 
     @Override
     public int hashCode() {
-	int hash = 5;
-	hash = 59 * hash + Objects.hashCode(this.idEnteConvenz);
-	hash = 59 * hash + Objects.hashCode(this.idUserIam);
-	return hash;
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.idEnteConvenz);
+        hash = 59 * hash + Objects.hashCode(this.idUserIam);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final UsrVAbilEnteConvenzId other = (UsrVAbilEnteConvenzId) obj;
-	if (!Objects.equals(this.idEnteConvenz, other.idEnteConvenz)) {
-	    return false;
-	}
-	if (!Objects.equals(this.idUserIam, other.idUserIam)) {
-	    return false;
-	}
-	return true;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UsrVAbilEnteConvenzId other = (UsrVAbilEnteConvenzId) obj;
+        if (!Objects.equals(this.idEnteConvenz, other.idEnteConvenz)) {
+            return false;
+        }
+        if (!Objects.equals(this.idUserIam, other.idUserIam)) {
+            return false;
+        }
+        return true;
     }
 }

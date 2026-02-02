@@ -71,50 +71,50 @@ public class S3UploadSessionVO implements Serializable {
     private ObjectStorageBackend config;
 
     public String getKeyName() {
-	return keyName;
+        return keyName;
     }
 
     public Date getDataInizio() {
-	return dataInizio;
+        return dataInizio;
     }
 
     public Date getDataFine() {
-	return dataFine;
+        return dataFine;
     }
 
     public S3UploadSessionVO(SalvataggioBackendHelper salvataggioBackendHelper,
-	    ObjectStorageBackend config, String keyName) {
-	this.bucketName = config.getBucket();
-	this.keyName = keyName;
-	this.salvataggioBackendHelper = salvataggioBackendHelper;
-	this.config = config;
+            ObjectStorageBackend config, String keyName) {
+        this.bucketName = config.getBucket();
+        this.keyName = keyName;
+        this.salvataggioBackendHelper = salvataggioBackendHelper;
+        this.config = config;
     }
 
     private void start() throws URISyntaxException {
-	dataInizio = new Date();
-	log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
-	// Create a list of ETag objects. You retrieve ETags for each object part uploaded,
-	// then, after each individual part has been uploaded, pass the list of ETags to
-	// the request to complete the upload.
-	partETags = new ArrayList<CompletedPart>();
-	// Initiate the multipart upload.
-	initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName)
-		.build();
+        dataInizio = new Date();
+        log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
+        // Create a list of ETag objects. You retrieve ETags for each object part uploaded,
+        // then, after each individual part has been uploaded, pass the list of ETags to
+        // the request to complete the upload.
+        partETags = new ArrayList<CompletedPart>();
+        // Initiate the multipart upload.
+        initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName)
+                .build();
 
-	initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
-	log.info("Multipart Upload a S3 Inizializzato.");
+        initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
+        log.info("Multipart Upload a S3 Inizializzato.");
     }
 
     private void stop() {
-	// Complete the multipart upload.
-	CompleteMultipartUploadRequest compRequest = CompleteMultipartUploadRequest.builder()
-		.uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
-		.multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build())
-		.build();
+        // Complete the multipart upload.
+        CompleteMultipartUploadRequest compRequest = CompleteMultipartUploadRequest.builder()
+                .uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
+                .multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build())
+                .build();
 
-	salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
-	dataFine = new Date();
-	log.info(String.format("Fine UploadMultipart to S3 [%s]", dataFine));
+        salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
+        dataFine = new Date();
+        log.info(String.format("Fine UploadMultipart to S3 [%s]", dataFine));
     }
 
     /*
@@ -122,34 +122,34 @@ public class S3UploadSessionVO implements Serializable {
      * completamente
      */
     public boolean uploadChunk(InputStream input, int chunk, int chunks) {
-	boolean isLastPart = (chunk == (chunks - 1)) ? true : false;
-	if (chunk == 0) {
-	    try {
-		start();
-	    } catch (URISyntaxException ex) {
-		java.util.logging.Logger.getLogger(S3UploadSessionVO.class.getName())
-			.log(Level.SEVERE, null, ex);
-	    }
-	}
-	byte[] bytes = null;
-	try {
-	    bytes = IoUtils.toByteArray(input);
-	} catch (IOException ex) {
-	    log.error("Errore caricamento chunk su S3!", ex);
-	}
-	log.info(String.format("Inizio l'update del chunk [%d] di [%d].", chunk, chunks));
-	// Create the request to upload a part.
-	UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName)
-		.key(keyName).uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
-	// Upload the part and add the response's ETag to our list.
-	UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes,
-		config);
-	log.info(String.format("Upload del chunk [%d] OK.", chunk, chunks));
-	partETags.add(
-		CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
-	if (isLastPart) {
-	    stop();
-	}
-	return isLastPart;
+        boolean isLastPart = (chunk == (chunks - 1)) ? true : false;
+        if (chunk == 0) {
+            try {
+                start();
+            } catch (URISyntaxException ex) {
+                java.util.logging.Logger.getLogger(S3UploadSessionVO.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+        byte[] bytes = null;
+        try {
+            bytes = IoUtils.toByteArray(input);
+        } catch (IOException ex) {
+            log.error("Errore caricamento chunk su S3!", ex);
+        }
+        log.info(String.format("Inizio l'update del chunk [%d] di [%d].", chunk, chunks));
+        // Create the request to upload a part.
+        UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName)
+                .key(keyName).uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
+        // Upload the part and add the response's ETag to our list.
+        UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes,
+                config);
+        log.info(String.format("Upload del chunk [%d] OK.", chunk, chunks));
+        partETags.add(
+                CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
+        if (isLastPart) {
+            stop();
+        }
+        return isLastPart;
     }
 }

@@ -39,39 +39,39 @@ public class RicercaDiarioInput {
     // boolean flTutteSessioni, int niRecordInizio, int niRecordResultSet,
     // String xmlDatiSpecOutput, String xmlDatiSpecFiltri, String xmlDatiSpecOrder) {
     public RicercaDiarioInput(String nmAmbiente, String nmVersatore, String nmTipoObject,
-	    String cdKeyObject, Long idSessione, String tiStatoObject, boolean flTutteSessioni,
-	    int niRecordInizio, int niRecordResultSet, String xmlDatiSpecOutput,
-	    String xmlDatiSpecFiltri, String xmlDatiSpecOrder) {
+            String cdKeyObject, Long idSessione, String tiStatoObject, boolean flTutteSessioni,
+            int niRecordInizio, int niRecordResultSet, String xmlDatiSpecOutput,
+            String xmlDatiSpecFiltri, String xmlDatiSpecOrder) {
 
-	this.nmAmbiente = nmAmbiente;
-	this.nmVersatore = nmVersatore;
-	// this.cdPassword = cdPassword;
-	this.nmTipoObject = nmTipoObject;
-	this.cdKeyObject = cdKeyObject;
-	this.idSessione = idSessione;
-	this.tiStatoObject = tiStatoObject;
-	this.flTutteSessioni = flTutteSessioni;
-	this.niRecordInizio = niRecordInizio;
-	this.niRecordResultSet = niRecordResultSet;
-	this.xmlDatiSpecFiltri = xmlDatiSpecFiltri;
-	this.xmlDatiSpecOrder = xmlDatiSpecOrder;
-	this.xmlDatiSpecOutput = xmlDatiSpecOutput;
+        this.nmAmbiente = nmAmbiente;
+        this.nmVersatore = nmVersatore;
+        // this.cdPassword = cdPassword;
+        this.nmTipoObject = nmTipoObject;
+        this.cdKeyObject = cdKeyObject;
+        this.idSessione = idSessione;
+        this.tiStatoObject = tiStatoObject;
+        this.flTutteSessioni = flTutteSessioni;
+        this.niRecordInizio = niRecordInizio;
+        this.niRecordResultSet = niRecordResultSet;
+        this.xmlDatiSpecFiltri = xmlDatiSpecFiltri;
+        this.xmlDatiSpecOrder = xmlDatiSpecOrder;
+        this.xmlDatiSpecOutput = xmlDatiSpecOutput;
     }
 
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     // public String getCdPassword() {
@@ -83,82 +83,82 @@ public class RicercaDiarioInput {
     // }
 
     public String getNmTipoObject() {
-	return nmTipoObject;
+        return nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     public Long getIdSessione() {
-	return idSessione;
+        return idSessione;
     }
 
     public void setIdSessione(Long idSessione) {
-	this.idSessione = idSessione;
+        this.idSessione = idSessione;
     }
 
     public String getTiStatoObject() {
-	return tiStatoObject;
+        return tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	this.tiStatoObject = tiStatoObject;
+        this.tiStatoObject = tiStatoObject;
     }
 
     public boolean isFlTutteSessioni() {
-	return flTutteSessioni;
+        return flTutteSessioni;
     }
 
     public void setFlTutteSessioni(boolean flTutteSessioni) {
-	this.flTutteSessioni = flTutteSessioni;
+        this.flTutteSessioni = flTutteSessioni;
     }
 
     public int getNiRecordInizio() {
-	return niRecordInizio;
+        return niRecordInizio;
     }
 
     public void setNiRecordInizio(int niRecordInizio) {
-	this.niRecordInizio = niRecordInizio;
+        this.niRecordInizio = niRecordInizio;
     }
 
     public int getNiRecordResultSet() {
-	return niRecordResultSet;
+        return niRecordResultSet;
     }
 
     public void setNiRecordResultSet(int niRecordResultSet) {
-	this.niRecordResultSet = niRecordResultSet;
+        this.niRecordResultSet = niRecordResultSet;
     }
 
     public String getXmlDatiSpecOutput() {
-	return xmlDatiSpecOutput;
+        return xmlDatiSpecOutput;
     }
 
     public void setXmlDatiSpecOutput(String xmlDatiSpecOutput) {
-	this.xmlDatiSpecOutput = xmlDatiSpecOutput;
+        this.xmlDatiSpecOutput = xmlDatiSpecOutput;
     }
 
     public String getXmlDatiSpecFiltri() {
-	return xmlDatiSpecFiltri;
+        return xmlDatiSpecFiltri;
     }
 
     public void setXmlDatiSpecFiltri(String xmlDatiSpecFiltri) {
-	this.xmlDatiSpecFiltri = xmlDatiSpecFiltri;
+        this.xmlDatiSpecFiltri = xmlDatiSpecFiltri;
     }
 
     public String getXmlDatiSpecOrder() {
-	return xmlDatiSpecOrder;
+        return xmlDatiSpecOrder;
     }
 
     public void setXmlDatiSpecOrder(String xmlDatiSpecOrder) {
-	this.xmlDatiSpecOrder = xmlDatiSpecOrder;
+        this.xmlDatiSpecOrder = xmlDatiSpecOrder;
     }
 }

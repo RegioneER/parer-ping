@@ -62,57 +62,57 @@ public class MonVLisStatoVersTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, true));
-	map.put(COL_ID_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_ID_TIPO_OBJECT,
-		new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_NM_TIPO_OBJECT,
-		new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
-	map.put(COL_TI_VERS_FILE, new ColumnDescriptor(COL_TI_VERS_FILE, Types.VARCHAR, 20, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_CD_KEY_OBJECT,
-		new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, true));
-	map.put(COL_DS_OBJECT, new ColumnDescriptor(COL_DS_OBJECT, Types.VARCHAR, 1024, true));
-	map.put(COL_TI_STATO_ESTERNO,
-		new ColumnDescriptor(COL_TI_STATO_ESTERNO, Types.VARCHAR, 30, true));
-	map.put(COL_ID_FILE_OBJECT,
-		new ColumnDescriptor(COL_ID_FILE_OBJECT, Types.DECIMAL, 22, true));
-	map.put(COL_NI_BYTE_FILE_VERS,
-		new ColumnDescriptor(COL_NI_BYTE_FILE_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_DS_HASH_FILE_VERS,
-		new ColumnDescriptor(COL_DS_HASH_FILE_VERS, Types.VARCHAR, 254, true));
-	map.put(COL_ID_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, true));
-	map.put(COL_DT_VERS, new ColumnDescriptor(COL_DT_VERS, Types.TIMESTAMP, 7, true));
-	map.put(COL_ID_USER_IAM_VERS,
-		new ColumnDescriptor(COL_ID_USER_IAM_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_NM_USERID_VERS,
-		new ColumnDescriptor(COL_NM_USERID_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_TI_STATO_OBJECT,
-		new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, true));
-	map.put(COL_TI_STATO_CALCOLATO,
-		new ColumnDescriptor(COL_TI_STATO_CALCOLATO, Types.VARCHAR, 30, true));
-	map.put(COL_TI_STATO_VISUALIZZATO,
-		new ColumnDescriptor(COL_TI_STATO_VISUALIZZATO, Types.VARCHAR, 30, true));
-	map.put(COL_TI_CONTENUTO_OGGETTO,
-		new ColumnDescriptor(COL_TI_CONTENUTO_OGGETTO, Types.VARCHAR, 30, true));
+        map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, true));
+        map.put(COL_ID_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_ID_AMBIENTE_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_ID_TIPO_OBJECT,
+                new ColumnDescriptor(COL_ID_TIPO_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_NM_TIPO_OBJECT,
+                new ColumnDescriptor(COL_NM_TIPO_OBJECT, Types.VARCHAR, 100, true));
+        map.put(COL_TI_VERS_FILE, new ColumnDescriptor(COL_TI_VERS_FILE, Types.VARCHAR, 20, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_CD_KEY_OBJECT,
+                new ColumnDescriptor(COL_CD_KEY_OBJECT, Types.VARCHAR, 100, true));
+        map.put(COL_DS_OBJECT, new ColumnDescriptor(COL_DS_OBJECT, Types.VARCHAR, 1024, true));
+        map.put(COL_TI_STATO_ESTERNO,
+                new ColumnDescriptor(COL_TI_STATO_ESTERNO, Types.VARCHAR, 30, true));
+        map.put(COL_ID_FILE_OBJECT,
+                new ColumnDescriptor(COL_ID_FILE_OBJECT, Types.DECIMAL, 22, true));
+        map.put(COL_NI_BYTE_FILE_VERS,
+                new ColumnDescriptor(COL_NI_BYTE_FILE_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_DS_HASH_FILE_VERS,
+                new ColumnDescriptor(COL_DS_HASH_FILE_VERS, Types.VARCHAR, 254, true));
+        map.put(COL_ID_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, true));
+        map.put(COL_DT_VERS, new ColumnDescriptor(COL_DT_VERS, Types.TIMESTAMP, 7, true));
+        map.put(COL_ID_USER_IAM_VERS,
+                new ColumnDescriptor(COL_ID_USER_IAM_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_NM_USERID_VERS,
+                new ColumnDescriptor(COL_NM_USERID_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_TI_STATO_OBJECT,
+                new ColumnDescriptor(COL_TI_STATO_OBJECT, Types.VARCHAR, 30, true));
+        map.put(COL_TI_STATO_CALCOLATO,
+                new ColumnDescriptor(COL_TI_STATO_CALCOLATO, Types.VARCHAR, 30, true));
+        map.put(COL_TI_STATO_VISUALIZZATO,
+                new ColumnDescriptor(COL_TI_STATO_VISUALIZZATO, Types.VARCHAR, 30, true));
+        map.put(COL_TI_CONTENUTO_OGGETTO,
+                new ColumnDescriptor(COL_TI_CONTENUTO_OGGETTO, Types.VARCHAR, 30, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

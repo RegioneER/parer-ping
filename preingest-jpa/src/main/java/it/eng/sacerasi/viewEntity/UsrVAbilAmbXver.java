@@ -40,39 +40,39 @@ public class UsrVAbilAmbXver implements Serializable {
 
     @Column(name = "DS_ORGANIZ")
     public String getDsOrganiz() {
-	return this.dsOrganiz;
+        return this.dsOrganiz;
     }
 
     public void setDsOrganiz(String dsOrganiz) {
-	this.dsOrganiz = dsOrganiz;
+        this.dsOrganiz = dsOrganiz;
     }
 
     @Column(name = "NM_APPLIC")
     public String getNmApplic() {
-	return this.nmApplic;
+        return this.nmApplic;
     }
 
     public void setNmApplic(String nmApplic) {
-	this.nmApplic = nmApplic;
+        this.nmApplic = nmApplic;
     }
 
     @Column(name = "NM_ORGANIZ")
     public String getNmOrganiz() {
-	return this.nmOrganiz;
+        return this.nmOrganiz;
     }
 
     public void setNmOrganiz(String nmOrganiz) {
-	this.nmOrganiz = nmOrganiz;
+        this.nmOrganiz = nmOrganiz;
     }
 
     private UsrVAbilAmbXverId usrVAbilAmbXverId;
 
     @EmbeddedId()
     public UsrVAbilAmbXverId getUsrVAbilAmbXverId() {
-	return usrVAbilAmbXverId;
+        return usrVAbilAmbXverId;
     }
 
     public void setUsrVAbilAmbXverId(UsrVAbilAmbXverId usrVAbilAmbXverId) {
-	this.usrVAbilAmbXverId = usrVAbilAmbXverId;
+        this.usrVAbilAmbXverId = usrVAbilAmbXverId;
     }
 }

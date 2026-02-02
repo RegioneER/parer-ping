@@ -38,21 +38,21 @@ public class MonVCalcStatoObjDaTrasf implements Serializable {
 
     @Column(name = "TI_STATO_OBJECT_PADRE")
     public String getTiStatoObjectPadre() {
-	return this.tiStatoObjectPadre;
+        return this.tiStatoObjectPadre;
     }
 
     public void setTiStatoObjectPadre(String tiStatoObjectPadre) {
-	this.tiStatoObjectPadre = tiStatoObjectPadre;
+        this.tiStatoObjectPadre = tiStatoObjectPadre;
     }
 
     @Id
     @Column(name = "ID_OGGETTO_PADRE")
     public BigDecimal getIdOggettoPadre() {
-	return this.idOggettoPadre;
+        return this.idOggettoPadre;
     }
 
     public void setIdOggettoPadre(BigDecimal idOggettoPadre) {
-	this.idOggettoPadre = idOggettoPadre;
+        this.idOggettoPadre = idOggettoPadre;
     }
 
 }

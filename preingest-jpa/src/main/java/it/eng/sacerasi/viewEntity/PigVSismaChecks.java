@@ -40,39 +40,39 @@ public class PigVSismaChecks implements Serializable {
 
     @Column(name = "FL_FILE_MANCANTE", columnDefinition = "CHAR")
     public String getFlFileMancante() {
-	return this.flFileMancante;
+        return this.flFileMancante;
     }
 
     public void setFlFileMancante(String flFileMancante) {
-	this.flFileMancante = flFileMancante;
+        this.flFileMancante = flFileMancante;
     }
 
     @Column(name = "FL_VERIFICA_ERRATA", columnDefinition = "CHAR")
     public String getFlVerificaErrata() {
-	return this.flVerificaErrata;
+        return this.flVerificaErrata;
     }
 
     public void setFlVerificaErrata(String flVerificaErrata) {
-	this.flVerificaErrata = flVerificaErrata;
+        this.flVerificaErrata = flVerificaErrata;
     }
 
     @Column(name = "FL_VERIFICA_IN_CORSO", columnDefinition = "CHAR")
     public String getFlVerificaInCorso() {
-	return this.flVerificaInCorso;
+        return this.flVerificaInCorso;
     }
 
     public void setFlVerificaInCorso(String flVerificaInCorso) {
-	this.flVerificaInCorso = flVerificaInCorso;
+        this.flVerificaInCorso = flVerificaInCorso;
     }
 
     @Id
     @Column(name = "ID_SISMA")
     public BigDecimal getIdSisma() {
-	return this.idSisma;
+        return this.idSisma;
     }
 
     public void setIdSisma(BigDecimal idSisma) {
-	this.idSisma = idSisma;
+        this.idSisma = idSisma;
     }
 
 }

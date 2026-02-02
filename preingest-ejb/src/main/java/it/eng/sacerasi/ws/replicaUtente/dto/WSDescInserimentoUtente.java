@@ -24,16 +24,16 @@ public class WSDescInserimentoUtente implements IWSDesc {
 
     @Override
     public String getVersione() {
-	return Costanti.WS_INSERIMENTO_UTENTE_VRSN;
+        return Costanti.WS_INSERIMENTO_UTENTE_VRSN;
     }
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_INSERIMENTO_UTENTE_ASYNC;
+        return Costanti.WS_INSERIMENTO_UTENTE_ASYNC;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_INSERIMENTO_UTENTE_COMP;
+        return Costanti.WS_INSERIMENTO_UTENTE_COMP;
     }
 }

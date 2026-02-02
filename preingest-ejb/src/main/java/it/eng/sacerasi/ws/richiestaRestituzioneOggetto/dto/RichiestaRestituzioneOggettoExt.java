@@ -36,97 +36,97 @@ public class RichiestaRestituzioneOggettoExt implements ISoapWSBase {
 
     @Override
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     @Override
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     @Override
     public RispostaControlli checkVersioneRequest(String versione) {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getVersioneCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public EnumSet<Costanti.ModificatoriWS> getModificatoriWSCalc() {
-	throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
      * @return the richiestaRestituzioneOggettoInput
      */
     public RichiestaRestituzioneOggettoInput getRichiestaRestituzioneOggettoInput() {
-	return richiestaRestituzioneOggettoInput;
+        return richiestaRestituzioneOggettoInput;
     }
 
     /**
      * @param richiestaRestituzioneOggettoInput the richiestaRestituzioneOggettoInput to set
      */
     public void setRichiestaRestituzioneOggettoInput(
-	    RichiestaRestituzioneOggettoInput richiestaRestituzioneOggettoInput) {
-	this.richiestaRestituzioneOggettoInput = richiestaRestituzioneOggettoInput;
+            RichiestaRestituzioneOggettoInput richiestaRestituzioneOggettoInput) {
+        this.richiestaRestituzioneOggettoInput = richiestaRestituzioneOggettoInput;
     }
 
     /**
      * @return the statoSessione
      */
     public Constants.StatoSessioneRecup getStatoSessione() {
-	return statoSessione;
+        return statoSessione;
     }
 
     /**
      * @param statoSessione the statoSessione to set
      */
     public void setStatoSessione(Constants.StatoSessioneRecup statoSessione) {
-	this.statoSessione = statoSessione;
+        this.statoSessione = statoSessione;
     }
 
     /**
      * @return the idVersatore
      */
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     /**
      * @param idVersatore the idVersatore to set
      */
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     /**
      * @return the idObject
      */
     public Long getIdObject() {
-	return idObject;
+        return idObject;
     }
 
     /**
      * @param idObject the idObject to set
      */
     public void setIdObject(Long idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
     /**
      * @return the dtApertura
      */
     public Date getDtApertura() {
-	return dtApertura;
+        return dtApertura;
     }
 
     /**
      * @param dtApertura the dtApertura to set
      */
     public void setDtApertura(Date dtApertura) {
-	this.dtApertura = dtApertura;
+        this.dtApertura = dtApertura;
     }
 }

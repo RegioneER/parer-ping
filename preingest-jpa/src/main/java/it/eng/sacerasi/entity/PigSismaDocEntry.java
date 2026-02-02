@@ -48,31 +48,31 @@ public class PigSismaDocEntry implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_SISMA_DOC_ENTRY_IDSISMADOCENTRY_GENERATOR")
     @Column(name = "ID_SISMA_DOC_ENTRY")
     public Long getIdSismaDocEntry() {
-	return idSismaDocEntry;
+        return idSismaDocEntry;
     }
 
     public void setIdSismaDocEntry(Long idSismaDocEntry) {
-	this.idSismaDocEntry = idSismaDocEntry;
+        this.idSismaDocEntry = idSismaDocEntry;
     }
 
     @Column(name = "NM_ENTRY")
     public String getNmEntry() {
-	return nmEntry;
+        return nmEntry;
     }
 
     public void setNmEntry(String nmEntry) {
-	this.nmEntry = nmEntry;
+        this.nmEntry = nmEntry;
     }
 
     // bi-directional many-to-one association to PigSisma
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_DOCUMENTI")
     public PigSismaDocumenti getPigSismaDocumenti() {
-	return pigSismaDocumenti;
+        return pigSismaDocumenti;
     }
 
     public void setPigSismaDocumenti(PigSismaDocumenti pigSismaDocumenti) {
-	this.pigSismaDocumenti = pigSismaDocumenti;
+        this.pigSismaDocumenti = pigSismaDocumenti;
     }
 
 }

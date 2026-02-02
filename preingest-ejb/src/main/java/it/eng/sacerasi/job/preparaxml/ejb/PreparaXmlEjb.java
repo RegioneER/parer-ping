@@ -46,7 +46,7 @@ import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 @Stateless(mappedName = "PreparaXmlEjb")
 @LocalBean
 @Interceptors({
-	it.eng.sacerasi.aop.TransactionInterceptor.class })
+        it.eng.sacerasi.aop.TransactionInterceptor.class })
 public class PreparaXmlEjb {
 
     Logger log = LoggerFactory.getLogger(PreparaXmlEjb.class);
@@ -68,55 +68,55 @@ public class PreparaXmlEjb {
     private PrioritaEjb prioritaEjb;
 
     public void preparaXml() throws ParerInternalError, ObjectStorageException {
-	List<PigObject> tmpOggetti = null;
-	String rootFtpValue;
+        List<PigObject> tmpOggetti = null;
+        String rootFtpValue;
 
-	rootFtpValue = commonDb.getRootFtpParam();
-	tmpOggetti = controlli.getListaObjectDaVersPostHash();
-	log.info("Preparazione XML:: oggetti da processare dopo il calcolo hash: {}",
-		tmpOggetti.size());
+        rootFtpValue = commonDb.getRootFtpParam();
+        tmpOggetti = controlli.getListaObjectDaVersPostHash();
+        log.info("Preparazione XML:: oggetti da processare dopo il calcolo hash: {}",
+                tmpOggetti.size());
 
-	for (PigObject tmpObject : tmpOggetti) {
-	    OggettoInCoda tmpOggInCoda = new OggettoInCoda();
-	    tmpOggInCoda.setRifPigObject(tmpObject);
-	    me.elabora(tmpOggInCoda, rootFtpValue);
-	}
+        for (PigObject tmpObject : tmpOggetti) {
+            OggettoInCoda tmpOggInCoda = new OggettoInCoda();
+            tmpOggInCoda.setRifPigObject(tmpObject);
+            me.elabora(tmpOggInCoda, rootFtpValue);
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void elabora(OggettoInCoda oggetto, String rootFtpValue)
-	    throws ParerInternalError, ObjectStorageException {
-	preparazioneXml.prepara(oggetto, rootFtpValue);
-	if (oggetto.getSeverity() != SeverityEnum.ERROR) {
-	    produzioneXml.produci(oggetto);
-	    salvataggioPrepXml.salvaTutto(oggetto);
+            throws ParerInternalError, ObjectStorageException {
+        preparazioneXml.prepara(oggetto, rootFtpValue);
+        if (oggetto.getSeverity() != SeverityEnum.ERROR) {
+            produzioneXml.produci(oggetto);
+            salvataggioPrepXml.salvaTutto(oggetto);
 
-	    // Controllo della valorizzazione di tutte le organizzazione a cui versare in Sacer
-	    BigDecimal idObject = new BigDecimal(oggetto.getRifPigObject().getIdObject());
-	    if (!controlli.checkStrutturaPigVChkOrgVersSacer(idObject)) {
-		oggetto.setSeverity(SeverityEnum.ERROR);
-		oggetto.setErrorCode(MessaggiWSBundle.PING_PREPXML_FILE_015);
-		oggetto.setErrorMessage(
-			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_015));
-	    } else if (!controlli.checkSimulazionePigVChkSimulaVersSacer(idObject)) {
-		oggetto.setSeverity(SeverityEnum.ERROR);
-		oggetto.setErrorCode(MessaggiWSBundle.PING_PREPXML_FILE_016);
-		oggetto.setErrorMessage(
-			MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_016));
-	    }
-	    if (oggetto.getSeverity() == SeverityEnum.ERROR) {
-		// gestione errore a posteriori
-		salvaErrore.chiudiInErrore(rootFtpValue, oggetto, false);
-	    }
-	} else {
-	    // gestione errore
-	    salvaErrore.chiudiInErrore(rootFtpValue, oggetto, false);
-	}
+            // Controllo della valorizzazione di tutte le organizzazione a cui versare in Sacer
+            BigDecimal idObject = new BigDecimal(oggetto.getRifPigObject().getIdObject());
+            if (!controlli.checkStrutturaPigVChkOrgVersSacer(idObject)) {
+                oggetto.setSeverity(SeverityEnum.ERROR);
+                oggetto.setErrorCode(MessaggiWSBundle.PING_PREPXML_FILE_015);
+                oggetto.setErrorMessage(
+                        MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_015));
+            } else if (!controlli.checkSimulazionePigVChkSimulaVersSacer(idObject)) {
+                oggetto.setSeverity(SeverityEnum.ERROR);
+                oggetto.setErrorCode(MessaggiWSBundle.PING_PREPXML_FILE_016);
+                oggetto.setErrorMessage(
+                        MessaggiWSBundle.getString(MessaggiWSBundle.PING_PREPXML_FILE_016));
+            }
+            if (oggetto.getSeverity() == SeverityEnum.ERROR) {
+                // gestione errore a posteriori
+                salvaErrore.chiudiInErrore(rootFtpValue, oggetto, false);
+            }
+        } else {
+            // gestione errore
+            salvaErrore.chiudiInErrore(rootFtpValue, oggetto, false);
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciAging() {
-	List<PigObject> objects = controlli.getListaObjectDaVersPostHash();
-	objects.stream().forEach(prioritaEjb::valutaEscalation);
+        List<PigObject> objects = controlli.getListaObjectDaVersPostHash();
+        objects.stream().forEach(prioritaEjb::valutaEscalation);
     }
 }

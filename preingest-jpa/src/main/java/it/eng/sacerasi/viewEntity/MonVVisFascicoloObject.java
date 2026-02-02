@@ -51,170 +51,170 @@ public class MonVVisFascicoloObject implements Serializable {
     private String tiStatoFascicoloObject;
 
     public MonVVisFascicoloObject() {
-	// orm?
+        // orm?
     }
 
     @Column(name = "AA_FASCICOLO_SACER")
     public BigDecimal getAaFascicoloSacer() {
-	return this.aaFascicoloSacer;
+        return this.aaFascicoloSacer;
     }
 
     public void setAaFascicoloSacer(BigDecimal aaFascicoloSacer) {
-	this.aaFascicoloSacer = aaFascicoloSacer;
+        this.aaFascicoloSacer = aaFascicoloSacer;
     }
 
     @Lob
     @Column(name = "BL_XML_VERS_SACER")
     public String getBlXmlVersSacer() {
-	return this.blXmlVersSacer;
+        return this.blXmlVersSacer;
     }
 
     public void setBlXmlVersSacer(String blXmlVersSacer) {
-	this.blXmlVersSacer = blXmlVersSacer;
+        this.blXmlVersSacer = blXmlVersSacer;
     }
 
     @Column(name = "CD_ERR_SACER")
     public String getCdErrSacer() {
-	return this.cdErrSacer;
+        return this.cdErrSacer;
     }
 
     public void setCdErrSacer(String cdErrSacer) {
-	this.cdErrSacer = cdErrSacer;
+        this.cdErrSacer = cdErrSacer;
     }
 
     @Column(name = "CD_KEY_OBJECT")
     public String getCdKeyObject() {
-	return this.cdKeyObject;
+        return this.cdKeyObject;
     }
 
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 
     @Column(name = "CD_KEY_FASCICOLO_SACER")
     public String getCdKeyFascicoloSacer() {
-	return this.cdKeyFascicoloSacer;
+        return this.cdKeyFascicoloSacer;
     }
 
     public void setCdKeyFascicoloSacer(String cdKeyFascicoloSacer) {
-	this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
+        this.cdKeyFascicoloSacer = cdKeyFascicoloSacer;
     }
 
     @Column(name = "DL_COMPOSITO_ORGANIZ")
     public String getDlCompositoOrganiz() {
-	return this.dlCompositoOrganiz;
+        return this.dlCompositoOrganiz;
     }
 
     public void setDlCompositoOrganiz(String dlCompositoOrganiz) {
-	this.dlCompositoOrganiz = dlCompositoOrganiz;
+        this.dlCompositoOrganiz = dlCompositoOrganiz;
     }
 
     @Column(name = "DL_ERR_SACER")
     public String getDlErrSacer() {
-	return this.dlErrSacer;
+        return this.dlErrSacer;
     }
 
     public void setDlErrSacer(String dlErrSacer) {
-	this.dlErrSacer = dlErrSacer;
+        this.dlErrSacer = dlErrSacer;
     }
 
     @Column(name = "DS_INFO_OBJECT")
     public String getDsInfoObject() {
-	return this.dsInfoObject;
+        return this.dsInfoObject;
     }
 
     public void setDsInfoObject(String dsInfoObject) {
-	this.dsInfoObject = dsInfoObject;
+        this.dsInfoObject = dsInfoObject;
     }
 
     @Column(name = "FL_VERS_SIMULATO", columnDefinition = "char")
     public String getFlVersSimulato() {
-	return this.flVersSimulato;
+        return this.flVersSimulato;
     }
 
     public void setFlVersSimulato(String flVersSimulato) {
-	this.flVersSimulato = flVersSimulato;
+        this.flVersSimulato = flVersSimulato;
     }
 
     @Column(name = "FL_XML_MOD", columnDefinition = "char")
     public String getFlXMlMod() {
-	return flXMlMod;
+        return flXMlMod;
     }
 
     public void setFlXMlMod(String flXMlMod) {
-	this.flXMlMod = flXMlMod;
+        this.flXMlMod = flXMlMod;
     }
 
     @Column(name = "ID_ORGANIZ_IAM")
     public BigDecimal getIdOrganizIam() {
-	return this.idOrganizIam;
+        return this.idOrganizIam;
     }
 
     public void setIdOrganizIam(BigDecimal idOrganizIam) {
-	this.idOrganizIam = idOrganizIam;
+        this.idOrganizIam = idOrganizIam;
     }
 
     @Id
     @Column(name = "ID_FASCICOLO_OBJECT")
     public BigDecimal getIdFascicoloObject() {
-	return this.idFascicoloObject;
+        return this.idFascicoloObject;
     }
 
     public void setIdFascicoloObject(BigDecimal idFascicoloObject) {
-	this.idFascicoloObject = idFascicoloObject;
+        this.idFascicoloObject = idFascicoloObject;
     }
 
     @Column(name = "NI_SIZE_FILE_BYTE")
     public BigDecimal getNiSizeFileByte() {
-	return this.niSizeFileByte;
+        return this.niSizeFileByte;
     }
 
     public void setNiSizeFileByte(BigDecimal niSizeFileByte) {
-	this.niSizeFileByte = niSizeFileByte;
+        this.niSizeFileByte = niSizeFileByte;
     }
 
     @Column(name = "NM_AMBIENTE_VERS")
     public String getNmAmbienteVers() {
-	return this.nmAmbienteVers;
+        return this.nmAmbienteVers;
     }
 
     public void setNmAmbienteVers(String nmAmbienteVers) {
-	this.nmAmbienteVers = nmAmbienteVers;
+        this.nmAmbienteVers = nmAmbienteVers;
     }
 
     @Column(name = "NM_TIPO_OBJECT")
     public String getNmTipoObject() {
-	return this.nmTipoObject;
+        return this.nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     @Column(name = "NM_VERS")
     public String getNmVers() {
-	return this.nmVers;
+        return this.nmVers;
     }
 
     public void setNmVers(String nmVers) {
-	this.nmVers = nmVers;
+        this.nmVers = nmVers;
     }
 
     @Column(name = "TI_STATO_OBJECT")
     public String getTiStatoObject() {
-	return this.tiStatoObject;
+        return this.tiStatoObject;
     }
 
     public void setTiStatoObject(String tiStatoObject) {
-	this.tiStatoObject = tiStatoObject;
+        this.tiStatoObject = tiStatoObject;
     }
 
     @Column(name = "TI_STATO_FASCICOLO_OBJECT")
     public String getTiStatoFascicoloObject() {
-	return this.tiStatoFascicoloObject;
+        return this.tiStatoFascicoloObject;
     }
 
     public void setTiStatoFascicoloObject(String tiStatoFascicoloObject) {
-	this.tiStatoFascicoloObject = tiStatoFascicoloObject;
+        this.tiStatoFascicoloObject = tiStatoFascicoloObject;
     }
 }

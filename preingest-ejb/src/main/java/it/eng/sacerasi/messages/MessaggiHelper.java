@@ -41,65 +41,65 @@ public class MessaggiHelper {
     private EntityManager entityManager;
 
     public List<PigErrore> retrieveListaErrori(String cdClasseErrore) {
-	String qlString = "SELECT e FROM PigErrore e " + (StringUtils.isNotBlank(cdClasseErrore)
-		? "WHERE e.pigClasseErrore.cdClasseErrore = :cdClasseErrore"
-		: "");
-	Query query = entityManager.createQuery(qlString);
-	if (StringUtils.isNotBlank(cdClasseErrore)) {
-	    query.setParameter("cdClasseErrore", cdClasseErrore);
-	}
-	return query.getResultList();
+        String qlString = "SELECT e FROM PigErrore e " + (StringUtils.isNotBlank(cdClasseErrore)
+                ? "WHERE e.pigClasseErrore.cdClasseErrore = :cdClasseErrore"
+                : "");
+        Query query = entityManager.createQuery(qlString);
+        if (StringUtils.isNotBlank(cdClasseErrore)) {
+            query.setParameter("cdClasseErrore", cdClasseErrore);
+        }
+        return query.getResultList();
     }
 
     public List<PigClasseErrore> retrieveListaClassi(String tiStato) {
-	String qlString = "SELECT c FROM PigStatoClasseErrore sc " + "JOIN sc.pigClasseErrore c "
-		+ (StringUtils.isNotBlank(tiStato)
-			? "WHERE sc.pigStatoObject.tiStatoObject = :tiStato"
-			: "");
-	Query query = entityManager.createQuery(qlString);
-	if (StringUtils.isNotBlank(tiStato)) {
-	    query.setParameter("tiStato", tiStato);
-	}
-	return query.getResultList();
+        String qlString = "SELECT c FROM PigStatoClasseErrore sc " + "JOIN sc.pigClasseErrore c "
+                + (StringUtils.isNotBlank(tiStato)
+                        ? "WHERE sc.pigStatoObject.tiStatoObject = :tiStato"
+                        : "");
+        Query query = entityManager.createQuery(qlString);
+        if (StringUtils.isNotBlank(tiStato)) {
+            query.setParameter("tiStato", tiStato);
+        }
+        return query.getResultList();
     }
 
     public List<PigClasseErrore> retrieveListaClassi(List<String> tiStato) {
-	Query query = entityManager
-		.createQuery("SELECT c FROM PigStatoClasseErrore sc " + "JOIN sc.pigClasseErrore c "
-			+ "WHERE sc.pigStatoObject.tiStatoObject IN (:tiStato)");
-	query.setParameter("tiStato", tiStato);
-	return query.getResultList();
+        Query query = entityManager
+                .createQuery("SELECT c FROM PigStatoClasseErrore sc " + "JOIN sc.pigClasseErrore c "
+                        + "WHERE sc.pigStatoObject.tiStatoObject IN (:tiStato)");
+        query.setParameter("tiStato", tiStato);
+        return query.getResultList();
     }
 
     public PigErrore retrievePigErrore(String cdErrore) {
-	Query query = entityManager.createQuery(
-		"SELECT errore FROM PigErrore errore WHERE errore.cdErrore = :cdErrore");
-	query.setParameter("cdErrore", cdErrore);
-	List<PigErrore> list = query.getResultList();
-	if (!list.isEmpty()) {
-	    return list.get(0);
-	}
-	return null;
+        Query query = entityManager.createQuery(
+                "SELECT errore FROM PigErrore errore WHERE errore.cdErrore = :cdErrore");
+        query.setParameter("cdErrore", cdErrore);
+        List<PigErrore> list = query.getResultList();
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public PigErrore retrievePigErroreNewTx(String cdErrore) {
-	Query query = entityManager.createQuery(
-		"SELECT errore FROM PigErrore errore " + "WHERE errore.cdErrore = :cdErrore");
-	query.setParameter("cdErrore", cdErrore);
-	List<PigErrore> list = query.getResultList();
-	if (!list.isEmpty()) {
-	    return list.get(0);
-	}
-	return null;
+        Query query = entityManager.createQuery(
+                "SELECT errore FROM PigErrore errore " + "WHERE errore.cdErrore = :cdErrore");
+        query.setParameter("cdErrore", cdErrore);
+        List<PigErrore> list = query.getResultList();
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
     public List<PigErrore> retrievePigErroreLike(String cdErrore) {
-	cdErrore += "%";
-	Query query = entityManager.createQuery(
-		"SELECT errore FROM PigErrore errore " + "WHERE errore.cdErrore LIKE :cdErrore");
-	query.setParameter("cdErrore", cdErrore);
-	return query.getResultList();
+        cdErrore += "%";
+        Query query = entityManager.createQuery(
+                "SELECT errore FROM PigErrore errore " + "WHERE errore.cdErrore LIKE :cdErrore");
+        query.setParameter("cdErrore", cdErrore);
+        return query.getResultList();
     }
 
 }

@@ -1,12 +1,29 @@
+<%--
+ Engineering Ingegneria Informatica S.p.A.
+
+ Copyright (C) 2023 Regione Emilia-Romagna
+ <p/>
+ This program is free software: you can redistribute it and/or modify it under the terms of
+ the GNU Affero General Public License as published by the Free Software Foundation,
+ either version 3 of the License, or (at your option) any later version.
+ <p/>
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU Affero General Public License for more details.
+ <p/>
+ You should have received a copy of the GNU Affero General Public License along with this program.
+ If not, see <https://www.gnu.org/licenses/>.
+ --%>
+
 <%@ page import="it.eng.sacerasi.slite.gen.form.VersamentoOggettoForm" pageEncoding="UTF-8"%>
 <%@ include file="../../include.jsp"%>
 
 <sl:html>
     <sl:head title="Versamento oggetto da trasformare" >
-        <link rel="stylesheet" type="text/css" href="/sacerping/webjars/plupload/2.3.9/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
-        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/plupload.full.min.js"></script>
-        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
-        <script type="text/javascript" src="/sacerping/webjars/plupload/2.3.9/js/i18n/it.js"></script>
+        <link rel="stylesheet" type="text/css" href="/sacerping/webjars/plupload/3.1.5/js/jquery.plupload.queue/css/jquery.plupload.queue.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="/sacerping/webjars/plupload/3.1.5/js/plupload.full.min.js"></script>
+        <script type="text/javascript" src="/sacerping/webjars/plupload/3.1.5/js/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+        <script type="text/javascript" src="/sacerping/webjars/plupload/3.1.5/js/i18n/it.js"></script>
 
         <script type="text/javascript" src="/sacerping/js/versamentoOSClient.js"></script>
         <script type="text/javascript" src="/sacerping/js/versamentoOggetto.js"></script>

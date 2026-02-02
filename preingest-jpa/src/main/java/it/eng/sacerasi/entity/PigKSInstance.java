@@ -41,37 +41,37 @@ public class PigKSInstance implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_KS_INSTANCE_IDKS_INSTANCE_GENERATOR")
     @Column(name = "ID_KS_INSTANCE")
     public Long getIdKsInstance() {
-	return this.idKsInstance;
+        return this.idKsInstance;
     }
 
     public void setIdKsInstance(Long idKsInstance) {
-	this.idKsInstance = idKsInstance;
+        this.idKsInstance = idKsInstance;
     }
 
     @Column(name = "NM_KS_INSTANCE")
     public String getNmKsInstance() {
-	return nmKsInstance;
+        return nmKsInstance;
     }
 
     public void setNmKsInstance(String nmKsInstance) {
-	this.nmKsInstance = nmKsInstance;
+        this.nmKsInstance = nmKsInstance;
     }
 
     @Column(name = "URL_KS_INSTANCE")
     public String getUrlKsInstance() {
-	return urlKsInstance;
+        return urlKsInstance;
     }
 
     public void setUrlKsInstance(String urlKsInstance) {
-	this.urlKsInstance = urlKsInstance;
+        this.urlKsInstance = urlKsInstance;
     }
 
     @Column(name = "DIR_KS_INSTANCE")
     public String getDirKsInstance() {
-	return dirKsInstance;
+        return dirKsInstance;
     }
 
     public void setDirKsInstance(String dirKsInstance) {
-	this.dirKsInstance = dirKsInstance;
+        this.dirKsInstance = dirKsInstance;
     }
 }

@@ -35,56 +35,56 @@ import org.slf4j.LoggerFactory;
 public class ControlliRichiestaRestituzioneOggetto {
 
     private static final Logger log = LoggerFactory
-	    .getLogger(ControlliRichiestaRestituzioneOggetto.class);
+            .getLogger(ControlliRichiestaRestituzioneOggetto.class);
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
 
     public RispostaControlli verificaOggetto(Long idObject) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
 
-	PigObject obj = entityManager.find(PigObject.class, idObject);
-	if (rispostaControlli.isrBoolean()
-		&& !obj.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name())) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_007);
-	    rispostaControlli
-		    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_007));
-	}
-	if (rispostaControlli.isrBoolean() && !obj.getPigTipoObject().getTiVersFile()
-		.equals(Constants.TipoVersamento.NO_ZIP.name())) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_006);
-	    rispostaControlli
-		    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_006));
-	}
-	// Per il terzo controllo bisogna ottenere la sessione più recente relativa all'oggetto
-	if (rispostaControlli.isrBoolean()) {
-	    // Eseguo una select verificando che non esistano sessioni con stato
-	    // 'IN_ATTESA_RECUP','RECUPERATO','IN_ATTESA_PRELIEVO','CHIUSO_OK'.
-	    try {
-		String queryStr = "SELECT COUNT(ses) FROM PigSessioneRecup ses "
-			+ "WHERE ses.pigObject.idObject = :idObj "
-			+ "AND ses.tiStato IN ('IN_ATTESA_RECUP','RECUPERATO','IN_ATTESA_PRELIEVO','CHIUSO_OK')";
+        PigObject obj = entityManager.find(PigObject.class, idObject);
+        if (rispostaControlli.isrBoolean()
+                && !obj.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name())) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_007);
+            rispostaControlli
+                    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_007));
+        }
+        if (rispostaControlli.isrBoolean() && !obj.getPigTipoObject().getTiVersFile()
+                .equals(Constants.TipoVersamento.NO_ZIP.name())) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_006);
+            rispostaControlli
+                    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_006));
+        }
+        // Per il terzo controllo bisogna ottenere la sessione più recente relativa all'oggetto
+        if (rispostaControlli.isrBoolean()) {
+            // Eseguo una select verificando che non esistano sessioni con stato
+            // 'IN_ATTESA_RECUP','RECUPERATO','IN_ATTESA_PRELIEVO','CHIUSO_OK'.
+            try {
+                String queryStr = "SELECT COUNT(ses) FROM PigSessioneRecup ses "
+                        + "WHERE ses.pigObject.idObject = :idObj "
+                        + "AND ses.tiStato IN ('IN_ATTESA_RECUP','RECUPERATO','IN_ATTESA_PRELIEVO','CHIUSO_OK')";
 
-		javax.persistence.Query query = entityManager.createQuery(queryStr);
-		query.setParameter("idObj", idObject);
-		Long count = (Long) query.getSingleResult();
-		if (count > 0) {
-		    rispostaControlli.setrBoolean(false);
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_008);
-		    rispostaControlli.setDsErr(
-			    MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_008));
-		}
-	    } catch (Exception e) {
-		rispostaControlli.setrBoolean(false);
-		rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
-		rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
-			String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
-		log.error("Eccezione nella lettura  della tabella delle sessioni di recupero ", e);
-	    }
-	}
+                javax.persistence.Query query = entityManager.createQuery(queryStr);
+                query.setParameter("idObj", idObject);
+                Long count = (Long) query.getSingleResult();
+                if (count > 0) {
+                    rispostaControlli.setrBoolean(false);
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_RICHOBJ_008);
+                    rispostaControlli.setDsErr(
+                            MessaggiWSBundle.getString(MessaggiWSBundle.PING_RICHOBJ_008));
+                }
+            } catch (Exception e) {
+                rispostaControlli.setrBoolean(false);
+                rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+                rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                        String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
+                log.error("Eccezione nella lettura  della tabella delle sessioni di recupero ", e);
+            }
+        }
 
-	return rispostaControlli;
+        return rispostaControlli;
     }
 }

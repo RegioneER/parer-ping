@@ -27,20 +27,11 @@ import javax.ejb.Singleton;
 import javax.jws.WebResult;
 import javax.xml.ws.WebServiceException;
 
+import it.eng.parer.kettle.model.*;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
-import it.eng.parer.kettle.model.AbstractEsito;
-import it.eng.parer.kettle.model.Esito;
-import it.eng.parer.kettle.model.EsitoCartella;
-import it.eng.parer.kettle.model.EsitoEsitenzaCartella;
-import it.eng.parer.kettle.model.EsitoJob;
-import it.eng.parer.kettle.model.EsitoListaParametri;
-import it.eng.parer.kettle.model.EsitoTransformation;
-import it.eng.parer.kettle.model.KettleJob;
-import it.eng.parer.kettle.model.KettleTransformation;
-import it.eng.parer.kettle.model.Parametro;
 import it.eng.parer.kettle.soap.client.TrasformazioniSoapService;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.xformer.common.Constants;
@@ -59,19 +50,19 @@ public class KettleWsClient {
 
     @PostConstruct
     protected void generateClient() {
-	JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 
-	Map<String, Object> props = new HashMap<String, Object>();
-	props.put("mtom-enabled", Boolean.TRUE);
-	factory.setProperties(props);
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put("mtom-enabled", Boolean.TRUE);
+        factory.setProperties(props);
 
-	factory.setServiceClass(TrasformazioniSoapService.class);
+        factory.setServiceClass(TrasformazioniSoapService.class);
 
-	String wsEndpoint = configurationHelper
-		.getValoreParamApplicByApplic(Constants.XFO_KETTLE_WS_ENDPOINT);
-	factory.setAddress(wsEndpoint);
+        String wsEndpoint = configurationHelper
+                .getValoreParamApplicByApplic(Constants.XFO_KETTLE_WS_ENDPOINT);
+        factory.setAddress(wsEndpoint);
 
-	client = (TrasformazioniSoapService) factory.create();
+        client = (TrasformazioniSoapService) factory.create();
     }
 
     /*
@@ -88,20 +79,20 @@ public class KettleWsClient {
      * @return Esito dell'avvenuto lancio della trasformazione
      */
     public Esito eseguiTrasformazione(long idOggetto, String nomeTrasformazione,
-	    Map<String, String> parametri) throws KettleServiceException {
-	try {
-	    List<Parametro> parametriList = new ArrayList<Parametro>();
+            Map<String, String> parametri) throws KettleServiceException {
+        try {
+            List<Parametro> parametriList = new ArrayList<Parametro>();
 
-	    for (Map.Entry<String, String> parametro : parametri.entrySet()) {
-		parametriList.add(new Parametro(parametro.getKey(), parametro.getValue()));
-	    }
+            for (Map.Entry<String, String> parametro : parametri.entrySet()) {
+                parametriList.add(new Parametro(parametro.getKey(), parametro.getValue()));
+            }
 
-	    Esito esito = client.eseguiTrasformazione(idOggetto, nomeTrasformazione, parametriList);
-	    return esito;
+            Esito esito = client.eseguiTrasformazione(idOggetto, nomeTrasformazione, parametriList);
+            return esito;
 
-	} catch (WebServiceException ex) {
-	    throw new KettleServiceException(ex.getMessage(), ex);
-	}
+        } catch (WebServiceException ex) {
+            throw new KettleServiceException(ex.getMessage(), ex);
+        }
     }
 
     /**
@@ -113,16 +104,16 @@ public class KettleWsClient {
      * @throws KettleException errore generico
      */
     public void inserisciJob(File jobXmlFile, String versionComment) throws KettleException {
-	DataHandler jobDescriptor = new DataHandler(new FileDataSource(jobXmlFile));
+        DataHandler jobDescriptor = new DataHandler(new FileDataSource(jobXmlFile));
 
-	KettleJob kettleJob = new KettleJob();
-	kettleJob.setJobDescriptor(jobDescriptor);
-	kettleJob.setVersione(versionComment);
+        KettleJob kettleJob = new KettleJob();
+        kettleJob.setJobDescriptor(jobDescriptor);
+        kettleJob.setVersione(versionComment);
 
-	EsitoJob esito = client.inserisciJob(kettleJob);
-	if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-	    throw new KettleException(esito.getDettaglio());
-	}
+        EsitoJob esito = client.inserisciJob(kettleJob);
+        if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+            throw new KettleException(esito.getDettaglio());
+        }
     }
 
     /**
@@ -135,18 +126,18 @@ public class KettleWsClient {
      * @throws KettleException errore generico
      */
     public void inserisciTransformation(File transformationXmlFile, String versionComment)
-	    throws KettleException {
-	DataHandler transformationDescriptor = new DataHandler(
-		new FileDataSource(transformationXmlFile));
+            throws KettleException {
+        DataHandler transformationDescriptor = new DataHandler(
+                new FileDataSource(transformationXmlFile));
 
-	KettleTransformation kettleTrasformation = new KettleTransformation();
-	kettleTrasformation.setTransformationDescriptor(transformationDescriptor);
-	kettleTrasformation.setVersione(versionComment);
+        KettleTransformation kettleTrasformation = new KettleTransformation();
+        kettleTrasformation.setTransformationDescriptor(transformationDescriptor);
+        kettleTrasformation.setVersione(versionComment);
 
-	EsitoTransformation esito = client.inserisciTransformation(kettleTrasformation);
-	if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-	    throw new KettleException(esito.getDettaglio());
-	}
+        EsitoTransformation esito = client.inserisciTransformation(kettleTrasformation);
+        if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+            throw new KettleException(esito.getDettaglio());
+        }
     }
 
     /**
@@ -157,10 +148,10 @@ public class KettleWsClient {
      * @throws KettleException errore generico
      */
     public void inserisciCartella(String nomeCartella) throws KettleException {
-	EsitoCartella esito = client.inserisciCartella(nomeCartella);
-	if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-	    throw new KettleException(esito.getDettaglio());
-	}
+        EsitoCartella esito = client.inserisciCartella(nomeCartella);
+        if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+            throw new KettleException(esito.getDettaglio());
+        }
     }
 
     /**
@@ -171,10 +162,10 @@ public class KettleWsClient {
      * @throws KettleException errore generico
      */
     public void eliminaCartella(String nomeCartella) throws KettleException {
-	EsitoCartella esito = client.eliminaCartella(nomeCartella);
-	if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-	    throw new KettleException(esito.getDettaglio());
-	}
+        EsitoCartella esito = client.eliminaCartella(nomeCartella);
+        if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+            throw new KettleException(esito.getDettaglio());
+        }
     }
 
     /**
@@ -190,25 +181,25 @@ public class KettleWsClient {
      */
     @WebResult(name = "ParametriList")
     public Map<String, String> ottieniParametri(String nomeTrasformazione)
-	    throws KettleException, KettleServiceException {
-	try {
-	    Map<String, String> parametersMap = new HashMap<>();
+            throws KettleException, KettleServiceException {
+        try {
+            Map<String, String> parametersMap = new HashMap<>();
 
-	    EsitoListaParametri esito = client.ottieniParametri(nomeTrasformazione);
-	    if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-		throw new KettleException(esito.getDettaglio());
-	    }
+            EsitoListaParametri esito = client.ottieniParametri(nomeTrasformazione);
+            if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+                throw new KettleException(esito.getDettaglio());
+            }
 
-	    List<Parametro> parameters = esito.getParameters();
-	    for (Parametro parameter : parameters) {
-		parametersMap.put(parameter.getNomeParametro(), parameter.getValoreParametro());
-	    }
+            List<Parametro> parameters = esito.getParameters();
+            for (Parametro parameter : parameters) {
+                parametersMap.put(parameter.getNomeParametro(), parameter.getValoreParametro());
+            }
 
-	    return parametersMap;
-	} catch (WebServiceException ex) {
-	    throw new KettleServiceException(
-		    "Errore di connessione con Parer Kettle server: " + ex.getMessage());
-	}
+            return parametersMap;
+        } catch (WebServiceException ex) {
+            throw new KettleServiceException(
+                    "Errore di connessione con Parer Kettle server: " + ex.getMessage());
+        }
     }
 
     /**
@@ -222,11 +213,11 @@ public class KettleWsClient {
      */
     @WebResult(name = "Esistenza")
     public boolean esistenzaCartella(String nomeCartella) throws KettleException {
-	EsitoEsitenzaCartella esito = client.esistenzaCartella(nomeCartella);
-	if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
-	    throw new KettleException(esito.getDettaglio());
-	}
+        EsitoEsitenzaCartella esito = client.esistenzaCartella(nomeCartella);
+        if (esito.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.KO) {
+            throw new KettleException(esito.getDettaglio());
+        }
 
-	return esito.isEsito();
+        return esito.isEsito();
     }
 }

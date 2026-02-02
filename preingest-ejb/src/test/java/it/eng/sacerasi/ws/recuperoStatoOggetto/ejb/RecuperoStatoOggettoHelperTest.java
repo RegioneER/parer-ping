@@ -45,26 +45,26 @@ public class RecuperoStatoOggettoHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(RecuperoStatoOggettoHelper.class)
-		.addClass("org.apache.commons.lang3.exception.ExceptionUtils")
-		.addPackages(true, "it.eng.sacerasi.ws.dto")
-		.addPackages(true, "it.eng.sacerasi.ws.recuperoStatoOggetto.dto");
+        return ArquillianUtils.createPingJar(RecuperoStatoOggettoHelper.class)
+                .addClass("org.apache.commons.lang3.exception.ExceptionUtils")
+                .addPackages(true, "it.eng.sacerasi.ws.dto")
+                .addPackages(true, "it.eng.sacerasi.ws.recuperoStatoOggetto.dto");
     }
 
     @Test
     void getStatoOggetto_queryIsOk() {
-	RecuperoStatoOggettoExt rsoExt = new RecuperoStatoOggettoExt();
-	rsoExt.setIdObject(-99L);
-	RispostaWSRecuperoStatoOggetto rispostaWs = new RispostaWSRecuperoStatoOggetto();
+        RecuperoStatoOggettoExt rsoExt = new RecuperoStatoOggettoExt();
+        rsoExt.setIdObject(-99L);
+        RispostaWSRecuperoStatoOggetto rispostaWs = new RispostaWSRecuperoStatoOggetto();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getStatoOggetto(rsoExt, rispostaWs);
-	    } catch (Exception e) {
-		throwExceptionIf(ExpectedException.class, e,
-			"Impossibile trovare PigObject con idObject " + rsoExt.getIdObject());
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getStatoOggetto(rsoExt, rispostaWs);
+            } catch (Exception e) {
+                throwExceptionIf(ExpectedException.class, e,
+                        "Impossibile trovare PigObject con idObject " + rsoExt.getIdObject());
+            }
+        });
 
     }
 

@@ -30,12 +30,12 @@ public interface IRispostaWS extends Serializable {
 
     public enum SeverityEnum {
 
-	OK, WARNING, ERROR
+        OK, WARNING, ERROR
     }
 
     public enum ErrorTypeEnum {
 
-	NOERROR, WS_DATA, WS_SIGNATURE, DB_FATAL
+        NOERROR, WS_DATA, WS_SIGNATURE, DB_FATAL
     }
 
     String getErrorCode();

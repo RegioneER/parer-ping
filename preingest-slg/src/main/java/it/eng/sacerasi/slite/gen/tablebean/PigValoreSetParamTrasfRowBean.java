@@ -38,100 +38,100 @@ public class PigValoreSetParamTrasfRowBean extends BaseRow implements JEEBaseRow
     public static PigValoreSetParamTrasfTableDescriptor TABLE_DESCRIPTOR = new PigValoreSetParamTrasfTableDescriptor();
 
     public PigValoreSetParamTrasfRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdValoreSetParamTrasf() {
-	return getBigDecimal("id_valore_set_param_trasf");
+        return getBigDecimal("id_valore_set_param_trasf");
     }
 
     public void setIdValoreSetParamTrasf(BigDecimal idValoreSetParamTrasf) {
-	setObject("id_valore_set_param_trasf", idValoreSetParamTrasf);
+        setObject("id_valore_set_param_trasf", idValoreSetParamTrasf);
     }
 
     public BigDecimal getIdVersTipoObjectDaTrasf() {
-	return getBigDecimal("id_vers_tipo_object_da_trasf");
+        return getBigDecimal("id_vers_tipo_object_da_trasf");
     }
 
     public void setIdVersTipoObjectDaTrasf(BigDecimal idVersTipoObjectDaTrasf) {
-	setObject("id_vers_tipo_object_da_trasf", idVersTipoObjectDaTrasf);
+        setObject("id_vers_tipo_object_da_trasf", idVersTipoObjectDaTrasf);
     }
 
     public BigDecimal getIdSetParamTrasf() {
-	return getBigDecimal("id_set_param_trasf");
+        return getBigDecimal("id_set_param_trasf");
     }
 
     public void setIdSetParamTrasf(BigDecimal idSetParamTrasf) {
-	setObject("id_set_param_trasf", idSetParamTrasf);
+        setObject("id_set_param_trasf", idSetParamTrasf);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigValoreSetParamTrasf entity = (PigValoreSetParamTrasf) obj;
+        PigValoreSetParamTrasf entity = (PigValoreSetParamTrasf) obj;
 
-	this.setIdValoreSetParamTrasf(new BigDecimal(entity.getIdValoreSetParamTrasf()));
-	if (entity.getPigVersTipoObjectDaTrasf() != null) {
-	    this.setIdVersTipoObjectDaTrasf(new BigDecimal(
-		    entity.getPigVersTipoObjectDaTrasf().getIdVersTipoObjectDaTrasf()));
+        this.setIdValoreSetParamTrasf(new BigDecimal(entity.getIdValoreSetParamTrasf()));
+        if (entity.getPigVersTipoObjectDaTrasf() != null) {
+            this.setIdVersTipoObjectDaTrasf(new BigDecimal(
+                    entity.getPigVersTipoObjectDaTrasf().getIdVersTipoObjectDaTrasf()));
 
-	}
-	if (entity.getXfoSetParamTrasf() != null) {
-	    this.setIdSetParamTrasf(
-		    new BigDecimal(entity.getXfoSetParamTrasf().getIdSetParamTrasf()));
+        }
+        if (entity.getXfoSetParamTrasf() != null) {
+            this.setIdSetParamTrasf(
+                    new BigDecimal(entity.getXfoSetParamTrasf().getIdSetParamTrasf()));
 
-	}
+        }
     }
 
     @Override
     public PigValoreSetParamTrasf rowBeanToEntity() {
-	PigValoreSetParamTrasf entity = new PigValoreSetParamTrasf();
-	if (this.getIdValoreSetParamTrasf() != null) {
-	    entity.setIdValoreSetParamTrasf(this.getIdValoreSetParamTrasf().longValue());
-	}
-	if (this.getIdVersTipoObjectDaTrasf() != null) {
-	    if (entity.getPigVersTipoObjectDaTrasf() == null) {
-		entity.setPigVersTipoObjectDaTrasf(new PigVersTipoObjectDaTrasf());
-	    }
-	    entity.getPigVersTipoObjectDaTrasf()
-		    .setIdVersTipoObjectDaTrasf(this.getIdVersTipoObjectDaTrasf().longValue());
-	}
-	if (this.getIdSetParamTrasf() != null) {
-	    if (entity.getXfoSetParamTrasf() == null) {
-		entity.setXfoSetParamTrasf(new XfoSetParamTrasf());
-	    }
-	    entity.getXfoSetParamTrasf().setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
-	}
-	return entity;
+        PigValoreSetParamTrasf entity = new PigValoreSetParamTrasf();
+        if (this.getIdValoreSetParamTrasf() != null) {
+            entity.setIdValoreSetParamTrasf(this.getIdValoreSetParamTrasf().longValue());
+        }
+        if (this.getIdVersTipoObjectDaTrasf() != null) {
+            if (entity.getPigVersTipoObjectDaTrasf() == null) {
+                entity.setPigVersTipoObjectDaTrasf(new PigVersTipoObjectDaTrasf());
+            }
+            entity.getPigVersTipoObjectDaTrasf()
+                    .setIdVersTipoObjectDaTrasf(this.getIdVersTipoObjectDaTrasf().longValue());
+        }
+        if (this.getIdSetParamTrasf() != null) {
+            if (entity.getXfoSetParamTrasf() == null) {
+                entity.setXfoSetParamTrasf(new XfoSetParamTrasf());
+            }
+            entity.getXfoSetParamTrasf().setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
+        }
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

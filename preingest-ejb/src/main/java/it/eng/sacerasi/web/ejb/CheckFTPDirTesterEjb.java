@@ -53,50 +53,54 @@ public class CheckFTPDirTesterEjb {
     private XADiskConnectionFactory xadCf;
 
     public PigVersTableBean getPigVersList() {
-	PigVersTableBean versatori = new PigVersTableBean();
-	List<PigVers> listaPigVers = amministrazioneHelper.getPigVersList(null);
-	try {
-	    if (listaPigVers != null && !listaPigVers.isEmpty()) {
-		versatori = (PigVersTableBean) Transform.entities2TableBean(listaPigVers);
-	    }
-	} catch (Exception e) {
-	    log.error(e.getMessage(), e);
-	}
-	return versatori;
+        PigVersTableBean versatori = new PigVersTableBean();
+        List<PigVers> listaPigVers = amministrazioneHelper.getPigVersList(null);
+        try {
+            if (listaPigVers != null && !listaPigVers.isEmpty()) {
+                versatori = (PigVersTableBean) Transform.entities2TableBean(listaPigVers);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return versatori;
     }
 
     public RispostaControlli doCheck(String rootFtp, String path) {
-	XADiskConnection xadConn = null;
-	File checkPath = new File(rootFtp.concat(path));
-	String newDir = "checkDir";
-	String newFile = "checkFile.txt";
-	RispostaControlli risp = new RispostaControlli();
-	risp.setrBoolean(false);
-	if (StringUtils.isNotBlank(rootFtp) && StringUtils.isNotBlank(path)) {
-	    try {
-		xadConn = xadCf.getConnection();
-		// Crea la directory
-		File tmpDir = new File(checkPath, newDir);
-		File tmpFile = new File(tmpDir, newFile);
-		xadConn.createFile(tmpDir, true);
-		// Creo il file
-		xadConn.createFile(tmpFile, false);
-		// Elimino il file
-		xadConn.deleteFile(tmpFile);
-		// Elimino la directory
-		xadConn.deleteFile(tmpDir);
-		risp.setrBoolean(true);
-	    } catch (ResourceException | FileAlreadyExistsException | FileNotExistsException
-		    | InsufficientPermissionOnFileException | LockingFailedException
-		    | NoTransactionAssociatedException | InterruptedException
-		    | DirectoryNotEmptyException | FileUnderUseException e) {
-		risp.setDsErr(e.getMessage());
-	    } finally {
-		if (xadConn != null) {
-		    xadConn.close();
-		}
-	    }
-	}
-	return risp;
+        XADiskConnection xadConn = null;
+        File checkPath = new File(rootFtp.concat(path));
+        String newDir = "checkDir";
+        String newFile = "checkFile.txt";
+        RispostaControlli risp = new RispostaControlli();
+        risp.setrBoolean(false);
+        if (StringUtils.isNotBlank(rootFtp) && StringUtils.isNotBlank(path)) {
+            try {
+                xadConn = xadCf.getConnection();
+                // Crea la directory
+                File tmpDir = new File(checkPath, newDir);
+                File tmpFile = new File(tmpDir, newFile);
+                xadConn.createFile(tmpDir, true);
+                // Creo il file
+                xadConn.createFile(tmpFile, false);
+                // Elimino il file
+                xadConn.deleteFile(tmpFile);
+                // Elimino la directory
+                xadConn.deleteFile(tmpDir);
+                risp.setrBoolean(true);
+            } catch (InterruptedException ie) {
+                log.error("Errore durante la creazione della directory o del file ", ie);
+                Thread.currentThread().interrupt(); // Restore interrupted status
+                risp.setDsErr(ie.getMessage());
+            } catch (ResourceException | FileAlreadyExistsException | FileNotExistsException
+                    | InsufficientPermissionOnFileException | LockingFailedException
+                    | NoTransactionAssociatedException | DirectoryNotEmptyException
+                    | FileUnderUseException e) {
+                risp.setDsErr(e.getMessage());
+            } finally {
+                if (xadConn != null) {
+                    xadConn.close();
+                }
+            }
+        }
+        return risp;
     }
 }

@@ -34,58 +34,58 @@ public class InserimentoUtenteCheckHelper {
     private ControlliReplicaUtente controlliRU;
 
     public void checkSessione(InserimentoUtenteExt inserimentoUtenteExt,
-	    RispostaWSInserimentoUtente rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	// Verifica Utente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliRU.verificaEsistenzaUtenteAttivo(
-		    inserimentoUtenteExt.getInserimentoUtenteInput().getIdUserIam());
-	    if (rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_002);
-		    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
-			    MessaggiWSBundle.SERVIZI_USR_002,
-			    inserimentoUtenteExt.getInserimentoUtenteInput().getIdUserIam()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    }
-	}
+            RispostaWSInserimentoUtente rispostaWs) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        // Verifica Utente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliRU.verificaEsistenzaUtenteAttivo(
+                    inserimentoUtenteExt.getInserimentoUtenteInput().getIdUserIam());
+            if (rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_002);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                            MessaggiWSBundle.SERVIZI_USR_002,
+                            inserimentoUtenteExt.getInserimentoUtenteInput().getIdUserIam()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            }
+        }
 
-	// Verifica Userid
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliRU.verificaEsistenzaNmUserid(
-		    inserimentoUtenteExt.getInserimentoUtenteInput().getNmUserid());
-	    if (rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_003);
-		    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
-			    MessaggiWSBundle.SERVIZI_USR_003,
-			    inserimentoUtenteExt.getInserimentoUtenteInput().getNmUserid()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    }
-	}
+        // Verifica Userid
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliRU.verificaEsistenzaNmUserid(
+                    inserimentoUtenteExt.getInserimentoUtenteInput().getNmUserid());
+            if (rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.SERVIZI_USR_003);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                            MessaggiWSBundle.SERVIZI_USR_003,
+                            inserimentoUtenteExt.getInserimentoUtenteInput().getNmUserid()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Costanti.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            }
+        }
     }
 
     private void setRispostaWsError(RispostaWSInserimentoUtente rispostaWs, SeverityEnum sev,
-	    EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getInserimentoUtenteRisposta().setCdEsito(esito);
-	rispostaWs.getInserimentoUtenteRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getInserimentoUtenteRisposta().setDsErr(rispostaControlli.getDsErr());
+            EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getInserimentoUtenteRisposta().setCdEsito(esito);
+        rispostaWs.getInserimentoUtenteRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getInserimentoUtenteRisposta().setDsErr(rispostaControlli.getDsErr());
     }
 }

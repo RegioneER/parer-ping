@@ -40,93 +40,93 @@ public class RicercaDiarioExt {
     private RicercaDiarioInput ricercaDiarioInput;
 
     public IWSDesc getDescrizione() {
-	return descrizione;
+        return descrizione;
     }
 
     public void setDescrizione(IWSDesc descrizione) {
-	this.descrizione = descrizione;
+        this.descrizione = descrizione;
     }
 
     public Long getIdVersatore() {
-	return idVersatore;
+        return idVersatore;
     }
 
     public void setIdVersatore(Long idVersatore) {
-	this.idVersatore = idVersatore;
+        this.idVersatore = idVersatore;
     }
 
     public Long getIdTipoObject() {
-	return idTipoObject;
+        return idTipoObject;
     }
 
     public void setIdTipoObject(Long idTipoObject) {
-	this.idTipoObject = idTipoObject;
+        this.idTipoObject = idTipoObject;
     }
 
     public Date getDtApertura() {
-	return dtApertura;
+        return dtApertura;
     }
 
     public void setDtApertura(Date dtApertura) {
-	this.dtApertura = dtApertura;
+        this.dtApertura = dtApertura;
     }
 
     public Date getDtChiusura() {
-	return dtChiusura;
+        return dtChiusura;
     }
 
     public void setDtChiusura(Date dtChiusura) {
-	this.dtChiusura = dtChiusura;
+        this.dtChiusura = dtChiusura;
     }
 
     public List<AttribDatiSpecBean> getListaAttribDatiSpec() {
-	return listaAttribDatiSpec;
+        return listaAttribDatiSpec;
     }
 
     public void setListaAttribDatiSpec(List<AttribDatiSpecBean> listaAttribDatiSpec) {
-	this.listaAttribDatiSpec = listaAttribDatiSpec;
+        this.listaAttribDatiSpec = listaAttribDatiSpec;
     }
 
     public List<DatoSpecFiltroConNomeColonna> getDatiSpecFiltriConNomeColonna() {
-	return datiSpecFiltriConNomeColonna;
+        return datiSpecFiltriConNomeColonna;
     }
 
     public void setDatiSpecFiltriConNomeColonna(
-	    List<DatoSpecFiltroConNomeColonna> datiSpecFiltriConNomeColonna) {
-	this.datiSpecFiltriConNomeColonna = datiSpecFiltriConNomeColonna;
+            List<DatoSpecFiltroConNomeColonna> datiSpecFiltriConNomeColonna) {
+        this.datiSpecFiltriConNomeColonna = datiSpecFiltriConNomeColonna;
     }
 
     public List<DatoSpecOutputConNomeColonna> getDatiSpecOutputConNomeColonna() {
-	return datiSpecOutputConNomeColonna;
+        return datiSpecOutputConNomeColonna;
     }
 
     public void setDatiSpecOutputConNomeColonna(
-	    List<DatoSpecOutputConNomeColonna> datiSpecOutputConNomeColonna) {
-	this.datiSpecOutputConNomeColonna = datiSpecOutputConNomeColonna;
+            List<DatoSpecOutputConNomeColonna> datiSpecOutputConNomeColonna) {
+        this.datiSpecOutputConNomeColonna = datiSpecOutputConNomeColonna;
     }
 
     public List<DatoSpecOrderConNomeColonna> getDatiSpecOrderConNomeColonna() {
-	return datiSpecOrderConNomeColonna;
+        return datiSpecOrderConNomeColonna;
     }
 
     public void setDatiSpecOrderConNomeColonna(
-	    List<DatoSpecOrderConNomeColonna> datiSpecOrderConNomeColonna) {
-	this.datiSpecOrderConNomeColonna = datiSpecOrderConNomeColonna;
+            List<DatoSpecOrderConNomeColonna> datiSpecOrderConNomeColonna) {
+        this.datiSpecOrderConNomeColonna = datiSpecOrderConNomeColonna;
     }
 
     public String getXmlDatiSpecOutput() {
-	return xmlDatiSpecOutput;
+        return xmlDatiSpecOutput;
     }
 
     public void setXmlDatiSpecOutput(String xmlDatiSpecOutput) {
-	this.xmlDatiSpecOutput = xmlDatiSpecOutput;
+        this.xmlDatiSpecOutput = xmlDatiSpecOutput;
     }
 
     public RicercaDiarioInput getRicercaDiarioInput() {
-	return ricercaDiarioInput;
+        return ricercaDiarioInput;
     }
 
     public void setRicercaDiarioInput(RicercaDiarioInput ricercaDiarioInput) {
-	this.ricercaDiarioInput = ricercaDiarioInput;
+        this.ricercaDiarioInput = ricercaDiarioInput;
     }
 }

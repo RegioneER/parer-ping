@@ -33,7 +33,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public IRispostaWS.SeverityEnum getSeverity() {
-	return severity;
+        return severity;
     }
 
     /**
@@ -41,7 +41,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public void setSeverity(IRispostaWS.SeverityEnum severity) {
-	this.severity = severity;
+        this.severity = severity;
     }
 
     /**
@@ -49,7 +49,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public IRispostaWS.ErrorTypeEnum getErrorType() {
-	return errorType;
+        return errorType;
     }
 
     /**
@@ -57,7 +57,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorType(IRispostaWS.ErrorTypeEnum errorType) {
-	this.errorType = errorType;
+        this.errorType = errorType;
     }
 
     /**
@@ -65,7 +65,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     /**
@@ -73,7 +73,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorMessage(String errorMessage) {
-	this.errorMessage = errorMessage;
+        this.errorMessage = errorMessage;
     }
 
     /**
@@ -81,7 +81,7 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public String getErrorCode() {
-	return errorCode;
+        return errorCode;
     }
 
     /**
@@ -89,20 +89,20 @@ public class RispostaWSNotificaPrelievo implements IRispostaWS {
      */
     @Override
     public void setErrorCode(String errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     /**
      * @return the notificaPrelievoRisposta
      */
     public NotificaPrelievoRisposta getNotificaPrelievoRisposta() {
-	return notificaPrelievoRisposta;
+        return notificaPrelievoRisposta;
     }
 
     /**
      * @param notificaPrelievoRisposta the notificaPrelievoRisposta to set
      */
     public void setNotificaPrelievoRisposta(NotificaPrelievoRisposta notificaPrelievoRisposta) {
-	this.notificaPrelievoRisposta = notificaPrelievoRisposta;
+        this.notificaPrelievoRisposta = notificaPrelievoRisposta;
     }
 }

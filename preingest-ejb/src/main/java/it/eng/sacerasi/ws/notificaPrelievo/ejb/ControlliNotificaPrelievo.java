@@ -43,50 +43,55 @@ public class ControlliNotificaPrelievo {
 
     @SuppressWarnings("unchecked")
     public RispostaControlli verificaOggetto(Long idObject) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
-	rispostaControlli.setrBoolean(true);
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(true);
 
-	// Per il controllo bisogna ottenere la sessione più recente relativa all'oggetto
-	PigSessioneRecup sessione = null;
-	// Eseguo una select prendendo, delle sessioni di quell'oggetto, quella che ha l'id maggiore
-	// tra tutte
-	// Sicuramente questa è la più recente sessione di recupero.
-	try {
-	    String queryStr = "SELECT ses FROM PigSessioneRecup ses "
-		    + "WHERE ses.idSessioneRecup = ("
-		    + "SELECT MAX(sessioni.idSessioneRecup) FROM PigSessioneRecup sessioni WHERE sessioni.pigObject.idObject = :idObj"
-		    + ")";
+        // Per il controllo bisogna ottenere la sessione più recente relativa all'oggetto
+        PigSessioneRecup sessione = null;
+        // Eseguo una select prendendo, delle sessioni di quell'oggetto, quella che ha l'id maggiore
+        // tra tutte
+        // Sicuramente questa è la più recente sessione di recupero.
+        try {
+            String queryStr = "SELECT ses FROM PigSessioneRecup ses "
+                    + "WHERE ses.idSessioneRecup = ("
+                    + "SELECT MAX(sessioni.idSessioneRecup) FROM PigSessioneRecup sessioni WHERE sessioni.pigObject.idObject = :idObj"
+                    + ")";
 
-	    javax.persistence.Query query = entityManager.createQuery(queryStr);
-	    query.setParameter("idObj", idObject);
-	    List<PigSessioneRecup> sessioni = query.getResultList();
-	    if (!sessioni.isEmpty()) {
-		sessione = sessioni.get(0);
-	    } else {
-		rispostaControlli.setrBoolean(false);
-		rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_006);
-		rispostaControlli
-			.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_006));
-	    }
-	} catch (Exception e) {
-	    rispostaControlli.setrBoolean(false);
-	    rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
-	    rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
-		    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
-	    log.error("Eccezione nella lettura  della tabella delle sessioni di recupero ", e);
-	}
+            javax.persistence.Query query = entityManager.createQuery(queryStr);
+            query.setParameter("idObj", idObject);
+            List<PigSessioneRecup> sessioni = query.getResultList();
+            if (!sessioni.isEmpty()) {
+                sessione = sessioni.get(0);
+            } else {
+                rispostaControlli.setrBoolean(false);
+                rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_006);
+                rispostaControlli
+                        .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_006));
+            }
+        } catch (Exception e) {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+            rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                    String.join("\n", ExceptionUtils.getRootCauseStackTrace(e))));
+            log.error("Eccezione nella lettura  della tabella delle sessioni di recupero ", e);
+        }
 
-	if (rispostaControlli.isrBoolean()) {
-	    rispostaControlli.setrLong(sessione.getIdSessioneRecup());
-	    if (!sessione.getTiStato()
-		    .equals(Constants.StatoSessioneRecup.IN_ATTESA_PRELIEVO.name())) {
-		rispostaControlli.setrBoolean(false);
-		rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_007);
-		rispostaControlli
-			.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_007));
-	    }
-	}
+        if (rispostaControlli.isrBoolean() && sessione != null) {
+            rispostaControlli.setrLong(sessione.getIdSessioneRecup());
+            if (!sessione.getTiStato()
+                    .equals(Constants.StatoSessioneRecup.IN_ATTESA_PRELIEVO.name())) {
+                rispostaControlli.setrBoolean(false);
+                rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_007);
+                rispostaControlli
+                        .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_007));
+            }
+        } else {
+            rispostaControlli.setrBoolean(false);
+            rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOTIFPREL_006);
+            rispostaControlli
+                    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOTIFPREL_006));
+        }
 
-	return rispostaControlli;
+        return rispostaControlli;
     }
 }

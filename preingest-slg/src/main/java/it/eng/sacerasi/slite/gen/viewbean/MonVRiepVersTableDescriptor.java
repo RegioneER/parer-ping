@@ -49,36 +49,36 @@ public class MonVRiepVersTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_NM_AMBIENTE_VERS,
-		new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
-	map.put(COL_FL_CESSATO, new ColumnDescriptor(COL_FL_CESSATO, Types.VARCHAR, 1, false));
-	map.put(COL_FL_SES_ERR_NORIS_NOVER,
-		new ColumnDescriptor(COL_FL_SES_ERR_NORIS_NOVER, Types.VARCHAR, 1, true));
-	map.put(COL_FL_OBJ_WARN, new ColumnDescriptor(COL_FL_OBJ_WARN, Types.VARCHAR, 1, true));
-	map.put(COL_FL_SES_NOTIF_DELAY,
-		new ColumnDescriptor(COL_FL_SES_NOTIF_DELAY, Types.VARCHAR, 1, true));
-	map.put(COL_FL_SES_REGCODA_NORIS_NOVER,
-		new ColumnDescriptor(COL_FL_SES_REGCODA_NORIS_NOVER, Types.VARCHAR, 1, true));
-	map.put(COL_FL_SES_PREPXML_REGCODA_DELAY,
-		new ColumnDescriptor(COL_FL_SES_PREPXML_REGCODA_DELAY, Types.VARCHAR, 1, true));
-	map.put(COL_FL_SES_VERS_SACER_NORIS_NOVER,
-		new ColumnDescriptor(COL_FL_SES_VERS_SACER_NORIS_NOVER, Types.VARCHAR, 1, true));
-	map.put(COL_FL_SES_VERS_SACER_DELAY,
-		new ColumnDescriptor(COL_FL_SES_VERS_SACER_DELAY, Types.VARCHAR, 1, true));
+        map.put(COL_NM_AMBIENTE_VERS,
+                new ColumnDescriptor(COL_NM_AMBIENTE_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_NM_VERS, new ColumnDescriptor(COL_NM_VERS, Types.VARCHAR, 100, true));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, true));
+        map.put(COL_FL_CESSATO, new ColumnDescriptor(COL_FL_CESSATO, Types.VARCHAR, 1, false));
+        map.put(COL_FL_SES_ERR_NORIS_NOVER,
+                new ColumnDescriptor(COL_FL_SES_ERR_NORIS_NOVER, Types.VARCHAR, 1, true));
+        map.put(COL_FL_OBJ_WARN, new ColumnDescriptor(COL_FL_OBJ_WARN, Types.VARCHAR, 1, true));
+        map.put(COL_FL_SES_NOTIF_DELAY,
+                new ColumnDescriptor(COL_FL_SES_NOTIF_DELAY, Types.VARCHAR, 1, true));
+        map.put(COL_FL_SES_REGCODA_NORIS_NOVER,
+                new ColumnDescriptor(COL_FL_SES_REGCODA_NORIS_NOVER, Types.VARCHAR, 1, true));
+        map.put(COL_FL_SES_PREPXML_REGCODA_DELAY,
+                new ColumnDescriptor(COL_FL_SES_PREPXML_REGCODA_DELAY, Types.VARCHAR, 1, true));
+        map.put(COL_FL_SES_VERS_SACER_NORIS_NOVER,
+                new ColumnDescriptor(COL_FL_SES_VERS_SACER_NORIS_NOVER, Types.VARCHAR, 1, true));
+        map.put(COL_FL_SES_VERS_SACER_DELAY,
+                new ColumnDescriptor(COL_FL_SES_VERS_SACER_DELAY, Types.VARCHAR, 1, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

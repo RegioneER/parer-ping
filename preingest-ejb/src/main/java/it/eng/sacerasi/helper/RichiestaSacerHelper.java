@@ -15,34 +15,21 @@ package it.eng.sacerasi.helper;
 
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,202 +49,143 @@ import it.eng.sacerasi.ws.ejb.XmlContextCache;
 public class RichiestaSacerHelper {
 
     Logger log = LoggerFactory.getLogger(RichiestaSacerHelper.class);
-    // Singleton Ejb di gestione cache dei parser Castor
+    // Singleton Ejb di gestione cache dei parser jaxb
     @EJB
     XmlContextCache xmlContextCache;
+    // Singleton Ejb di gestione del pool di connessioni http
+    @EJB
+    RichiestaSacerCmPoolHelper richiestaSacerCmPoolHelper;
 
     public EsitoConnessione upload(RichiestaSacerInput inputParams) {
-	EsitoConnessione esitoConnessione = new EsitoConnessione();
-	String responseString = null;
-	try {
-	    boolean useHttps = true;
+        // inizializzazion bean esito
+        EsitoConnessione esitoConnessione = new EsitoConnessione();
+        // impostazione dei parametri di connessione
+        int timeout = inputParams.getTimeout();
+        RequestConfig reqConfig = RequestConfig.custom().setConnectTimeout(timeout)
+                .setSocketTimeout(timeout).build();
 
-	    HttpParams httpParameters = new BasicHttpParams();
-	    int timeoutConnection = inputParams.getTimeout();
-	    int timeoutSoConnection = inputParams.getTimeout();
-	    HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-	    HttpConnectionParams.setSoTimeout(httpParameters, timeoutSoConnection);
+        // creazione cliente http attraverso il pool
+        try (CloseableHttpClient httpclient = richiestaSacerCmPoolHelper
+                .createHttpClient(reqConfig)) {
 
-	    // crea una nuova istanza di HttpClient, predisponendo la chiamata del metodo POST
-	    HttpClient httpclient = new DefaultHttpClient(httpParameters);
+            HttpPost httppost = new HttpPost(inputParams.getUrlRichiesta());
+            HttpEntity reqEntity = buildMultipartEntity(inputParams);
+            httppost.setEntity(reqEntity);
 
-	    if (useHttps) {
-		// se devo usare HTTPS...
-		// creo un array di TrustManager per considerare tutti i certificati server come
-		// validi.
-		// questo andrebbe rimpiazzato con uno che validi il certificato con un certstore...
-		X509TrustManager tm = new X509TrustManager() {
-		    @Override
-		    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-			return null;
-		    }
+            log.info("Executing request... {}", httppost.getRequestLine());
+            HttpResponse response = httpclient.execute(httppost);
+            int statusCode = response.getStatusLine().getStatusCode();
 
-		    @Override
-		    public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
-			    String authType) {
-			// unused
-		    }
+            if (statusCode != 200) {
+                setError(esitoConnessione, "Il servizio restituisce errore " + statusCode);
+            } else {
+                HttpEntity resEntity = response.getEntity();
+                if (resEntity != null) {
+                    String responseString = EntityUtils.toString(resEntity);
+                    log.trace("Response: {}", responseString);
+                    processResponse(responseString, inputParams, esitoConnessione);
+                    esitoConnessione.setXmlResponse(responseString);
+                    esitoConnessione.setErroreConnessione(false);
+                }
+            }
+        } catch (Exception ex) {
+            final String msg = "Richiesta al servizio scaduta o fallita";
+            log.error(msg, ex);
+            setError(esitoConnessione, msg);
+        }
+        return esitoConnessione;
+    }
 
-		    @Override
-		    public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
-			    String authType) {
-			// unused
-		    }
-		};
+    private HttpEntity buildMultipartEntity(RichiestaSacerInput inputParams) {
+        // Creazione del multipart entity per la richiesta
+        final String contentTypeTextPlain = "text/plain";
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addTextBody("VERSIONE", inputParams.getVersioneWsDaInvocare(),
+                ContentType.create(contentTypeTextPlain, StandardCharsets.ISO_8859_1));
+        builder.addTextBody("LOGINNAME", inputParams.getUserIdSacer(),
+                ContentType.create(contentTypeTextPlain, StandardCharsets.ISO_8859_1));
+        builder.addTextBody("PASSWORD", inputParams.getPasswordSacer(),
+                ContentType.create(contentTypeTextPlain, StandardCharsets.ISO_8859_1));
+        if (inputParams.getXmlIndice() != null) {
+            builder.addTextBody("XMLINDICE",
+                    XmlUtils.convertToHTMLCodes(inputParams.getXmlIndice()),
+                    ContentType.create("text/xml", StandardCharsets.ISO_8859_1));
+        }
+        builder.addTextBody("XMLSIP",
+                XmlUtils.convertToHTMLCodes(inputParams.getXmlRichiestaSacer()),
+                ContentType.create("text/xml", StandardCharsets.ISO_8859_1));
+        return builder.build();
+    }
 
-		try {
-		    // Creo il contesto SSL utilizzando i trust manager creati
-		    SSLContext ctx = SSLContext.getInstance("TLS");
-		    ctx.init(null, new TrustManager[] {
-			    tm }, null);
+    private void processResponse(String responseString, RichiestaSacerInput inputParams,
+            EsitoConnessione esitoConnessione) {
+        try {
+            switch (inputParams.getTipoRichiesta()) {
+            case VERSAMENTO:
+                EsitoVersamento esitoVersamento = unmarshallEsitoVersamento(responseString);
+                esitoConnessione
+                        .setCodiceEsito(esitoVersamento.getEsitoGenerale().getCodiceEsito().name());
+                esitoConnessione
+                        .setCodiceErrore(esitoVersamento.getEsitoGenerale().getCodiceErrore());
+                esitoConnessione.setMessaggioErrore(
+                        esitoVersamento.getEsitoGenerale().getMessaggioErrore());
+                break;
+            case RECUPERO:
+                StatoConservazione statoConservazione = unmarshallStatoConservazione(
+                        responseString);
+                esitoConnessione.setCodiceEsito(
+                        statoConservazione.getEsitoGenerale().getCodiceEsito().name());
+                esitoConnessione
+                        .setCodiceErrore(statoConservazione.getEsitoGenerale().getCodiceErrore());
+                esitoConnessione.setMessaggioErrore(
+                        statoConservazione.getEsitoGenerale().getMessaggioErrore());
+                break;
+            case ANNULLAMENTO:
+                EsitoRichiestaAnnullamentoVersamenti esitoAnnul = unmarshallEsitoRichiestaAnnullamentoVersamenti(
+                        responseString);
+                esitoConnessione
+                        .setCodiceEsito(esitoAnnul.getEsitoRichiesta().getCodiceEsito().name());
+                esitoConnessione.setCodiceErrore(esitoAnnul.getEsitoRichiesta().getCodiceErrore());
+                esitoConnessione
+                        .setMessaggioErrore(esitoAnnul.getEsitoRichiesta().getMessaggioErrore());
+                break;
+            }
+        } catch (Exception ex) {
+            final String msg = "Errore nella risposta: l'xml di risposta non rispetta l'xsd associato";
+            log.error(msg, ex);
+            esitoConnessione.setCodiceEsito(Constants.EsitoVersamento.NEGATIVO.name());
+            esitoConnessione.setCodiceErrore(MessaggiWSBundle.ERR_666);
+            esitoConnessione.setMessaggioErrore(msg);
+        }
+    }
 
-		    // Creo la connessione https
-		    SSLSocketFactory ssf = new SSLSocketFactory(ctx,
-			    SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		    ClientConnectionManager ccm = httpclient.getConnectionManager();
-		    SchemeRegistry sr = ccm.getSchemeRegistry();
-		    sr.register(new Scheme("https", 443, ssf));
-		    httpclient = new DefaultHttpClient(ccm, httpclient.getParams());
-		} catch (NoSuchAlgorithmException | KeyManagementException e) {
-		    log.error("Errore interno nella preparazione della chiamata HTTPS {0}",
-			    e.getMessage());
-		}
-	    }
-
-	    HttpPost httppost = new HttpPost(inputParams.getUrlRichiesta());
-
-	    // Inizializza la request come multipart, nella modalità browser compatible che
-	    // consente di inviare i dati come campi di una form web
-	    MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-	    // std HTTP POST CHARSET
-	    // aggiunge alla request il campo testuale VERSIONE
-	    reqEntity.addPart("VERSIONE", new StringBody(inputParams.getVersioneWsDaInvocare(),
-		    MediaType.TEXT_PLAIN, StandardCharsets.ISO_8859_1));
-
-	    // aggiunge alla request il campo testuale LOGINNAME
-	    reqEntity.addPart("LOGINNAME ", new StringBody(inputParams.getUserIdSacer(),
-		    MediaType.TEXT_PLAIN, StandardCharsets.ISO_8859_1));
-
-	    // aggiunge alla request il campo testuale PASSWORD
-	    reqEntity.addPart("PASSWORD ", new StringBody(inputParams.getPasswordSacer(),
-		    MediaType.TEXT_PLAIN, StandardCharsets.ISO_8859_1));
-
-	    if (inputParams.getXmlIndice() != null) {
-		// aggiunge alla request il campo testuale XMLINDICE
-		reqEntity.addPart("XMLINDICE ",
-			new StringBody(XmlUtils.convertToHTMLCodes(inputParams.getXmlIndice()),
-				MediaType.TEXT_XML, StandardCharsets.ISO_8859_1));
-	    }
-
-	    // aggiunge alla request il campo testuale XMLSIP, con il documento XML dei metadati
-	    reqEntity.addPart("XMLSIP",
-		    new StringBody(XmlUtils.convertToHTMLCodes(inputParams.getXmlRichiestaSacer()),
-			    MediaType.TEXT_XML, StandardCharsets.ISO_8859_1));
-	    // imposta la chiamata del metodo POST con i dati appena caricati
-	    httppost.setEntity(reqEntity);
-
-	    log.info("eseguo la richiesta... {}", httppost.getRequestLine());
-
-	    // invoca il web service
-	    HttpResponse response = null;
-	    boolean timeoutException = false;
-	    int statusCode = 0;
-	    try {
-		response = httpclient.execute(httppost);
-		statusCode = response.getStatusLine().getStatusCode();
-	    } catch (Exception ex) {
-		timeoutException = true;
-		log.error("catch timeoutException ", ex);
-	    }
-	    if (timeoutException || statusCode != 200) {
-		esitoConnessione.setErroreConnessione(true);
-		if (timeoutException) {
-		    esitoConnessione.setDescrErrConnessione("Errore timeout");
-		} else {
-		    esitoConnessione
-			    .setDescrErrConnessione("Errore il server ha ritornato uno status HTTP="
-				    + statusCode + ", diverso da 200");
-		}
-	    } else {
-		// recupera la risposta
-		HttpEntity resEntity = response.getEntity();
-		if (resEntity != null) {
-		    responseString = EntityUtils.toString(resEntity);
-		    log.trace("Risposta : {}", responseString);
-
-		    switch (inputParams.getTipoRichiesta()) {
-		    case VERSAMENTO:
-			EsitoVersamento esitoVersamento = unmarshallEsitoVersamento(responseString);
-			esitoConnessione.setCodiceEsito(
-				esitoVersamento.getEsitoGenerale().getCodiceEsito().name());
-			esitoConnessione.setCodiceErrore(
-				esitoVersamento.getEsitoGenerale().getCodiceErrore());
-			esitoConnessione.setMessaggioErrore(
-				esitoVersamento.getEsitoGenerale().getMessaggioErrore());
-			break;
-		    case RECUPERO:
-			StatoConservazione statoConservazione = unmarshallStatoConservazione(
-				responseString);
-			esitoConnessione.setCodiceEsito(
-				statoConservazione.getEsitoGenerale().getCodiceEsito().name());
-			esitoConnessione.setCodiceErrore(
-				statoConservazione.getEsitoGenerale().getCodiceErrore());
-			esitoConnessione.setMessaggioErrore(
-				statoConservazione.getEsitoGenerale().getMessaggioErrore());
-			break;
-		    case ANNULLAMENTO:
-			EsitoRichiestaAnnullamentoVersamenti esitoAnnul = unmarshallEsitoRichiestaAnnullamentoVersamenti(
-				responseString);
-			esitoConnessione.setCodiceEsito(
-				esitoAnnul.getEsitoRichiesta().getCodiceEsito().name());
-			esitoConnessione
-				.setCodiceErrore(esitoAnnul.getEsitoRichiesta().getCodiceErrore());
-			esitoConnessione.setMessaggioErrore(
-				esitoAnnul.getEsitoRichiesta().getMessaggioErrore());
-			break;
-		    }
-		    esitoConnessione.setXmlResponse(responseString);
-		    esitoConnessione.setErroreConnessione(false);
-		}
-	    }
-	} catch (Exception ex) {
-	    // MAC#14483 - Gestire esito non conforme in annullamento oggetto
-	    // Se l'xml c'è ma non lo valida con l'xsd lo deve registrare comunque evitando di
-	    // lasciarlo nullo
-	    esitoConnessione.setXmlResponse(responseString);
-	    esitoConnessione.setErroreConnessione(false);
-	    esitoConnessione.setDescrErrConnessione(null);
-	    esitoConnessione.setCodiceEsito(Constants.EsitoVersamento.NEGATIVO.name());
-	    esitoConnessione.setCodiceErrore(MessaggiWSBundle.ERR_666);
-	    esitoConnessione.setMessaggioErrore(
-		    "Errore nella risposta: l'xml di risposta non rispetta l'xsd associato");
-	    log.error("Errore nella risposta: l'xml di risposta non rispetta l'xsd associato", ex);
-	}
-	return esitoConnessione;
+    private void setError(EsitoConnessione esito, String errorMessage) {
+        esito.setErroreConnessione(true);
+        esito.setDescrErrConnessione(errorMessage);
     }
 
     private EsitoVersamento unmarshallEsitoVersamento(String resp) throws JAXBException {
-	StringReader tmpReader = new StringReader(resp);
-	javax.xml.bind.Unmarshaller tmpUnmarshaller = xmlContextCache
-		.getVersRespCtxforEsitoVersamento().createUnmarshaller();
-	tmpUnmarshaller.setSchema(xmlContextCache.getSchemaOfVersResp());
-	return (EsitoVersamento) (tmpUnmarshaller.unmarshal(tmpReader));
+        StringReader tmpReader = new StringReader(resp);
+        javax.xml.bind.Unmarshaller tmpUnmarshaller = xmlContextCache
+                .getVersRespCtxforEsitoVersamento().createUnmarshaller();
+        tmpUnmarshaller.setSchema(xmlContextCache.getSchemaOfVersResp());
+        return (EsitoVersamento) (tmpUnmarshaller.unmarshal(tmpReader));
     }
 
     private StatoConservazione unmarshallStatoConservazione(String resp) throws JAXBException {
-	StringReader tmpReader = new StringReader(resp);
-	Unmarshaller tmpUnmarshaller = xmlContextCache.getVersRespStatoCtx_StatoConservazione()
-		.createUnmarshaller();
-	return (StatoConservazione) (tmpUnmarshaller.unmarshal(tmpReader));
+        StringReader tmpReader = new StringReader(resp);
+        Unmarshaller tmpUnmarshaller = xmlContextCache.getVersRespStatoCtx_StatoConservazione()
+                .createUnmarshaller();
+        return (StatoConservazione) (tmpUnmarshaller.unmarshal(tmpReader));
     }
 
     private EsitoRichiestaAnnullamentoVersamenti unmarshallEsitoRichiestaAnnullamentoVersamenti(
-	    String resp) throws JAXBException {
-	StringReader tmpReader = new StringReader(resp);
-	javax.xml.bind.Unmarshaller unmarshaller = xmlContextCache
-		.getEsitoAnnVersCtx_EsitoRichiestaAnnullamentoVersamenti().createUnmarshaller();
-	unmarshaller.setSchema(xmlContextCache.getSchemaOfEsitoRichAnnVers());
-	return (EsitoRichiestaAnnullamentoVersamenti) unmarshaller.unmarshal(tmpReader);
+            String resp) throws JAXBException {
+        StringReader tmpReader = new StringReader(resp);
+        javax.xml.bind.Unmarshaller unmarshaller = xmlContextCache
+                .getEsitoAnnVersCtx_EsitoRichiestaAnnullamentoVersamenti().createUnmarshaller();
+        unmarshaller.setSchema(xmlContextCache.getSchemaOfEsitoRichAnnVers());
+        return (EsitoRichiestaAnnullamentoVersamenti) unmarshaller.unmarshal(tmpReader);
     }
 }

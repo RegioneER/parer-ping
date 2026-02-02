@@ -33,19 +33,19 @@ public class IamAbilTipoDatoTableBean extends AbstractBaseTable<IamAbilTipoDatoR
     public static IamAbilTipoDatoTableDescriptor TABLE_DESCRIPTOR = new IamAbilTipoDatoTableDescriptor();
 
     public IamAbilTipoDatoTableBean() {
-	super();
+        super();
     }
 
     protected IamAbilTipoDatoRowBean createRow() {
-	return new IamAbilTipoDatoRowBean();
+        return new IamAbilTipoDatoRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamAbilTipoDatoRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

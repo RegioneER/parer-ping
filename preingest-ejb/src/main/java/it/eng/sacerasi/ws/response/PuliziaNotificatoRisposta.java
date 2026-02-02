@@ -32,83 +32,83 @@ public class PuliziaNotificatoRisposta {
      * @return the cdEsito
      */
     public Constants.EsitoServizio getCdEsito() {
-	return cdEsito;
+        return cdEsito;
     }
 
     /**
      * @param cdEsito the cdEsito to set
      */
     public void setCdEsito(Constants.EsitoServizio cdEsito) {
-	this.cdEsito = cdEsito;
+        this.cdEsito = cdEsito;
     }
 
     /**
      * @return the cdErr
      */
     public String getCdErr() {
-	return cdErr;
+        return cdErr;
     }
 
     /**
      * @param cdErr the cdErr to set
      */
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     /**
      * @return the dlErr
      */
     public String getDlErr() {
-	return dlErr;
+        return dlErr;
     }
 
     /**
      * @param dlErr the dlErr to set
      */
     public void setDlErr(String dlErr) {
-	this.dlErr = dlErr;
+        this.dlErr = dlErr;
     }
 
     /**
      * @return the nmAmbiente
      */
     public String getNmAmbiente() {
-	return nmAmbiente;
+        return nmAmbiente;
     }
 
     /**
      * @param nmAmbiente the nmAmbiente to set
      */
     public void setNmAmbiente(String nmAmbiente) {
-	this.nmAmbiente = nmAmbiente;
+        this.nmAmbiente = nmAmbiente;
     }
 
     /**
      * @return the nmVersatore
      */
     public String getNmVersatore() {
-	return nmVersatore;
+        return nmVersatore;
     }
 
     /**
      * @param nmVersatore the nmVersatore to set
      */
     public void setNmVersatore(String nmVersatore) {
-	this.nmVersatore = nmVersatore;
+        this.nmVersatore = nmVersatore;
     }
 
     /**
      * @return the cdKeyObject
      */
     public String getCdKeyObject() {
-	return cdKeyObject;
+        return cdKeyObject;
     }
 
     /**
      * @param cdKeyObject the cdKeyObject to set
      */
     public void setCdKeyObject(String cdKeyObject) {
-	this.cdKeyObject = cdKeyObject;
+        this.cdKeyObject = cdKeyObject;
     }
 }

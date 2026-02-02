@@ -33,19 +33,19 @@ public class PigLogJobTableBean extends AbstractBaseTable<PigLogJobRowBean> {
     public static PigLogJobTableDescriptor TABLE_DESCRIPTOR = new PigLogJobTableDescriptor();
 
     public PigLogJobTableBean() {
-	super();
+        super();
     }
 
     protected PigLogJobRowBean createRow() {
-	return new PigLogJobRowBean();
+        return new PigLogJobRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigLogJobRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

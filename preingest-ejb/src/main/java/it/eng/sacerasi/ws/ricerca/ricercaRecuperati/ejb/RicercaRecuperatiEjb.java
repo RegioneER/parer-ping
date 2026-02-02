@@ -45,40 +45,40 @@ public class RicercaRecuperatiEjb {
 
     public RicercaRecuperatiRisposta ricercaRecuperati(String nmAmbiente, String nmVersatore) {
 
-	// Istanzio la risposta
-	RispostaWSRicercaRecuperati rispostaWs = new RispostaWSRicercaRecuperati();
-	rispostaWs.setRicercaRecuperatiRisposta(new RicercaRecuperatiRisposta());
-	// Imposto l'esito della risposta di default OK
-	rispostaWs.getRicercaRecuperatiRisposta().setCdEsito(Constants.EsitoServizio.OK);
+        // Istanzio la risposta
+        RispostaWSRicercaRecuperati rispostaWs = new RispostaWSRicercaRecuperati();
+        rispostaWs.setRicercaRecuperatiRisposta(new RicercaRecuperatiRisposta());
+        // Imposto l'esito della risposta di default OK
+        rispostaWs.getRicercaRecuperatiRisposta().setCdEsito(Constants.EsitoServizio.OK);
 
-	// Istanzio l'oggetto che contiene i parametri ricevuti in input
-	RicercaRecuperatiInput rdInput = new RicercaRecuperatiInput(nmAmbiente, nmVersatore);
+        // Istanzio l'oggetto che contiene i parametri ricevuti in input
+        RicercaRecuperatiInput rdInput = new RicercaRecuperatiInput(nmAmbiente, nmVersatore);
 
-	// Istanzio l'Ext con l'oggetto creato e setto i parametri descrizione e quelli in input
-	RicercaRecuperatiExt ricercaRecuperatiExt = new RicercaRecuperatiExt();
-	ricercaRecuperatiExt.setRicercaRecuperatiInput(rdInput);
+        // Istanzio l'Ext con l'oggetto creato e setto i parametri descrizione e quelli in input
+        RicercaRecuperatiExt ricercaRecuperatiExt = new RicercaRecuperatiExt();
+        ricercaRecuperatiExt.setRicercaRecuperatiInput(rdInput);
 
-	// 1: Chiamo la classe RicercaDiarioCheck che gestisce i controlli di sessione e di oggetto
-	// e popola la
-	// rispostaWs
-	ricercaRecuperatiCheckHelper.checkSessione(ricercaRecuperatiExt, rispostaWs);
+        // 1: Chiamo la classe RicercaDiarioCheck che gestisce i controlli di sessione e di oggetto
+        // e popola la
+        // rispostaWs
+        ricercaRecuperatiCheckHelper.checkSessione(ricercaRecuperatiExt, rispostaWs);
 
-	// non ho bisogno di aggiungere altri dati alla risposta proveniente dall'input, sono tutti
-	// già inizializzati dal check
+        // non ho bisogno di aggiungere altri dati alla risposta proveniente dall'input, sono tutti
+        // già inizializzati dal check
 
-	// Lista da associare al risultato
-	ListaOggRicRecuperatiType listaOggType = new ListaOggRicRecuperatiType();
+        // Lista da associare al risultato
+        ListaOggRicRecuperatiType listaOggType = new ListaOggRicRecuperatiType();
 
-	if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
-	    listaOggType = executeQueries.querySearch(nmAmbiente, nmVersatore);
-	}
+        if (rispostaWs.getSeverity() != IRispostaWS.SeverityEnum.ERROR) {
+            listaOggType = executeQueries.querySearch(nmAmbiente, nmVersatore);
+        }
 
-	rispostaWs.getRicercaRecuperatiRisposta().setNmAmbiente(nmAmbiente);
-	rispostaWs.getRicercaRecuperatiRisposta().setNmVersatore(nmVersatore);
-	rispostaWs.getRicercaRecuperatiRisposta().setListaOggetti(listaOggType);
+        rispostaWs.getRicercaRecuperatiRisposta().setNmAmbiente(nmAmbiente);
+        rispostaWs.getRicercaRecuperatiRisposta().setNmVersatore(nmVersatore);
+        rispostaWs.getRicercaRecuperatiRisposta().setListaOggetti(listaOggType);
 
-	// Ritorno la risposta
-	return rispostaWs.getRicercaRecuperatiRisposta();
+        // Ritorno la risposta
+        return rispostaWs.getRicercaRecuperatiRisposta();
     }
 
 }

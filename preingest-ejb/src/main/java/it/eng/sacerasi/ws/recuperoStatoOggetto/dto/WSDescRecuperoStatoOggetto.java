@@ -24,16 +24,16 @@ public class WSDescRecuperoStatoOggetto implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_RECUPERO_STATO_OGGETTO_ASYNC;
+        return Costanti.WS_RECUPERO_STATO_OGGETTO_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_RECUPERO_STATO_OGGETTO_VRSN;
+        return Costanti.WS_RECUPERO_STATO_OGGETTO_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_RECUPERO_STATO_OGGETTO_COMP;
+        return Costanti.WS_RECUPERO_STATO_OGGETTO_COMP;
     }
 }

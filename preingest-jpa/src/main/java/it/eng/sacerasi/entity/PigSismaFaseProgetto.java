@@ -40,55 +40,55 @@ public class PigSismaFaseProgetto implements Serializable {
     private PigSismaFinanziamento pigSismaFinanziamento;
 
     public PigSismaFaseProgetto() {
-	// non usato
+        // non usato
     }
 
     @Id
     @Column(name = "ID_SISMA_FASE_PROGETTO")
     public Long getIdSismaFaseProgetto() {
-	return idSismaFaseProgetto;
+        return idSismaFaseProgetto;
     }
 
     public void setIdSismaFaseProgetto(Long idSismaFaseProgetto) {
-	this.idSismaFaseProgetto = idSismaFaseProgetto;
+        this.idSismaFaseProgetto = idSismaFaseProgetto;
     }
 
     @Column(name = "TI_FASE_SISMA")
     public String getTiFaseSisma() {
-	return this.tiFaseSisma;
+        return this.tiFaseSisma;
     }
 
     public void setTiFaseSisma(String tiFaseSisma) {
-	this.tiFaseSisma = tiFaseSisma;
+        this.tiFaseSisma = tiFaseSisma;
     }
 
     @Column(name = "DS_FASE_SISMA")
     public String getDsFaseSisma() {
-	return dsFaseSisma;
+        return dsFaseSisma;
     }
 
     public void setDsFaseSisma(String dsFaseSisma) {
-	this.dsFaseSisma = dsFaseSisma;
+        this.dsFaseSisma = dsFaseSisma;
     }
 
     @Column(name = "NI_ORD")
     public BigDecimal getNiOrd() {
-	return niOrd;
+        return niOrd;
     }
 
     public void setNiOrd(BigDecimal niOrd) {
-	this.niOrd = niOrd;
+        this.niOrd = niOrd;
     }
 
     // bi-directional many-to-one association to PigSismaFinanziamento
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SISMA_FINANZIAMENTO")
     public PigSismaFinanziamento getPigSismaFinanziamento() {
-	return this.pigSismaFinanziamento;
+        return this.pigSismaFinanziamento;
     }
 
     public void setPigSismaFinanziamento(PigSismaFinanziamento pigSismaFinanziamento) {
-	this.pigSismaFinanziamento = pigSismaFinanziamento;
+        this.pigSismaFinanziamento = pigSismaFinanziamento;
     }
 
 }

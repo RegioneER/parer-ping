@@ -29,11 +29,11 @@ public class KettleServiceException extends Exception {
     }
 
     public KettleServiceException(String message) {
-	super(message);
+        super(message);
     }
 
     public KettleServiceException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
 }

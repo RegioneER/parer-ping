@@ -44,24 +44,24 @@ public class PigSismaStoricoStatiTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_STATO, new ColumnDescriptor(COL_ID_STATO, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SISMA, new ColumnDescriptor(COL_ID_SISMA, Types.DECIMAL, 22, false));
-	map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
-	map.put(COL_TS_REG_STATO,
-		new ColumnDescriptor(COL_TS_REG_STATO, Types.TIMESTAMP, 11, false));
-	map.put(COL_CD_DESC, new ColumnDescriptor(COL_CD_DESC, Types.VARCHAR, 1024, false));
+        map.put(COL_ID_STATO, new ColumnDescriptor(COL_ID_STATO, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SISMA, new ColumnDescriptor(COL_ID_SISMA, Types.DECIMAL, 22, false));
+        map.put(COL_TI_STATO, new ColumnDescriptor(COL_TI_STATO, Types.VARCHAR, 30, false));
+        map.put(COL_TS_REG_STATO,
+                new ColumnDescriptor(COL_TS_REG_STATO, Types.TIMESTAMP, 11, false));
+        map.put(COL_CD_DESC, new ColumnDescriptor(COL_CD_DESC, Types.VARCHAR, 1024, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

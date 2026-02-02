@@ -28,16 +28,16 @@ public class WSDescStatusMonitor implements IWSDesc {
 
     @Override
     public String getVersione() {
-	return Costanti.WS_STATUS_MONITOR_VRSN;
+        return Costanti.WS_STATUS_MONITOR_VRSN;
     }
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_STATUS_MONITOR_NOME;
+        return Costanti.WS_STATUS_MONITOR_NOME;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_STATUS_MONITOR_COMP;
+        return Costanti.WS_STATUS_MONITOR_COMP;
     }
 }

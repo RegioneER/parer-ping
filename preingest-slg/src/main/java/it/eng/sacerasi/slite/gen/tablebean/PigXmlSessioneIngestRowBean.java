@@ -38,102 +38,102 @@ public class PigXmlSessioneIngestRowBean extends BaseRow implements JEEBaseRowIn
     public static PigXmlSessioneIngestTableDescriptor TABLE_DESCRIPTOR = new PigXmlSessioneIngestTableDescriptor();
 
     public PigXmlSessioneIngestRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdXmlSessioneIngest() {
-	return getBigDecimal("id_xml_sessione_ingest");
+        return getBigDecimal("id_xml_sessione_ingest");
     }
 
     public void setIdXmlSessioneIngest(BigDecimal idXmlSessioneIngest) {
-	setObject("id_xml_sessione_ingest", idXmlSessioneIngest);
+        setObject("id_xml_sessione_ingest", idXmlSessioneIngest);
     }
 
     public BigDecimal getIdSessioneIngest() {
-	return getBigDecimal("id_sessione_ingest");
+        return getBigDecimal("id_sessione_ingest");
     }
 
     public void setIdSessioneIngest(BigDecimal idSessioneIngest) {
-	setObject("id_sessione_ingest", idSessioneIngest);
+        setObject("id_sessione_ingest", idSessioneIngest);
     }
 
     public String getBlXml() {
-	return getString("bl_xml");
+        return getString("bl_xml");
     }
 
     public void setBlXml(String blXml) {
-	setObject("bl_xml", blXml);
+        setObject("bl_xml", blXml);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigXmlSessioneIngest entity = (PigXmlSessioneIngest) obj;
+        PigXmlSessioneIngest entity = (PigXmlSessioneIngest) obj;
 
-	this.setIdXmlSessioneIngest(new BigDecimal(entity.getIdXmlSessioneIngest()));
-	if (entity.getPigSessioneIngest() != null) {
-	    this.setIdSessioneIngest(
-		    new BigDecimal(entity.getPigSessioneIngest().getIdSessioneIngest()));
+        this.setIdXmlSessioneIngest(new BigDecimal(entity.getIdXmlSessioneIngest()));
+        if (entity.getPigSessioneIngest() != null) {
+            this.setIdSessioneIngest(
+                    new BigDecimal(entity.getPigSessioneIngest().getIdSessioneIngest()));
 
-	}
-	this.setBlXml(entity.getBlXml());
-	this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
-		: null);
+        }
+        this.setBlXml(entity.getBlXml());
+        this.setIdVers(Objects.nonNull(entity.getIdVers()) ? BigDecimal.valueOf(entity.getIdVers())
+                : null);
     }
 
     @Override
     public PigXmlSessioneIngest rowBeanToEntity() {
-	PigXmlSessioneIngest entity = new PigXmlSessioneIngest();
-	if (this.getIdXmlSessioneIngest() != null) {
-	    entity.setIdXmlSessioneIngest(this.getIdXmlSessioneIngest().longValue());
-	}
-	if (this.getIdSessioneIngest() != null) {
-	    if (entity.getPigSessioneIngest() == null) {
-		entity.setPigSessioneIngest(new PigSessioneIngest());
-	    }
-	    entity.getPigSessioneIngest()
-		    .setIdSessioneIngest(this.getIdSessioneIngest().longValue());
-	}
-	entity.setBlXml(this.getBlXml());
-	entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
-	return entity;
+        PigXmlSessioneIngest entity = new PigXmlSessioneIngest();
+        if (this.getIdXmlSessioneIngest() != null) {
+            entity.setIdXmlSessioneIngest(this.getIdXmlSessioneIngest().longValue());
+        }
+        if (this.getIdSessioneIngest() != null) {
+            if (entity.getPigSessioneIngest() == null) {
+                entity.setPigSessioneIngest(new PigSessioneIngest());
+            }
+            entity.getPigSessioneIngest()
+                    .setIdSessioneIngest(this.getIdSessioneIngest().longValue());
+        }
+        entity.setBlXml(this.getBlXml());
+        entity.setIdVers(Objects.nonNull(this.getIdVers()) ? this.getIdVers().longValue() : null);
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

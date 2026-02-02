@@ -37,120 +37,120 @@ public class XfoParamTrasfRowBean extends BaseRow implements JEEBaseRowInterface
     public static XfoParamTrasfTableDescriptor TABLE_DESCRIPTOR = new XfoParamTrasfTableDescriptor();
 
     public XfoParamTrasfRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdParamTrasf() {
-	return getBigDecimal("id_param_trasf");
+        return getBigDecimal("id_param_trasf");
     }
 
     public void setIdParamTrasf(BigDecimal idParamTrasf) {
-	setObject("id_param_trasf", idParamTrasf);
+        setObject("id_param_trasf", idParamTrasf);
     }
 
     public String getNmParamTrasf() {
-	return getString("nm_param_trasf");
+        return getString("nm_param_trasf");
     }
 
     public void setNmParamTrasf(String nmParamTrasf) {
-	setObject("nm_param_trasf", nmParamTrasf);
+        setObject("nm_param_trasf", nmParamTrasf);
     }
 
     public String getDsParamTrasf() {
-	return getString("ds_param_trasf");
+        return getString("ds_param_trasf");
     }
 
     public void setDsParamTrasf(String dsParamTrasf) {
-	setObject("ds_param_trasf", dsParamTrasf);
+        setObject("ds_param_trasf", dsParamTrasf);
     }
 
     public String getTiParamTrasf() {
-	return getString("ti_param_trasf");
+        return getString("ti_param_trasf");
     }
 
     public void setTiParamTrasf(String tiParamTrasf) {
-	setObject("ti_param_trasf", tiParamTrasf);
+        setObject("ti_param_trasf", tiParamTrasf);
     }
 
     public BigDecimal getIdSetParamTrasf() {
-	return getBigDecimal("id_set_param_trasf");
+        return getBigDecimal("id_set_param_trasf");
     }
 
     public void setIdSetParamTrasf(BigDecimal idSetParamTrasf) {
-	setObject("id_set_param_trasf", idSetParamTrasf);
+        setObject("id_set_param_trasf", idSetParamTrasf);
     }
 
     public String getDsValoreParam() {
-	return getString("ds_valore_param");
+        return getString("ds_valore_param");
     }
 
     public void setDsValoreParam(String dsValoreParam) {
-	setObject("ds_valore_param", dsValoreParam);
+        setObject("ds_valore_param", dsValoreParam);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	XfoParamTrasf entity = (XfoParamTrasf) obj;
+        XfoParamTrasf entity = (XfoParamTrasf) obj;
 
-	this.setIdParamTrasf(new BigDecimal(entity.getIdParamTrasf()));
-	this.setNmParamTrasf(entity.getNmParamTrasf());
-	this.setDsParamTrasf(entity.getDsParamTrasf());
-	this.setTiParamTrasf(entity.getTiParamTrasf());
-	if (entity.getXfoSetParamTrasf() != null) {
-	    this.setIdSetParamTrasf(
-		    new BigDecimal(entity.getXfoSetParamTrasf().getIdSetParamTrasf()));
-	}
+        this.setIdParamTrasf(new BigDecimal(entity.getIdParamTrasf()));
+        this.setNmParamTrasf(entity.getNmParamTrasf());
+        this.setDsParamTrasf(entity.getDsParamTrasf());
+        this.setTiParamTrasf(entity.getTiParamTrasf());
+        if (entity.getXfoSetParamTrasf() != null) {
+            this.setIdSetParamTrasf(
+                    new BigDecimal(entity.getXfoSetParamTrasf().getIdSetParamTrasf()));
+        }
 
-	this.setDsValoreParam(entity.getDsValoreParam());
+        this.setDsValoreParam(entity.getDsValoreParam());
     }
 
     @Override
     public XfoParamTrasf rowBeanToEntity() {
-	XfoParamTrasf entity = new XfoParamTrasf();
-	if (this.getIdParamTrasf() != null) {
-	    entity.setIdParamTrasf(this.getIdParamTrasf().longValue());
-	}
-	entity.setNmParamTrasf(this.getNmParamTrasf());
-	entity.setDsParamTrasf(this.getDsParamTrasf());
-	entity.setTiParamTrasf(this.getTiParamTrasf());
-	if (this.getIdSetParamTrasf() != null) {
-	    if (entity.getXfoSetParamTrasf() == null) {
-		entity.setXfoSetParamTrasf(new XfoSetParamTrasf());
-	    }
-	    entity.getXfoSetParamTrasf().setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
-	}
-	entity.setDsValoreParam(this.getDsValoreParam());
-	return entity;
+        XfoParamTrasf entity = new XfoParamTrasf();
+        if (this.getIdParamTrasf() != null) {
+            entity.setIdParamTrasf(this.getIdParamTrasf().longValue());
+        }
+        entity.setNmParamTrasf(this.getNmParamTrasf());
+        entity.setDsParamTrasf(this.getDsParamTrasf());
+        entity.setTiParamTrasf(this.getTiParamTrasf());
+        if (this.getIdSetParamTrasf() != null) {
+            if (entity.getXfoSetParamTrasf() == null) {
+                entity.setXfoSetParamTrasf(new XfoSetParamTrasf());
+            }
+            entity.getXfoSetParamTrasf().setIdSetParamTrasf(this.getIdSetParamTrasf().longValue());
+        }
+        entity.setDsValoreParam(this.getDsValoreParam());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

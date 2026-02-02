@@ -35,44 +35,44 @@ public class PigStrumUrbAtto implements Serializable {
     private String dsDescrizione;
 
     public PigStrumUrbAtto() {
-	// placeholder
+        // placeholder
     }
 
     @Id
     @Column(name = "ID_ATTO")
     public Long getIdAtto() {
-	return this.idAtto;
+        return this.idAtto;
     }
 
     public void setIdAtto(Long idAtto) {
-	this.idAtto = idAtto;
+        this.idAtto = idAtto;
     }
 
     @Column(name = "TI_ATTO")
     public String getTiAtto() {
-	return tiAtto;
+        return tiAtto;
     }
 
     public void setTiAtto(String tiAtto) {
-	this.tiAtto = tiAtto;
+        this.tiAtto = tiAtto;
     }
 
     @Column(name = "CD_NOME")
     public String getCdNome() {
-	return cdNome;
+        return cdNome;
     }
 
     public void setCdNome(String cdName) {
-	this.cdNome = cdName;
+        this.cdNome = cdName;
     }
 
     @Column(name = "DS_DESCRIZIONE")
     public String getDsDescrizione() {
-	return dsDescrizione;
+        return dsDescrizione;
     }
 
     public void setDsDescrizione(String dsDescription) {
-	this.dsDescrizione = dsDescription;
+        this.dsDescrizione = dsDescription;
     }
 
 }

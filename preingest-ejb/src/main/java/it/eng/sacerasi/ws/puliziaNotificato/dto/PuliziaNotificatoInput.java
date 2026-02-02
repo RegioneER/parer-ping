@@ -27,38 +27,38 @@ public class PuliziaNotificatoInput {
     // public PuliziaNotificatoInput(String NmAmbiente, String NmVersatore, String CdPassword,
     // String CdKeyObject) {
     public PuliziaNotificatoInput(String NmAmbiente, String NmVersatore, String CdKeyObject) {
-	this.NmAmbiente = NmAmbiente;
-	this.NmVersatore = NmVersatore;
-	// this.CdPassword = CdPassword;
-	this.CdKeyObject = CdKeyObject;
+        this.NmAmbiente = NmAmbiente;
+        this.NmVersatore = NmVersatore;
+        // this.CdPassword = CdPassword;
+        this.CdKeyObject = CdKeyObject;
     }
 
     /**
      * @return the NmAmbiente
      */
     public String getNmAmbiente() {
-	return NmAmbiente;
+        return NmAmbiente;
     }
 
     /**
      * @param NmAmbiente the NmAmbiente to set
      */
     public void setNmAmbiente(String NmAmbiente) {
-	this.NmAmbiente = NmAmbiente;
+        this.NmAmbiente = NmAmbiente;
     }
 
     /**
      * @return the NmVersatore
      */
     public String getNmVersatore() {
-	return NmVersatore;
+        return NmVersatore;
     }
 
     /**
      * @param NmVersatore the NmVersatore to set
      */
     public void setNmVersatore(String NmVersatore) {
-	this.NmVersatore = NmVersatore;
+        this.NmVersatore = NmVersatore;
     }
 
     // /**
@@ -79,14 +79,14 @@ public class PuliziaNotificatoInput {
      * @return the CdKeyObject
      */
     public String getCdKeyObject() {
-	return CdKeyObject;
+        return CdKeyObject;
     }
 
     /**
      * @param CdKeyObject the CdKeyObject to set
      */
     public void setCdKeyObject(String CdKeyObject) {
-	this.CdKeyObject = CdKeyObject;
+        this.CdKeyObject = CdKeyObject;
     }
 
 }

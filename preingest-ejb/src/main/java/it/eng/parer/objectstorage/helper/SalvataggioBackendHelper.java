@@ -95,122 +95,122 @@ public class SalvataggioBackendHelper {
      * @throws ObjectStorageException in caso di errore
      */
     public ResponseInputStream<GetObjectResponse> getObject(ObjectStorageBackend configuration,
-	    String objectKey) throws ObjectStorageException {
-	try {
-	    S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		    configuration.getAccessKeyId(), configuration.getSecretKey());
-	    GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-		    .bucket(configuration.getBucket()).key(objectKey).build();
-	    return s3SourceClient.getObject(getObjectRequest);
+            String objectKey) throws ObjectStorageException {
+        try {
+            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                    configuration.getAccessKeyId(), configuration.getSecretKey());
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(configuration.getBucket()).key(objectKey).build();
+            return s3SourceClient.getObject(getObjectRequest);
 
-	} catch (AwsServiceException | SdkClientException e) {
-	    throw ObjectStorageException.builder()
-		    .message("{0}: impossibile ottenere dal bucket {1} oggetto con chiave {2}",
-			    configuration.getBackendName(), configuration.getBucket(), objectKey)
-		    .cause(e).build();
-	}
+        } catch (AwsServiceException | SdkClientException e) {
+            throw ObjectStorageException.builder()
+                    .message("{0}: impossibile ottenere dal bucket {1} oggetto con chiave {2}",
+                            configuration.getBackendName(), configuration.getBucket(), objectKey)
+                    .cause(e).build();
+        }
 
     }
 
     public void putS3Object(ObjectStorageBackend config, String nomeOggetto, String contenuto,
-	    Optional<String> base64crc32c) throws ObjectStorageException {
-	putS3Object(config, nomeOggetto, RequestBody.fromString(contenuto), base64crc32c);
+            Optional<String> base64crc32c) throws ObjectStorageException {
+        putS3Object(config, nomeOggetto, RequestBody.fromString(contenuto), base64crc32c);
     }
 
     public void putS3Object(ObjectStorageBackend config, String nomeOggetto, File file,
-	    Optional<String> base64crc32c) throws ObjectStorageException {
-	putS3Object(config, nomeOggetto, RequestBody.fromFile(file), base64crc32c);
+            Optional<String> base64crc32c) throws ObjectStorageException {
+        putS3Object(config, nomeOggetto, RequestBody.fromFile(file), base64crc32c);
     }
 
     private void putS3Object(ObjectStorageBackend configuration, String objectKey,
-	    RequestBody requestBody, Optional<String> base64crc32c) throws ObjectStorageException {
-	try {
-	    PutObjectRequest.Builder putObjectBuilder = PutObjectRequest.builder()
-		    .bucket(configuration.getBucket()).key(objectKey);
+            RequestBody requestBody, Optional<String> base64crc32c) throws ObjectStorageException {
+        try {
+            PutObjectRequest.Builder putObjectBuilder = PutObjectRequest.builder()
+                    .bucket(configuration.getBucket()).key(objectKey);
 
-	    if (base64crc32c.isPresent()) {
-		putObjectBuilder.checksumCRC32C(base64crc32c.get());
-	    }
+            if (base64crc32c.isPresent()) {
+                putObjectBuilder.checksumCRC32C(base64crc32c.get());
+            }
 
-	    S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		    configuration.getAccessKeyId(), configuration.getSecretKey());
+            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                    configuration.getAccessKeyId(), configuration.getSecretKey());
 
-	    PutObjectRequest objectRequest = putObjectBuilder.build();
-	    s3SourceClient.putObject(objectRequest, requestBody);
+            PutObjectRequest objectRequest = putObjectBuilder.build();
+            s3SourceClient.putObject(objectRequest, requestBody);
 
-	} catch (S3Exception e) {
-	    throw ObjectStorageException.builder()
-		    .message("{0}: impossibile caricare sul bucket {1} oggetto con chiave {2}",
-			    configuration.getBackendName(), configuration.getBucket(), objectKey)
-		    .cause(e).build();
-	}
+        } catch (S3Exception e) {
+            throw ObjectStorageException.builder()
+                    .message("{0}: impossibile caricare sul bucket {1} oggetto con chiave {2}",
+                            configuration.getBackendName(), configuration.getBucket(), objectKey)
+                    .cause(e).build();
+        }
     }
 
     public void deleteObject(ObjectStorageBackend configuration, String objectKey)
-	    throws ObjectStorageException {
-	try {
-	    DeleteObjectRequest delOb = DeleteObjectRequest.builder()
-		    .bucket(configuration.getBucket()).key(objectKey).build();
+            throws ObjectStorageException {
+        try {
+            DeleteObjectRequest delOb = DeleteObjectRequest.builder()
+                    .bucket(configuration.getBucket()).key(objectKey).build();
 
-	    S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		    configuration.getAccessKeyId(), configuration.getSecretKey());
+            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                    configuration.getAccessKeyId(), configuration.getSecretKey());
 
-	    s3SourceClient.deleteObject(delOb);
-	} catch (S3Exception e) {
-	    throw ObjectStorageException.builder()
-		    .message("{0}: impossibile eliminare dal bucket {1} oggetto con chiave {2}",
-			    configuration.getBackendName(), configuration.getBucket(), objectKey)
-		    .cause(e).build();
-	}
+            s3SourceClient.deleteObject(delOb);
+        } catch (S3Exception e) {
+            throw ObjectStorageException.builder()
+                    .message("{0}: impossibile eliminare dal bucket {1} oggetto con chiave {2}",
+                            configuration.getBackendName(), configuration.getBucket(), objectKey)
+                    .cause(e).build();
+        }
     }
 
     public boolean doesObjectExist(ObjectStorageBackend configuration, String key) {
-	S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		configuration.getAccessKeyId(), configuration.getSecretKey());
+        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                configuration.getAccessKeyId(), configuration.getSecretKey());
 
-	HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
-		.bucket(configuration.getBucket()).build();
+        HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
+                .bucket(configuration.getBucket()).build();
 
-	try {
-	    s3SourceClient.headObject(objectRequest);
+        try {
+            s3SourceClient.headObject(objectRequest);
 
-	    return true;
+            return true;
 
-	} catch (S3Exception e) {
-	    return false;
-	}
+        } catch (S3Exception e) {
+            return false;
+        }
     }
 
     public CreateMultipartUploadResponse initiateMultipartUpload(
-	    CreateMultipartUploadRequest initiateMultipartUploadRequest,
-	    ObjectStorageBackend configuration) {
-	S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		configuration.getAccessKeyId(), configuration.getSecretKey());
-	return s3SourceClient.createMultipartUpload(initiateMultipartUploadRequest);
+            CreateMultipartUploadRequest initiateMultipartUploadRequest,
+            ObjectStorageBackend configuration) {
+        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                configuration.getAccessKeyId(), configuration.getSecretKey());
+        return s3SourceClient.createMultipartUpload(initiateMultipartUploadRequest);
     }
 
     public CompleteMultipartUploadResponse completeMultipartUpload(
-	    CompleteMultipartUploadRequest completeMultipartUploadRequest,
-	    ObjectStorageBackend configuration) {
-	S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		configuration.getAccessKeyId(), configuration.getSecretKey());
-	return s3SourceClient.completeMultipartUpload(completeMultipartUploadRequest);
+            CompleteMultipartUploadRequest completeMultipartUploadRequest,
+            ObjectStorageBackend configuration) {
+        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                configuration.getAccessKeyId(), configuration.getSecretKey());
+        return s3SourceClient.completeMultipartUpload(completeMultipartUploadRequest);
     }
 
     public UploadPartResponse uploadPart(UploadPartRequest uploadPartRequest, byte[] byteArray,
-	    ObjectStorageBackend configuration) {
-	S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		configuration.getAccessKeyId(), configuration.getSecretKey());
-	return s3SourceClient.uploadPart(uploadPartRequest, RequestBody.fromBytes(byteArray));
+            ObjectStorageBackend configuration) {
+        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                configuration.getAccessKeyId(), configuration.getSecretKey());
+        return s3SourceClient.uploadPart(uploadPartRequest, RequestBody.fromBytes(byteArray));
     }
 
     public Long getObjectSize(ObjectStorageBackend configuration, String key) {
-	S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
-		configuration.getAccessKeyId(), configuration.getSecretKey());
+        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+                configuration.getAccessKeyId(), configuration.getSecretKey());
 
-	HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
-		.bucket(configuration.getBucket()).build();
-	return s3SourceClient.headObject(objectRequest).contentLength();
+        HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
+                .bucket(configuration.getBucket()).build();
+        return s3SourceClient.headObject(objectRequest).contentLength();
     }
 
     private static final String BUCKET = "BUCKET";
@@ -229,122 +229,122 @@ public class SalvataggioBackendHelper {
      * @throws ObjectStorageException in caso di errore
      */
     public ObjectStorageBackend getObjectStorageConfiguration(final String nomeBackend,
-	    final String tipoUsoOs) throws ObjectStorageException {
-	TypedQuery<DecConfigObjectStorage> query = entityManager.createQuery(
-		"Select c from DecConfigObjectStorage c where c.tiUsoConfigObjectStorage = :tipoUsoOs and c.decBackend.nmBackend = :nomeBackend order by c.nmConfigObjectStorage",
-		DecConfigObjectStorage.class);
-	query.setParameter("tipoUsoOs", tipoUsoOs);
-	query.setParameter("nomeBackend", nomeBackend);
-	List<DecConfigObjectStorage> resultList = query.getResultList();
-	String bucket = null;
-	String nomeSystemPropertyAccessKeyId = null;
-	String nomeSystemPropertySecretKey = null;
-	String storageAddress = null;
-	Long backendId = null;
+            final String tipoUsoOs) throws ObjectStorageException {
+        TypedQuery<DecConfigObjectStorage> query = entityManager.createQuery(
+                "Select c from DecConfigObjectStorage c where c.tiUsoConfigObjectStorage = :tipoUsoOs and c.decBackend.nmBackend = :nomeBackend order by c.nmConfigObjectStorage",
+                DecConfigObjectStorage.class);
+        query.setParameter("tipoUsoOs", tipoUsoOs);
+        query.setParameter("nomeBackend", nomeBackend);
+        List<DecConfigObjectStorage> resultList = query.getResultList();
+        String bucket = null;
+        String nomeSystemPropertyAccessKeyId = null;
+        String nomeSystemPropertySecretKey = null;
+        String storageAddress = null;
+        Long backendId = null;
 
-	for (DecConfigObjectStorage decConfigObjectStorage : resultList) {
-	    switch (decConfigObjectStorage.getNmConfigObjectStorage()) {
-	    case ACCESS_KEY_ID_SYS_PROP:
-		nomeSystemPropertyAccessKeyId = decConfigObjectStorage
-			.getDsValoreConfigObjectStorage();
-		break;
-	    case BUCKET:
-		bucket = decConfigObjectStorage.getDsValoreConfigObjectStorage();
-		break;
-	    case SECRET_KEY_SYS_PROP:
-		nomeSystemPropertySecretKey = decConfigObjectStorage
-			.getDsValoreConfigObjectStorage();
-		break;
-	    default:
-		throw ObjectStorageException.builder().message(
-			"Impossibile stabilire la tipologia del parametro per l'object storage")
-			.build();
-	    }
-	    // identico per tutti perché definito nella tabella padre
-	    storageAddress = decConfigObjectStorage.getDecBackend().getDlBackendUri();
-	    backendId = decConfigObjectStorage.getDecBackend().getIdDecBackend();
-	}
-	if (StringUtils.isBlank(bucket) || StringUtils.isBlank(nomeSystemPropertyAccessKeyId)
-		|| StringUtils.isBlank(nomeSystemPropertySecretKey)
-		|| StringUtils.isBlank(storageAddress)) {
-	    throw ObjectStorageException.builder()
-		    .message(
-			    "Impossibile stabilire la tipologia del parametro per l'object storage")
-		    .build();
-	}
+        for (DecConfigObjectStorage decConfigObjectStorage : resultList) {
+            switch (decConfigObjectStorage.getNmConfigObjectStorage()) {
+            case ACCESS_KEY_ID_SYS_PROP:
+                nomeSystemPropertyAccessKeyId = decConfigObjectStorage
+                        .getDsValoreConfigObjectStorage();
+                break;
+            case BUCKET:
+                bucket = decConfigObjectStorage.getDsValoreConfigObjectStorage();
+                break;
+            case SECRET_KEY_SYS_PROP:
+                nomeSystemPropertySecretKey = decConfigObjectStorage
+                        .getDsValoreConfigObjectStorage();
+                break;
+            default:
+                throw ObjectStorageException.builder().message(
+                        "Impossibile stabilire la tipologia del parametro per l'object storage")
+                        .build();
+            }
+            // identico per tutti perché definito nella tabella padre
+            storageAddress = decConfigObjectStorage.getDecBackend().getDlBackendUri();
+            backendId = decConfigObjectStorage.getDecBackend().getIdDecBackend();
+        }
+        if (StringUtils.isBlank(bucket) || StringUtils.isBlank(nomeSystemPropertyAccessKeyId)
+                || StringUtils.isBlank(nomeSystemPropertySecretKey)
+                || StringUtils.isBlank(storageAddress)) {
+            throw ObjectStorageException.builder()
+                    .message(
+                            "Impossibile stabilire la tipologia del parametro per l'object storage")
+                    .build();
+        }
 
-	final String accessKeyId = System.getProperty(nomeSystemPropertyAccessKeyId);
-	final String secretKey = System.getProperty(nomeSystemPropertySecretKey);
-	final URI osURI = URI.create(storageAddress);
-	final String stagingBucket = bucket;
-	final Long idBackend = backendId;
+        final String accessKeyId = System.getProperty(nomeSystemPropertyAccessKeyId);
+        final String secretKey = System.getProperty(nomeSystemPropertySecretKey);
+        final URI osURI = URI.create(storageAddress);
+        final String stagingBucket = bucket;
+        final Long idBackend = backendId;
 
-	return new ObjectStorageBackend() {
-	    private static final long serialVersionUID = -7032516962480163852L;
+        return new ObjectStorageBackend() {
+            private static final long serialVersionUID = -7032516962480163852L;
 
-	    @Override
-	    public String getBackendName() {
-		return nomeBackend;
-	    }
+            @Override
+            public String getBackendName() {
+                return nomeBackend;
+            }
 
-	    @Override
-	    public URI getAddress() {
-		return osURI;
-	    }
+            @Override
+            public URI getAddress() {
+                return osURI;
+            }
 
-	    @Override
-	    public String getBucket() {
-		return stagingBucket;
-	    }
+            @Override
+            public String getBucket() {
+                return stagingBucket;
+            }
 
-	    @Override
-	    public String getAccessKeyId() {
-		return accessKeyId;
-	    }
+            @Override
+            public String getAccessKeyId() {
+                return accessKeyId;
+            }
 
-	    @Override
-	    public String getSecretKey() {
-		return secretKey;
-	    }
+            @Override
+            public String getSecretKey() {
+                return secretKey;
+            }
 
-	    @Override
-	    public Long getBackendId() {
-		return idBackend;
-	    }
-	};
+            @Override
+            public Long getBackendId() {
+                return idBackend;
+            }
+        };
     }
 
     // MEV34843 restituisce il nome univoco del backend per i versamenti per il tipo oggetto
     // specificato.
     public String lookupBackendForVersamenti(BigDecimal idAmbienteVers, BigDecimal idVers,
-	    BigDecimal idTipoObject) {
-	return configurationHelper.getValoreParamApplicByTipoObj(Constants.BACKEND_VERSAMENTI,
-		idAmbienteVers, idVers, idTipoObject);
+            BigDecimal idTipoObject) {
+        return configurationHelper.getValoreParamApplicByTipoObj(Constants.BACKEND_VERSAMENTI,
+                idAmbienteVers, idVers, idTipoObject);
     }
 
     public String lookupBackendForSisma() {
-	return configurationHelper.getValoreParamApplicByApplic(Constants.BACKEND_SISMA);
+        return configurationHelper.getValoreParamApplicByApplic(Constants.BACKEND_SISMA);
     }
 
     public String lookupBackendForStrumentiUrbanistici() {
-	return configurationHelper
-		.getValoreParamApplicByApplic(Constants.BACKEND_STRUMENTI_URBANISTICI);
+        return configurationHelper
+                .getValoreParamApplicByApplic(Constants.BACKEND_STRUMENTI_URBANISTICI);
     }
 
     public String lookupBackendForReportTrasformazioni() {
-	return configurationHelper
-		.getValoreParamApplicByApplic(Constants.BACKEND_REPORT_TRASFORMAZIONI);
+        return configurationHelper
+                .getValoreParamApplicByApplic(Constants.BACKEND_REPORT_TRASFORMAZIONI);
     }
 
     public DecBackend getBackendEntity(String nomeBackend) {
-	TypedQuery<DecBackend> query = entityManager.createQuery(
-		"Select d from DecBackend d where d.nmBackend = :nomeBackend", DecBackend.class);
-	query.setParameter("nomeBackend", nomeBackend);
-	return query.getSingleResult();
+        TypedQuery<DecBackend> query = entityManager.createQuery(
+                "Select d from DecBackend d where d.nmBackend = :nomeBackend", DecBackend.class);
+        query.setParameter("nomeBackend", nomeBackend);
+        return query.getSingleResult();
     }
 
     public DecBackend getBackendEntity(Long id) {
-	return entityManager.find(DecBackend.class, id);
+        return entityManager.find(DecBackend.class, id);
     }
 
     /**
@@ -357,246 +357,246 @@ public class SalvataggioBackendHelper {
      * @throws ObjectStorageException in caso di errore
      */
     public BackendStorage getBackend(String nomeBackend) throws ObjectStorageException {
-	try {
+        try {
 
-	    DecBackend backend = getBackendEntity(nomeBackend);
-	    final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
-		    .valueOf(backend.getNmTipoBackend());
-	    final String backendName = backend.getNmBackend();
-	    final Long idBackend = backend.getIdDecBackend();
+            DecBackend backend = getBackendEntity(nomeBackend);
+            final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
+                    .valueOf(backend.getNmTipoBackend());
+            final String backendName = backend.getNmBackend();
+            final Long idBackend = backend.getIdDecBackend();
 
-	    return new BackendStorage() {
-		private static final long serialVersionUID = 5092016605462729859L;
+            return new BackendStorage() {
+                private static final long serialVersionUID = 5092016605462729859L;
 
-		@Override
-		public BackendStorage.STORAGE_TYPE getType() {
-		    return type;
-		}
+                @Override
+                public BackendStorage.STORAGE_TYPE getType() {
+                    return type;
+                }
 
-		@Override
-		public String getBackendName() {
-		    return backendName;
-		}
+                @Override
+                public String getBackendName() {
+                    return backendName;
+                }
 
-		@Override
-		public Long getBackendId() {
-		    return idBackend;
-		}
-	    };
+                @Override
+                public Long getBackendId() {
+                    return idBackend;
+                }
+            };
 
-	} catch (IllegalArgumentException | NonUniqueResultException e) {
-	    throw ObjectStorageException.builder()
-		    .message("Impossibile ottenere le informazioni di backend").cause(e).build();
-	}
+        } catch (IllegalArgumentException | NonUniqueResultException e) {
+            throw ObjectStorageException.builder()
+                    .message("Impossibile ottenere le informazioni di backend").cause(e).build();
+        }
 
     }
 
     // MEV34843 - restituisce il backend per il versamento oggetti
     public BackendStorage getBackendForVersamento(BigDecimal idAmbienteVers, BigDecimal idVers,
-	    BigDecimal idTipoObject) throws ObjectStorageException {
-	String backendName = lookupBackendForVersamenti(idAmbienteVers, idVers, idTipoObject);
-	return getBackend(backendName);
+            BigDecimal idTipoObject) throws ObjectStorageException {
+        String backendName = lookupBackendForVersamenti(idAmbienteVers, idVers, idTipoObject);
+        return getBackend(backendName);
     }
 
     public BackendStorage getBackendForSisma() throws ObjectStorageException {
-	String backendName = lookupBackendForSisma();
-	return getBackend(backendName);
+        String backendName = lookupBackendForSisma();
+        return getBackend(backendName);
     }
 
     public BackendStorage getBackendForStrumentiUrbanistici() throws ObjectStorageException {
-	String backendName = lookupBackendForStrumentiUrbanistici();
-	return getBackend(backendName);
+        String backendName = lookupBackendForStrumentiUrbanistici();
+        return getBackend(backendName);
     }
 
     public BackendStorage getBackendForReportTrasformazioni() throws ObjectStorageException {
-	String backendName = lookupBackendForReportTrasformazioni();
-	return getBackend(backendName);
+        String backendName = lookupBackendForReportTrasformazioni();
+        return getBackend(backendName);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForVersamento(String nomeBackend)
-	    throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_VERSAMENTO);
+            throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_VERSAMENTO);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForVersamento(String nomeBackend,
-	    String nomeBucketUtilizzato) throws ObjectStorageException {
-	ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-		CONF_VERSAMENTO);
-	return new ObjectStorageBackend() {
-	    private static final long serialVersionUID = -7032516962480163852L;
+            String nomeBucketUtilizzato) throws ObjectStorageException {
+        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
+                CONF_VERSAMENTO);
+        return new ObjectStorageBackend() {
+            private static final long serialVersionUID = -7032516962480163852L;
 
-	    @Override
-	    public String getBackendName() {
-		return nomeBackend;
-	    }
+            @Override
+            public String getBackendName() {
+                return nomeBackend;
+            }
 
-	    @Override
-	    public URI getAddress() {
-		return objectStorageConfiguration.getAddress();
-	    }
+            @Override
+            public URI getAddress() {
+                return objectStorageConfiguration.getAddress();
+            }
 
-	    @Override
-	    public String getBucket() {
-		return nomeBucketUtilizzato;
-	    }
+            @Override
+            public String getBucket() {
+                return nomeBucketUtilizzato;
+            }
 
-	    @Override
-	    public String getAccessKeyId() {
-		return objectStorageConfiguration.getAccessKeyId();
-	    }
+            @Override
+            public String getAccessKeyId() {
+                return objectStorageConfiguration.getAccessKeyId();
+            }
 
-	    @Override
-	    public String getSecretKey() {
-		return objectStorageConfiguration.getSecretKey();
-	    }
+            @Override
+            public String getSecretKey() {
+                return objectStorageConfiguration.getSecretKey();
+            }
 
-	    @Override
-	    public Long getBackendId() {
-		return objectStorageConfiguration.getBackendId();
-	    }
-	};
+            @Override
+            public Long getBackendId() {
+                return objectStorageConfiguration.getBackendId();
+            }
+        };
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForSisma(String nomeBackend)
-	    throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_SISMA);
+            throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_SISMA);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForSismaTrasformati(String nomeBackend)
-	    throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_SISMA_TRASFORMATI);
+            throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_SISMA_TRASFORMATI);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForSisma(String nomeBackend,
-	    String nomeBucketUtilizzato) throws ObjectStorageException {
-	ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-		CONF_SISMA);
-	return new ObjectStorageBackend() {
-	    private static final long serialVersionUID = -7032516962480163852L;
+            String nomeBucketUtilizzato) throws ObjectStorageException {
+        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
+                CONF_SISMA);
+        return new ObjectStorageBackend() {
+            private static final long serialVersionUID = -7032516962480163852L;
 
-	    @Override
-	    public String getBackendName() {
-		return nomeBackend;
-	    }
+            @Override
+            public String getBackendName() {
+                return nomeBackend;
+            }
 
-	    @Override
-	    public URI getAddress() {
-		return objectStorageConfiguration.getAddress();
-	    }
+            @Override
+            public URI getAddress() {
+                return objectStorageConfiguration.getAddress();
+            }
 
-	    @Override
-	    public String getBucket() {
-		return nomeBucketUtilizzato;
-	    }
+            @Override
+            public String getBucket() {
+                return nomeBucketUtilizzato;
+            }
 
-	    @Override
-	    public String getAccessKeyId() {
-		return objectStorageConfiguration.getAccessKeyId();
-	    }
+            @Override
+            public String getAccessKeyId() {
+                return objectStorageConfiguration.getAccessKeyId();
+            }
 
-	    @Override
-	    public String getSecretKey() {
-		return objectStorageConfiguration.getSecretKey();
-	    }
+            @Override
+            public String getSecretKey() {
+                return objectStorageConfiguration.getSecretKey();
+            }
 
-	    @Override
-	    public Long getBackendId() {
-		return objectStorageConfiguration.getBackendId();
-	    }
-	};
+            @Override
+            public Long getBackendId() {
+                return objectStorageConfiguration.getBackendId();
+            }
+        };
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForStrumentiUrbanistici(
-	    String nomeBackend) throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_STRUMENTI_URBANISTICI);
+            String nomeBackend) throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_STRUMENTI_URBANISTICI);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForStrumentiUrbanisticiTrasformati(
-	    String nomeBackend) throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_STRUMENTI_URBANISTICI_TRASFORMATI);
+            String nomeBackend) throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_STRUMENTI_URBANISTICI_TRASFORMATI);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForStrumentiUrbanistici(
-	    String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
-	ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-		CONF_STRUMENTI_URBANISTICI);
-	return new ObjectStorageBackend() {
-	    private static final long serialVersionUID = -7032516962480163852L;
+            String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
+        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
+                CONF_STRUMENTI_URBANISTICI);
+        return new ObjectStorageBackend() {
+            private static final long serialVersionUID = -7032516962480163852L;
 
-	    @Override
-	    public String getBackendName() {
-		return nomeBackend;
-	    }
+            @Override
+            public String getBackendName() {
+                return nomeBackend;
+            }
 
-	    @Override
-	    public URI getAddress() {
-		return objectStorageConfiguration.getAddress();
-	    }
+            @Override
+            public URI getAddress() {
+                return objectStorageConfiguration.getAddress();
+            }
 
-	    @Override
-	    public String getBucket() {
-		return nomeBucketUtilizzato;
-	    }
+            @Override
+            public String getBucket() {
+                return nomeBucketUtilizzato;
+            }
 
-	    @Override
-	    public String getAccessKeyId() {
-		return objectStorageConfiguration.getAccessKeyId();
-	    }
+            @Override
+            public String getAccessKeyId() {
+                return objectStorageConfiguration.getAccessKeyId();
+            }
 
-	    @Override
-	    public String getSecretKey() {
-		return objectStorageConfiguration.getSecretKey();
-	    }
+            @Override
+            public String getSecretKey() {
+                return objectStorageConfiguration.getSecretKey();
+            }
 
-	    @Override
-	    public Long getBackendId() {
-		return objectStorageConfiguration.getBackendId();
-	    }
-	};
+            @Override
+            public Long getBackendId() {
+                return objectStorageConfiguration.getBackendId();
+            }
+        };
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForReportTrasformazioni(
-	    String nomeBackend) throws ObjectStorageException {
-	return getObjectStorageConfiguration(nomeBackend, CONF_REPORT_TRASFORMAZIONI);
+            String nomeBackend) throws ObjectStorageException {
+        return getObjectStorageConfiguration(nomeBackend, CONF_REPORT_TRASFORMAZIONI);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForReportTrasformazioni(
-	    String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
-	ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-		CONF_REPORT_TRASFORMAZIONI);
-	return new ObjectStorageBackend() {
-	    private static final long serialVersionUID = -7032516962480163852L;
+            String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
+        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
+                CONF_REPORT_TRASFORMAZIONI);
+        return new ObjectStorageBackend() {
+            private static final long serialVersionUID = -7032516962480163852L;
 
-	    @Override
-	    public String getBackendName() {
-		return nomeBackend;
-	    }
+            @Override
+            public String getBackendName() {
+                return nomeBackend;
+            }
 
-	    @Override
-	    public URI getAddress() {
-		return objectStorageConfiguration.getAddress();
-	    }
+            @Override
+            public URI getAddress() {
+                return objectStorageConfiguration.getAddress();
+            }
 
-	    @Override
-	    public String getBucket() {
-		return nomeBucketUtilizzato;
-	    }
+            @Override
+            public String getBucket() {
+                return nomeBucketUtilizzato;
+            }
 
-	    @Override
-	    public String getAccessKeyId() {
-		return objectStorageConfiguration.getAccessKeyId();
-	    }
+            @Override
+            public String getAccessKeyId() {
+                return objectStorageConfiguration.getAccessKeyId();
+            }
 
-	    @Override
-	    public String getSecretKey() {
-		return objectStorageConfiguration.getSecretKey();
-	    }
+            @Override
+            public String getSecretKey() {
+                return objectStorageConfiguration.getSecretKey();
+            }
 
-	    @Override
-	    public Long getBackendId() {
-		return objectStorageConfiguration.getBackendId();
-	    }
-	};
+            @Override
+            public Long getBackendId() {
+                return objectStorageConfiguration.getBackendId();
+            }
+        };
     }
 
     /**
@@ -609,81 +609,81 @@ public class SalvataggioBackendHelper {
      * @throws ObjectStorageException in caso di errore
      */
     public BackendStorage getBackend(Long backendId) throws ObjectStorageException {
-	try {
+        try {
 
-	    DecBackend backend = getBackendEntity(backendId);
-	    final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
-		    .valueOf(backend.getNmTipoBackend());
-	    final String backendName = backend.getNmBackend();
-	    final Long idBackend = backend.getIdDecBackend();
+            DecBackend backend = getBackendEntity(backendId);
+            final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
+                    .valueOf(backend.getNmTipoBackend());
+            final String backendName = backend.getNmBackend();
+            final Long idBackend = backend.getIdDecBackend();
 
-	    return new BackendStorage() {
-		private static final long serialVersionUID = 5092016605462729859L;
+            return new BackendStorage() {
+                private static final long serialVersionUID = 5092016605462729859L;
 
-		@Override
-		public BackendStorage.STORAGE_TYPE getType() {
-		    return type;
-		}
+                @Override
+                public BackendStorage.STORAGE_TYPE getType() {
+                    return type;
+                }
 
-		@Override
-		public String getBackendName() {
-		    return backendName;
-		}
+                @Override
+                public String getBackendName() {
+                    return backendName;
+                }
 
-		@Override
-		public Long getBackendId() {
-		    return idBackend;
-		}
-	    };
+                @Override
+                public Long getBackendId() {
+                    return idBackend;
+                }
+            };
 
-	} catch (IllegalArgumentException | NonUniqueResultException e) {
-	    throw ObjectStorageException.builder()
-		    .message("Impossibile ottenere le informazioni di backend").cause(e).build();
-	}
+        } catch (IllegalArgumentException | NonUniqueResultException e) {
+            throw ObjectStorageException.builder()
+                    .message("Impossibile ottenere le informazioni di backend").cause(e).build();
+        }
 
     }
 
     public void addBackendInfosToFilesDepositati(String nmAmbiente, String nmVersatore,
-	    String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
-	    throws ObjectStorageException {
-	String queryStr = "SELECT obj FROM PigObject obj INNER JOIN obj.pigVer vers "
-		+ "WHERE vers.pigAmbienteVer.nmAmbienteVers = :nmAmbiente AND vers.nmVers = :nmVers AND obj.cdKeyObject = :cdKey";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("nmAmbiente", nmAmbiente);
-	query.setParameter("nmVers", nmVersatore);
-	query.setParameter("cdKey", cdKeyObject);
+            String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
+            throws ObjectStorageException {
+        String queryStr = "SELECT obj FROM PigObject obj INNER JOIN obj.pigVer vers "
+                + "WHERE vers.pigAmbienteVer.nmAmbienteVers = :nmAmbiente AND vers.nmVers = :nmVers AND obj.cdKeyObject = :cdKey";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("nmAmbiente", nmAmbiente);
+        query.setParameter("nmVers", nmVersatore);
+        query.setParameter("cdKey", cdKeyObject);
 
-	List<PigObject> results = query.getResultList();
-	if (results.isEmpty()) {
-	    throw ObjectStorageException.builder()
-		    .message(
-			    "Impossibile ottenere le informazioni di backend, oggetto non trovato.")
-		    .build();
-	}
+        List<PigObject> results = query.getResultList();
+        if (results.isEmpty()) {
+            throw ObjectStorageException.builder()
+                    .message(
+                            "Impossibile ottenere le informazioni di backend, oggetto non trovato.")
+                    .build();
+        }
 
-	PigObject obj = results.get(0);
-	PigVers vers = obj.getPigVer();
-	PigAmbienteVers ambienteVers = vers.getPigAmbienteVer();
+        PigObject obj = results.get(0);
+        PigVers vers = obj.getPigVer();
+        PigAmbienteVers ambienteVers = vers.getPigAmbienteVer();
 
-	BackendStorage backendVersamento = getBackendForVersamento(
-		BigDecimal.valueOf(ambienteVers.getIdAmbienteVers()),
-		BigDecimal.valueOf(vers.getIdVers()),
-		BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
+        BackendStorage backendVersamento = getBackendForVersamento(
+                BigDecimal.valueOf(ambienteVers.getIdAmbienteVers()),
+                BigDecimal.valueOf(vers.getIdVers()),
+                BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
 
-	String tenantOs = configurationHelper
-		.getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE);
+        String tenantOs = configurationHelper
+                .getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE);
 
-	for (FileDepositatoType file : listaFileDepositati.getFileDepositato()) {
-	    file.setIdBackend(backendVersamento.getBackendId());
+        for (FileDepositatoType file : listaFileDepositati.getFileDepositato()) {
+            file.setIdBackend(backendVersamento.getBackendId());
 
-	    if (backendVersamento.isObjectStorage()) {
-		ObjectStorageBackend config = getObjectStorageConfigurationForVersamento(
-			backendVersamento.getBackendName());
+            if (backendVersamento.isObjectStorage()) {
+                ObjectStorageBackend config = getObjectStorageConfigurationForVersamento(
+                        backendVersamento.getBackendName());
 
-		file.setNmOsTenant(tenantOs);
-		file.setNmOsBucket(config.getBucket());
-	    }
-	}
+                file.setNmOsTenant(tenantOs);
+                file.setNmOsBucket(config.getBucket());
+            }
+        }
     }
 
     /**
@@ -699,14 +699,14 @@ public class SalvataggioBackendHelper {
      * @throws IOException errore generico
      */
     private String calculateFileCRC32CBase64(Path resource) throws IOException {
-	byte[] buffer = new byte[BUFFER_SIZE];
-	int readed;
-	CRC32CChecksum crc32c = new CRC32CChecksum();
-	try (InputStream is = Files.newInputStream(resource)) {
-	    while ((readed = is.read(buffer)) != -1) {
-		crc32c.update(buffer, 0, readed);
-	    }
-	}
-	return Base64.getEncoder().encodeToString(crc32c.getValueAsBytes());
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int readed;
+        CRC32CChecksum crc32c = new CRC32CChecksum();
+        try (InputStream is = Files.newInputStream(resource)) {
+            while ((readed = is.read(buffer)) != -1) {
+                crc32c.update(buffer, 0, readed);
+            }
+        }
+        return Base64.getEncoder().encodeToString(crc32c.getValueAsBytes());
     }
 }

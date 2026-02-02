@@ -31,20 +31,20 @@ import org.apache.commons.lang3.StringUtils;
 public class XmlUtils {
 
     private XmlUtils() {
-	throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Utility class");
     }
 
     // #MAC #15042
     public static Charset getXmlEcondingDeclaration(String xmlSip)
-	    throws XMLStreamException, FactoryConfigurationError {
-	// XXE (disabled external entity access)
-	XMLInputFactory factory = XMLInputFactory.newInstance();
-	factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-	XMLStreamReader xmlStreamReader = factory.createXMLStreamReader(new StringReader(xmlSip));
-	String encodingFromXMLDeclaration = xmlStreamReader.getCharacterEncodingScheme();
-	return StringUtils.isNotBlank(encodingFromXMLDeclaration)
-		? Charset.forName(encodingFromXMLDeclaration)
-		: StandardCharsets.UTF_8;
+            throws XMLStreamException, FactoryConfigurationError {
+        // XXE (disabled external entity access)
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        XMLStreamReader xmlStreamReader = factory.createXMLStreamReader(new StringReader(xmlSip));
+        String encodingFromXMLDeclaration = xmlStreamReader.getCharacterEncodingScheme();
+        return StringUtils.isNotBlank(encodingFromXMLDeclaration)
+                ? Charset.forName(encodingFromXMLDeclaration)
+                : StandardCharsets.UTF_8;
     }
 
     /**
@@ -57,19 +57,19 @@ public class XmlUtils {
      */
     // MAC #21830
     public static String convertToHTMLCodes(String str) {
-	StringBuilder sb = new StringBuilder();
-	int len = str.length();
-	for (int i = 0; i < len; ++i) {
-	    char c = str.charAt(i);
-	    if (c > 127) {
-		sb.append("&#");
-		sb.append(Integer.toString(c, 10));
-		sb.append(";");
-	    } else {
-		sb.append(c);
-	    }
-	}
-	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        int len = str.length();
+        for (int i = 0; i < len; ++i) {
+            char c = str.charAt(i);
+            if (c > 127) {
+                sb.append("&#");
+                sb.append(Integer.toString(c, 10));
+                sb.append(";");
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
 }

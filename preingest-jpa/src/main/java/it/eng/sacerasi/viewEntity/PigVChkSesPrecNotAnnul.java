@@ -38,21 +38,21 @@ public class PigVChkSesPrecNotAnnul implements Serializable {
 
     @Column(name = "FL_SES_PREC_NOT_ANNULLATA", columnDefinition = "char")
     public String getFlSesPrecNotAnnullata() {
-	return this.flSesPrecNotAnnullata;
+        return this.flSesPrecNotAnnullata;
     }
 
     public void setFlSesPrecNotAnnullata(String flSesPrecNotAnnullata) {
-	this.flSesPrecNotAnnullata = flSesPrecNotAnnullata;
+        this.flSesPrecNotAnnullata = flSesPrecNotAnnullata;
     }
 
     @Id
     @Column(name = "ID_OBJECT")
     public BigDecimal getIdObject() {
-	return this.idObject;
+        return this.idObject;
     }
 
     public void setIdObject(BigDecimal idObject) {
-	this.idObject = idObject;
+        this.idObject = idObject;
     }
 
 }

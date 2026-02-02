@@ -36,26 +36,26 @@ public class PreingestAuthenticator extends Authenticator {
 
     @Override
     public User recuperoAutorizzazioni(HttpSession httpSession) {
-	User utente = (User) SessionManager.getUser(httpSession);
-	RecuperoAutorizzazioni client = IAMSoapClients.recuperoAutorizzazioniClient(
-		utente.getConfigurazione().get("USERID_RECUP_INFO"),
-		utente.getConfigurazione().get("PSW_RECUP_INFO"),
-		utente.getConfigurazione().get("URL_RECUP_AUTOR_USER"));
-	RecuperoAutorizzazioniRisposta resp;
-	try {
-	    resp = client.recuperoAutorizzazioniPerNome(utente.getUsername(), getAppName(),
-		    utente.getIdOrganizzazioneFoglia().intValue());
-	} catch (AuthWSException_Exception e) {
-	    throw new RuntimeException(e);
-	}
-	UserUtil.fillComponenti(utente, resp);
-	SessionManager.setUser(httpSession, utente);
-	return utente;
+        User utente = (User) SessionManager.getUser(httpSession);
+        RecuperoAutorizzazioni client = IAMSoapClients.recuperoAutorizzazioniClient(
+                utente.getConfigurazione().get("USERID_RECUP_INFO"),
+                utente.getConfigurazione().get("PSW_RECUP_INFO"),
+                utente.getConfigurazione().get("URL_RECUP_AUTOR_USER"));
+        RecuperoAutorizzazioniRisposta resp;
+        try {
+            resp = client.recuperoAutorizzazioniPerNome(utente.getUsername(), getAppName(),
+                    utente.getIdOrganizzazioneFoglia().intValue());
+        } catch (AuthWSException_Exception e) {
+            throw new RuntimeException(e);
+        }
+        UserUtil.fillComponenti(utente, resp);
+        SessionManager.setUser(httpSession, utente);
+        return utente;
     }
 
     @Override
     protected String getAppName() {
-	return configHelper.getParamApplicApplicationName();
+        return configHelper.getParamApplicApplicationName();
     }
 
 }

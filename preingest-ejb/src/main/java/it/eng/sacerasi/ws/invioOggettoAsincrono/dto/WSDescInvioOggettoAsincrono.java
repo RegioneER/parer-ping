@@ -27,16 +27,16 @@ public class WSDescInvioOggettoAsincrono implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_INVIO_OGGETTO_ASYNC;
+        return Costanti.WS_INVIO_OGGETTO_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_INVIO_OGGETTO_ASYNC_VRSN;
+        return Costanti.WS_INVIO_OGGETTO_ASYNC_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_INVIO_OGGETTO_ASYNC_COMP;
+        return Costanti.WS_INVIO_OGGETTO_ASYNC_COMP;
     }
 }

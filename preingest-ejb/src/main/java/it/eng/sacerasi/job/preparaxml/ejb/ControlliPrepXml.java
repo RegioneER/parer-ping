@@ -55,151 +55,151 @@ public class ControlliPrepXml {
      * usato da job produzione xml
      */
     public List<PigObject> getListaObjectDaVersPostHash() {
-	// MAC#29391 - Gestione della priorità di versamento del JOB PREPARA XML SACER
-	String queryStr = "select u from PigObject u " + "join u.pigSessioneIngests si "
-		+ "where u.tiStatoObject = :tiStatoObjectIn "
-		+ "and si.idSessioneIngest = u.idLastSessioneIngest "
-		+ "and si.tiStatoVerificaHash = :tiStatoVerificaHashIn "
-		+ "ORDER BY u.tiPrioritaVersamento, si.dtApertura ASC";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("tiStatoObjectIn", Constants.StatoOggetto.IN_ATTESA_SCHED.name());
-	query.setParameter("tiStatoVerificaHashIn", Constants.StatoVerificaHash.OK.name());
+        // MAC#29391 - Gestione della priorità di versamento del JOB PREPARA XML SACER
+        String queryStr = "select u from PigObject u " + "join u.pigSessioneIngests si "
+                + "where u.tiStatoObject = :tiStatoObjectIn "
+                + "and si.idSessioneIngest = u.idLastSessioneIngest "
+                + "and si.tiStatoVerificaHash = :tiStatoVerificaHashIn "
+                + "ORDER BY u.tiPrioritaVersamento, si.dtApertura ASC";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("tiStatoObjectIn", Constants.StatoOggetto.IN_ATTESA_SCHED.name());
+        query.setParameter("tiStatoVerificaHashIn", Constants.StatoVerificaHash.OK.name());
 
-	return query.getResultList();
+        return query.getResultList();
     }
 
     public BigDecimal recuperaAggiornaContUDSacer(OggettoInCoda oggetto, BigDecimal annoRif) {
-	BigDecimal tmpRet;
-	PigTipoObject pTipoObj;
-	List<PigContUnitaDocSacer> tmpPigContUnitaDocSacers;
-	PigContUnitaDocSacer tmpContUnitaDocSacer;
-	OggettoInCoda.ContUnitaDocSacer contUnitaDoc = new OggettoInCoda().new ContUnitaDocSacer();
+        BigDecimal tmpRet;
+        PigTipoObject pTipoObj;
+        List<PigContUnitaDocSacer> tmpPigContUnitaDocSacers;
+        PigContUnitaDocSacer tmpContUnitaDocSacer;
+        OggettoInCoda.ContUnitaDocSacer contUnitaDoc = new OggettoInCoda().new ContUnitaDocSacer();
 
-	oggetto.setValoreContUnitaDocSacer(contUnitaDoc);
-	pTipoObj = entityManager.find(PigTipoObject.class,
-		oggetto.getRifPigObject().getPigTipoObject().getIdTipoObject());
+        oggetto.setValoreContUnitaDocSacer(contUnitaDoc);
+        pTipoObj = entityManager.find(PigTipoObject.class,
+                oggetto.getRifPigObject().getPigTipoObject().getIdTipoObject());
 
-	String queryStr = "select p from PigContUnitaDocSacer p "
-		+ "where p.pigTipoObject = :pigTipoObject "
-		+ "and p.aaUnitaDocSacer = :aaUnitaDocSacer";
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("pigTipoObject", pTipoObj);
-	query.setParameter("aaUnitaDocSacer", annoRif);
-	tmpPigContUnitaDocSacers = query.getResultList();
+        String queryStr = "select p from PigContUnitaDocSacer p "
+                + "where p.pigTipoObject = :pigTipoObject "
+                + "and p.aaUnitaDocSacer = :aaUnitaDocSacer";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("pigTipoObject", pTipoObj);
+        query.setParameter("aaUnitaDocSacer", annoRif);
+        tmpPigContUnitaDocSacers = query.getResultList();
 
-	if (tmpPigContUnitaDocSacers != null && tmpPigContUnitaDocSacers.size() == 1) {
-	    tmpContUnitaDocSacer = tmpPigContUnitaDocSacers.get(0);
-	    tmpRet = tmpContUnitaDocSacer.getPgContUnitaDocSacer()
-		    .add(new BigDecimal(BigInteger.ONE));
-	    //
-	    contUnitaDoc
-		    .setRifIdPigContUnitaDocSacer(tmpContUnitaDocSacer.getIdContUnitaDocSacer());
-	    contUnitaDoc.setValore(tmpRet);
-	    //
-	} else {
-	    tmpRet = BigDecimal.ONE;
-	    //
-	    contUnitaDoc.setRifIdPigTipoObject(pTipoObj.getIdTipoObject());
-	    contUnitaDoc.setAnnoUnitaDocSacer(annoRif);
-	    contUnitaDoc.setValore(tmpRet);
-	    //
-	}
+        if (tmpPigContUnitaDocSacers != null && tmpPigContUnitaDocSacers.size() == 1) {
+            tmpContUnitaDocSacer = tmpPigContUnitaDocSacers.get(0);
+            tmpRet = tmpContUnitaDocSacer.getPgContUnitaDocSacer()
+                    .add(new BigDecimal(BigInteger.ONE));
+            //
+            contUnitaDoc
+                    .setRifIdPigContUnitaDocSacer(tmpContUnitaDocSacer.getIdContUnitaDocSacer());
+            contUnitaDoc.setValore(tmpRet);
+            //
+        } else {
+            tmpRet = BigDecimal.ONE;
+            //
+            contUnitaDoc.setRifIdPigTipoObject(pTipoObj.getIdTipoObject());
+            contUnitaDoc.setAnnoUnitaDocSacer(annoRif);
+            contUnitaDoc.setValore(tmpRet);
+            //
+        }
 
-	return tmpRet;
+        return tmpRet;
     }
 
     public boolean verificaPUDocObjNonVersata(Chiave chiave, long idObj) {
-	boolean tmpRet = false;
-	long conta;
+        boolean tmpRet = false;
+        long conta;
 
-	String queryStr = "select count(pig_udo) from PigUnitaDocObject pig_udo "
-		+ " where pig_udo.pigObject.idObject = :idObjectIn "
-		+ "and pig_udo.cdRegistroUnitaDocSacer = :cdRegistroUnitaDocSacerIn "
-		+ "and pig_udo.aaUnitaDocSacer = :aaUnitaDocSacerIn "
-		+ "and pig_udo.cdKeyUnitaDocSacer = :cdKeyUnitaDocSacerIn "
-		+ "and (pig_udo.tiStatoUnitaDocObject = :stateOk "
-		+ " or (pig_udo.tiStatoUnitaDocObject = :stateErr "
-		+ "  and (pig_udo.cdErrSacer = :errCode "
-		+ "    or pig_udo.cdErrSacer = :errCodeAlt))) ";
+        String queryStr = "select count(pig_udo) from PigUnitaDocObject pig_udo "
+                + " where pig_udo.pigObject.idObject = :idObjectIn "
+                + "and pig_udo.cdRegistroUnitaDocSacer = :cdRegistroUnitaDocSacerIn "
+                + "and pig_udo.aaUnitaDocSacer = :aaUnitaDocSacerIn "
+                + "and pig_udo.cdKeyUnitaDocSacer = :cdKeyUnitaDocSacerIn "
+                + "and (pig_udo.tiStatoUnitaDocObject = :stateOk "
+                + " or (pig_udo.tiStatoUnitaDocObject = :stateErr "
+                + "  and (pig_udo.cdErrSacer = :errCode "
+                + "    or pig_udo.cdErrSacer = :errCodeAlt))) ";
 
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("idObjectIn", idObj);
-	query.setParameter("cdRegistroUnitaDocSacerIn", chiave.getRegistro());
-	query.setParameter("aaUnitaDocSacerIn", new BigDecimal(chiave.getAnno()));
-	query.setParameter("cdKeyUnitaDocSacerIn", chiave.getNumero());
-	query.setParameter("stateOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
-	query.setParameter("stateErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
-	query.setParameter("errCode", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_OLD);
-	query.setParameter("errCodeAlt", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("idObjectIn", idObj);
+        query.setParameter("cdRegistroUnitaDocSacerIn", chiave.getRegistro());
+        query.setParameter("aaUnitaDocSacerIn", new BigDecimal(chiave.getAnno()));
+        query.setParameter("cdKeyUnitaDocSacerIn", chiave.getNumero());
+        query.setParameter("stateOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
+        query.setParameter("stateErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+        query.setParameter("errCode", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_OLD);
+        query.setParameter("errCodeAlt", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
 
-	conta = (Long) query.getSingleResult();
+        conta = (Long) query.getSingleResult();
 
-	if (conta == 0) {
-	    tmpRet = true;
-	}
-	return tmpRet;
+        if (conta == 0) {
+            tmpRet = true;
+        }
+        return tmpRet;
     }
 
     public boolean verificaPFascicoloObjNonVersato(Chiave chiave, long idObj) {
-	boolean tmpRet = false;
-	long conta;
+        boolean tmpRet = false;
+        long conta;
 
-	String queryStr = "select count(pig_fo) from PigFascicoloObject pig_fo "
-		+ " where pig_fo.pigObject.idObject = :idObjectIn "
-		+ "and pig_fo.aaFascicoloSacer = :aaFascicoloSacerIn "
-		+ "and pig_fo.cdKeyFascicoloSacer = :cdKeyFascicoloSacerIn "
-		+ "and (pig_fo.tiStatoFascicoloObject = :stateOk "
-		+ " or (pig_fo.tiStatoFascicoloObject = :stateErr "
-		+ "  and (pig_fo.cdErrSacer = :errCode "
-		+ "    or pig_fo.cdErrSacer = :errCodeAlt))) ";
+        String queryStr = "select count(pig_fo) from PigFascicoloObject pig_fo "
+                + " where pig_fo.pigObject.idObject = :idObjectIn "
+                + "and pig_fo.aaFascicoloSacer = :aaFascicoloSacerIn "
+                + "and pig_fo.cdKeyFascicoloSacer = :cdKeyFascicoloSacerIn "
+                + "and (pig_fo.tiStatoFascicoloObject = :stateOk "
+                + " or (pig_fo.tiStatoFascicoloObject = :stateErr "
+                + "  and (pig_fo.cdErrSacer = :errCode "
+                + "    or pig_fo.cdErrSacer = :errCodeAlt))) ";
 
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("idObjectIn", idObj);
-	query.setParameter("aaFascicoloSacerIn", new BigDecimal(chiave.getAnno()));
-	query.setParameter("cdKeyFascicoloSacerIn", chiave.getNumero());
-	query.setParameter("stateOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
-	query.setParameter("stateErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
-	query.setParameter("errCode", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_OLD);
-	query.setParameter("errCodeAlt", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("idObjectIn", idObj);
+        query.setParameter("aaFascicoloSacerIn", new BigDecimal(chiave.getAnno()));
+        query.setParameter("cdKeyFascicoloSacerIn", chiave.getNumero());
+        query.setParameter("stateOk", Constants.StatoUnitaDocObject.VERSATA_OK.name());
+        query.setParameter("stateErr", Constants.StatoUnitaDocObject.VERSATA_ERR.name());
+        query.setParameter("errCode", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_OLD);
+        query.setParameter("errCodeAlt", Constants.COD_VERS_ERR_CHIAVE_DUPLICATA_NEW);
 
-	conta = (Long) query.getSingleResult();
+        conta = (Long) query.getSingleResult();
 
-	if (conta == 0) {
-	    tmpRet = true;
-	}
-	return tmpRet;
+        if (conta == 0) {
+            tmpRet = true;
+        }
+        return tmpRet;
     }
 
     public PigTipoFileObject getPigTipoFileObj(String nmTipoFileObj, long idTipoObj) {
-	List<PigTipoFileObject> pigTipoFileObjects;
+        List<PigTipoFileObject> pigTipoFileObjects;
 
-	String queryStr = "select u from PigTipoFileObject u where u.pigTipoObject.idTipoObject = :idTipoObject "
-		+ "and u.nmTipoFileObject = :nmTipoFileObject ";
+        String queryStr = "select u from PigTipoFileObject u where u.pigTipoObject.idTipoObject = :idTipoObject "
+                + "and u.nmTipoFileObject = :nmTipoFileObject ";
 
-	javax.persistence.Query query = entityManager.createQuery(queryStr);
-	query.setParameter("idTipoObject", idTipoObj);
-	query.setParameter("nmTipoFileObject", nmTipoFileObj);
-	pigTipoFileObjects = query.getResultList();
-	if (pigTipoFileObjects != null && !pigTipoFileObjects.isEmpty()) {
-	    return pigTipoFileObjects.get(0);
-	} else {
-	    return null;
-	}
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("idTipoObject", idTipoObj);
+        query.setParameter("nmTipoFileObject", nmTipoFileObj);
+        pigTipoFileObjects = query.getResultList();
+        if (pigTipoFileObjects != null && !pigTipoFileObjects.isEmpty()) {
+            return pigTipoFileObjects.get(0);
+        } else {
+            return null;
+        }
     }
 
     public boolean checkStrutturaPigVChkOrgVersSacer(BigDecimal idObject) {
-	PigVChkOrgVersSacer view = entityManager.find(PigVChkOrgVersSacer.class, idObject);
-	return view.getFlOrgVersSacerOk().equals("1");
+        PigVChkOrgVersSacer view = entityManager.find(PigVChkOrgVersSacer.class, idObject);
+        return view.getFlOrgVersSacerOk().equals("1");
     }
 
     public boolean checkSimulazionePigVChkSimulaVersSacer(BigDecimal idObject) {
-	PigVChkSimulaVersSacer view = entityManager.find(PigVChkSimulaVersSacer.class, idObject);
-	return view.getFlSimulaVersSacerOk().equals("1");
+        PigVChkSimulaVersSacer view = entityManager.find(PigVChkSimulaVersSacer.class, idObject);
+        return view.getFlSimulaVersSacerOk().equals("1");
     }
 
     public boolean checkPigVChkSesPrecNotAnnul(BigDecimal idObject) {
-	PigVChkSesPrecNotAnnul view = entityManager.find(PigVChkSesPrecNotAnnul.class, idObject);
-	return view.getFlSesPrecNotAnnullata().equals("1");
+        PigVChkSesPrecNotAnnul view = entityManager.find(PigVChkSesPrecNotAnnul.class, idObject);
+        return view.getFlSesPrecNotAnnullata().equals("1");
     }
 
 }

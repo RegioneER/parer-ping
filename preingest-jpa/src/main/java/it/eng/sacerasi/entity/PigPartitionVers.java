@@ -42,52 +42,52 @@ public class PigPartitionVers implements Serializable {
     private PigVers pigVers;
 
     public PigPartitionVers() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "PIG_PARTITION_VERS_IDPARTITIONVERS_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_PARTITION_VERS"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SPIG_PARTITION_VERS"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PIG_PARTITION_VERS_IDPARTITIONVERS_GENERATOR")
     @Column(name = "ID_PARTITION_VERS")
     public Long getIdPartitionVers() {
-	return this.idPartitionVers;
+        return this.idPartitionVers;
     }
 
     public void setIdPartitionVers(Long idPartitionVers) {
-	this.idPartitionVers = idPartitionVers;
+        this.idPartitionVers = idPartitionVers;
     }
 
     @Column(name = "TI_PARTITION")
     public String getTiPartition() {
-	return this.tiPartition;
+        return this.tiPartition;
     }
 
     public void setTiPartition(String tiPartition) {
-	this.tiPartition = tiPartition;
+        this.tiPartition = tiPartition;
     }
 
     // bi-directional many-to-one association to PigPartition
     @ManyToOne
     @JoinColumn(name = "ID_PARTITION")
     public PigPartition getPigPartition() {
-	return this.pigPartition;
+        return this.pigPartition;
     }
 
     public void setPigPartition(PigPartition pigPartition) {
-	this.pigPartition = pigPartition;
+        this.pigPartition = pigPartition;
     }
 
     // bi-directional many-to-one association to PigVer
     @ManyToOne
     @JoinColumn(name = "ID_VERS")
     public PigVers getPigVers() {
-	return this.pigVers;
+        return this.pigVers;
     }
 
     public void setPigVers(PigVers pigVers) {
-	this.pigVers = pigVers;
+        this.pigVers = pigVers;
     }
 
 }

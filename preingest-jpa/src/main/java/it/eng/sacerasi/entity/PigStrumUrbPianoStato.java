@@ -39,88 +39,88 @@ public class PigStrumUrbPianoStato implements Serializable {
     private List<PigStrumUrbPianoDocReq> pigStrumUrbPianoDocReqs = new ArrayList<>();
 
     public PigStrumUrbPianoStato() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @Column(name = "ID_STRUM_URB_PIANO_STATO")
     public Long getIdStrumUrbPianoStato() {
-	return this.idStrumUrbPianoStato;
+        return this.idStrumUrbPianoStato;
     }
 
     public void setIdStrumUrbPianoStato(Long idStrumUrbPianoStato) {
-	this.idStrumUrbPianoStato = idStrumUrbPianoStato;
+        this.idStrumUrbPianoStato = idStrumUrbPianoStato;
     }
 
     @Column(name = "NM_TIPO_STRUMENTO_URBANISTICO")
     public String getNmTipoStrumentoUrbanistico() {
-	return this.nmTipoStrumentoUrbanistico;
+        return this.nmTipoStrumentoUrbanistico;
     }
 
     public void setNmTipoStrumentoUrbanistico(String nmTipoStrumentoUrbanistico) {
-	this.nmTipoStrumentoUrbanistico = nmTipoStrumentoUrbanistico;
+        this.nmTipoStrumentoUrbanistico = nmTipoStrumentoUrbanistico;
     }
 
     @Column(name = "TI_FASE_STRUMENTO")
     public String getTiFaseStrumento() {
-	return this.tiFaseStrumento;
+        return this.tiFaseStrumento;
     }
 
     public void setTiFaseStrumento(String tiFaseStrumento) {
-	this.tiFaseStrumento = tiFaseStrumento;
+        this.tiFaseStrumento = tiFaseStrumento;
     }
 
     // bi-directional many-to-one association to PigStrumentiUrbanistici
     @OneToMany(mappedBy = "pigStrumUrbPianoStato")
     public List<PigStrumentiUrbanistici> getPigStrumentiUrbanisticis() {
-	return this.pigStrumentiUrbanisticis;
+        return this.pigStrumentiUrbanisticis;
     }
 
     public void setPigStrumentiUrbanisticis(
-	    List<PigStrumentiUrbanistici> pigStrumentiUrbanisticis) {
-	this.pigStrumentiUrbanisticis = pigStrumentiUrbanisticis;
+            List<PigStrumentiUrbanistici> pigStrumentiUrbanisticis) {
+        this.pigStrumentiUrbanisticis = pigStrumentiUrbanisticis;
     }
 
     public PigStrumentiUrbanistici addPigStrumentiUrbanistici(
-	    PigStrumentiUrbanistici pigStrumentiUrbanistici) {
-	getPigStrumentiUrbanisticis().add(pigStrumentiUrbanistici);
-	pigStrumentiUrbanistici.setPigStrumUrbPianoStato(this);
+            PigStrumentiUrbanistici pigStrumentiUrbanistici) {
+        getPigStrumentiUrbanisticis().add(pigStrumentiUrbanistici);
+        pigStrumentiUrbanistici.setPigStrumUrbPianoStato(this);
 
-	return pigStrumentiUrbanistici;
+        return pigStrumentiUrbanistici;
     }
 
     public PigStrumentiUrbanistici removePigStrumentiUrbanistici(
-	    PigStrumentiUrbanistici pigStrumentiUrbanistici) {
-	getPigStrumentiUrbanisticis().remove(pigStrumentiUrbanistici);
-	pigStrumentiUrbanistici.setPigStrumUrbPianoStato(null);
+            PigStrumentiUrbanistici pigStrumentiUrbanistici) {
+        getPigStrumentiUrbanisticis().remove(pigStrumentiUrbanistici);
+        pigStrumentiUrbanistici.setPigStrumUrbPianoStato(null);
 
-	return pigStrumentiUrbanistici;
+        return pigStrumentiUrbanistici;
     }
 
     // bi-directional many-to-one association to PigStrumUrbPianoDocReq
     @OneToMany(mappedBy = "pigStrumUrbPianoStato")
     public List<PigStrumUrbPianoDocReq> getPigStrumUrbPianoDocReqs() {
-	return this.pigStrumUrbPianoDocReqs;
+        return this.pigStrumUrbPianoDocReqs;
     }
 
     public void setPigStrumUrbPianoDocReqs(List<PigStrumUrbPianoDocReq> pigStrumUrbPianoDocReqs) {
-	this.pigStrumUrbPianoDocReqs = pigStrumUrbPianoDocReqs;
+        this.pigStrumUrbPianoDocReqs = pigStrumUrbPianoDocReqs;
     }
 
     public PigStrumUrbPianoDocReq addPigStrumUrbPianoDocReq(
-	    PigStrumUrbPianoDocReq pigStrumUrbPianoDocReq) {
-	getPigStrumUrbPianoDocReqs().add(pigStrumUrbPianoDocReq);
-	pigStrumUrbPianoDocReq.setPigStrumUrbPianoStato(this);
+            PigStrumUrbPianoDocReq pigStrumUrbPianoDocReq) {
+        getPigStrumUrbPianoDocReqs().add(pigStrumUrbPianoDocReq);
+        pigStrumUrbPianoDocReq.setPigStrumUrbPianoStato(this);
 
-	return pigStrumUrbPianoDocReq;
+        return pigStrumUrbPianoDocReq;
     }
 
     public PigStrumUrbPianoDocReq removePigStrumUrbPianoDocReq(
-	    PigStrumUrbPianoDocReq pigStrumUrbPianoDocReq) {
-	getPigStrumUrbPianoDocReqs().remove(pigStrumUrbPianoDocReq);
-	pigStrumUrbPianoDocReq.setPigStrumUrbPianoStato(null);
+            PigStrumUrbPianoDocReq pigStrumUrbPianoDocReq) {
+        getPigStrumUrbPianoDocReqs().remove(pigStrumUrbPianoDocReq);
+        pigStrumUrbPianoDocReq.setPigStrumUrbPianoStato(null);
 
-	return pigStrumUrbPianoDocReq;
+        return pigStrumUrbPianoDocReq;
     }
 
 }

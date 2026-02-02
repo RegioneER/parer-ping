@@ -23,7 +23,7 @@ import java.io.Serializable;
 public interface BackendStorage extends Serializable {
 
     enum STORAGE_TYPE {
-	OS, FILE
+        OS, FILE
     }
 
     STORAGE_TYPE getType();
@@ -33,11 +33,11 @@ public interface BackendStorage extends Serializable {
     Long getBackendId();
 
     default boolean isObjectStorage() {
-	return STORAGE_TYPE.OS.equals(getType());
+        return STORAGE_TYPE.OS.equals(getType());
     }
 
     default boolean isFile() {
-	return STORAGE_TYPE.FILE.equals(getType());
+        return STORAGE_TYPE.FILE.equals(getType());
     }
 
 }

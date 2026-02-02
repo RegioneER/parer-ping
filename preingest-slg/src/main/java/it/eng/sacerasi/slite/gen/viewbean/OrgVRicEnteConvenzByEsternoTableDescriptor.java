@@ -56,49 +56,49 @@ public class OrgVRicEnteConvenzByEsternoTableDescriptor extends TableDescriptor 
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_ENTE_CONVENZ,
-		new ColumnDescriptor(COL_ID_ENTE_CONVENZ, Types.DECIMAL, 22, true));
-	map.put(COL_NM_ENTE_CONVENZ,
-		new ColumnDescriptor(COL_NM_ENTE_CONVENZ, Types.VARCHAR, 254, true));
-	map.put(COL_ID_CATEG_ENTE,
-		new ColumnDescriptor(COL_ID_CATEG_ENTE, Types.DECIMAL, 22, true));
-	map.put(COL_ID_AMBITO_TERRIT,
-		new ColumnDescriptor(COL_ID_AMBITO_TERRIT, Types.DECIMAL, 22, true));
-	map.put(COL_DT_INI_VAL, new ColumnDescriptor(COL_DT_INI_VAL, Types.TIMESTAMP, 7, true));
-	map.put(COL_DT_CESSAZIONE,
-		new ColumnDescriptor(COL_DT_CESSAZIONE, Types.TIMESTAMP, 7, true));
-	map.put(COL_FL_RECESSO, new ColumnDescriptor(COL_FL_RECESSO, Types.VARCHAR, 1, true));
-	map.put(COL_ENTE_ATTIVO, new ColumnDescriptor(COL_ENTE_ATTIVO, Types.DECIMAL, 22, true));
-	map.put(COL_ID_USER_IAM_COR,
-		new ColumnDescriptor(COL_ID_USER_IAM_COR, Types.DECIMAL, 22, true));
-	map.put(COL_ID_AMBIENTE_ENTE_CONVENZ,
-		new ColumnDescriptor(COL_ID_AMBIENTE_ENTE_CONVENZ, Types.DECIMAL, 22, true));
-	map.put(COL_ID_ENTE_GESTORE,
-		new ColumnDescriptor(COL_ID_ENTE_GESTORE, Types.DECIMAL, 22, true));
-	map.put(COL_ID_ENTE_CONSERV,
-		new ColumnDescriptor(COL_ID_ENTE_CONSERV, Types.DECIMAL, 22, true));
-	map.put(COL_DT_DEC_ACCORDO,
-		new ColumnDescriptor(COL_DT_DEC_ACCORDO, Types.TIMESTAMP, 7, true));
-	map.put(COL_DT_SCAD_ACCORDO,
-		new ColumnDescriptor(COL_DT_SCAD_ACCORDO, Types.TIMESTAMP, 7, true));
-	map.put(COL_FL_IN_CORSO_CONVENZ,
-		new ColumnDescriptor(COL_FL_IN_CORSO_CONVENZ, Types.VARCHAR, 1, true));
-	map.put(COL_FL_NON_CONVENZ,
-		new ColumnDescriptor(COL_FL_NON_CONVENZ, Types.VARCHAR, 1, true));
-	map.put(COL_TI_ENTE_CONVENZ,
-		new ColumnDescriptor(COL_TI_ENTE_CONVENZ, Types.VARCHAR, 100, true));
+        map.put(COL_ID_ENTE_CONVENZ,
+                new ColumnDescriptor(COL_ID_ENTE_CONVENZ, Types.DECIMAL, 22, true));
+        map.put(COL_NM_ENTE_CONVENZ,
+                new ColumnDescriptor(COL_NM_ENTE_CONVENZ, Types.VARCHAR, 254, true));
+        map.put(COL_ID_CATEG_ENTE,
+                new ColumnDescriptor(COL_ID_CATEG_ENTE, Types.DECIMAL, 22, true));
+        map.put(COL_ID_AMBITO_TERRIT,
+                new ColumnDescriptor(COL_ID_AMBITO_TERRIT, Types.DECIMAL, 22, true));
+        map.put(COL_DT_INI_VAL, new ColumnDescriptor(COL_DT_INI_VAL, Types.TIMESTAMP, 7, true));
+        map.put(COL_DT_CESSAZIONE,
+                new ColumnDescriptor(COL_DT_CESSAZIONE, Types.TIMESTAMP, 7, true));
+        map.put(COL_FL_RECESSO, new ColumnDescriptor(COL_FL_RECESSO, Types.VARCHAR, 1, true));
+        map.put(COL_ENTE_ATTIVO, new ColumnDescriptor(COL_ENTE_ATTIVO, Types.DECIMAL, 22, true));
+        map.put(COL_ID_USER_IAM_COR,
+                new ColumnDescriptor(COL_ID_USER_IAM_COR, Types.DECIMAL, 22, true));
+        map.put(COL_ID_AMBIENTE_ENTE_CONVENZ,
+                new ColumnDescriptor(COL_ID_AMBIENTE_ENTE_CONVENZ, Types.DECIMAL, 22, true));
+        map.put(COL_ID_ENTE_GESTORE,
+                new ColumnDescriptor(COL_ID_ENTE_GESTORE, Types.DECIMAL, 22, true));
+        map.put(COL_ID_ENTE_CONSERV,
+                new ColumnDescriptor(COL_ID_ENTE_CONSERV, Types.DECIMAL, 22, true));
+        map.put(COL_DT_DEC_ACCORDO,
+                new ColumnDescriptor(COL_DT_DEC_ACCORDO, Types.TIMESTAMP, 7, true));
+        map.put(COL_DT_SCAD_ACCORDO,
+                new ColumnDescriptor(COL_DT_SCAD_ACCORDO, Types.TIMESTAMP, 7, true));
+        map.put(COL_FL_IN_CORSO_CONVENZ,
+                new ColumnDescriptor(COL_FL_IN_CORSO_CONVENZ, Types.VARCHAR, 1, true));
+        map.put(COL_FL_NON_CONVENZ,
+                new ColumnDescriptor(COL_FL_NON_CONVENZ, Types.VARCHAR, 1, true));
+        map.put(COL_TI_ENTE_CONVENZ,
+                new ColumnDescriptor(COL_TI_ENTE_CONVENZ, Types.VARCHAR, 100, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

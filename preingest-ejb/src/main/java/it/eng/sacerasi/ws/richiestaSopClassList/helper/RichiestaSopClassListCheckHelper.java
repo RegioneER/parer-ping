@@ -40,79 +40,79 @@ public class RichiestaSopClassListCheckHelper {
 
     @SuppressWarnings("unchecked")
     public void checkRichiesta(RichiestaSopClassListExt rsclExt,
-	    RispostaWSRichiestaSopClassList rispostaWs) {
-	RispostaControlli rispostaControlli = new RispostaControlli();
+            RispostaWSRichiestaSopClassList rispostaWs) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
 
-	// Verifica Nome Ambiente
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS
-		    .verificaNomeAmbiente(rsclExt.getRichiestaSopClassListInput().getNmAmbiente());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_SOP_001);
-		    rispostaControlli
-			    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_SOP_001,
-				    rsclExt.getRichiestaSopClassListInput().getNmAmbiente()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		rispostaWs.getRichiestaSopClassListRisposta()
-			.setNmAmbiente(rsclExt.getRichiestaSopClassListInput().getNmAmbiente());
-	    }
-	}
+        // Verifica Nome Ambiente
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS
+                    .verificaNomeAmbiente(rsclExt.getRichiestaSopClassListInput().getNmAmbiente());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_SOP_001);
+                    rispostaControlli
+                            .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_SOP_001,
+                                    rsclExt.getRichiestaSopClassListInput().getNmAmbiente()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                rispostaWs.getRichiestaSopClassListRisposta()
+                        .setNmAmbiente(rsclExt.getRichiestaSopClassListInput().getNmAmbiente());
+            }
+        }
 
-	Long idVersatore = null;
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = controlliWS.verificaNomeVersatore(
-		    rsclExt.getRichiestaSopClassListInput().getNmAmbiente(),
-		    rsclExt.getRichiestaSopClassListInput().getNmVersatore());
-	    if (!rispostaControlli.isrBoolean()) {
-		if (rispostaControlli.getCodErr() == null) {
-		    rispostaControlli.setCodErr(MessaggiWSBundle.PING_SOP_002);
-		    rispostaControlli
-			    .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_SOP_002,
-				    rsclExt.getRichiestaSopClassListInput().getNmVersatore()));
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		} else {
-		    // Errore 666
-		    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			    rispostaControlli);
-		}
-	    } else {
-		idVersatore = rispostaControlli.getrLong();
-		rispostaWs.getRichiestaSopClassListRisposta()
-			.setNmVersatore(rsclExt.getRichiestaSopClassListInput().getNmVersatore());
-	    }
-	}
-	rsclExt.setIdVersatore(idVersatore);
+        Long idVersatore = null;
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliWS.verificaNomeVersatore(
+                    rsclExt.getRichiestaSopClassListInput().getNmAmbiente(),
+                    rsclExt.getRichiestaSopClassListInput().getNmVersatore());
+            if (!rispostaControlli.isrBoolean()) {
+                if (rispostaControlli.getCodErr() == null) {
+                    rispostaControlli.setCodErr(MessaggiWSBundle.PING_SOP_002);
+                    rispostaControlli
+                            .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_SOP_002,
+                                    rsclExt.getRichiestaSopClassListInput().getNmVersatore()));
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                } else {
+                    // Errore 666
+                    setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                            rispostaControlli);
+                }
+            } else {
+                idVersatore = rispostaControlli.getrLong();
+                rispostaWs.getRichiestaSopClassListRisposta()
+                        .setNmVersatore(rsclExt.getRichiestaSopClassListInput().getNmVersatore());
+            }
+        }
+        rsclExt.setIdVersatore(idVersatore);
 
-	if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
-	    rispostaControlli.reset();
-	    rispostaControlli = helper.getSopClassListByIdVersatore(idVersatore);
-	    if (!rispostaControlli.isrBoolean()) {
-		setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
-			rispostaControlli);
-	    } else {
-		rsclExt.setListaSopClass((List<PigSopClassDicom>) rispostaControlli.getrObject());
-	    }
-	}
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = helper.getSopClassListByIdVersatore(idVersatore);
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, SeverityEnum.ERROR, Constants.EsitoServizio.KO,
+                        rispostaControlli);
+            } else {
+                rsclExt.setListaSopClass((List<PigSopClassDicom>) rispostaControlli.getrObject());
+            }
+        }
     }
 
     private void setRispostaWsError(RispostaWSRichiestaSopClassList rispostaWs, SeverityEnum sev,
-	    Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
-	rispostaWs.setSeverity(sev);
-	rispostaWs.setErrorCode(rispostaControlli.getCodErr());
-	rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
-	rispostaWs.getRichiestaSopClassListRisposta().setCdEsito(esito);
-	rispostaWs.getRichiestaSopClassListRisposta().setCdErr(rispostaControlli.getCodErr());
-	rispostaWs.getRichiestaSopClassListRisposta().setDsErr(rispostaControlli.getDsErr());
+            Constants.EsitoServizio esito, RispostaControlli rispostaControlli) {
+        rispostaWs.setSeverity(sev);
+        rispostaWs.setErrorCode(rispostaControlli.getCodErr());
+        rispostaWs.setErrorMessage(rispostaControlli.getDsErr());
+        rispostaWs.getRichiestaSopClassListRisposta().setCdEsito(esito);
+        rispostaWs.getRichiestaSopClassListRisposta().setCdErr(rispostaControlli.getCodErr());
+        rispostaWs.getRichiestaSopClassListRisposta().setDsErr(rispostaControlli.getDsErr());
     }
 }

@@ -40,81 +40,81 @@ public class InvioSismaHelperTest {
 
     @Deployment
     public static Archive<?> createArchive() {
-	return ArquillianUtils.createPingJar(InvioSismaHelper.class);
+        return ArquillianUtils.createPingJar(InvioSismaHelper.class);
     }
 
     @Test
     void getIdSismaDaInviareQueryIsOk() {
-	helper.getIdSismaDaInviare();
-	assertTrue(true);
+        helper.getIdSismaDaInviare();
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiQueryIsOk() {
-	long idSisma = 0L;
-	helper.getDocumenti(idSisma);
-	assertTrue(true);
+        long idSisma = 0L;
+        helper.getDocumenti(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void getDettaglioSismaQueryIsOk() {
-	long idSisma = 0L;
-	helper.getDettaglioSisma(idSisma);
-	assertTrue(true);
+        long idSisma = 0L;
+        helper.getDettaglioSisma(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void getDocumentiDaInviareQueryIsOk() {
-	long idSisma = 0L;
-	helper.getDocumentiDaInviare(idSisma);
-	assertTrue(true);
+        long idSisma = 0L;
+        helper.getDocumentiDaInviare(idSisma);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.existsPigObjectPerVersatore(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.existsPigObjectPerVersatore(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreSismaInAttesaFileQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.existsPigObjectPerVersatoreSismaInAttesaFile(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.existsPigObjectPerVersatoreSismaInAttesaFile(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreSismaAnnullatoQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.existsPigObjectPerVersatoreSismaAnnullato(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.existsPigObjectPerVersatoreSismaAnnullato(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void existsPigObjectPerVersatoreNoSismaQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.existsPigObjectPerVersatoreNoSisma(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.existsPigObjectPerVersatoreNoSisma(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void getPigObjectPerVersatoreSismaInNewTxQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.getPigObjectPerVersatoreSismaInNewTx(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.getPigObjectPerVersatoreSismaInNewTx(idVers, cdKeyObject);
+        assertTrue(true);
     }
 
     @Test
     void getPigObjectPerVersatoreSismaQueryIsOk() {
-	long idVers = 0L;
-	String cdKeyObject = "NON ESISTE";
-	helper.getPigObjectPerVersatoreSisma(idVers, cdKeyObject);
-	assertTrue(true);
+        long idVers = 0L;
+        String cdKeyObject = "NON ESISTE";
+        helper.getPigObjectPerVersatoreSisma(idVers, cdKeyObject);
+        assertTrue(true);
     }
 }

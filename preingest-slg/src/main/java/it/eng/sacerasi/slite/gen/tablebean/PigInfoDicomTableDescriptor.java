@@ -73,81 +73,81 @@ public class PigInfoDicomTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_INFO_DICOM,
-		new ColumnDescriptor(COL_ID_INFO_DICOM, Types.DECIMAL, 22, true));
-	map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
-	map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
-	map.put(COL_CD_VERSIONE_DATI_SPEC_DICOM,
-		new ColumnDescriptor(COL_CD_VERSIONE_DATI_SPEC_DICOM, Types.VARCHAR, 100, false));
-	map.put(COL_CD_AET_NODO_DICOM,
-		new ColumnDescriptor(COL_CD_AET_NODO_DICOM, Types.VARCHAR, 100, false));
-	map.put(COL_DL_LISTA_SOP_CLASS,
-		new ColumnDescriptor(COL_DL_LISTA_SOP_CLASS, Types.VARCHAR, 2048, false));
-	map.put(COL_DT_STUDY_DATE,
-		new ColumnDescriptor(COL_DT_STUDY_DATE, Types.TIMESTAMP, 7, false));
-	map.put(COL_DS_ACCESSION_NUMBER,
-		new ColumnDescriptor(COL_DS_ACCESSION_NUMBER, Types.VARCHAR, 254, false));
-	map.put(COL_DL_LISTA_MODALITY_IN_STUDY,
-		new ColumnDescriptor(COL_DL_LISTA_MODALITY_IN_STUDY, Types.VARCHAR, 2048, false));
-	map.put(COL_DS_INSTITUTION_NAME,
-		new ColumnDescriptor(COL_DS_INSTITUTION_NAME, Types.VARCHAR, 254, false));
-	map.put(COL_DS_REF_PHYSICIAN_NAME,
-		new ColumnDescriptor(COL_DS_REF_PHYSICIAN_NAME, Types.VARCHAR, 254, false));
-	map.put(COL_DL_STUDY_DESCRIPTION,
-		new ColumnDescriptor(COL_DL_STUDY_DESCRIPTION, Types.VARCHAR, 1024, false));
-	map.put(COL_DS_PATIENT_NAME,
-		new ColumnDescriptor(COL_DS_PATIENT_NAME, Types.VARCHAR, 100, false));
-	map.put(COL_CD_PATIENT_ID,
-		new ColumnDescriptor(COL_CD_PATIENT_ID, Types.VARCHAR, 100, false));
-	map.put(COL_CD_PATIENT_ID_ISSUER,
-		new ColumnDescriptor(COL_CD_PATIENT_ID_ISSUER, Types.VARCHAR, 100, false));
-	map.put(COL_DT_PATIENT_BIRTH_DATE,
-		new ColumnDescriptor(COL_DT_PATIENT_BIRTH_DATE, Types.TIMESTAMP, 7, false));
-	map.put(COL_TI_PATIENT_SEX,
-		new ColumnDescriptor(COL_TI_PATIENT_SEX, Types.VARCHAR, 1, false));
-	map.put(COL_DS_STUDY_INSTANCE_UID,
-		new ColumnDescriptor(COL_DS_STUDY_INSTANCE_UID, Types.VARCHAR, 254, false));
-	map.put(COL_NI_STUDY_RELATED_SERIES,
-		new ColumnDescriptor(COL_NI_STUDY_RELATED_SERIES, Types.DECIMAL, 22, false));
-	map.put(COL_NI_STUDY_RELATED_IMAGES,
-		new ColumnDescriptor(COL_NI_STUDY_RELATED_IMAGES, Types.DECIMAL, 22, false));
-	map.put(COL_DS_STUDY_ID, new ColumnDescriptor(COL_DS_STUDY_ID, Types.VARCHAR, 254, false));
-	map.put(COL_DT_PRESA_IN_CARICO,
-		new ColumnDescriptor(COL_DT_PRESA_IN_CARICO, Types.TIMESTAMP, 7, false));
-	map.put(COL_BL_DCM_HASH_TXT,
-		new ColumnDescriptor(COL_BL_DCM_HASH_TXT, Types.CLOB, 4000, false));
-	map.put(COL_DS_DCM_HASH, new ColumnDescriptor(COL_DS_DCM_HASH, Types.VARCHAR, 254, false));
-	map.put(COL_TI_ALGO_DCM_HASH,
-		new ColumnDescriptor(COL_TI_ALGO_DCM_HASH, Types.VARCHAR, 20, false));
-	map.put(COL_CD_ENCODING_DCM_HASH,
-		new ColumnDescriptor(COL_CD_ENCODING_DCM_HASH, Types.VARCHAR, 100, false));
-	map.put(COL_BL_GLOBAL_HASH_TXT,
-		new ColumnDescriptor(COL_BL_GLOBAL_HASH_TXT, Types.CLOB, 4000, false));
-	map.put(COL_DS_GLOBAL_HASH,
-		new ColumnDescriptor(COL_DS_GLOBAL_HASH, Types.VARCHAR, 254, false));
-	map.put(COL_TI_ALGO_GLOBAL_HASH,
-		new ColumnDescriptor(COL_TI_ALGO_GLOBAL_HASH, Types.VARCHAR, 20, false));
-	map.put(COL_CD_ENCODING_GLOBAL_HASH,
-		new ColumnDescriptor(COL_CD_ENCODING_GLOBAL_HASH, Types.VARCHAR, 100, false));
-	map.put(COL_DS_FILE_HASH,
-		new ColumnDescriptor(COL_DS_FILE_HASH, Types.VARCHAR, 254, false));
-	map.put(COL_TI_ALGO_FILE_HASH,
-		new ColumnDescriptor(COL_TI_ALGO_FILE_HASH, Types.VARCHAR, 20, false));
-	map.put(COL_CD_ENCODING_FILE_HASH,
-		new ColumnDescriptor(COL_CD_ENCODING_FILE_HASH, Types.VARCHAR, 100, false));
-	map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, false));
+        map.put(COL_ID_INFO_DICOM,
+                new ColumnDescriptor(COL_ID_INFO_DICOM, Types.DECIMAL, 22, true));
+        map.put(COL_ID_OBJECT, new ColumnDescriptor(COL_ID_OBJECT, Types.DECIMAL, 22, false));
+        map.put(COL_ID_VERS, new ColumnDescriptor(COL_ID_VERS, Types.DECIMAL, 22, false));
+        map.put(COL_CD_VERSIONE_DATI_SPEC_DICOM,
+                new ColumnDescriptor(COL_CD_VERSIONE_DATI_SPEC_DICOM, Types.VARCHAR, 100, false));
+        map.put(COL_CD_AET_NODO_DICOM,
+                new ColumnDescriptor(COL_CD_AET_NODO_DICOM, Types.VARCHAR, 100, false));
+        map.put(COL_DL_LISTA_SOP_CLASS,
+                new ColumnDescriptor(COL_DL_LISTA_SOP_CLASS, Types.VARCHAR, 2048, false));
+        map.put(COL_DT_STUDY_DATE,
+                new ColumnDescriptor(COL_DT_STUDY_DATE, Types.TIMESTAMP, 7, false));
+        map.put(COL_DS_ACCESSION_NUMBER,
+                new ColumnDescriptor(COL_DS_ACCESSION_NUMBER, Types.VARCHAR, 254, false));
+        map.put(COL_DL_LISTA_MODALITY_IN_STUDY,
+                new ColumnDescriptor(COL_DL_LISTA_MODALITY_IN_STUDY, Types.VARCHAR, 2048, false));
+        map.put(COL_DS_INSTITUTION_NAME,
+                new ColumnDescriptor(COL_DS_INSTITUTION_NAME, Types.VARCHAR, 254, false));
+        map.put(COL_DS_REF_PHYSICIAN_NAME,
+                new ColumnDescriptor(COL_DS_REF_PHYSICIAN_NAME, Types.VARCHAR, 254, false));
+        map.put(COL_DL_STUDY_DESCRIPTION,
+                new ColumnDescriptor(COL_DL_STUDY_DESCRIPTION, Types.VARCHAR, 1024, false));
+        map.put(COL_DS_PATIENT_NAME,
+                new ColumnDescriptor(COL_DS_PATIENT_NAME, Types.VARCHAR, 100, false));
+        map.put(COL_CD_PATIENT_ID,
+                new ColumnDescriptor(COL_CD_PATIENT_ID, Types.VARCHAR, 100, false));
+        map.put(COL_CD_PATIENT_ID_ISSUER,
+                new ColumnDescriptor(COL_CD_PATIENT_ID_ISSUER, Types.VARCHAR, 100, false));
+        map.put(COL_DT_PATIENT_BIRTH_DATE,
+                new ColumnDescriptor(COL_DT_PATIENT_BIRTH_DATE, Types.TIMESTAMP, 7, false));
+        map.put(COL_TI_PATIENT_SEX,
+                new ColumnDescriptor(COL_TI_PATIENT_SEX, Types.VARCHAR, 1, false));
+        map.put(COL_DS_STUDY_INSTANCE_UID,
+                new ColumnDescriptor(COL_DS_STUDY_INSTANCE_UID, Types.VARCHAR, 254, false));
+        map.put(COL_NI_STUDY_RELATED_SERIES,
+                new ColumnDescriptor(COL_NI_STUDY_RELATED_SERIES, Types.DECIMAL, 22, false));
+        map.put(COL_NI_STUDY_RELATED_IMAGES,
+                new ColumnDescriptor(COL_NI_STUDY_RELATED_IMAGES, Types.DECIMAL, 22, false));
+        map.put(COL_DS_STUDY_ID, new ColumnDescriptor(COL_DS_STUDY_ID, Types.VARCHAR, 254, false));
+        map.put(COL_DT_PRESA_IN_CARICO,
+                new ColumnDescriptor(COL_DT_PRESA_IN_CARICO, Types.TIMESTAMP, 7, false));
+        map.put(COL_BL_DCM_HASH_TXT,
+                new ColumnDescriptor(COL_BL_DCM_HASH_TXT, Types.CLOB, 4000, false));
+        map.put(COL_DS_DCM_HASH, new ColumnDescriptor(COL_DS_DCM_HASH, Types.VARCHAR, 254, false));
+        map.put(COL_TI_ALGO_DCM_HASH,
+                new ColumnDescriptor(COL_TI_ALGO_DCM_HASH, Types.VARCHAR, 20, false));
+        map.put(COL_CD_ENCODING_DCM_HASH,
+                new ColumnDescriptor(COL_CD_ENCODING_DCM_HASH, Types.VARCHAR, 100, false));
+        map.put(COL_BL_GLOBAL_HASH_TXT,
+                new ColumnDescriptor(COL_BL_GLOBAL_HASH_TXT, Types.CLOB, 4000, false));
+        map.put(COL_DS_GLOBAL_HASH,
+                new ColumnDescriptor(COL_DS_GLOBAL_HASH, Types.VARCHAR, 254, false));
+        map.put(COL_TI_ALGO_GLOBAL_HASH,
+                new ColumnDescriptor(COL_TI_ALGO_GLOBAL_HASH, Types.VARCHAR, 20, false));
+        map.put(COL_CD_ENCODING_GLOBAL_HASH,
+                new ColumnDescriptor(COL_CD_ENCODING_GLOBAL_HASH, Types.VARCHAR, 100, false));
+        map.put(COL_DS_FILE_HASH,
+                new ColumnDescriptor(COL_DS_FILE_HASH, Types.VARCHAR, 254, false));
+        map.put(COL_TI_ALGO_FILE_HASH,
+                new ColumnDescriptor(COL_TI_ALGO_FILE_HASH, Types.VARCHAR, 20, false));
+        map.put(COL_CD_ENCODING_FILE_HASH,
+                new ColumnDescriptor(COL_CD_ENCODING_FILE_HASH, Types.VARCHAR, 100, false));
+        map.put(COL_ID_XSD_SPEC, new ColumnDescriptor(COL_ID_XSD_SPEC, Types.DECIMAL, 22, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

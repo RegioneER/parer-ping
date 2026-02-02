@@ -49,55 +49,55 @@ public class SIAplTipoOrganiz implements Serializable {
     }
 
     public SIAplTipoOrganiz(long idTipoOrganiz) {
-	this.idTipoOrganiz = idTipoOrganiz;
+        this.idTipoOrganiz = idTipoOrganiz;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_APPLIC")
     public SIAplApplic getsIAplApplic() {
-	return sIAplApplic;
+        return sIAplApplic;
     }
 
     public void setsIAplApplic(SIAplApplic sIAplApplic) {
-	this.sIAplApplic = sIAplApplic;
+        this.sIAplApplic = sIAplApplic;
     }
 
     @Basic
     @Column(name = "FL_LAST_LIVELLO", nullable = false, length = 1, columnDefinition = "char")
     public String getFlLastLivello() {
-	return flLastLivello;
+        return flLastLivello;
     }
 
     public void setFlLastLivello(String flLastLivello) {
-	this.flLastLivello = flLastLivello;
+        this.flLastLivello = flLastLivello;
     }
 
     @Id
     @Column(name = "ID_TIPO_ORGANIZ")
     public Long getIdTipoOrganiz() {
-	return idTipoOrganiz;
+        return idTipoOrganiz;
     }
 
     public void setIdTipoOrganiz(Long idTipoOrganiz) {
-	this.idTipoOrganiz = idTipoOrganiz;
+        this.idTipoOrganiz = idTipoOrganiz;
     }
 
     @Basic
     @Column(name = "NM_TIPO_ORGANIZ", nullable = false, length = 100)
     public String getNmTipoOrganiz() {
-	return nmTipoOrganiz;
+        return nmTipoOrganiz;
     }
 
     public void setNmTipoOrganiz(String nmTipoOrganiz) {
-	this.nmTipoOrganiz = nmTipoOrganiz;
+        this.nmTipoOrganiz = nmTipoOrganiz;
     }
 
     @OneToMany(mappedBy = "siAplTipoOrganiz", cascade = CascadeType.MERGE)
     public List<SIUsrOrganizIam> getUsrOrganizIams() {
-	return usrOrganizIams;
+        return usrOrganizIams;
     }
 
     public void setUsrOrganizIams(List<SIUsrOrganizIam> usrOrganizIams) {
-	this.usrOrganizIams = usrOrganizIams;
+        this.usrOrganizIams = usrOrganizIams;
     }
 }

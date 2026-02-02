@@ -46,67 +46,67 @@ public class ComboHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(ComboHelper.class);
+        return ArquillianUtils.createPingJar(ComboHelper.class);
     }
 
     @Test
     void getAmbienteVersatoreFromUtente_queryIsOk() {
-	long idUtente = aLong();
-	helper.getAmbienteVersatoreFromUtente(idUtente);
-	assertTrue(true);
+        long idUtente = aLong();
+        helper.getAmbienteVersatoreFromUtente(idUtente);
+        assertTrue(true);
     }
 
     @Test
     void getVersatoreFromAmbienteVersatore_queryIsOk() {
-	Long idUtente = aLong();
-	BigDecimal idAmbienteVers = aBigDecimal();
-	helper.getVersatoreFromAmbienteVersatore(idUtente, idAmbienteVers);
-	assertTrue(true);
+        Long idUtente = aLong();
+        BigDecimal idAmbienteVers = aBigDecimal();
+        helper.getVersatoreFromAmbienteVersatore(idUtente, idAmbienteVers);
+        assertTrue(true);
     }
 
     @Test
     void getTipoObjectFromVersatore_long_BigDecimal_queryIsOk() {
-	long idUtente = aLong();
-	BigDecimal idVers = aBigDecimal();
-	helper.getTipoObjectFromVersatore(idUtente, idVers);
-	assertTrue(true);
+        long idUtente = aLong();
+        BigDecimal idVers = aBigDecimal();
+        helper.getTipoObjectFromVersatore(idUtente, idVers);
+        assertTrue(true);
     }
 
     @Test
     void getTipoObjectFromVersatore_3args_queryIsOk() {
-	long idUtente = aLong();
-	BigDecimal idVers = aBigDecimal();
-	String[] tipoVers = aStringArray(2);
-	helper.getTipoObjectFromVersatore(idUtente, idVers, tipoVers);
-	assertTrue(true);
+        long idUtente = aLong();
+        BigDecimal idVers = aBigDecimal();
+        String[] tipoVers = aStringArray(2);
+        helper.getTipoObjectFromVersatore(idUtente, idVers, tipoVers);
+        assertTrue(true);
     }
 
     @Test
     void getTipoObjectFromVersatoreNoFleggati_queryIsOk() {
-	long idUtente = aLong();
-	BigDecimal idVers = aBigDecimal();
-	String[] tipoVers = aStringArray(2);
-	helper.getTipoObjectFromVersatoreNoFleggati(idUtente, idVers, tipoVers);
-	assertTrue(true);
+        long idUtente = aLong();
+        BigDecimal idVers = aBigDecimal();
+        String[] tipoVers = aStringArray(2);
+        helper.getTipoObjectFromVersatoreNoFleggati(idUtente, idVers, tipoVers);
+        assertTrue(true);
     }
 
     @Test
     void getVersatori_queryIsOk() {
-	long idUtente = aLong();
-	helper.getVersatori(idUtente);
-	assertTrue(true);
+        long idUtente = aLong();
+        helper.getVersatori(idUtente);
+        assertTrue(true);
     }
 
     @Test
     void getIdAmbienteVersatore_queryIsOk() {
-	BigDecimal idVers = aBigDecimal();
+        BigDecimal idVers = aBigDecimal();
 
-	assertThrows(ExpectedException.class, () -> {
-	    try {
-		helper.getIdAmbienteVersatore(idVers);
-	    } catch (Exception e) {
-		throwExpectedExceptionIfNoResultException(e);
-	    }
-	});
+        assertThrows(ExpectedException.class, () -> {
+            try {
+                helper.getIdAmbienteVersatore(idVers);
+            } catch (Exception e) {
+                throwExpectedExceptionIfNoResultException(e);
+            }
+        });
     }
 }

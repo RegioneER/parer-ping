@@ -52,76 +52,76 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
 
     @Override
     public boolean handleMessage(SOAPMessageContext msgCtx) {
-	ControlliRestWS myControlliWs;
-	Boolean outbound = (Boolean) msgCtx.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
-	String ipAddress = "NON_CALCOLATO";
-	if (!outbound.booleanValue()) {
-	    Object tmpRequest = msgCtx.get(MessageContext.SERVLET_REQUEST);
-	    if (tmpRequest instanceof HttpServletRequest) {
-		ipAddress = ((HttpServletRequest) tmpRequest).getHeader("X-FORWARDED-FOR");
-		if (ipAddress == null || ipAddress.isEmpty()) {
-		    ipAddress = ((HttpServletRequest) tmpRequest).getRemoteAddr();
-		}
-	    }
-	    log.debug("IdpLoginHandler attivato. Client IP Address: {}", ipAddress);
+        ControlliRestWS myControlliWs;
+        Boolean outbound = (Boolean) msgCtx.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        String ipAddress = "NON_CALCOLATO";
+        if (!outbound.booleanValue()) {
+            Object tmpRequest = msgCtx.get(MessageContext.SERVLET_REQUEST);
+            if (tmpRequest instanceof HttpServletRequest) {
+                ipAddress = ((HttpServletRequest) tmpRequest).getHeader("X-FORWARDED-FOR");
+                if (ipAddress == null || ipAddress.isEmpty()) {
+                    ipAddress = ((HttpServletRequest) tmpRequest).getRemoteAddr();
+                }
+            }
+            log.debug("IdpLoginHandler attivato. Client IP Address: {}", ipAddress);
 
-	    // nell'originale su SACER la classe di chiama ControlliWs
-	    // in questo caso, quel nome era già "occupato".
-	    // Recupera l'ejb, se possibile, altrimenti segnala errore
-	    try {
-		myControlliWs = (ControlliRestWS) new InitialContext()
-			.lookup("java:app/SacerAsync-ejb/ControlliRestWS");
-	    } catch (NamingException ex) {
-		throw new ProtocolException("Impossibile recuperare l'ejb ControlliRestWS", ex);
-	    }
+            // nell'originale su SACER la classe di chiama ControlliWs
+            // in questo caso, quel nome era già "occupato".
+            // Recupera l'ejb, se possibile, altrimenti segnala errore
+            try {
+                myControlliWs = (ControlliRestWS) new InitialContext()
+                        .lookup("java:app/SacerAsync-ejb/ControlliRestWS");
+            } catch (NamingException ex) {
+                throw new ProtocolException("Impossibile recuperare l'ejb ControlliRestWS", ex);
+            }
 
-	    try {
-		NodeList usernameEl = msgCtx.getMessage().getSOAPHeader()
-			.getElementsByTagNameNS(WSSE_XSD_URI, "Username");
-		NodeList passwordEl = msgCtx.getMessage().getSOAPHeader()
-			.getElementsByTagNameNS(WSSE_XSD_URI, "Password");
-		Node userNode = null;
-		Node passNode = null;
-		if (usernameEl != null && passwordEl != null
-			&& (userNode = usernameEl.item(0)) != null
-			&& (passNode = passwordEl.item(0)) != null) {
-		    String username = userNode.getFirstChild().getNodeValue();
-		    String password = passNode.getFirstChild().getNodeValue();
-		    RispostaControlli rc = myControlliWs.checkCredenziali(username, password,
-			    ipAddress, ControlliRestWS.TipiWSPerControlli.WS_SOAP);
-		    if (!rc.isrBoolean()) {
-			try {
-			    SOAPFactory fac = SOAPFactory.newInstance();
-			    SOAPFault sfault = fac.createFault();
-			    sfault.setFaultCode(rc.getCodErr());
-			    sfault.setFaultString(rc.getDsErr());
-			    throw new SOAPFaultException(sfault);
-			} catch (SOAPException e1) {
-			    throw new ProtocolException(
-				    "Errore durante la creazione dell'eccezione SOAP", e1);
-			}
-		    }
-		    msgCtx.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.TRUE);
-		    msgCtx.put(AuthenticationHandlerConstants.USER, username);
-		    msgCtx.put(AuthenticationHandlerConstants.PWD, password);
-		} else {
-		    throw new ProtocolException("Username e password sono obbligatorie");
-		}
+            try {
+                NodeList usernameEl = msgCtx.getMessage().getSOAPHeader()
+                        .getElementsByTagNameNS(WSSE_XSD_URI, "Username");
+                NodeList passwordEl = msgCtx.getMessage().getSOAPHeader()
+                        .getElementsByTagNameNS(WSSE_XSD_URI, "Password");
+                Node userNode = null;
+                Node passNode = null;
+                if (usernameEl != null && passwordEl != null
+                        && (userNode = usernameEl.item(0)) != null
+                        && (passNode = passwordEl.item(0)) != null) {
+                    String username = userNode.getFirstChild().getNodeValue();
+                    String password = passNode.getFirstChild().getNodeValue();
+                    RispostaControlli rc = myControlliWs.checkCredenziali(username, password,
+                            ipAddress, ControlliRestWS.TipiWSPerControlli.WS_SOAP);
+                    if (!rc.isrBoolean()) {
+                        try {
+                            SOAPFactory fac = SOAPFactory.newInstance();
+                            SOAPFault sfault = fac.createFault();
+                            sfault.setFaultCode(rc.getCodErr());
+                            sfault.setFaultString(rc.getDsErr());
+                            throw new SOAPFaultException(sfault);
+                        } catch (SOAPException e1) {
+                            throw new ProtocolException(
+                                    "Errore durante la creazione dell'eccezione SOAP", e1);
+                        }
+                    }
+                    msgCtx.put(AuthenticationHandlerConstants.AUTHN_STAUTS, java.lang.Boolean.TRUE);
+                    msgCtx.put(AuthenticationHandlerConstants.USER, username);
+                    msgCtx.put(AuthenticationHandlerConstants.PWD, password);
+                } else {
+                    throw new ProtocolException("Username e password sono obbligatorie");
+                }
 
-	    } catch (DOMException | SOAPException e) {
-		throw new ProtocolException(e);
-	    }
-	    msgCtx.setScope(AuthenticationHandlerConstants.AUTHN_STAUTS,
-		    MessageContext.Scope.APPLICATION);
-	    msgCtx.setScope(AuthenticationHandlerConstants.USER, MessageContext.Scope.APPLICATION);
-	    msgCtx.setScope(AuthenticationHandlerConstants.PWD, MessageContext.Scope.APPLICATION);
-	}
-	return true;
+            } catch (DOMException | SOAPException e) {
+                throw new ProtocolException(e);
+            }
+            msgCtx.setScope(AuthenticationHandlerConstants.AUTHN_STAUTS,
+                    MessageContext.Scope.APPLICATION);
+            msgCtx.setScope(AuthenticationHandlerConstants.USER, MessageContext.Scope.APPLICATION);
+            msgCtx.setScope(AuthenticationHandlerConstants.PWD, MessageContext.Scope.APPLICATION);
+        }
+        return true;
     }
 
     @Override
     public boolean handleFault(SOAPMessageContext context) {
-	return true;
+        return true;
     }
 
     @Override
@@ -130,9 +130,9 @@ public class IdpLoginHandler implements SOAPHandler<SOAPMessageContext> {
 
     @Override
     public Set<QName> getHeaders() {
-	HashSet<QName> headers = new HashSet<>();
-	headers.add(QNAME_WSSE_HEADER);
-	return headers;
+        HashSet<QName> headers = new HashSet<>();
+        headers.add(QNAME_WSSE_HEADER);
+        return headers;
     }
 
 }

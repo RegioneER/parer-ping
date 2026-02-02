@@ -24,16 +24,16 @@ public class WSDescRichiestaSopClassList implements IWSDesc {
 
     @Override
     public String getNomeWs() {
-	return Costanti.WS_RICH_SOPCLASS_LIST_ASYNC;
+        return Costanti.WS_RICH_SOPCLASS_LIST_ASYNC;
     }
 
     @Override
     public String getVersione() {
-	return Costanti.WS_RICH_SOPCLASS_LIST_VRSN;
+        return Costanti.WS_RICH_SOPCLASS_LIST_VRSN;
     }
 
     @Override
     public String[] getCompatibilitaWS() {
-	return Costanti.WS_RICH_SOPCLASS_LIST_COMP;
+        return Costanti.WS_RICH_SOPCLASS_LIST_COMP;
     }
 }

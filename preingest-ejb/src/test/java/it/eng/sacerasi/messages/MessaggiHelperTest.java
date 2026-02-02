@@ -42,48 +42,48 @@ public class MessaggiHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(MessaggiHelper.class);
+        return ArquillianUtils.createPingJar(MessaggiHelper.class);
     }
 
     @Test
     void retrieveListaErrori_queryIsOk() {
-	String cdClasseErrore = aString();
-	helper.retrieveListaErrori(cdClasseErrore);
-	assertTrue(true);
+        String cdClasseErrore = aString();
+        helper.retrieveListaErrori(cdClasseErrore);
+        assertTrue(true);
     }
 
     @Test
     void retrieveListaClassi_String_queryIsOk() {
-	String tiStato = aString();
-	helper.retrieveListaClassi(tiStato);
-	assertTrue(true);
+        String tiStato = aString();
+        helper.retrieveListaClassi(tiStato);
+        assertTrue(true);
     }
 
     @Test
     void retrieveListaClassi_List_queryIsOk() {
-	List<String> tiStato = aListOfString(2);
-	helper.retrieveListaClassi(tiStato);
-	assertTrue(true);
+        List<String> tiStato = aListOfString(2);
+        helper.retrieveListaClassi(tiStato);
+        assertTrue(true);
     }
 
     @Test
     void retrievePigErrore_queryIsOk() {
-	String cdErrore = aString();
-	helper.retrievePigErrore(cdErrore);
-	assertTrue(true);
+        String cdErrore = aString();
+        helper.retrievePigErrore(cdErrore);
+        assertTrue(true);
     }
 
     @Test
     void retrievePigErroreNewTx_queryIsOk() {
-	String cdErrore = aString();
-	helper.retrievePigErroreNewTx(cdErrore);
-	assertTrue(true);
+        String cdErrore = aString();
+        helper.retrievePigErroreNewTx(cdErrore);
+        assertTrue(true);
     }
 
     @Test
     void retrievePigErroreLike_queryIsOk() {
-	String cdErrore = aString();
-	helper.retrievePigErroreLike(cdErrore);
-	assertTrue(true);
+        String cdErrore = aString();
+        helper.retrievePigErroreLike(cdErrore);
+        assertTrue(true);
     }
 }

@@ -50,137 +50,137 @@ public class MonVLisObjTrasf implements Serializable {
 
     @Column(name = "CD_ERR")
     public String getCdErr() {
-	return this.cdErr;
+        return this.cdErr;
     }
 
     public void setCdErr(String cdErr) {
-	this.cdErr = cdErr;
+        this.cdErr = cdErr;
     }
 
     @Column(name = "CD_KEY_OBJECT_TRASF")
     public String getCdKeyObjectTrasf() {
-	return this.cdKeyObjectTrasf;
+        return this.cdKeyObjectTrasf;
     }
 
     public void setCdKeyObjectTrasf(String cdKeyObjectTrasf) {
-	this.cdKeyObjectTrasf = cdKeyObjectTrasf;
+        this.cdKeyObjectTrasf = cdKeyObjectTrasf;
     }
 
     @Column(name = "DL_ERR")
     public String getDlErr() {
-	return this.dlErr;
+        return this.dlErr;
     }
 
     public void setDlErr(String dlErr) {
-	this.dlErr = dlErr;
+        this.dlErr = dlErr;
     }
 
     @Column(name = "DS_OBJECT_TRASF")
     public String getDsObjectTrasf() {
-	return this.dsObjectTrasf;
+        return this.dsObjectTrasf;
     }
 
     public void setDsObjectTrasf(String dsObjectTrasf) {
-	this.dsObjectTrasf = dsObjectTrasf;
+        this.dsObjectTrasf = dsObjectTrasf;
     }
 
     @Column(name = "DS_PATH")
     public String getDsPath() {
-	return this.dsPath;
+        return this.dsPath;
     }
 
     public void setDsPath(String dsPath) {
-	this.dsPath = dsPath;
+        this.dsPath = dsPath;
     }
 
     @Column(name = "DS_PATH_TRASF")
     public String getDsPathTrasf() {
-	return this.dsPathTrasf;
+        return this.dsPathTrasf;
     }
 
     public void setDsPathTrasf(String dsPathTrasf) {
-	this.dsPathTrasf = dsPathTrasf;
+        this.dsPathTrasf = dsPathTrasf;
     }
 
     @Column(name = "ID_OBJECT_DA_TRASF_PING")
     public BigDecimal getIdObjectDaTrasfPing() {
-	return this.idObjectDaTrasfPing;
+        return this.idObjectDaTrasfPing;
     }
 
     public void setIdObjectDaTrasfPing(BigDecimal idObjectDaTrasfPing) {
-	this.idObjectDaTrasfPing = idObjectDaTrasfPing;
+        this.idObjectDaTrasfPing = idObjectDaTrasfPing;
     }
 
     @Id
     @Column(name = "ID_OBJECT_TRASF")
     public BigDecimal getIdObjectTrasf() {
-	return this.idObjectTrasf;
+        return this.idObjectTrasf;
     }
 
     public void setIdObjectTrasf(BigDecimal idObjectTrasf) {
-	this.idObjectTrasf = idObjectTrasf;
+        this.idObjectTrasf = idObjectTrasf;
     }
 
     @Column(name = "ID_VERS_TRASF")
     public BigDecimal getIdVersTrasf() {
-	return this.idVersTrasf;
+        return this.idVersTrasf;
     }
 
     public void setIdVersTrasf(BigDecimal idVersTrasf) {
-	this.idVersTrasf = idVersTrasf;
+        this.idVersTrasf = idVersTrasf;
     }
 
     @Column(name = "NM_AMBIENTE_VERS_TRASF")
     public String getNmAmbienteVersTrasf() {
-	return this.nmAmbienteVersTrasf;
+        return this.nmAmbienteVersTrasf;
     }
 
     public void setNmAmbienteVersTrasf(String nmAmbienteVersTrasf) {
-	this.nmAmbienteVersTrasf = nmAmbienteVersTrasf;
+        this.nmAmbienteVersTrasf = nmAmbienteVersTrasf;
     }
 
     @Column(name = "NM_TIPO_OBJECT_TRASF")
     public String getNmTipoObjectTrasf() {
-	return this.nmTipoObjectTrasf;
+        return this.nmTipoObjectTrasf;
     }
 
     public void setNmTipoObjectTrasf(String nmTipoObjectTrasf) {
-	this.nmTipoObjectTrasf = nmTipoObjectTrasf;
+        this.nmTipoObjectTrasf = nmTipoObjectTrasf;
     }
 
     @Column(name = "NM_VERS_TRASF")
     public String getNmVersTrasf() {
-	return this.nmVersTrasf;
+        return this.nmVersTrasf;
     }
 
     public void setNmVersTrasf(String nmVersTrasf) {
-	this.nmVersTrasf = nmVersTrasf;
+        this.nmVersTrasf = nmVersTrasf;
     }
 
     @Column(name = "PG_OGGETTO_TRASF")
     public BigDecimal getPgOggettoTrasf() {
-	return this.pgOggettoTrasf;
+        return this.pgOggettoTrasf;
     }
 
     public void setPgOggettoTrasf(BigDecimal pgOggettoTrasf) {
-	this.pgOggettoTrasf = pgOggettoTrasf;
+        this.pgOggettoTrasf = pgOggettoTrasf;
     }
 
     @Column(name = "TI_STATO_TRASF")
     public String getTiStatoTrasf() {
-	return this.tiStatoTrasf;
+        return this.tiStatoTrasf;
     }
 
     public void setTiStatoTrasf(String tiStatoTrasf) {
-	this.tiStatoTrasf = tiStatoTrasf;
+        this.tiStatoTrasf = tiStatoTrasf;
     }
 
     @Column(name = "NI_UD_PRODOTTE")
     public BigDecimal getNiUdProdotte() {
-	return niUdProdotte;
+        return niUdProdotte;
     }
 
     public void setNiUdProdotte(BigDecimal niUdProdotte) {
-	this.niUdProdotte = niUdProdotte;
+        this.niUdProdotte = niUdProdotte;
     }
 }

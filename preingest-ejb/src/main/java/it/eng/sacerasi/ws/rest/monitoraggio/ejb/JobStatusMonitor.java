@@ -43,79 +43,79 @@ public class JobStatusMonitor {
 
     @SuppressWarnings("unchecked")
     public void calcolaStatoJob(RispostaWSStatusMonitor rispostaWs, List<MonitorJob> tmpLstJob,
-	    Date ultimaChiamataDelWs) {
-	List<PigDecJob> lstDj = null;
-	RispostaControlli rc = controlliMonitor.leggiElencoJob();
-	if (rc.isrBoolean()) {
-	    lstDj = (List<PigDecJob>) rc.getrObject();
-	} else {
-	    rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
-	    return;
-	}
+            Date ultimaChiamataDelWs) {
+        List<PigDecJob> lstDj = null;
+        RispostaControlli rc = controlliMonitor.leggiElencoJob();
+        if (rc.isrBoolean()) {
+            lstDj = (List<PigDecJob>) rc.getrObject();
+        } else {
+            rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
+            return;
+        }
 
-	//
-	for (PigDecJob dj : lstDj) {
-	    MonitorJob tmpJob = new MonitorJob();
-	    tmpJob.setNomeJob(dj.getNmJob());
-	    //
-	    if (dj.getTiSchedJob().equals("STANDARD")) {
-		rc = controlliMonitor.recNuovaEsecuzioneTimer(dj.getNmJob());
-		if (rc.isrBoolean()) {
-		    if (rc.getrDate() != null) {
-			tmpJob.setStatoTimer(MonitorJob.StatiTimer.ON);
-		    } else {
-			tmpJob.setStatoTimer(MonitorJob.StatiTimer.OFF);
-		    }
-		} else {
-		    rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
-		    return;
-		}
-	    } else {
-		// se il job non è "STANDARD", allora è classificato come "NO_TIMER".
-		// Non posso verificare lo stato di un timer che
-		// non esiste, perciò rendo per default il valore "ON" che non produce
-		// warning in sede di monitoraggio
-		tmpJob.setStatoTimer(MonitorJob.StatiTimer.ON);
-	    }
+        //
+        for (PigDecJob dj : lstDj) {
+            MonitorJob tmpJob = new MonitorJob();
+            tmpJob.setNomeJob(dj.getNmJob());
+            //
+            if (dj.getTiSchedJob().equals("STANDARD")) {
+                rc = controlliMonitor.recNuovaEsecuzioneTimer(dj.getNmJob());
+                if (rc.isrBoolean()) {
+                    if (rc.getrDate() != null) {
+                        tmpJob.setStatoTimer(MonitorJob.StatiTimer.ON);
+                    } else {
+                        tmpJob.setStatoTimer(MonitorJob.StatiTimer.OFF);
+                    }
+                } else {
+                    rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
+                    return;
+                }
+            } else {
+                // se il job non è "STANDARD", allora è classificato come "NO_TIMER".
+                // Non posso verificare lo stato di un timer che
+                // non esiste, perciò rendo per default il valore "ON" che non produce
+                // warning in sede di monitoraggio
+                tmpJob.setStatoTimer(MonitorJob.StatiTimer.ON);
+            }
 
-	    //
-	    Date ultimaAttivitaDelJob = null;
-	    rc = controlliMonitor.leggiUltimaRegistrazione(dj.getNmJob());
-	    if (rc.isrBoolean()) {
-		ultimaAttivitaDelJob = rc.getrDate();
-		tmpJob.settSUltimaAttivita(ultimaAttivitaDelJob);
-		switch ((Constants.TipiRegLogJob) rc.getrObject()) {
-		case INIZIO_SCHEDULAZIONE:
-		    tmpJob.setStatoJob(MonitorJob.StatiJob.IN_CORSO);
-		    break;
-		case FINE_SCHEDULAZIONE:
-		    tmpJob.setStatoJob(MonitorJob.StatiJob.CHIUSA_OK);
-		    break;
-		case ERRORE:
-		    tmpJob.setStatoJob(MonitorJob.StatiJob.CHIUSA_ERR);
-		    break;
-		}
-	    } else {
-		rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
-		return;
-	    }
+            //
+            Date ultimaAttivitaDelJob = null;
+            rc = controlliMonitor.leggiUltimaRegistrazione(dj.getNmJob());
+            if (rc.isrBoolean()) {
+                ultimaAttivitaDelJob = rc.getrDate();
+                tmpJob.settSUltimaAttivita(ultimaAttivitaDelJob);
+                switch ((Constants.TipiRegLogJob) rc.getrObject()) {
+                case INIZIO_SCHEDULAZIONE:
+                    tmpJob.setStatoJob(MonitorJob.StatiJob.IN_CORSO);
+                    break;
+                case FINE_SCHEDULAZIONE:
+                    tmpJob.setStatoJob(MonitorJob.StatiJob.CHIUSA_OK);
+                    break;
+                case ERRORE:
+                    tmpJob.setStatoJob(MonitorJob.StatiJob.CHIUSA_ERR);
+                    break;
+                }
+            } else {
+                rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
+                return;
+            }
 
-	    //
-	    rc = controlliMonitor.leggiAllarmiInIntervallo(dj.getNmJob(), ultimaChiamataDelWs,
-		    ultimaAttivitaDelJob);
-	    if (rc.isrBoolean()) {
-		if (rc.getrLong() > 0) {
-		    tmpJob.setAllarmiDaUltimaChiamata(MonitorJob.Allarmi.ERRORE_SCHEDULAZIONE);
-		} else {
-		    tmpJob.setAllarmiDaUltimaChiamata(MonitorJob.Allarmi.NESSUN_ALLARME);
-		}
-	    } else {
-		rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
-		return;
-	    }
+            //
+            rc = controlliMonitor.leggiAllarmiInIntervallo(dj.getNmJob(), ultimaChiamataDelWs,
+                    ultimaAttivitaDelJob);
+            if (rc.isrBoolean()) {
+                if (rc.getrLong() > 0) {
+                    tmpJob.setAllarmiDaUltimaChiamata(MonitorJob.Allarmi.ERRORE_SCHEDULAZIONE);
+                } else {
+                    tmpJob.setAllarmiDaUltimaChiamata(MonitorJob.Allarmi.NESSUN_ALLARME);
+                }
+            } else {
+                rispostaWs.setEsitoWsError(rc.getCodErr(), rc.getDsErr());
+                return;
+            }
 
-	    //
-	    tmpLstJob.add(tmpJob);
-	}
+            //
+            tmpLstJob.add(tmpJob);
+        }
     }
 }

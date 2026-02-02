@@ -33,19 +33,19 @@ public class PigClasseErroreTableBean extends AbstractBaseTable<PigClasseErroreR
     public static PigClasseErroreTableDescriptor TABLE_DESCRIPTOR = new PigClasseErroreTableDescriptor();
 
     public PigClasseErroreTableBean() {
-	super();
+        super();
     }
 
     protected PigClasseErroreRowBean createRow() {
-	return new PigClasseErroreRowBean();
+        return new PigClasseErroreRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigClasseErroreRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

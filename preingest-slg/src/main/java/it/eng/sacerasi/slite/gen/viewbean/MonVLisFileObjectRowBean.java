@@ -36,171 +36,171 @@ public class MonVLisFileObjectRowBean extends BaseRow implements JEEBaseRowInter
     public static MonVLisFileObjectTableDescriptor TABLE_DESCRIPTOR = new MonVLisFileObjectTableDescriptor();
 
     public MonVLisFileObjectRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdObject() {
-	return getBigDecimal("id_object");
+        return getBigDecimal("id_object");
     }
 
     public void setIdObject(BigDecimal idObject) {
-	setObject("id_object", idObject);
+        setObject("id_object", idObject);
     }
 
     public BigDecimal getIdFileObject() {
-	return getBigDecimal("id_file_object");
+        return getBigDecimal("id_file_object");
     }
 
     public void setIdFileObject(BigDecimal idFileObject) {
-	setObject("id_file_object", idFileObject);
+        setObject("id_file_object", idFileObject);
     }
 
     public String getNmFileObject() {
-	return getString("nm_file_object");
+        return getString("nm_file_object");
     }
 
     public void setNmFileObject(String nmFileObject) {
-	setObject("nm_file_object", nmFileObject);
+        setObject("nm_file_object", nmFileObject);
     }
 
     public BigDecimal getIdTipoFileObject() {
-	return getBigDecimal("id_tipo_file_object");
+        return getBigDecimal("id_tipo_file_object");
     }
 
     public void setIdTipoFileObject(BigDecimal idTipoFileObject) {
-	setObject("id_tipo_file_object", idTipoFileObject);
+        setObject("id_tipo_file_object", idTipoFileObject);
     }
 
     public String getNmTipoFileObject() {
-	return getString("nm_tipo_file_object");
+        return getString("nm_tipo_file_object");
     }
 
     public void setNmTipoFileObject(String nmTipoFileObject) {
-	setObject("nm_tipo_file_object", nmTipoFileObject);
+        setObject("nm_tipo_file_object", nmTipoFileObject);
     }
 
     public String getDsHashFileVers() {
-	return getString("ds_hash_file_vers");
+        return getString("ds_hash_file_vers");
     }
 
     public void setDsHashFileVers(String dsHashFileVers) {
-	setObject("ds_hash_file_vers", dsHashFileVers);
+        setObject("ds_hash_file_vers", dsHashFileVers);
     }
 
     public String getTiAlgoHashFileVers() {
-	return getString("ti_algo_hash_file_vers");
+        return getString("ti_algo_hash_file_vers");
     }
 
     public void setTiAlgoHashFileVers(String tiAlgoHashFileVers) {
-	setObject("ti_algo_hash_file_vers", tiAlgoHashFileVers);
+        setObject("ti_algo_hash_file_vers", tiAlgoHashFileVers);
     }
 
     public String getCdEncodingHashFileVers() {
-	return getString("cd_encoding_hash_file_vers");
+        return getString("cd_encoding_hash_file_vers");
     }
 
     public void setCdEncodingHashFileVers(String cdEncodingHashFileVers) {
-	setObject("cd_encoding_hash_file_vers", cdEncodingHashFileVers);
+        setObject("cd_encoding_hash_file_vers", cdEncodingHashFileVers);
     }
 
     public BigDecimal getNiSizeFileVers() {
-	return getBigDecimal("ni_size_file_vers");
+        return getBigDecimal("ni_size_file_vers");
     }
 
     public void setNiSizeFileVers(BigDecimal niSizeFileVers) {
-	setObject("ni_size_file_vers", niSizeFileVers);
+        setObject("ni_size_file_vers", niSizeFileVers);
     }
 
     public BigDecimal getIdBackend() {
-	return getBigDecimal("id_backend");
+        return getBigDecimal("id_backend");
     }
 
     public void setIdBackend(BigDecimal idBackend) {
-	setObject("id_backend", idBackend);
+        setObject("id_backend", idBackend);
     }
 
     public String getNmBucket() {
-	return getString("nm_bucket");
+        return getString("nm_bucket");
     }
 
     public void setNmBucket(String nm_bucket) {
-	setObject("nm_bucket", nm_bucket);
+        setObject("nm_bucket", nm_bucket);
     }
 
     public String getCdKeyFile() {
-	return getString("cd_key_file");
+        return getString("cd_key_file");
     }
 
     public void setCdKeyFile(String cd_key_file) {
-	setObject("cd_key_file", cd_key_file);
+        setObject("cd_key_file", cd_key_file);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	MonVLisFileObject entity = (MonVLisFileObject) obj;
-	this.setIdObject(entity.getIdObject());
-	this.setIdFileObject(entity.getIdFileObject());
-	this.setNmFileObject(entity.getNmFileObject());
-	this.setIdTipoFileObject(entity.getIdTipoFileObject());
-	this.setNmTipoFileObject(entity.getNmTipoFileObject());
-	this.setDsHashFileVers(entity.getDsHashFileVers());
-	this.setTiAlgoHashFileVers(entity.getTiAlgoHashFileVers());
-	this.setCdEncodingHashFileVers(entity.getCdEncodingHashFileVers());
-	this.setNiSizeFileVers(entity.getNiSizeFileVers());
-	// MEV34843
-	this.setIdBackend(entity.getIdBackend());
-	// MEV21995
-	this.setNmBucket(entity.getNmBucket());
-	this.setCdKeyFile(entity.getCdKeyFile());
+        MonVLisFileObject entity = (MonVLisFileObject) obj;
+        this.setIdObject(entity.getIdObject());
+        this.setIdFileObject(entity.getIdFileObject());
+        this.setNmFileObject(entity.getNmFileObject());
+        this.setIdTipoFileObject(entity.getIdTipoFileObject());
+        this.setNmTipoFileObject(entity.getNmTipoFileObject());
+        this.setDsHashFileVers(entity.getDsHashFileVers());
+        this.setTiAlgoHashFileVers(entity.getTiAlgoHashFileVers());
+        this.setCdEncodingHashFileVers(entity.getCdEncodingHashFileVers());
+        this.setNiSizeFileVers(entity.getNiSizeFileVers());
+        // MEV34843
+        this.setIdBackend(entity.getIdBackend());
+        // MEV21995
+        this.setNmBucket(entity.getNmBucket());
+        this.setCdKeyFile(entity.getCdKeyFile());
     }
 
     @Override
     public MonVLisFileObject rowBeanToEntity() {
-	MonVLisFileObject entity = new MonVLisFileObject();
-	entity.setIdObject(this.getIdObject());
-	entity.setIdFileObject(this.getIdFileObject());
-	entity.setNmFileObject(this.getNmFileObject());
-	entity.setIdTipoFileObject(this.getIdTipoFileObject());
-	entity.setNmTipoFileObject(this.getNmTipoFileObject());
-	entity.setDsHashFileVers(this.getDsHashFileVers());
-	entity.setTiAlgoHashFileVers(this.getTiAlgoHashFileVers());
-	entity.setCdEncodingHashFileVers(this.getCdEncodingHashFileVers());
-	entity.setNiSizeFileVers(this.getNiSizeFileVers());
-	// MEV34843
-	entity.setIdBackend(this.getIdBackend());
-	// MEV21995
-	entity.setNmBucket(this.getNmBucket());
-	entity.setCdKeyFile(this.getCdKeyFile());
-	return entity;
+        MonVLisFileObject entity = new MonVLisFileObject();
+        entity.setIdObject(this.getIdObject());
+        entity.setIdFileObject(this.getIdFileObject());
+        entity.setNmFileObject(this.getNmFileObject());
+        entity.setIdTipoFileObject(this.getIdTipoFileObject());
+        entity.setNmTipoFileObject(this.getNmTipoFileObject());
+        entity.setDsHashFileVers(this.getDsHashFileVers());
+        entity.setTiAlgoHashFileVers(this.getTiAlgoHashFileVers());
+        entity.setCdEncodingHashFileVers(this.getCdEncodingHashFileVers());
+        entity.setNiSizeFileVers(this.getNiSizeFileVers());
+        // MEV34843
+        entity.setIdBackend(this.getIdBackend());
+        // MEV21995
+        entity.setNmBucket(this.getNmBucket());
+        entity.setCdKeyFile(this.getCdKeyFile());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

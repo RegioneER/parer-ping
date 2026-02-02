@@ -28,19 +28,19 @@ import java.util.regex.Pattern;
 public class StrumentiUrbanisticiValidator extends TypeValidator {
 
     public StrumentiUrbanisticiValidator(MessageBox messageBox) {
-	super(messageBox);
+        super(messageBox);
     }
 
     public boolean validaNumero(String numero) throws EMFError {
-	Pattern regxp = Pattern.compile("^[a-zA-Z0-9/.-]+$");
-	Matcher matcher = regxp.matcher(numero);
-	if (!matcher.matches()) {
-	    messageBox.addError(
-		    "Si possono inserire soltanto lettere, numeri, e i seguenti caratteri: '/.-'");
-	    return false;
-	} else {
-	    return true;
-	}
+        Pattern regxp = Pattern.compile("^[a-zA-Z0-9/.-]+$");
+        Matcher matcher = regxp.matcher(numero);
+        if (!matcher.matches()) {
+            messageBox.addError(
+                    "Si possono inserire soltanto lettere, numeri, e i seguenti caratteri: '/.-'");
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

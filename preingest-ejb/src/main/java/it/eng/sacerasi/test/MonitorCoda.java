@@ -88,193 +88,180 @@ public class MonitorCoda {
      *
      * @param queue           nome coda
      * @param messageSelector selettore
+     *
      * @return lista di messaggi
+     *
      * @throws JMSException errore generico
      */
     public List<InfoCoda> retrieveMsgInQueue(String queue, String messageSelector)
-	    throws JMSException {
-	List<InfoCoda> msgList = new ArrayList<>();
-	QueueConnection queueConn = null;
-	QueueBrowser queueBrowser = null;
-	QueueSession queueSession = null;
-	try {
-	    queueConn = connFactory.createQueueConnection();
-	    queueSession = queueConn.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	    if (queue.equals(NomeCoda.producerCodaVersQueue.name())) {
-		queueBrowser = queueSession.createBrowser(producerCodaVersQueue);
-	    } else if (queue.equals(NomeCoda.dmqQueue.name())) {
-		queueBrowser = queueSession.createBrowser(dmqQueue);
-	    } else {
-		// coda non presente
-	    }
-	    Enumeration<?> e = queueBrowser.getEnumeration();
+            throws JMSException {
+        List<InfoCoda> msgList = new ArrayList<>();
+        QueueBrowser queueBrowser = null;
+        try (QueueConnection queueConn = connFactory.createQueueConnection();
+                QueueSession queueSession = queueConn.createQueueSession(true,
+                        Session.AUTO_ACKNOWLEDGE);) {
+            if (queue.equals(NomeCoda.producerCodaVersQueue.name())) {
+                queueBrowser = queueSession.createBrowser(producerCodaVersQueue);
+            } else if (queue.equals(NomeCoda.dmqQueue.name())) {
+                queueBrowser = queueSession.createBrowser(dmqQueue);
+            } else {
+                // coda non presente
+            }
+            Enumeration<?> e = queueBrowser.getEnumeration();
 
-	    while (e.hasMoreElements()) {
+            while (e.hasMoreElements()) {
 
-		InfoCoda infoCoda = new InfoCoda();
-		Message textMessage = (Message) e.nextElement();
-		/*
-		 * se il selettore in input non è valorizzato o coincide con il selettore presente
-		 * nel messaggio, allora il messaggio va visualizzato
-		 */
-		if (messageSelector == null
-			|| textMessage.getStringProperty("queueType").equals(messageSelector)) {
+                InfoCoda infoCoda = new InfoCoda();
+                Message textMessage = (Message) e.nextElement();
+                /*
+                 * se il selettore in input non è valorizzato o coincide con il selettore presente
+                 * nel messaggio, allora il messaggio va visualizzato
+                 */
+                if (messageSelector == null
+                        || textMessage.getStringProperty("queueType").equals(messageSelector)) {
 
-		    infoCoda.setMessageSelector(textMessage.getStringProperty("queueType"));
+                    infoCoda.setMessageSelector(textMessage.getStringProperty("queueType"));
 
-		    infoCoda.setSentTimestamp(new Date(textMessage.getJMSTimestamp()));
+                    infoCoda.setSentTimestamp(new Date(textMessage.getJMSTimestamp()));
 
-		    // Mai disponibili su HornetQ/Jboss
-		    if (textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_COMMENT") != null) {
-			infoCoda.setUndeliveredComment(
-				textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_COMMENT"));
-		    }
-		    if (textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_REASON") != null) {
-			infoCoda.setUndeliveredReason(
-				textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_REASON"));
-		    }
-		    if (textMessage
-			    .getStringProperty("JMS_SUN_DMQ_UNDELIVERED_TIMESTAMP") != null) {
-			long millis = Long.parseLong(
-				textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_TIMESTAMP"));
-			infoCoda.setUndeliveredTimestamp(new Date(millis));
-		    }
+                    // Mai disponibili su HornetQ/Jboss
+                    if (textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_COMMENT") != null) {
+                        infoCoda.setUndeliveredComment(
+                                textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_COMMENT"));
+                    }
+                    if (textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_REASON") != null) {
+                        infoCoda.setUndeliveredReason(
+                                textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_REASON"));
+                    }
+                    if (textMessage
+                            .getStringProperty("JMS_SUN_DMQ_UNDELIVERED_TIMESTAMP") != null) {
+                        long millis = Long.parseLong(
+                                textMessage.getStringProperty("JMS_SUN_DMQ_UNDELIVERED_TIMESTAMP"));
+                        infoCoda.setUndeliveredTimestamp(new Date(millis));
+                    }
 
-		    if (textMessage.getStringProperty(JMSX_DELIVERY_COUNT) != null) {
-			infoCoda.setDeliveryCount(Integer
-				.parseInt(textMessage.getStringProperty(JMSX_DELIVERY_COUNT)));
-		    }
-		    String messageID = textMessage.getJMSMessageID();
-		    infoCoda.setMessageID(messageID);
+                    if (textMessage.getStringProperty(JMSX_DELIVERY_COUNT) != null) {
+                        infoCoda.setDeliveryCount(Integer
+                                .parseInt(textMessage.getStringProperty(JMSX_DELIVERY_COUNT)));
+                    }
+                    String messageID = textMessage.getJMSMessageID();
+                    infoCoda.setMessageID(messageID);
 
-		    if (textMessage instanceof TextMessage) {
-			ObjectMapper mapper = new ObjectMapper();
-			Object genericPayload = null;
-			try {
-			    // deserializzo il messaggio
-			    if (textMessage.getStringProperty(
-				    Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE) != null) {
-				switch (textMessage.getStringProperty(
-					Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE)) {
-				case Costanti.PAYLOAD_TYPE_CODA_VERS:
-				    genericPayload = mapper.readValue(
-					    ((TextMessage) textMessage).getText(), Payload.class);
-				    break;
-				case Costanti.PAYLOAD_TYPE_VERIFICAH:
-				    genericPayload = mapper.readValue(
-					    ((TextMessage) textMessage).getText(),
-					    PayloadCdPrepXml.class);
-				    break;
-				default:
-				    throw new MessageFormatException(
-					    "Errore nel messaggio: payload Type not define");
-				}
-			    }
-			} catch (MessageFormatException ex) {
-			    LOG.error(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
-			    throw new JMSException(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
-			}
-			if (genericPayload instanceof Payload) {
-			    Payload payload = (Payload) genericPayload;
-			    infoCoda.setObjectId(payload.getObjectId());
-			    infoCoda.setUnitaDocSessionId(payload.getUnitaDocSessionId());
-			    infoCoda.setCdRegistroUnitaDocSacer(
-				    payload.getCdRegistroUnitaDocSacer());
-			    infoCoda.setAaUnitaDocSacer(payload.getAaUnitaDocSacer());
-			    infoCoda.setCdKeyUnitaDocSacer(payload.getCdKeyUnitaDocSacer());
-			} else if (genericPayload instanceof PayloadCdPrepXml) {
-			    PayloadCdPrepXml payloadCdPrepXml = (PayloadCdPrepXml) genericPayload;
-			    infoCoda.setObjectId(payloadCdPrepXml.getIdPigObject());
-			    infoCoda.setUnitaDocSessionId(
-				    payloadCdPrepXml.getIdLastSessioneIngest());
-			}
-			msgList.add(infoCoda);
-		    }
-		}
-	    }
-	} catch (Exception ex) {
-	    throw new JMSException("Errore nella lettura dalla coda '" + queue + "' con selettore "
-		    + messageSelector);
-	} finally {
-	    if (queueBrowser != null) {
-		queueBrowser.close();
-	    }
-	    if (queueSession != null) {
-		queueSession.close();
-	    }
-	    if (queueConn != null) {
-		queueConn.close();
-	    }
-	}
-	return msgList;
+                    if (textMessage instanceof TextMessage) {
+                        ObjectMapper mapper = new ObjectMapper();
+                        Object genericPayload = null;
+                        // deserializzo il messaggio
+                        if (textMessage.getStringProperty(
+                                Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE) != null) {
+                            switch (textMessage.getStringProperty(
+                                    Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE)) {
+                            case Costanti.PAYLOAD_TYPE_CODA_VERS:
+                                genericPayload = mapper.readValue(
+                                        ((TextMessage) textMessage).getText(), Payload.class);
+                                break;
+                            case Costanti.PAYLOAD_TYPE_VERIFICAH:
+                                genericPayload = mapper.readValue(
+                                        ((TextMessage) textMessage).getText(),
+                                        PayloadCdPrepXml.class);
+                                break;
+                            default:
+                                throw new MessageFormatException(
+                                        "Errore nel messaggio: payload Type not define");
+                            }
+                        }
+                        if (genericPayload instanceof Payload) {
+                            Payload payload = (Payload) genericPayload;
+                            infoCoda.setObjectId(payload.getObjectId());
+                            infoCoda.setUnitaDocSessionId(payload.getUnitaDocSessionId());
+                            infoCoda.setCdRegistroUnitaDocSacer(
+                                    payload.getCdRegistroUnitaDocSacer());
+                            infoCoda.setAaUnitaDocSacer(payload.getAaUnitaDocSacer());
+                            infoCoda.setCdKeyUnitaDocSacer(payload.getCdKeyUnitaDocSacer());
+                        } else if (genericPayload instanceof PayloadCdPrepXml) {
+                            PayloadCdPrepXml payloadCdPrepXml = (PayloadCdPrepXml) genericPayload;
+                            infoCoda.setObjectId(payloadCdPrepXml.getIdPigObject());
+                            infoCoda.setUnitaDocSessionId(
+                                    payloadCdPrepXml.getIdLastSessioneIngest());
+                        }
+                        msgList.add(infoCoda);
+                    }
+                }
+            }
+        } catch (MessageFormatException ex) {
+            LOG.error(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
+            throw new JMSException(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
+        } catch (Exception ex) {
+            throw new JMSException("Errore nella lettura dalla coda '" + queue + "' con selettore "
+                    + messageSelector);
+        } finally {
+            if (queueBrowser != null) {
+                queueBrowser.close();
+            }
+        }
+        return msgList;
     }
 
     /**
+     *
      * @param queue           nome coda
      * @param messageSelector selettore
+     *
      * @return elementi di tipo {@link InfoCoda}
+     *
      * @throws JMSException errore generico
      */
     public List<InfoCoda> retrieveGenericMsgInQueue(String queue, String messageSelector)
-	    throws JMSException {
-	List<InfoCoda> msgList = new ArrayList<>();
-	QueueConnection queueConn = null;
-	QueueBrowser queueBrowser = null;
-	QueueSession queueSession = null;
-	try {
-	    queueConn = connFactory.createQueueConnection();
-	    queueSession = queueConn.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	    if (queue.equals(NomeCoda.producerCodaVersQueue.name())) {
-		queueBrowser = queueSession.createBrowser(producerCodaVersQueue);
-	    } else if (queue.equals(NomeCoda.dmqQueue.name())) {
-		queueBrowser = queueSession.createBrowser(dmqQueue, messageSelector);
-	    }
-	    Enumeration<?> e = queueBrowser.getEnumeration();
+            throws JMSException {
+        List<InfoCoda> msgList = new ArrayList<>();
+        QueueBrowser queueBrowser = null;
+        try (QueueConnection queueConn = connFactory.createQueueConnection();
+                QueueSession queueSession = queueConn.createQueueSession(true,
+                        Session.AUTO_ACKNOWLEDGE);) {
+            if (queue.equals(NomeCoda.producerCodaVersQueue.name())) {
+                queueBrowser = queueSession.createBrowser(producerCodaVersQueue);
+            } else if (queue.equals(NomeCoda.dmqQueue.name())) {
+                queueBrowser = queueSession.createBrowser(dmqQueue, messageSelector);
+            }
+            Enumeration<?> e = queueBrowser.getEnumeration();
 
-	    while (e.hasMoreElements()) {
+            while (e.hasMoreElements()) {
 
-		InfoCoda infoCoda = new InfoCoda();
-		Message objMessage = (Message) e.nextElement();
+                InfoCoda infoCoda = new InfoCoda();
+                Message objMessage = (Message) e.nextElement();
 
-		/*
-		 * JMS Message Metadata custom info (PARER) a) queueType
-		 */
-		if (objMessage
-			.getStringProperty(Costanti.JMSMsgProperties.MSG_K_QUEUETYPE) != null) {
-		    infoCoda.setMessageSelector(objMessage
-			    .getStringProperty(Costanti.JMSMsgProperties.MSG_K_QUEUETYPE));
-		} else {
-		    continue; // passa al messaggio successivo (Nota: avendo inserito un selettore,
-		    // caso che non
-		    // dovrebbe mai verificarsi)
-		}
+                /*
+                 * JMS Message Metadata custom info (PARER) a) queueType
+                 */
+                if (objMessage
+                        .getStringProperty(Costanti.JMSMsgProperties.MSG_K_QUEUETYPE) != null) {
+                    infoCoda.setMessageSelector(objMessage
+                            .getStringProperty(Costanti.JMSMsgProperties.MSG_K_QUEUETYPE));
+                } else {
+                    continue; // passa al messaggio successivo (Nota: avendo inserito un selettore,
+                    // caso che non
+                    // dovrebbe mai verificarsi)
+                }
 
-		infoCoda.setSentTimestamp(new Date(objMessage.getJMSTimestamp()));
+                infoCoda.setSentTimestamp(new Date(objMessage.getJMSTimestamp()));
 
-		infoCoda.setMessageID(objMessage.getJMSMessageID());
+                infoCoda.setMessageID(objMessage.getJMSMessageID());
 
-		if (objMessage.getStringProperty(JMSX_DELIVERY_COUNT) != null) {
-		    infoCoda.setDeliveryCount(
-			    Integer.parseInt(objMessage.getStringProperty(JMSX_DELIVERY_COUNT)));
-		}
+                if (objMessage.getStringProperty(JMSX_DELIVERY_COUNT) != null) {
+                    infoCoda.setDeliveryCount(
+                            Integer.parseInt(objMessage.getStringProperty(JMSX_DELIVERY_COUNT)));
+                }
 
-		msgList.add(infoCoda);
-	    }
-	} catch (Exception ex) {
-	    throw new JMSException("Errore nella lettura dalla coda '" + queue + "' con selettore "
-		    + messageSelector);
-	} finally {
-	    if (queueBrowser != null) {
-		queueBrowser.close();
-	    }
-	    if (queueSession != null) {
-		queueSession.close();
-	    }
-	    if (queueConn != null) {
-		queueConn.close();
-	    }
-	}
-	return msgList;
+                msgList.add(infoCoda);
+            }
+        } catch (Exception ex) {
+            throw new JMSException("Errore nella lettura dalla coda '" + queue + "' con selettore "
+                    + messageSelector);
+        } finally {
+            if (queueBrowser != null) {
+                queueBrowser.close();
+            }
+        }
+        return msgList;
     }
 
     /**
@@ -283,49 +270,43 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
+     *
      * @return L'id del messaggio inviato
+     *
      * @throws ParerInternalError errore generico
      * @throws JMSException       errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String redeliveryMsg(String msgID, String queueName)
-	    throws ParerInternalError, JMSException {
-	Message message = me.readMsgFromQueueAtomic(msgID, queueName);
-	String id = message.getJMSMessageID();
-	me.deliveryMsg(message);
-	return id;
+            throws ParerInternalError, JMSException {
+        Message message = me.readMsgFromQueueAtomic(msgID, queueName);
+        String id = message.getJMSMessageID();
+        me.deliveryMsg(message);
+        return id;
     }
 
     /**
      * Invia un messaggio alla coda
      *
      * @param message dto messaggio {@link Message}
+     *
      * @throws JMSException errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void deliveryMsg(Message message) throws JMSException {
-	QueueConnection queueConn = null;
-	QueueSession queueSession = null;
-	try {
-	    // ATTENZIONE!!! senza la riga sottostante da questo errore:
-	    // javax.jms.JMSException: Could not create a session: Only allowed one session per
-	    // connection. See the J2EE
-	    // spec, e.g. J2EE1.4 Section 6.6
-	    queueConn = connFactory.createQueueConnection();
-	    queueSession = queueConn.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	    QueueSender qSender = queueSession.createSender(producerCodaVersQueue);
-	    qSender.send(message);
-	} catch (Exception ex) {
-	    LOG.error("Eccezione", ex);
-	    throw new JMSException("Errore nella lettura dalla coda morta");
-	} finally {
-	    if (queueSession != null) {
-		queueSession.close();
-	    }
-	    if (queueConn != null) {
-		queueConn.close();
-	    }
-	}
+        try (QueueConnection queueConn = connFactory.createQueueConnection();
+                QueueSession queueSession = queueConn.createQueueSession(true,
+                        Session.AUTO_ACKNOWLEDGE);
+                QueueSender qSender = queueSession.createSender(producerCodaVersQueue);) {
+            // ATTENZIONE!!! senza la riga sottostante da questo errore:
+            // javax.jms.JMSException: Could not create a session: Only allowed one session per
+            // connection. See the J2EE
+            // spec, e.g. J2EE1.4 Section 6.6
+            qSender.send(message);
+        } catch (Exception ex) {
+            LOG.error("Eccezione", ex);
+            throw new JMSException("Errore nella lettura dalla coda morta");
+        }
     }
 
     /**
@@ -333,12 +314,14 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
+     *
      * @return il messaggio letto e consumato
+     *
      * @throws JMSException errore generico
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Message readMsgFromQueueAtomic(String msgID, String queueName) throws JMSException {
-	return me.readMsgFromQueue(msgID, queueName);
+        return me.readMsgFromQueue(msgID, queueName);
     }
 
     /**
@@ -346,52 +329,48 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
+     *
      * @return il messaggio letto e consumato
+     *
      * @throws JMSException errore generico
      */
     public Message readMsgFromQueue(String msgID, String queueName) throws JMSException {
-	QueueConnection queueConn = null;
-	QueueSession queueSession = null;
-	QueueReceiver qReceiver = null;
-	try {
-	    // A cosa serve questo sleep?
-	    Thread.sleep(4000);
-	    queueConn = connFactory.createQueueConnection();
-	    // E' corretto effettare esplicitamente lo start?
-	    queueConn.start();
-	    queueSession = queueConn.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	    if (queueName.equals(NomeCoda.producerCodaVersQueue.name())) {
-		qReceiver = queueSession.createReceiver(producerCodaVersQueue,
-			"JMSMessageID='" + msgID + "'");
-	    } else if (queueName.equals(NomeCoda.dmqQueue.name())) {
-		qReceiver = queueSession.createReceiver(dmqQueue, "JMSMessageID='" + msgID + "'");
-	    } else {
-		throw new JMSException("Errore durante la lettura del messaggio con id " + msgID
-			+ " dalla coda " + queueName + ": coda non presente");
-	    }
-	    Message message = qReceiver.receive(6000L);
-	    if (message == null) {
-		throw new JMSException("Errore durante il recupero del messaggio con id " + msgID
-			+ " dalla coda " + queueName);
-	    }
-	    return message;
-	} catch (JMSException e) {
-	    throw e;
-	} catch (Exception ex) {
-	    LOG.error("Eccezione", ex);
-	    throw new JMSException("Errore durante la lettura del messaggio con id " + msgID
-		    + " dalla coda " + queueName);
-	} finally {
-	    if (queueSession != null) {
-		queueSession.close();
-	    }
-	    if (queueConn != null) {
-		queueConn.close();
-	    }
-	    if (qReceiver != null) {
-		qReceiver.close();
-	    }
-	}
+        try (QueueConnection queueConn = connFactory.createQueueConnection();
+                QueueSession queueSession = queueConn.createQueueSession(true,
+                        Session.AUTO_ACKNOWLEDGE);) {
+            // A cosa serve questo sleep?
+            Thread.sleep(4000);
+            QueueReceiver qReceiver = null;
+            // E' corretto effettare esplicitamente lo start?
+            queueConn.start();
+            if (queueName.equals(NomeCoda.producerCodaVersQueue.name())) {
+                qReceiver = queueSession.createReceiver(producerCodaVersQueue,
+                        "JMSMessageID='" + msgID + "'");
+            } else if (queueName.equals(NomeCoda.dmqQueue.name())) {
+                qReceiver = queueSession.createReceiver(dmqQueue, "JMSMessageID='" + msgID + "'");
+            } else {
+                throw new JMSException("Errore durante la lettura del messaggio con id " + msgID
+                        + " dalla coda " + queueName + ": coda non presente");
+            }
+            Message message = qReceiver.receive(6000L);
+            if (message == null) {
+                throw new JMSException("Errore durante il recupero del messaggio con id " + msgID
+                        + " dalla coda " + queueName);
+            }
+            return message;
+        } catch (JMSException e) {
+            throw e;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Ripristina lo stato di interruzione
+            LOG.error("Interruzione durante la lettura del messaggio con id " + msgID
+                    + " dalla coda " + queueName, e);
+            throw new JMSException("Interruzione durante la lettura del messaggio con id " + msgID
+                    + " dalla coda " + queueName);
+        } catch (Exception ex) {
+            LOG.error("Eccezione", ex);
+            throw new JMSException("Errore durante la lettura del messaggio con id " + msgID
+                    + " dalla coda " + queueName);
+        }
     }
 
     /**
@@ -399,12 +378,14 @@ public class MonitorCoda {
      *
      * @param msgID     id messaggio
      * @param queueName nome coda
+     *
      * @return L'id del messaggio eliminato
+     *
      * @throws JMSException errore generico
      */
     public String deleteMsgFromQueue(String msgID, String queueName) throws JMSException {
-	Message message = me.readMsgFromQueue(msgID, queueName);
-	return message.getJMSMessageID();
+        Message message = me.readMsgFromQueue(msgID, queueName);
+        return message.getJMSMessageID();
     }
 
     /**
@@ -412,78 +393,67 @@ public class MonitorCoda {
      *
      * @param messageSelector selettore
      * @param parToCheck      numero parametro da verificare
+     *
      * @return Il numero di occorrenze del messaggio cercato all'interno della coda
+     *
      * @throws JMSException errore generico
      */
     public int checkMsgInQueue(String messageSelector, BigDecimal parToCheck) throws JMSException {
-	int msgCount = 0;
-	long unitaDocSessionId;
-	long idObject;
-	QueueConnection queueConn = null;
-	QueueSession queueSession = null;
-	QueueBrowser queueBrowser = null;
+        int msgCount = 0;
+        long unitaDocSessionId;
+        long idObject;
 
-	ObjectMapper mapper = new ObjectMapper();
-	try {
-	    queueConn = connFactory.createQueueConnection();
-	    queueSession = queueConn.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	    queueBrowser = queueSession.createBrowser(producerCodaVersQueue);
-	    Enumeration<?> e = queueBrowser.getEnumeration();
-	    while (e.hasMoreElements()) {
-		TextMessage textMessage = (TextMessage) e.nextElement();
-		Object genericPayload = null;
-		try {
-		    // deserializzo il messaggio
-		    if (textMessage.getStringProperty(
-			    Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE) != null) {
-			switch (textMessage
-				.getStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE)) {
-			case Costanti.PAYLOAD_TYPE_CODA_VERS:
-			    genericPayload = mapper.readValue(textMessage.getText(), Payload.class);
-			    break;
-			case Costanti.PAYLOAD_TYPE_VERIFICAH:
-			    genericPayload = mapper.readValue(textMessage.getText(),
-				    PayloadCdPrepXml.class);
-			    break;
-			default:
-			    throw new MessageFormatException(
-				    "Errore nel messaggio: payload Type not define");
-			}
-		    }
-		} catch (MessageFormatException ex) {
-		    LOG.error(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
-		    throw new JMSException(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
-		}
-		if (genericPayload instanceof Payload) {
-		    Payload payload = (Payload) genericPayload;
-		    unitaDocSessionId = payload.getUnitaDocSessionId();
-		    if (new BigDecimal(unitaDocSessionId).equals(parToCheck)) {
-			msgCount++;
-		    }
-		} else if (genericPayload instanceof PayloadCdPrepXml) {
-		    PayloadCdPrepXml payloadCdPrepXml = (PayloadCdPrepXml) genericPayload;
-		    idObject = payloadCdPrepXml.getIdPigObject();
-		    if (new BigDecimal(idObject).equals(parToCheck)) {
-			msgCount++;
-		    }
-		}
-	    }
-	} catch (Exception ex) {
-	    throw new JMSException(
-		    "Errore nella lettura dalla coda 'producerCodaVersQueue' con selettore "
-			    + messageSelector);
-	} finally {
-	    if (queueBrowser != null) {
-		queueBrowser.close();
-	    }
-	    if (queueSession != null) {
-		queueSession.close();
-	    }
-	    if (queueConn != null) {
-		queueConn.close();
-	    }
-	}
-	return msgCount;
+        ObjectMapper mapper = new ObjectMapper();
+        try (QueueConnection queueConn = connFactory.createQueueConnection();
+                QueueSession queueSession = queueConn.createQueueSession(true,
+                        Session.AUTO_ACKNOWLEDGE);
+                QueueBrowser queueBrowser = queueSession.createBrowser(producerCodaVersQueue);) {
+
+            Enumeration<?> e = queueBrowser.getEnumeration();
+            while (e.hasMoreElements()) {
+                TextMessage textMessage = (TextMessage) e.nextElement();
+                Object genericPayload = null;
+                // deserializzo il messaggio
+                if (textMessage
+                        .getStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE) != null) {
+                    switch (textMessage
+                            .getStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE)) {
+                    case Costanti.PAYLOAD_TYPE_CODA_VERS:
+                        genericPayload = mapper.readValue(textMessage.getText(), Payload.class);
+                        break;
+                    case Costanti.PAYLOAD_TYPE_VERIFICAH:
+                        genericPayload = mapper.readValue(textMessage.getText(),
+                                PayloadCdPrepXml.class);
+                        break;
+                    default:
+                        throw new MessageFormatException(
+                                "Errore nel messaggio: payload Type not define");
+                    }
+                }
+
+                if (genericPayload instanceof Payload) {
+                    Payload payload = (Payload) genericPayload;
+                    unitaDocSessionId = payload.getUnitaDocSessionId();
+                    if (new BigDecimal(unitaDocSessionId).equals(parToCheck)) {
+                        msgCount++;
+                    }
+                } else if (genericPayload instanceof PayloadCdPrepXml) {
+                    PayloadCdPrepXml payloadCdPrepXml = (PayloadCdPrepXml) genericPayload;
+                    idObject = payloadCdPrepXml.getIdPigObject();
+                    if (new BigDecimal(idObject).equals(parToCheck)) {
+                        msgCount++;
+                    }
+                }
+            }
+        } catch (MessageFormatException ex) {
+            LOG.error(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
+            throw new JMSException(ERRORE_MESSAGGIO_FORMATO_NON_VALIDO);
+        } catch (Exception ex) {
+            throw new JMSException(
+                    "Errore nella lettura dalla coda 'producerCodaVersQueue' con selettore "
+                            + messageSelector);
+        }
+        return msgCount;
     }
 
     /**
@@ -492,63 +462,67 @@ public class MonitorCoda {
      *
      * @param messageSelector selettore
      * @param paramToCheck    parametro da verificare
+     *
      * @return numero messaggi consumati
      */
     public int checkMsgConsumed(String messageSelector, BigDecimal paramToCheck) {
-	int msgCount = -1;
-	msgCount = codaHelper.checkConsumed(messageSelector, paramToCheck).intValue();
-	return msgCount;
+        int msgCount = -1;
+        msgCount = codaHelper.checkConsumed(messageSelector, paramToCheck).intValue();
+        return msgCount;
     }
 
     /**
+     *
      * @param msgConsumedNum  numero messaggi consumati
      * @param msgDeliveredNum numero messaggi inviati
      * @param messageSelector selettore
+     *
      * @return La stringa del messaggio da visualizzare all'utente
+     *
      * @throws JMSException errore generico
      */
     public String buildSingleUserMsg(int msgConsumedNum, int msgDeliveredNum,
-	    String messageSelector) throws JMSException {
-	String userMsg = null;
-	if (msgConsumedNum > 1 || msgDeliveredNum > 1) {
-	    throw new JMSException(
-		    "Errore nella lettura dalla coda 'producerCodaVersQueue' con selettore "
-			    + messageSelector
-			    + ": messaggio con id object o con id unita doc sessione duplicato");
-	} else {
-	    if (msgConsumedNum == 1) { // messaggio consumato
-		userMsg = "Messaggio con selettore " + messageSelector
-			+ " consegnato alla coda 'producerCodaVersQueue' e processato dal sistema";
-	    } else { // messaggio con consumato. Controllo se è stato consegnato
-		if (msgDeliveredNum == 1) {
-		    userMsg = "Messaggio con selettore " + messageSelector
-			    + " inviato e consegnato alla coda 'producerCodaVersQueue' ma non ancora processato dal sistema";
-		} else { // messaggio né consegnato né processato. Questo potrebbe essere un
-		    // problema.
-		    userMsg = "Attenzione: il messaggio con selettore " + messageSelector
-			    + " è stato inviato alla coda 'producerCodaVersQueue' ma non risulta ancora né consegnato né processato dal sistema";
-		}
-	    }
-	}
-	return userMsg;
+            String messageSelector) throws JMSException {
+        String userMsg = null;
+        if (msgConsumedNum > 1 || msgDeliveredNum > 1) {
+            throw new JMSException(
+                    "Errore nella lettura dalla coda 'producerCodaVersQueue' con selettore "
+                            + messageSelector
+                            + ": messaggio con id object o con id unita doc sessione duplicato");
+        } else {
+            if (msgConsumedNum == 1) { // messaggio consumato
+                userMsg = "Messaggio con selettore " + messageSelector
+                        + " consegnato alla coda 'producerCodaVersQueue' e processato dal sistema";
+            } else { // messaggio con consumato. Controllo se è stato consegnato
+                if (msgDeliveredNum == 1) {
+                    userMsg = "Messaggio con selettore " + messageSelector
+                            + " inviato e consegnato alla coda 'producerCodaVersQueue' ma non ancora processato dal sistema";
+                } else { // messaggio né consegnato né processato. Questo potrebbe essere un
+                    // problema.
+                    userMsg = "Attenzione: il messaggio con selettore " + messageSelector
+                            + " è stato inviato alla coda 'producerCodaVersQueue' ma non risulta ancora né consegnato né processato dal sistema";
+                }
+            }
+        }
+        return userMsg;
     }
 
     public String buildMultipleUserMsg(int totMsg, int msgConsumedNum, int msgDeliveredNum)
-	    throws JMSException {
-	String userMsg = null;
-	if (msgConsumedNum > totMsg || msgDeliveredNum > totMsg) {
-	    throw new JMSException(
-		    "Errore nella lettura dalla coda 'producerCodaVersQueue' : messaggi con id object o con id unita doc sessione duplicati");
-	} else {
-	    if (msgConsumedNum == totMsg) { // messaggi consumati
-		userMsg = totMsg
-			+ " messaggi consegnati alla coda 'producerCodaVersQueue' e processati dal sistema";
-	    } else { // Presenti messaggi non consumati. Controllo se è stato consegnato
-		userMsg = totMsg + " messaggi inviati , " + msgDeliveredNum
-			+ " consegnati alla coda 'producerCodaVersQueue', di cui " + msgConsumedNum
-			+ " processati dal sistema";
-	    }
-	}
-	return userMsg;
+            throws JMSException {
+        String userMsg = null;
+        if (msgConsumedNum > totMsg || msgDeliveredNum > totMsg) {
+            throw new JMSException(
+                    "Errore nella lettura dalla coda 'producerCodaVersQueue' : messaggi con id object o con id unita doc sessione duplicati");
+        } else {
+            if (msgConsumedNum == totMsg) { // messaggi consumati
+                userMsg = totMsg
+                        + " messaggi consegnati alla coda 'producerCodaVersQueue' e processati dal sistema";
+            } else { // Presenti messaggi non consumati. Controllo se è stato consegnato
+                userMsg = totMsg + " messaggi inviati , " + msgDeliveredNum
+                        + " consegnati alla coda 'producerCodaVersQueue', di cui " + msgConsumedNum
+                        + " processati dal sistema";
+            }
+        }
+        return userMsg;
     }
 }

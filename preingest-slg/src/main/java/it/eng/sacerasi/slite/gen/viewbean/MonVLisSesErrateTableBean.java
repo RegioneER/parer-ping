@@ -38,19 +38,19 @@ public class MonVLisSesErrateTableBean extends AbstractBaseTable<MonVLisSesErrat
     public static MonVLisSesErrateTableDescriptor TABLE_DESCRIPTOR = new MonVLisSesErrateTableDescriptor();
 
     public MonVLisSesErrateTableBean() {
-	super();
+        super();
     }
 
     protected MonVLisSesErrateRowBean createRow() {
-	return new MonVLisSesErrateRowBean();
+        return new MonVLisSesErrateRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVLisSesErrateRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -33,19 +33,19 @@ public class IamUserTableBean extends AbstractBaseTable<IamUserRowBean> {
     public static IamUserTableDescriptor TABLE_DESCRIPTOR = new IamUserTableDescriptor();
 
     public IamUserTableBean() {
-	super();
+        super();
     }
 
     protected IamUserRowBean createRow() {
-	return new IamUserRowBean();
+        return new IamUserRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<IamUserRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

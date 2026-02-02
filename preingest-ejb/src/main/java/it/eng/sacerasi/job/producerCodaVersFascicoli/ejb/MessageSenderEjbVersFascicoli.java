@@ -44,45 +44,45 @@ public class MessageSenderEjbVersFascicoli {
     private Queue queue;
 
     public void produceMessages(PayloadFascicolo queueItem, String queueToUse)
-	    throws JMSException, JsonProcessingException, JMSSendException {
+            throws JMSException, JsonProcessingException, JMSSendException {
 
-	try (Connection connection = connectionFactory.createConnection();
-		Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
-		MessageProducer messageProducer = session.createProducer(queue);) {
+        try (Connection connection = connectionFactory.createConnection();
+                Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+                MessageProducer messageProducer = session.createProducer(queue);) {
 
-	    TextMessage textmessage;
-	    ObjectMapper mapper = new ObjectMapper();
-	    String payloadQueueItemJson = "";
+            TextMessage textmessage;
+            ObjectMapper mapper = new ObjectMapper();
+            String payloadQueueItemJson = "";
 
-	    /*
-	     * The first parameter of the createSession() method is a Boolean indicating if the
-	     * session is transacted. If this value is true, several messages can be sent as part of
-	     * a transaction by invoking the commit() method in the session object. Similarly, they
-	     * can be rolled back by invoking its rollback() method. The second parameter of the
-	     * createSession() method indicates how messages are acknowledged by the message
-	     * receiver. Valid values for this parameter are defined as constants in the
-	     * javax.jms.Session interface. Session.AUTO_ACKNOWLEDGE: indicates that the session
-	     * will automatically acknowledge the receipt of a message. Session.CLIENT_ACKNOWLEDGE:
-	     * indicates that the message receiver must explicitly call the acknowledge() method on
-	     * the message. Session.DUPS_OK_ACKNOWLEDGE: indicates that the session will lazily
-	     * acknowledge the receipt of messages. Using this value might result in some messages
-	     * being delivered more than once.
-	     */
-	    payloadQueueItemJson = mapper.writeValueAsString(queueItem);
+            /*
+             * The first parameter of the createSession() method is a Boolean indicating if the
+             * session is transacted. If this value is true, several messages can be sent as part of
+             * a transaction by invoking the commit() method in the session object. Similarly, they
+             * can be rolled back by invoking its rollback() method. The second parameter of the
+             * createSession() method indicates how messages are acknowledged by the message
+             * receiver. Valid values for this parameter are defined as constants in the
+             * javax.jms.Session interface. Session.AUTO_ACKNOWLEDGE: indicates that the session
+             * will automatically acknowledge the receipt of a message. Session.CLIENT_ACKNOWLEDGE:
+             * indicates that the message receiver must explicitly call the acknowledge() method on
+             * the message. Session.DUPS_OK_ACKNOWLEDGE: indicates that the session will lazily
+             * acknowledge the receipt of messages. Using this value might result in some messages
+             * being delivered more than once.
+             */
+            payloadQueueItemJson = mapper.writeValueAsString(queueItem);
 
-	    textmessage = session.createTextMessage();
-	    // app selector
-	    textmessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_APP, Costanti.PING);
-	    textmessage.setStringProperty("queueType", queueToUse);
+            textmessage = session.createTextMessage();
+            // app selector
+            textmessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_APP, Costanti.PING);
+            textmessage.setStringProperty("queueType", queueToUse);
 
-	    textmessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE,
-		    Costanti.PAYLOAD_TYPE_CODA_VERS_FASCICOLO);
-	    textmessage.setText(payloadQueueItemJson);
+            textmessage.setStringProperty(Costanti.JMSMsgProperties.MSG_K_PAYLOAD_TYPE,
+                    Costanti.PAYLOAD_TYPE_CODA_VERS_FASCICOLO);
+            textmessage.setText(payloadQueueItemJson);
 
-	    messageProducer.send(textmessage);
-	} catch (JMSException ex) {
-	    throw new JMSSendException("Errore nell'invio del messaggio in coda", ex);
-	}
+            messageProducer.send(textmessage);
+        } catch (JMSException ex) {
+            throw new JMSSendException("Errore nell'invio del messaggio in coda", ex);
+        }
     }
 
 }

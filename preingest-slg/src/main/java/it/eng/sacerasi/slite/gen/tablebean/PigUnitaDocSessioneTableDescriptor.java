@@ -50,37 +50,37 @@ public class PigUnitaDocSessioneTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_UNITA_DOC_SESSIONE,
-		new ColumnDescriptor(COL_ID_UNITA_DOC_SESSIONE, Types.DECIMAL, 22, true));
-	map.put(COL_ID_SESSIONE_INGEST,
-		new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
-	map.put(COL_CD_REGISTRO_UNITA_DOC_SACER,
-		new ColumnDescriptor(COL_CD_REGISTRO_UNITA_DOC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_AA_UNITA_DOC_SACER,
-		new ColumnDescriptor(COL_AA_UNITA_DOC_SACER, Types.DECIMAL, 22, false));
-	map.put(COL_CD_KEY_UNITA_DOC_SACER,
-		new ColumnDescriptor(COL_CD_KEY_UNITA_DOC_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_TI_STATO_UNITA_DOC_SESSIONE,
-		new ColumnDescriptor(COL_TI_STATO_UNITA_DOC_SESSIONE, Types.VARCHAR, 20, false));
-	map.put(COL_NI_SIZE_FILE_BYTE,
-		new ColumnDescriptor(COL_NI_SIZE_FILE_BYTE, Types.DECIMAL, 22, false));
-	map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
-	map.put(COL_CD_ERR_SACER,
-		new ColumnDescriptor(COL_CD_ERR_SACER, Types.VARCHAR, 100, false));
-	map.put(COL_DL_ERR_SACER,
-		new ColumnDescriptor(COL_DL_ERR_SACER, Types.VARCHAR, 1024, false));
+        map.put(COL_ID_UNITA_DOC_SESSIONE,
+                new ColumnDescriptor(COL_ID_UNITA_DOC_SESSIONE, Types.DECIMAL, 22, true));
+        map.put(COL_ID_SESSIONE_INGEST,
+                new ColumnDescriptor(COL_ID_SESSIONE_INGEST, Types.DECIMAL, 22, false));
+        map.put(COL_CD_REGISTRO_UNITA_DOC_SACER,
+                new ColumnDescriptor(COL_CD_REGISTRO_UNITA_DOC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_AA_UNITA_DOC_SACER,
+                new ColumnDescriptor(COL_AA_UNITA_DOC_SACER, Types.DECIMAL, 22, false));
+        map.put(COL_CD_KEY_UNITA_DOC_SACER,
+                new ColumnDescriptor(COL_CD_KEY_UNITA_DOC_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_TI_STATO_UNITA_DOC_SESSIONE,
+                new ColumnDescriptor(COL_TI_STATO_UNITA_DOC_SESSIONE, Types.VARCHAR, 20, false));
+        map.put(COL_NI_SIZE_FILE_BYTE,
+                new ColumnDescriptor(COL_NI_SIZE_FILE_BYTE, Types.DECIMAL, 22, false));
+        map.put(COL_DT_STATO, new ColumnDescriptor(COL_DT_STATO, Types.TIMESTAMP, 7, true));
+        map.put(COL_CD_ERR_SACER,
+                new ColumnDescriptor(COL_CD_ERR_SACER, Types.VARCHAR, 100, false));
+        map.put(COL_DL_ERR_SACER,
+                new ColumnDescriptor(COL_DL_ERR_SACER, Types.VARCHAR, 1024, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

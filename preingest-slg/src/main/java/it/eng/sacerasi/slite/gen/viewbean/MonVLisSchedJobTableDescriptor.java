@@ -48,29 +48,29 @@ public class MonVLisSchedJobTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_LOG_JOB, new ColumnDescriptor(COL_ID_LOG_JOB, Types.DECIMAL, 22, true));
-	map.put(COL_NM_JOB, new ColumnDescriptor(COL_NM_JOB, Types.VARCHAR, 100, true));
-	map.put(COL_DT_REG_LOG_JOB_INI,
-		new ColumnDescriptor(COL_DT_REG_LOG_JOB_INI, Types.TIMESTAMP, 7, true));
-	map.put(COL_DT_REG_LOG_JOB_FINE,
-		new ColumnDescriptor(COL_DT_REG_LOG_JOB_FINE, Types.TIMESTAMP, 7, true));
-	map.put(COL_DURATA_GG, new ColumnDescriptor(COL_DURATA_GG, Types.DECIMAL, 22, true));
-	map.put(COL_DURATA_ORE, new ColumnDescriptor(COL_DURATA_ORE, Types.DECIMAL, 22, true));
-	map.put(COL_DURATA_MIN, new ColumnDescriptor(COL_DURATA_MIN, Types.DECIMAL, 22, true));
-	map.put(COL_DURATA_SEC, new ColumnDescriptor(COL_DURATA_SEC, Types.DECIMAL, 22, true));
-	map.put(COL_DL_MSG_ERR, new ColumnDescriptor(COL_DL_MSG_ERR, Types.VARCHAR, 1024, true));
+        map.put(COL_ID_LOG_JOB, new ColumnDescriptor(COL_ID_LOG_JOB, Types.DECIMAL, 22, true));
+        map.put(COL_NM_JOB, new ColumnDescriptor(COL_NM_JOB, Types.VARCHAR, 100, true));
+        map.put(COL_DT_REG_LOG_JOB_INI,
+                new ColumnDescriptor(COL_DT_REG_LOG_JOB_INI, Types.TIMESTAMP, 7, true));
+        map.put(COL_DT_REG_LOG_JOB_FINE,
+                new ColumnDescriptor(COL_DT_REG_LOG_JOB_FINE, Types.TIMESTAMP, 7, true));
+        map.put(COL_DURATA_GG, new ColumnDescriptor(COL_DURATA_GG, Types.DECIMAL, 22, true));
+        map.put(COL_DURATA_ORE, new ColumnDescriptor(COL_DURATA_ORE, Types.DECIMAL, 22, true));
+        map.put(COL_DURATA_MIN, new ColumnDescriptor(COL_DURATA_MIN, Types.DECIMAL, 22, true));
+        map.put(COL_DURATA_SEC, new ColumnDescriptor(COL_DURATA_SEC, Types.DECIMAL, 22, true));
+        map.put(COL_DL_MSG_ERR, new ColumnDescriptor(COL_DL_MSG_ERR, Types.VARCHAR, 1024, true));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

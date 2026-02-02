@@ -35,97 +35,97 @@ public class RicercaStrumentiUrbanisticiDTO {
     }
 
     public RicercaStrumentiUrbanisticiDTO(
-	    StrumentiUrbanisticiForm.FiltriStrumentiUrbanistici filtri) throws EMFError {
-	this.tiStrumentoUrbanistico = filtri.getTi_strumento_urbanistico().parse();
-	this.nmFaseElaborazione = filtri.getNm_fase_elaborazione().parse();
-	this.dtCreazione = filtri.getDt_creazione().parse();
-	this.cdOggetto = filtri.getCd_oggetto().parse();
-	this.anno = filtri.getNi_anno().parse();
-	this.cdNumero = filtri.getCd_numero().parse();
-	this.nmStato = filtri.getNm_stato().parse();
+            StrumentiUrbanisticiForm.FiltriStrumentiUrbanistici filtri) throws EMFError {
+        this.tiStrumentoUrbanistico = filtri.getTi_strumento_urbanistico().parse();
+        this.nmFaseElaborazione = filtri.getNm_fase_elaborazione().parse();
+        this.dtCreazione = filtri.getDt_creazione().parse();
+        this.cdOggetto = filtri.getCd_oggetto().parse();
+        this.anno = filtri.getNi_anno().parse();
+        this.cdNumero = filtri.getCd_numero().parse();
+        this.nmStato = filtri.getNm_stato().parse();
     }
 
     public String getTiStrumentoUrbanistico() {
-	return tiStrumentoUrbanistico;
+        return tiStrumentoUrbanistico;
     }
 
     public void setTiStrumentoUrbanistico(String tiStrumentoUrbanistico) {
-	this.tiStrumentoUrbanistico = tiStrumentoUrbanistico;
+        this.tiStrumentoUrbanistico = tiStrumentoUrbanistico;
     }
 
     public boolean isTiStrumentoUrbanistico() {
-	return this.tiStrumentoUrbanistico != null && !this.tiStrumentoUrbanistico.isEmpty();
+        return this.tiStrumentoUrbanistico != null && !this.tiStrumentoUrbanistico.isEmpty();
     }
 
     public String getNmFaseElaborazione() {
-	return nmFaseElaborazione;
+        return nmFaseElaborazione;
     }
 
     public void setNmFaseElaborazione(String nmFaseElaborazione) {
-	this.nmFaseElaborazione = nmFaseElaborazione;
+        this.nmFaseElaborazione = nmFaseElaborazione;
     }
 
     public boolean isNmFaseElaborazione() {
-	return this.nmFaseElaborazione != null && !this.nmFaseElaborazione.isEmpty();
+        return this.nmFaseElaborazione != null && !this.nmFaseElaborazione.isEmpty();
     }
 
     public Date getDtCreazione() {
-	return dtCreazione;
+        return dtCreazione;
     }
 
     public void setDtCreazione(Date dtCreazione) {
-	this.dtCreazione = dtCreazione;
+        this.dtCreazione = dtCreazione;
     }
 
     public boolean isDtCreazione() {
-	return this.dtCreazione != null;
+        return this.dtCreazione != null;
     }
 
     public String getCdOggetto() {
-	return cdOggetto;
+        return cdOggetto;
     }
 
     public void setCdOggetto(String cdOggetto) {
-	this.cdOggetto = cdOggetto;
+        this.cdOggetto = cdOggetto;
     }
 
     public boolean isCdOggetto() {
-	return this.cdOggetto != null && !this.cdOggetto.isEmpty();
+        return this.cdOggetto != null && !this.cdOggetto.isEmpty();
     }
 
     public String getAnno() {
-	return anno;
+        return anno;
     }
 
     public void setAnno(String anno) {
-	this.anno = anno;
+        this.anno = anno;
     }
 
     public boolean isAnno() {
-	return this.anno != null;
+        return this.anno != null;
     }
 
     public String getCdNumero() {
-	return cdNumero;
+        return cdNumero;
     }
 
     public void setCdNumero(String cdNumero) {
-	this.cdNumero = cdNumero;
+        this.cdNumero = cdNumero;
     }
 
     public boolean isCdNumero() {
-	return this.cdNumero != null && !this.cdNumero.isEmpty();
+        return this.cdNumero != null && !this.cdNumero.isEmpty();
     }
 
     public String getNmStato() {
-	return nmStato;
+        return nmStato;
     }
 
     public void setNmStato(String nmStato) {
-	this.nmStato = nmStato;
+        this.nmStato = nmStato;
     }
 
     public boolean isNmStato() {
-	return this.nmStato != null && !this.nmStato.isEmpty();
+        return this.nmStato != null && !this.nmStato.isEmpty();
     }
 }

@@ -28,41 +28,41 @@ import it.eng.sacerasi.ws.ricerca.enums.OperatoreType;
 public class QueriesUtils {
 
     public static Map<String, String[]> getMappingOperazione() {
-	HashMap<String, String[]> op = new HashMap<>();
-	op.put(OperatoreType.UGUALE.name(), new String[] {
-		"=", "", "" });
-	op.put(OperatoreType.DIVERSO.name(), new String[] {
-		"!=", "", "" });
-	op.put(OperatoreType.MAGGIORE.name(), new String[] {
-		">", "", "" });
-	op.put(OperatoreType.MAGGIORE_UGUALE.name(), new String[] {
-		">=", "", "" });
-	op.put(OperatoreType.MINORE.name(), new String[] {
-		"<", "", "" });
-	op.put(OperatoreType.MINORE_UGUALE.name(), new String[] {
-		"<=", "", "" });
-	op.put(OperatoreType.INIZIA_PER.name(), new String[] {
-		"LIKE", "", "%" });
-	op.put(OperatoreType.CONTIENE.name(), new String[] {
-		"LIKE", "%", "%" });
-	op.put(OperatoreType.NON_CONTIENE.name(), new String[] {
-		"NOT LIKE", "%", "%" });
-	op.put(OperatoreType.IN.name(), new String[] {
-		"IN", "", "" });
-	return op;
+        HashMap<String, String[]> op = new HashMap<>();
+        op.put(OperatoreType.UGUALE.name(), new String[] {
+                "=", "", "" });
+        op.put(OperatoreType.DIVERSO.name(), new String[] {
+                "!=", "", "" });
+        op.put(OperatoreType.MAGGIORE.name(), new String[] {
+                ">", "", "" });
+        op.put(OperatoreType.MAGGIORE_UGUALE.name(), new String[] {
+                ">=", "", "" });
+        op.put(OperatoreType.MINORE.name(), new String[] {
+                "<", "", "" });
+        op.put(OperatoreType.MINORE_UGUALE.name(), new String[] {
+                "<=", "", "" });
+        op.put(OperatoreType.INIZIA_PER.name(), new String[] {
+                "LIKE", "", "%" });
+        op.put(OperatoreType.CONTIENE.name(), new String[] {
+                "LIKE", "%", "%" });
+        op.put(OperatoreType.NON_CONTIENE.name(), new String[] {
+                "NOT LIKE", "%", "%" });
+        op.put(OperatoreType.IN.name(), new String[] {
+                "IN", "", "" });
+        return op;
     }
 
     // Metodo per "cammellare" una stringa
     public static String toCamelCase(String s) {
-	String[] parts = s.split("_");
-	String camelCaseString = parts[0];
-	for (int i = 1; i < parts.length; i++) {
-	    camelCaseString = camelCaseString + toProperCase(parts[i]);
-	}
-	return camelCaseString;
+        String[] parts = s.split("_");
+        String camelCaseString = parts[0];
+        for (int i = 1; i < parts.length; i++) {
+            camelCaseString = camelCaseString + toProperCase(parts[i]);
+        }
+        return camelCaseString;
     }
 
     public static String toProperCase(String s) {
-	return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 }

@@ -45,41 +45,41 @@ public class IamIndIpUser implements Serializable {
     private IamUser iamUser;
 
     public IamIndIpUser() {
-	// for Hibernate
+        // for Hibernate
     }
 
     @Id
     @GenericGenerator(name = "IAM_IND_IP_USER_IDINDIPUSER_GENERATOR", strategy = "it.eng.sequences.hibernate.NonMonotonicSequenceGenerator", parameters = {
-	    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SIAM_IND_IP_USER"),
-	    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
+            @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SIAM_IND_IP_USER"),
+            @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1") })
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IAM_IND_IP_USER_IDINDIPUSER_GENERATOR")
     @Column(name = "ID_IND_IP_USER")
     public Long getIdIndIpUser() {
-	return this.idIndIpUser;
+        return this.idIndIpUser;
     }
 
     public void setIdIndIpUser(Long idIndIpUser) {
-	this.idIndIpUser = idIndIpUser;
+        this.idIndIpUser = idIndIpUser;
     }
 
     @Column(name = "CD_IND_IP_USER")
     public String getCdIndIpUser() {
-	return this.cdIndIpUser;
+        return this.cdIndIpUser;
     }
 
     public void setCdIndIpUser(String cdIndIpUser) {
-	this.cdIndIpUser = cdIndIpUser;
+        this.cdIndIpUser = cdIndIpUser;
     }
 
     // bi-directional many-to-one association to IamUser
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USER_IAM")
     public IamUser getIamUser() {
-	return this.iamUser;
+        return this.iamUser;
     }
 
     public void setIamUser(IamUser iamUser) {
-	this.iamUser = iamUser;
+        this.iamUser = iamUser;
     }
 
 }

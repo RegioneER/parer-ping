@@ -26,6 +26,6 @@ public class ConstOrgCollegEntiConvenz {
      * Tipo collegamento ti_colleg IN ('GERARCHICO', 'RETICOLARE')
      */
     public enum TiColleg {
-	GERARCHICO, RETICOLARE
+        GERARCHICO, RETICOLARE
     }
 }

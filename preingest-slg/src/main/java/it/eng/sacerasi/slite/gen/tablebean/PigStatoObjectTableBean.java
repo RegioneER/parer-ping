@@ -34,19 +34,19 @@ public class PigStatoObjectTableBean extends AbstractBaseTable<PigStatoObjectRow
     public static PigStatoObjectTableDescriptor TABLE_DESCRIPTOR = new PigStatoObjectTableDescriptor();
 
     public PigStatoObjectTableBean() {
-	super();
+        super();
     }
 
     protected PigStatoObjectRowBean createRow() {
-	return new PigStatoObjectRowBean();
+        return new PigStatoObjectRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<PigStatoObjectRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

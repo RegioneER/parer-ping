@@ -40,48 +40,48 @@ public class UsrVAbilAmbEnteConvenz implements Serializable {
     }
 
     public UsrVAbilAmbEnteConvenz(BigDecimal idAmbienteEnteConvenz, String nmAmbienteEnteConvenz,
-	    String dsAmbienteEnteConvenz) {
-	this.usrVAbilAmbEnteConvenzId = new UsrVAbilAmbEnteConvenzId();
-	this.usrVAbilAmbEnteConvenzId.setIdAmbienteEnteConvenz(idAmbienteEnteConvenz);
-	this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
-	this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
+            String dsAmbienteEnteConvenz) {
+        this.usrVAbilAmbEnteConvenzId = new UsrVAbilAmbEnteConvenzId();
+        this.usrVAbilAmbEnteConvenzId.setIdAmbienteEnteConvenz(idAmbienteEnteConvenz);
+        this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
+        this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
     }
 
     @Column(name = "DS_AMBIENTE_ENTE_CONVENZ")
     public String getDsAmbienteEnteConvenz() {
-	return this.dsAmbienteEnteConvenz;
+        return this.dsAmbienteEnteConvenz;
     }
 
     public void setDsAmbienteEnteConvenz(String dsAmbienteEnteConvenz) {
-	this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
+        this.dsAmbienteEnteConvenz = dsAmbienteEnteConvenz;
     }
 
     @Column(name = "NM_AMBIENTE_ENTE_CONVENZ")
     public String getNmAmbienteEnteConvenz() {
-	return this.nmAmbienteEnteConvenz;
+        return this.nmAmbienteEnteConvenz;
     }
 
     public void setNmAmbienteEnteConvenz(String nmAmbienteEnteConvenz) {
-	this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
+        this.nmAmbienteEnteConvenz = nmAmbienteEnteConvenz;
     }
 
     @Column(name = "NM_USERID")
     public String getNmUserid() {
-	return this.nmUserid;
+        return this.nmUserid;
     }
 
     public void setNmUserid(String nmUserid) {
-	this.nmUserid = nmUserid;
+        this.nmUserid = nmUserid;
     }
 
     private UsrVAbilAmbEnteConvenzId usrVAbilAmbEnteConvenzId;
 
     @EmbeddedId()
     public UsrVAbilAmbEnteConvenzId getUsrVAbilAmbEnteConvenzId() {
-	return usrVAbilAmbEnteConvenzId;
+        return usrVAbilAmbEnteConvenzId;
     }
 
     public void setUsrVAbilAmbEnteConvenzId(UsrVAbilAmbEnteConvenzId usrVAbilAmbEnteConvenzId) {
-	this.usrVAbilAmbEnteConvenzId = usrVAbilAmbEnteConvenzId;
+        this.usrVAbilAmbEnteConvenzId = usrVAbilAmbEnteConvenzId;
     }
 }

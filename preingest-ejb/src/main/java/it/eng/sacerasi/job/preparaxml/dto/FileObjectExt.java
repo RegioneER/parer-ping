@@ -36,83 +36,83 @@ public class FileObjectExt implements Serializable {
     String cdKeyFile;
 
     public PigFileObject getRifPigFileObject() {
-	return rifPigFileObject;
+        return rifPigFileObject;
     }
 
     public void setRifPigFileObject(PigFileObject rifPigFileObject) {
-	this.rifPigFileObject = rifPigFileObject;
+        this.rifPigFileObject = rifPigFileObject;
     }
 
     public String getUrnFile() {
-	return urnFile;
+        return urnFile;
     }
 
     public void setUrnFile(String urnFile) {
-	this.urnFile = urnFile;
+        this.urnFile = urnFile;
     }
 
     public String getTipoHashFile() {
-	return tipoHashFile;
+        return tipoHashFile;
     }
 
     public void setTipoHashFile(String tipoHashFile) {
-	this.tipoHashFile = tipoHashFile;
+        this.tipoHashFile = tipoHashFile;
     }
 
     public String getEncodingFile() {
-	return encodingFile;
+        return encodingFile;
     }
 
     public void setEncodingFile(String encodingFile) {
-	this.encodingFile = encodingFile;
+        this.encodingFile = encodingFile;
     }
 
     public String getHashFile() {
-	return hashFile;
+        return hashFile;
     }
 
     public void setHashFile(String hashFile) {
-	this.hashFile = hashFile;
+        this.hashFile = hashFile;
     }
 
     public String getUrnFileRel() {
-	return urnFileRel;
+        return urnFileRel;
     }
 
     public void setUrnFileRel(String urnFileRel) {
-	this.urnFileRel = urnFileRel;
+        this.urnFileRel = urnFileRel;
     }
 
     // MEV 34843
     public Long getIdBackend() {
-	return idBackend;
+        return idBackend;
     }
 
     public void setIdBackend(Long idBackend) {
-	this.idBackend = idBackend;
+        this.idBackend = idBackend;
     }
 
     public String getNmOsTenant() {
-	return nmOsTenant;
+        return nmOsTenant;
     }
 
     public void setNmOsTenant(String nmOsTenant) {
-	this.nmOsTenant = nmOsTenant;
+        this.nmOsTenant = nmOsTenant;
     }
 
     public String getNmBucket() {
-	return nmBucket;
+        return nmBucket;
     }
 
     public void setNmBucket(String nmBucket) {
-	this.nmBucket = nmBucket;
+        this.nmBucket = nmBucket;
     }
 
     public String getCdKeyFile() {
-	return cdKeyFile;
+        return cdKeyFile;
     }
 
     public void setCdKeyFile(String cdKeyFile) {
-	this.cdKeyFile = cdKeyFile;
+        this.cdKeyFile = cdKeyFile;
     }
 }

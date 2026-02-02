@@ -43,25 +43,25 @@ public class IamAbilOrganizTableDescriptor extends TableDescriptor {
     private static Map<String, ColumnDescriptor> map = new LinkedHashMap<String, ColumnDescriptor>();
 
     static {
-	map.put(COL_ID_ABIL_ORGANIZ,
-		new ColumnDescriptor(COL_ID_ABIL_ORGANIZ, Types.DECIMAL, 22, true));
-	map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, false));
-	map.put(COL_ID_ORGANIZ_APPLIC,
-		new ColumnDescriptor(COL_ID_ORGANIZ_APPLIC, Types.DECIMAL, 22, false));
-	map.put(COL_FL_ORGANIZ_DEFAULT,
-		new ColumnDescriptor(COL_FL_ORGANIZ_DEFAULT, Types.VARCHAR, 1, false));
+        map.put(COL_ID_ABIL_ORGANIZ,
+                new ColumnDescriptor(COL_ID_ABIL_ORGANIZ, Types.DECIMAL, 22, true));
+        map.put(COL_ID_USER_IAM, new ColumnDescriptor(COL_ID_USER_IAM, Types.DECIMAL, 22, false));
+        map.put(COL_ID_ORGANIZ_APPLIC,
+                new ColumnDescriptor(COL_ID_ORGANIZ_APPLIC, Types.DECIMAL, 22, false));
+        map.put(COL_FL_ORGANIZ_DEFAULT,
+                new ColumnDescriptor(COL_FL_ORGANIZ_DEFAULT, Types.VARCHAR, 1, false));
     }
 
     public Map<String, ColumnDescriptor> getColumnMap() {
-	return map;
+        return map;
     }
 
     public String getTableName() {
-	return TABLE_NAME;
+        return TABLE_NAME;
     }
 
     public String getStatement() {
-	return SELECT;
+        return SELECT;
     }
 
 }

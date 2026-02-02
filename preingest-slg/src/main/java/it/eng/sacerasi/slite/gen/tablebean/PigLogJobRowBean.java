@@ -36,103 +36,103 @@ public class PigLogJobRowBean extends BaseRow implements JEEBaseRowInterface {
     public static PigLogJobTableDescriptor TABLE_DESCRIPTOR = new PigLogJobTableDescriptor();
 
     public PigLogJobRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     // getter e setter
     public BigDecimal getIdLogJob() {
-	return getBigDecimal("id_log_job");
+        return getBigDecimal("id_log_job");
     }
 
     public void setIdLogJob(BigDecimal idLogJob) {
-	setObject("id_log_job", idLogJob);
+        setObject("id_log_job", idLogJob);
     }
 
     public String getNmJob() {
-	return getString("nm_job");
+        return getString("nm_job");
     }
 
     public void setNmJob(String nmJob) {
-	setObject("nm_job", nmJob);
+        setObject("nm_job", nmJob);
     }
 
     public String getTiRegLogJob() {
-	return getString("ti_reg_log_job");
+        return getString("ti_reg_log_job");
     }
 
     public void setTiRegLogJob(String tiRegLogJob) {
-	setObject("ti_reg_log_job", tiRegLogJob);
+        setObject("ti_reg_log_job", tiRegLogJob);
     }
 
     public Timestamp getDtRegLogJob() {
-	return getTimestamp("dt_reg_log_job");
+        return getTimestamp("dt_reg_log_job");
     }
 
     public void setDtRegLogJob(Timestamp dtRegLogJob) {
-	setObject("dt_reg_log_job", dtRegLogJob);
+        setObject("dt_reg_log_job", dtRegLogJob);
     }
 
     public String getDlMsgErr() {
-	return getString("dl_msg_err");
+        return getString("dl_msg_err");
     }
 
     public void setDlMsgErr(String dlMsgErr) {
-	setObject("dl_msg_err", dlMsgErr);
+        setObject("dl_msg_err", dlMsgErr);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	PigLogJob entity = (PigLogJob) obj;
+        PigLogJob entity = (PigLogJob) obj;
 
-	this.setIdLogJob(new BigDecimal(entity.getIdLogJob()));
-	this.setNmJob(entity.getNmJob());
-	this.setTiRegLogJob(entity.getTiRegLogJob());
-	if (entity.getDtRegLogJob() != null) {
-	    this.setDtRegLogJob(new Timestamp(entity.getDtRegLogJob().getTime()));
-	}
-	this.setDlMsgErr(entity.getDlMsgErr());
+        this.setIdLogJob(new BigDecimal(entity.getIdLogJob()));
+        this.setNmJob(entity.getNmJob());
+        this.setTiRegLogJob(entity.getTiRegLogJob());
+        if (entity.getDtRegLogJob() != null) {
+            this.setDtRegLogJob(new Timestamp(entity.getDtRegLogJob().getTime()));
+        }
+        this.setDlMsgErr(entity.getDlMsgErr());
     }
 
     @Override
     public PigLogJob rowBeanToEntity() {
-	PigLogJob entity = new PigLogJob();
-	if (this.getIdLogJob() != null) {
-	    entity.setIdLogJob(this.getIdLogJob().longValue());
-	}
-	entity.setNmJob(this.getNmJob());
-	entity.setTiRegLogJob(this.getTiRegLogJob());
-	entity.setDtRegLogJob(this.getDtRegLogJob());
-	entity.setDlMsgErr(this.getDlMsgErr());
-	return entity;
+        PigLogJob entity = new PigLogJob();
+        if (this.getIdLogJob() != null) {
+            entity.setIdLogJob(this.getIdLogJob().longValue());
+        }
+        entity.setNmJob(this.getNmJob());
+        entity.setTiRegLogJob(this.getTiRegLogJob());
+        entity.setDtRegLogJob(this.getDtRegLogJob());
+        entity.setDlMsgErr(this.getDlMsgErr());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

@@ -40,14 +40,14 @@ public class RichiestaSopClassListHelperTest {
 
     @Deployment
     public static Archive<?> createTestArchive() {
-	return ArquillianUtils.createPingJar(RichiestaSopClassListHelper.class).addPackages(true,
-		"it.eng.sacerasi.ws.dto");
+        return ArquillianUtils.createPingJar(RichiestaSopClassListHelper.class).addPackages(true,
+                "it.eng.sacerasi.ws.dto");
     }
 
     @Test
     void getSopClassListByIdVersatore_queryIsOk() {
-	Long idVersatore = aLong();
-	helper.getSopClassListByIdVersatore(idVersatore);
-	assertTrue(true);
+        Long idVersatore = aLong();
+        helper.getSopClassListByIdVersatore(idVersatore);
+        assertTrue(true);
     }
 }

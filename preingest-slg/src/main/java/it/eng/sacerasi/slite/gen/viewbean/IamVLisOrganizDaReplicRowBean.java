@@ -37,191 +37,191 @@ public class IamVLisOrganizDaReplicRowBean extends BaseRow implements JEEBaseRow
     public static IamVLisOrganizDaReplicTableDescriptor TABLE_DESCRIPTOR = new IamVLisOrganizDaReplicTableDescriptor();
 
     public IamVLisOrganizDaReplicRowBean() {
-	super();
+        super();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     public BigDecimal getIdOrganizDaReplic() {
-	return getBigDecimal("id_organiz_da_replic");
+        return getBigDecimal("id_organiz_da_replic");
     }
 
     public void setIdOrganizDaReplic(BigDecimal idOrganizDaReplic) {
-	setObject("id_organiz_da_replic", idOrganizDaReplic);
+        setObject("id_organiz_da_replic", idOrganizDaReplic);
     }
 
     public BigDecimal getIdOrganizApplic() {
-	return getBigDecimal("id_organiz_applic");
+        return getBigDecimal("id_organiz_applic");
     }
 
     public void setIdOrganizApplic(BigDecimal idOrganizApplic) {
-	setObject("id_organiz_applic", idOrganizApplic);
+        setObject("id_organiz_applic", idOrganizApplic);
     }
 
     public String getNmOrganiz() {
-	return getString("nm_organiz");
+        return getString("nm_organiz");
     }
 
     public void setNmOrganiz(String nmOrganiz) {
-	setObject("nm_organiz", nmOrganiz);
+        setObject("nm_organiz", nmOrganiz);
     }
 
     public String getTiOperReplic() {
-	return getString("ti_oper_replic");
+        return getString("ti_oper_replic");
     }
 
     public void setTiOperReplic(String tiOperReplic) {
-	setObject("ti_oper_replic", tiOperReplic);
+        setObject("ti_oper_replic", tiOperReplic);
     }
 
     public String getTiStatoReplic() {
-	return getString("ti_stato_replic");
+        return getString("ti_stato_replic");
     }
 
     public void setTiStatoReplic(String tiStatoReplic) {
-	setObject("ti_stato_replic", tiStatoReplic);
+        setObject("ti_stato_replic", tiStatoReplic);
     }
 
     public Timestamp getDtLogOrganizDaReplic() {
-	return getTimestamp("dt_log_organiz_da_replic");
+        return getTimestamp("dt_log_organiz_da_replic");
     }
 
     public void setDtLogOrganizDaReplic(Timestamp dtLogOrganizDaReplic) {
-	setObject("dt_log_organiz_da_replic", dtLogOrganizDaReplic);
+        setObject("dt_log_organiz_da_replic", dtLogOrganizDaReplic);
     }
 
     public String getCdErr() {
-	return getString("cd_err");
+        return getString("cd_err");
     }
 
     public void setCdErr(String cdErr) {
-	setObject("cd_err", cdErr);
+        setObject("cd_err", cdErr);
     }
 
     public String getDsMsgErr() {
-	return getString("ds_msg_err");
+        return getString("ds_msg_err");
     }
 
     public void setDsMsgErr(String dsMsgErr) {
-	setObject("ds_msg_err", dsMsgErr);
+        setObject("ds_msg_err", dsMsgErr);
     }
 
     public Timestamp getDtErr() {
-	return getTimestamp("dt_err");
+        return getTimestamp("dt_err");
     }
 
     public void setDtErr(Timestamp dtErr) {
-	setObject("dt_err", dtErr);
+        setObject("dt_err", dtErr);
     }
 
     public String getDsOrdOrganiz() {
-	return getString("ds_ord_organiz");
+        return getString("ds_ord_organiz");
     }
 
     public void setDsOrdOrganiz(String dsOrdOrganiz) {
-	setObject("ds_ord_organiz", dsOrdOrganiz);
+        setObject("ds_ord_organiz", dsOrdOrganiz);
     }
 
     public BigDecimal getIdAmbiente() {
-	return getBigDecimal("id_ambiente");
+        return getBigDecimal("id_ambiente");
     }
 
     public void setIdAmbiente(BigDecimal idAmbiente) {
-	setObject("id_ambiente", idAmbiente);
+        setObject("id_ambiente", idAmbiente);
     }
 
     public String getNmAmbiente() {
-	return getString("nm_ambiente");
+        return getString("nm_ambiente");
     }
 
     public void setNmAmbiente(String nmAmbiente) {
-	setObject("nm_ambiente", nmAmbiente);
+        setObject("nm_ambiente", nmAmbiente);
     }
 
     public BigDecimal getIdVers() {
-	return getBigDecimal("id_vers");
+        return getBigDecimal("id_vers");
     }
 
     public void setIdVers(BigDecimal idVers) {
-	setObject("id_vers", idVers);
+        setObject("id_vers", idVers);
     }
 
     public String getNmVers() {
-	return getString("nm_vers");
+        return getString("nm_vers");
     }
 
     public void setNmVers(String nmVers) {
-	setObject("nm_vers", nmVers);
+        setObject("nm_vers", nmVers);
     }
 
     @Override
     public void entityToRowBean(Object obj) {
-	IamVLisOrganizDaReplic entity = (IamVLisOrganizDaReplic) obj;
-	this.setIdOrganizDaReplic(entity.getIdOrganizDaReplic());
-	this.setIdOrganizApplic(entity.getIdOrganizApplic());
-	this.setNmOrganiz(entity.getNmOrganiz());
-	this.setTiOperReplic(entity.getTiOperReplic());
-	this.setTiStatoReplic(entity.getTiStatoReplic());
-	if (entity.getDtLogOrganizDaReplic() != null) {
-	    this.setDtLogOrganizDaReplic(new Timestamp(entity.getDtLogOrganizDaReplic().getTime()));
-	}
-	this.setCdErr(entity.getCdErr());
-	this.setDsMsgErr(entity.getDsMsgErr());
-	if (entity.getDtErr() != null) {
-	    this.setDtErr(new Timestamp(entity.getDtErr().getTime()));
-	}
-	this.setDsOrdOrganiz(entity.getDsOrdOrganiz());
-	this.setIdAmbiente(entity.getIdAmbiente());
-	this.setNmAmbiente(entity.getNmAmbiente());
-	this.setIdVers(entity.getIdVers());
-	this.setNmVers(entity.getNmVers());
+        IamVLisOrganizDaReplic entity = (IamVLisOrganizDaReplic) obj;
+        this.setIdOrganizDaReplic(entity.getIdOrganizDaReplic());
+        this.setIdOrganizApplic(entity.getIdOrganizApplic());
+        this.setNmOrganiz(entity.getNmOrganiz());
+        this.setTiOperReplic(entity.getTiOperReplic());
+        this.setTiStatoReplic(entity.getTiStatoReplic());
+        if (entity.getDtLogOrganizDaReplic() != null) {
+            this.setDtLogOrganizDaReplic(new Timestamp(entity.getDtLogOrganizDaReplic().getTime()));
+        }
+        this.setCdErr(entity.getCdErr());
+        this.setDsMsgErr(entity.getDsMsgErr());
+        if (entity.getDtErr() != null) {
+            this.setDtErr(new Timestamp(entity.getDtErr().getTime()));
+        }
+        this.setDsOrdOrganiz(entity.getDsOrdOrganiz());
+        this.setIdAmbiente(entity.getIdAmbiente());
+        this.setNmAmbiente(entity.getNmAmbiente());
+        this.setIdVers(entity.getIdVers());
+        this.setNmVers(entity.getNmVers());
     }
 
     @Override
     public IamVLisOrganizDaReplic rowBeanToEntity() {
-	IamVLisOrganizDaReplic entity = new IamVLisOrganizDaReplic();
-	entity.setIdOrganizDaReplic(this.getIdOrganizDaReplic());
-	entity.setIdOrganizApplic(this.getIdOrganizApplic());
-	entity.setNmOrganiz(this.getNmOrganiz());
-	entity.setTiOperReplic(this.getTiOperReplic());
-	entity.setTiStatoReplic(this.getTiStatoReplic());
-	entity.setDtLogOrganizDaReplic(this.getDtLogOrganizDaReplic());
-	entity.setCdErr(this.getCdErr());
-	entity.setDsMsgErr(this.getDsMsgErr());
-	entity.setDtErr(this.getDtErr());
-	entity.setDsOrdOrganiz(this.getDsOrdOrganiz());
-	entity.setIdAmbiente(this.getIdAmbiente());
-	entity.setNmAmbiente(this.getNmAmbiente());
-	entity.setIdVers(this.getIdVers());
-	entity.setNmVers(this.getNmVers());
-	return entity;
+        IamVLisOrganizDaReplic entity = new IamVLisOrganizDaReplic();
+        entity.setIdOrganizDaReplic(this.getIdOrganizDaReplic());
+        entity.setIdOrganizApplic(this.getIdOrganizApplic());
+        entity.setNmOrganiz(this.getNmOrganiz());
+        entity.setTiOperReplic(this.getTiOperReplic());
+        entity.setTiStatoReplic(this.getTiStatoReplic());
+        entity.setDtLogOrganizDaReplic(this.getDtLogOrganizDaReplic());
+        entity.setCdErr(this.getCdErr());
+        entity.setDsMsgErr(this.getDsMsgErr());
+        entity.setDtErr(this.getDtErr());
+        entity.setDsOrdOrganiz(this.getDsOrdOrganiz());
+        entity.setIdAmbiente(this.getIdAmbiente());
+        entity.setNmAmbiente(this.getNmAmbiente());
+        entity.setIdVers(this.getIdVers());
+        entity.setNmVers(this.getNmVers());
+        return entity;
     }
 
     // gestione della paginazione
     public void setRownum(Integer rownum) {
-	setObject("rownum", rownum);
+        setObject("rownum", rownum);
     }
 
     public Integer getRownum() {
-	return Integer.parseInt(getObject("rownum").toString());
+        return Integer.parseInt(getObject("rownum").toString());
     }
 
     public void setRnum(Integer rnum) {
-	setObject("rnum", rnum);
+        setObject("rnum", rnum);
     }
 
     public Integer getRnum() {
-	return Integer.parseInt(getObject("rnum").toString());
+        return Integer.parseInt(getObject("rnum").toString());
     }
 
     public void setNumrecords(Integer numRecords) {
-	setObject("numrecords", numRecords);
+        setObject("numrecords", numRecords);
     }
 
     public Integer getNumrecords() {
-	return Integer.parseInt(getObject("numrecords").toString());
+        return Integer.parseInt(getObject("numrecords").toString());
     }
 
 }

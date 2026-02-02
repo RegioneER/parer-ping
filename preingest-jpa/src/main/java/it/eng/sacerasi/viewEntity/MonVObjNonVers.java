@@ -40,39 +40,39 @@ public class MonVObjNonVers implements Serializable {
 
     @Column(name = "FL_NON_RISOLUB", columnDefinition = "char")
     public String getFlNonRisolub() {
-	return this.flNonRisolub;
+        return this.flNonRisolub;
     }
 
     public void setFlNonRisolub(String flNonRisolub) {
-	this.flNonRisolub = flNonRisolub;
+        this.flNonRisolub = flNonRisolub;
     }
 
     @Column(name = "FL_VERIF", columnDefinition = "char")
     public String getFlVerif() {
-	return this.flVerif;
+        return this.flVerif;
     }
 
     public void setFlVerif(String flVerif) {
-	this.flVerif = flVerif;
+        this.flVerif = flVerif;
     }
 
     @Column(name = "NM_TIPO_OBJECT")
     public String getNmTipoObject() {
-	return this.nmTipoObject;
+        return this.nmTipoObject;
     }
 
     public void setNmTipoObject(String nmTipoObject) {
-	this.nmTipoObject = nmTipoObject;
+        this.nmTipoObject = nmTipoObject;
     }
 
     private MonVObjNonVersId monVObjNonVersId;
 
     @EmbeddedId()
     public MonVObjNonVersId getMonVObjNonVersId() {
-	return monVObjNonVersId;
+        return monVObjNonVersId;
     }
 
     public void setMonVObjNonVersId(MonVObjNonVersId monVObjNonVersId) {
-	this.monVObjNonVersId = monVObjNonVersId;
+        this.monVObjNonVersId = monVObjNonVersId;
     }
 }

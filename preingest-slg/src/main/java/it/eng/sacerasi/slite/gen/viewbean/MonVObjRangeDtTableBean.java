@@ -38,19 +38,19 @@ public class MonVObjRangeDtTableBean extends AbstractBaseTable<MonVObjRangeDtRow
     public static MonVObjRangeDtTableDescriptor TABLE_DESCRIPTOR = new MonVObjRangeDtTableDescriptor();
 
     public MonVObjRangeDtTableBean() {
-	super();
+        super();
     }
 
     protected MonVObjRangeDtRowBean createRow() {
-	return new MonVObjRangeDtRowBean();
+        return new MonVObjRangeDtRowBean();
     }
 
     public TableDescriptor getTableDescriptor() {
-	return TABLE_DESCRIPTOR;
+        return TABLE_DESCRIPTOR;
     }
 
     @Deprecated
     public Iterator<MonVObjRangeDtRowBean> getRowsIterator() {
-	return iterator();
+        return iterator();
     }
 }

@@ -37,11 +37,11 @@ public class PigVSuList implements Serializable {
     @Id
     @Column(name = "NM_TIPO_STRUMENTO_URBANISTICO")
     public String getNmTipoStrumentoUrbanistico() {
-	return nmTipoStrumentoUrbanistico;
+        return nmTipoStrumentoUrbanistico;
     }
 
     public void setNmTipoStrumentoUrbanistico(String nmTipoStrumentoUrbanistico) {
-	this.nmTipoStrumentoUrbanistico = nmTipoStrumentoUrbanistico;
+        this.nmTipoStrumentoUrbanistico = nmTipoStrumentoUrbanistico;
     }
 
 }

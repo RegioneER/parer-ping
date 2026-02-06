@@ -10,7 +10,6 @@
  * have received a copy of the GNU Affero General Public License along with this program. If not,
  * see <https://www.gnu.org/licenses/>.
  */
-
 package it.eng.sacerasi.web.action;
 
 import java.io.BufferedOutputStream;
@@ -58,6 +57,7 @@ import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigStrumUrbAtto;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
+import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.job.verificaDocumentiSU.ejb.VerificaDocumentiSUEjb;
 import it.eng.sacerasi.messages.MessaggiHelper;
@@ -89,7 +89,6 @@ import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.SuppressLogging;
 
 /**
- *
  * @author MIacolucci
  */
 public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractAction {
@@ -372,7 +371,12 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         // MAC#25781 - Correggere la visualizzazione del pulsante recupera errori su strumenti
         // urbanistici
         if (dto.getTiStato().equals(STATO_ERRORE)) {
-            getForm().getDettaglioButtonList().getRecuperaErrori().setEditMode();
+            // MEV 39529
+            // Codice inibito in attesa di chiarire il comportamento desiderato.
+            // getForm().getDettaglioButtonList().getRecuperaErrori()
+            // .setReadonly(strumentiUrbanisticiHelper
+            // .esisteOggettoGeneratoInChiusoErrVers(dto.getCdKey(), dto.getIdVers()));
+            getForm().getDettaglioButtonList().getRecuperaErrori().setReadonly(false);
         } else {
             getForm().getDettaglioButtonList().getRecuperaErrori().setViewMode();
         }
@@ -1208,7 +1212,12 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                     .getDatiGeneraliOutput().getId_strumenti_urbanistici_out() != null) {
                 BigDecimal idSu = getForm().getDatiGeneraliOutput()
                         .getId_strumenti_urbanistici_out().parse();
-                Date dataStato = strumentiUrbanisticiEjb.recuperoErroreSU(idSu, tiNuovoStato);
+                Date dataStato;
+                try {
+                    dataStato = strumentiUrbanisticiEjb.recuperoErroreSU(idSu, tiNuovoStato);
+                } catch (ParerUserError | ParerInternalError ex) {
+                    throw new EMFError(EMFError.ERROR, "Errore: " + ex.getMessage());
+                }
                 getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(tiNuovoStato);
                 getForm().getDatiGeneraliOutput().getDt_stato_out()
                         .setValue(DateUtil.formatDateWithSlashAndTime(dataStato));

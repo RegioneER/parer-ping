@@ -464,7 +464,7 @@ public class PayloadManagerEjb {
      */
     public void definisciStatoOggettoPadre(Long idOggettoPadre) throws LockingFailedException,
             NoTransactionAssociatedException, DirectoryNotEmptyException, ResourceException,
-            InterruptedException, FileUnderUseException, InsufficientPermissionOnFileException {
+            FileUnderUseException, InsufficientPermissionOnFileException {
         if (idOggettoPadre != null) {
             codaHelper.getEntityManager().flush();
             // assume il lock sull'oggetto padre
@@ -499,9 +499,15 @@ public class PayloadManagerEjb {
                                             Constants.TipoGestioneOggettiFigli.AUTOMATICA.name())) {
                                 for (PigObjectTrasf objectFiglio : oggettoPadre
                                         .getPigObjectTrasfs()) {
-                                    deleteDir("", rootDirTrasf,
-                                            objectFiglio.getPigVer().getDsPathTrasf(),
-                                            objectFiglio.getDsPath());
+                                    try {
+                                        deleteDir("", rootDirTrasf,
+                                                objectFiglio.getPigVer().getDsPathTrasf(),
+                                                objectFiglio.getDsPath());
+                                    } catch (InterruptedException e) {
+                                        log.error("Thread interrotto in cancellazione cartella: {}",
+                                                e.getMessage());
+                                        Thread.currentThread().interrupt();
+                                    }
                                 }
                             }
                             /*
@@ -557,9 +563,15 @@ public class PayloadManagerEjb {
                                             Constants.TipoGestioneOggettiFigli.AUTOMATICA.name())) {
                                 for (PigObjectTrasf objectFiglio : oggettoPadre
                                         .getPigObjectTrasfs()) {
-                                    deleteDir("", rootDirTrasf,
-                                            objectFiglio.getPigVer().getDsPathTrasf(),
-                                            objectFiglio.getDsPath());
+                                    try {
+                                        deleteDir("", rootDirTrasf,
+                                                objectFiglio.getPigVer().getDsPathTrasf(),
+                                                objectFiglio.getDsPath());
+                                    } catch (InterruptedException e) {
+                                        log.error("Thread interrotto in cancellazione cartella: {}",
+                                                e.getMessage());
+                                        Thread.currentThread().interrupt();
+                                    }
                                 }
                             }
                             // Punto 6) Elimina la cartella dell'oggetto padre
@@ -591,9 +603,15 @@ public class PayloadManagerEjb {
                                             Constants.TipoGestioneOggettiFigli.AUTOMATICA.name())) {
                                 for (PigObjectTrasf objectFiglio : oggettoPadre
                                         .getPigObjectTrasfs()) {
-                                    deleteDir("", rootDirTrasf,
-                                            objectFiglio.getPigVer().getDsPathTrasf(),
-                                            objectFiglio.getDsPath());
+                                    try {
+                                        deleteDir("", rootDirTrasf,
+                                                objectFiglio.getPigVer().getDsPathTrasf(),
+                                                objectFiglio.getDsPath());
+                                    } catch (InterruptedException e) {
+                                        log.error("Thread interrotto in cancellazione cartella: {}",
+                                                e.getMessage());
+                                        Thread.currentThread().interrupt();
+                                    }
                                 }
                             }
                             // Punto 7) Elimina la cartella dell'oggetto padre

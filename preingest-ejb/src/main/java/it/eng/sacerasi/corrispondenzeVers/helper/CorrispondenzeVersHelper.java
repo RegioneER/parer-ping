@@ -33,7 +33,7 @@ import it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping;
  *
  * @author Bonora_L
  */
-@Stateless
+@Stateless(mappedName = "CorrispondenzeVersHelper")
 @LocalBean
 public class CorrispondenzeVersHelper extends GenericHelper {
 

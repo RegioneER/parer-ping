@@ -122,7 +122,7 @@ import it.eng.spagoLite.db.base.table.BaseTable;
  * @author Gilioli_P
  */
 @SuppressWarnings("unchecked")
-@Stateless
+@Stateless(mappedName = "MonitoraggioHelper")
 @LocalBean
 public class MonitoraggioHelper extends GenericHelper {
 

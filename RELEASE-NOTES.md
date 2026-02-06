@@ -1,21 +1,18 @@
-## 8.3.0 (20-01-2026)
+## 8.4.0 (06-02-2026)
 
-### Bugfix: 5
-- [#39346](https://parermine.regione.emilia-romagna.it/issues/39346) Correzione stato oggetto tipo contenuto fascicolo chiuso OK per chiave duplicata
-- [#39344](https://parermine.regione.emilia-romagna.it/issues/39344) Correzioni varie a seguito di versamento da fascicolo
-- [#35185](https://parermine.regione.emilia-romagna.it/issues/35185) Gestione dell'errore nella generazione dell'archivio dello strumento urbanistico
-- [#34787](https://parermine.regione.emilia-romagna.it/issues/34787) Gestione dell'errore nella generazione dell'archivio del Progetto
-- [#33824](https://parermine.regione.emilia-romagna.it/issues/33824) Correzione dello stato in esecuzione in gestione job
+### Bugfix: 6
+- [#39983](https://parermine.regione.emilia-romagna.it/issues/39983) Correzione della concatenazione parametri per versatore per cui si generano oggetti
+- [#39906](https://parermine.regione.emilia-romagna.it/issues/39906) Correzione in fase di inserimento di un nuovo tipo oggetto – campo Tipo contenuto
+- [#39897](https://parermine.regione.emilia-romagna.it/issues/39897) Correzione della gestione degli stati in lista stati strumento urbanistico e sisma
+- [#39632](https://parermine.regione.emilia-romagna.it/issues/39632) Correzione dello stato attivazione e in esecuzione in gestione job
+- [#38432](https://parermine.regione.emilia-romagna.it/issues/38432) Correzione del problema di lentezza nella configurazione dei parametri della trasformazione sul tipo oggetto
+- [#38424](https://parermine.regione.emilia-romagna.it/issues/38424) Correzione del problema di lentezza nella configurazione dei multiversatori
 
-### Novità: 11
-- [#39397](https://parermine.regione.emilia-romagna.it/issues/39397) Aggiornamento Plugin JS Plupload
-- [#39388](https://parermine.regione.emilia-romagna.it/issues/39388) Patch di sicurezza per interventi legati a CVE
-- [#38477](https://parermine.regione.emilia-romagna.it/issues/38477) Software improvements
-- [#38422](https://parermine.regione.emilia-romagna.it/issues/38422) Adattamento applicazione per inclusione nuovo framework modificato per DPI
-- [#38415](https://parermine.regione.emilia-romagna.it/issues/38415) Rimozione funzionalità Gestione job legacy
-- [#37686](https://parermine.regione.emilia-romagna.it/issues/37686) Gestione stato SU e SISMA IN_VERSAMENTO in caso di recupero errore
-- [#36400](https://parermine.regione.emilia-romagna.it/issues/36400) Modifica dimensione campo tabella PIG_VALORE_PARAM_TRASF
-- [#35357](https://parermine.regione.emilia-romagna.it/issues/35357) Modifica al producer_coda_vers per settare come verificato gli oggetti ZIP_CON_XML_SACER messi in recupero automatico
-- [#35121](https://parermine.regione.emilia-romagna.it/issues/35121) Migliore alla pagina Monitoraggio server trasformazioni
-- [#35120](https://parermine.regione.emilia-romagna.it/issues/35120) Migliore alla gestione degli errori di trasformazione dovuti a problemi di comunicazione con kettle
-- [#34693](https://parermine.regione.emilia-romagna.it/issues/34693) Eliminazione del file di oggetto annullato per oggetti ZIP NO/CON XML con salvataggio su OS
+### Novità: 7
+- [#39968](https://parermine.regione.emilia-romagna.it/issues/39968) Aumento a 4000 caratteri del campo DL_ERR_SACER 
+- [#39533](https://parermine.regione.emilia-romagna.it/issues/39533) Introduzione scope type "request" gestione controller web Spring
+- [#39433](https://parermine.regione.emilia-romagna.it/issues/39433) Modifica alla ricerca oggetto: filtro per trasformazione
+- [#39425](https://parermine.regione.emilia-romagna.it/issues/39425) Modifica alla funzione Set errore trasformazione quando la trasformazione è in corso
+- [#39384](https://parermine.regione.emilia-romagna.it/issues/39384) SISMA - Scarico Rdv soggetti attuatori pubblici
+- [#35161](https://parermine.regione.emilia-romagna.it/issues/35161) Introduzione del recupera errori in SU che annulla la sessione dell'oggetto in PING
+- [#35160](https://parermine.regione.emilia-romagna.it/issues/35160) Introduzione del recupera errori in sisma che annulla la sessione dell'oggetto in PING

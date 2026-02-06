@@ -253,6 +253,14 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         setObject("ti_stato_calcolato", tiStatoCalcolato);
     }
 
+    public BigDecimal getIdTrasformazione() {
+        return getBigDecimal("id_trasformazione");
+    }
+
+    public void setIdTrasformazione(BigDecimal idTrasformazione) {
+        setObject("id_trasformazione", idTrasformazione);
+    }
+
     @Override
     public void entityToRowBean(Object obj) {
         MonVLisStatoVers entity = (MonVLisStatoVers) obj;
@@ -286,6 +294,7 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         this.setTiContenutoOggetto(entity.getTiContenutoOggetto());
         this.setTiStatoVisaulizzato(entity.getTiStatoVisualizzato());
         this.setTiStatoCalcolato(entity.getTiStatoCalcolato());
+        this.setIdTrasformazione(entity.getIdTrasformazione());
     }
 
     @Override
@@ -318,6 +327,7 @@ public class MonVLisStatoVersRowBean extends BaseRow implements JEEBaseRowInterf
         entity.setTiContenutoOggetto(this.getTiContenutoOggetto());
         entity.setTiStatoVisualizzato(this.getTiStatoVisualizzato());
         entity.setTiStatoCalcolato(this.getTiStatoCalcolato());
+        entity.setIdTrasformazione(this.getIdTrasformazione());
         return entity;
     }
 

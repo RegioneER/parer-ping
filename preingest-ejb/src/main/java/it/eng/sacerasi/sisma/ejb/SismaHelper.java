@@ -542,14 +542,14 @@ public class SismaHelper extends GenericHelper {
     public PigSisma aggiornaStato(PigSisma su, PigSisma.TiStato tiStato) {
         PigSisma pigSisma = getEntityManager().find(PigSisma.class, su.getIdSisma());
 
-        // MEV 37686
-        pigSisma.setTiStato(tiStato);
-        pigSisma.setDtStato(new Date());
-
         // MEV 30936
         creaStatoStorico(pigSisma, pigSisma.getTiStato().name(), pigSisma.getDtStato(),
                 pigSisma.getCdErr() != null ? pigSisma.getCdErr() + " - " + pigSisma.getDsErr()
                         : "");
+
+        // MEV 37686
+        pigSisma.setTiStato(tiStato);
+        pigSisma.setDtStato(new Date());
 
         return pigSisma;
     }
@@ -953,6 +953,16 @@ public class SismaHelper extends GenericHelper {
         pigSismaStoricoStati.setTsRegStato(dtRegStato);
         pigSismaStoricoStati.setDescrizione(descrizione);
         getEntityManager().persist(pigSismaStoricoStati);
+    }
+
+    // MEV 39384
+    public boolean existsStatoStorico(BigDecimal idSisma, String stato) {
+        Query query = getEntityManager().createQuery(
+                "SELECT CASE WHEN (count(s) > 0) THEN true ELSE false END FROM PigSismaStoricoStati s WHERE s.pigSisma.idSisma = :idSisma AND s.tiStato = :stato",
+                Boolean.class);
+        query.setParameter("idSisma", HibernateUtils.longFrom(idSisma));
+        query.setParameter("stato", stato);
+        return (boolean) query.getSingleResult();
     }
 
     // MEV 34843

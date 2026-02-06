@@ -263,6 +263,7 @@ public class PigTipoObjectRowBean extends BaseRow implements JEEBaseRowInterface
         }
         entity.setDsRegExpCdVers(this.getDsRegExpCdVers());
         entity.setFlNoVisibVersOgg(this.getFlNoVisibVersOgg());
+        entity.setTiContenuto(this.getTiContenuto());
         return entity;
     }
 

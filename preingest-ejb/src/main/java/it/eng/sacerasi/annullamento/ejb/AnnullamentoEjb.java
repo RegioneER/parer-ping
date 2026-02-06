@@ -716,10 +716,6 @@ public class AnnullamentoEjb {
                         try {
                             // MEV#14100
                             payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt(); // Ripristina lo stato di
-                            // interruzione
-                            throw new ParerUserError(ex.getMessage());
                         } catch (Exception ex) {
                             throw new ParerUserError(ex.getMessage());
                         }
@@ -990,9 +986,6 @@ public class AnnullamentoEjb {
         if (oggPadre != null) {
             try {
                 payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt(); // Ripristina lo stato di interruzione
-                throw new ParerUserError(ex.getMessage());
             } catch (Exception ex) {
                 throw new ParerUserError(ex.getMessage());
             }

@@ -12,6 +12,8 @@
  */
 package it.eng.sacerasi.web.ejb;
 
+import it.eng.parer.kettle.model.AbstractEsito;
+import it.eng.parer.kettle.model.EsitoStatusTrasformazione;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -78,12 +80,14 @@ import it.eng.sacerasi.viewEntity.MonVVisUnitaDocSessione;
 import it.eng.sacerasi.viewEntity.MonVVisVersFallito;
 import it.eng.sacerasi.viewEntity.PigVLisStrutVersSacer;
 import it.eng.sacerasi.viewEntity.UsrVAbilStrutSacerXping;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.helper.MonitoraggioHelper;
 import it.eng.sacerasi.web.util.Transform;
 import it.eng.sacerasi.ws.util.Util;
 import it.eng.sacerasi.xml.unitaDocumentaria.VersatoreType;
 import it.eng.spagoCore.error.EMFError;
+import org.xadisk.filesystem.exceptions.*;
+
+import javax.ejb.*;
 
 /**
  *
@@ -97,7 +101,7 @@ public class MonitoraggioEjb {
     SessionContext ctx;
     @Resource(mappedName = "jca/xadiskLocal")
     private XADiskConnectionFactory xadCf;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/MonitoraggioHelper")
+    @EJB
     private MonitoraggioHelper monitoraggioHelper;
     @EJB
     private CommonDb commonDb;
@@ -106,12 +110,11 @@ public class MonitoraggioEjb {
     @EJB
     private PayloadManagerEjb payloadManagerHelper;
     @EJB
-    CorrispondenzeVersHelper corVersHelper;
+    private CorrispondenzeVersHelper corVersHelper;
+    @EJB
+    private SalvataggioBackendHelper salvataggioBackendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/KettleWsClient")
     private KettleWsClient kwsClient;
-
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
 
     private static final Logger log = LoggerFactory.getLogger(MonitoraggioEjb.class);
 
@@ -214,8 +217,13 @@ public class MonitoraggioEjb {
         pigSessioneIngest.setNote(note);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public String preAnnullamentoSetupNewTx(BigDecimal idObject) throws ParerInternalError {
+        return preAnnullamentoSetup(idObject);
+    }
+
     // MEV 32543 funzione di appoggio per preparare l'annullamento
-    public String preAnnullamentoSetup(BigDecimal idObject) throws Exception {
+    public String preAnnullamentoSetup(BigDecimal idObject) throws ParerInternalError {
         String errore = null;
         PigObject pigObject = monitoraggioHelper.findById(PigObject.class, idObject);
         PigTipoObject pigTipoObject = pigObject.getPigTipoObject();
@@ -246,12 +254,22 @@ public class MonitoraggioEjb {
                 || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
                 || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_CODA.name())) {
 
-            deleteDirAndOS(pigObject, pigSessioneIngest);
+            try {
+                deleteDirAndOS(pigObject, pigSessioneIngest);
+            } catch (ObjectStorageException e) {
+                throw new ParerInternalError(e);
+            }
         }
 
         PigObject oggPadre = pigObject.getPigObjectPadre();
         if (oggPadre != null) {
-            payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
+            try {
+                payloadManagerHelper.definisciStatoOggettoPadre(oggPadre.getIdObject());
+            } catch (LockingFailedException | NoTransactionAssociatedException
+                    | DirectoryNotEmptyException | ResourceException | FileUnderUseException
+                    | InsufficientPermissionOnFileException ex) {
+                throw new ParerInternalError(ex);
+            }
         }
 
         return errore;
@@ -1013,5 +1031,14 @@ public class MonitoraggioEjb {
                     salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
             }
         }
+    }
+
+    // MEV 39425
+    public boolean isTrasformazioneInCorso(BigDecimal idObject) {
+        EsitoStatusTrasformazione esitoStatusTrasformazione = kwsClient
+                .statusTrasformazione(idObject.longValue());
+        return esitoStatusTrasformazione.getEsitoSintetico() == AbstractEsito.ESITO_SINTETICO.OK
+                && esitoStatusTrasformazione.getStatoTrasformazione().getCodiceStatoTrasformazione()
+                        .equals("TRASFORMAZIONE_IN_CORSO");
     }
 }

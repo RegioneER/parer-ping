@@ -95,7 +95,8 @@ import it.eng.spagoLite.message.Message.MessageLevel;
 import it.eng.spagoLite.message.MessageBox;
 import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.SuppressLogging;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 import org.springframework.web.client.RestTemplate;
 
@@ -1379,7 +1380,8 @@ public class SismaAction extends SismaAbstractAction {
             throws EMFError {
         SismaDto dto = sismaEjb.getSismaById(idSisma);
         if (dto.getTiStato().equals(PigSisma.TiStato.VERSATO.name())
-                || dto.getTiStato().equals(PigSisma.TiStato.COMPLETATO.name())) {
+                || dto.getTiStato().equals(PigSisma.TiStato.COMPLETATO.name())
+                || sismaHelper.existsStatoStorico(idSisma, PigSisma.TiStato.VERSATO.name())) {
             /* CHIAMARE IL WS per il download del rapporto di versamento */
             // NUOVA ROBA DA IAM
             String versione = configurationHelper.getValoreParamApplicByApplic(
@@ -1603,7 +1605,12 @@ public class SismaAction extends SismaAbstractAction {
                 if (getForm().getDatiGeneraliOutput().getId_sisma_out() != null) {
                     BigDecimal idSisma = getForm().getDatiGeneraliOutput().getId_sisma_out()
                             .parse();
-                    Date dataStato = sismaEjb.recuperoErroreSisma(idSisma, tiNuovoStato);
+                    Date dataStato;
+                    try {
+                        dataStato = sismaEjb.recuperoErroreSisma(idSisma, tiNuovoStato);
+                    } catch (ParerUserError | ParerInternalError ex) {
+                        throw new EMFError(EMFError.ERROR, "Errore: " + ex.getMessage());
+                    }
                     getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(tiNuovoStato);
                     getForm().getDatiGeneraliOutput().getDt_stato_out()
                             .setValue(DateUtil.formatDateWithSlashAndTime(dataStato));

@@ -3748,11 +3748,12 @@ public class AmministrazioneEjb {
 
     public PigParamApplicTableBean getPigParamApplicTableBean(String tiParamApplic,
             String tiGestioneParam, String flAppartApplic, String flAppartAmbiente,
-            String flAppartVers, String flAppartTipoOggetto) {
+            String flAppartVers, String flAppartTipoOggetto, String cdVersioneAppIni,
+            String cdVersioneAppFine) {
         PigParamApplicTableBean paramApplicTableBean = new PigParamApplicTableBean();
         List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicList(
                 tiParamApplic, tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVers,
-                flAppartTipoOggetto);
+                flAppartTipoOggetto, cdVersioneAppIni, cdVersioneAppFine);
 
         try {
             if (paramApplicList != null && !paramApplicList.isEmpty()) {
@@ -3779,11 +3780,12 @@ public class AmministrazioneEjb {
     // MEV 32650
     public PigParamApplicTableBean getPigParamApplicTableBean(String tiParamApplic,
             String tiGestioneParam, String flAppartApplic, String flAppartAmbiente,
-            String flAppartVers, String flAppartTipoOggetto, boolean filterValid) {
+            String flAppartVers, String flAppartTipoOggetto, boolean filterValid,
+            String cdVersioneAppIni, String cdVersioneAppFine) {
         PigParamApplicTableBean paramApplicTableBean = new PigParamApplicTableBean();
         List<PigParamApplic> paramApplicList = amministrazioneHelper.getPigParamApplicList(
                 tiParamApplic, tiGestioneParam, flAppartApplic, flAppartAmbiente, flAppartVers,
-                flAppartTipoOggetto, filterValid);
+                flAppartTipoOggetto, filterValid, cdVersioneAppIni, cdVersioneAppFine);
 
         try {
             if (paramApplicList != null && !paramApplicList.isEmpty()) {

@@ -18,10 +18,8 @@ import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigAmbienteVers;
 import it.eng.sacerasi.entity.PigTipoObject;
 import it.eng.sacerasi.entity.PigVers;
-import it.eng.sacerasi.slite.gen.tablebean.PigAmbienteVersTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersTableBean;
+import it.eng.sacerasi.entity.XfoTrasf;
+import it.eng.sacerasi.slite.gen.tablebean.*;
 import it.eng.sacerasi.web.util.Transform;
 
 import java.math.BigDecimal;
@@ -275,5 +273,23 @@ public class ComboHelper {
         query.setParameter("idVers", HibernateUtils.longFrom(idVers));
         Long res = (Long) query.getSingleResult();
         return new BigDecimal(res);
+    }
+
+    // MEV 39433
+    public XfoTrasfTableBean getAllXfoTrasf() {
+        String queryStr = "SELECT t FROM XfoTrasf t ";
+        Query query = entityManager.createQuery(queryStr);
+
+        XfoTrasfTableBean xfoTrasfTableBean = new XfoTrasfTableBean();
+        List<XfoTrasf> trasfList = query.getResultList();
+        try {
+            if (!trasfList.isEmpty()) {
+                // trasformo la lista di entity (risultante della query) in un tablebean
+                xfoTrasfTableBean = (XfoTrasfTableBean) Transform.entities2TableBean(trasfList);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return xfoTrasfTableBean;
     }
 }

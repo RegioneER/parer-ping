@@ -220,4 +220,9 @@ public class KettleWsClient {
 
         return esito.isEsito();
     }
+
+    @WebResult(name = "EsitoStatusTrasformazione")
+    public EsitoStatusTrasformazione statusTrasformazione(Long idObject) {
+        return client.statusTrasformazione(idObject);
+    }
 }

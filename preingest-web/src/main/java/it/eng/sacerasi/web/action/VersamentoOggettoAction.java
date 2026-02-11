@@ -29,6 +29,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.jws.WebService;
 
+import it.eng.sacerasi.slite.gen.tablebean.*;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -53,17 +54,6 @@ import it.eng.sacerasi.slite.gen.Application;
 import it.eng.sacerasi.slite.gen.action.VersamentoOggettoAbstractAction;
 import it.eng.sacerasi.slite.gen.form.MonitoraggioForm;
 import it.eng.sacerasi.slite.gen.form.VersamentoOggettoForm;
-import it.eng.sacerasi.slite.gen.tablebean.PigAmbienteVersRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigAmbienteVersTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigObjectRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoFileObjectTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigTipoObjectTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersTipoObjectDaTrasfRowBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigVersTipoObjectDaTrasfTableBean;
-import it.eng.sacerasi.slite.gen.tablebean.PigXsdDatiSpecTableBean;
 import it.eng.sacerasi.slite.gen.viewbean.MonVLisStatoVersTableBean;
 import it.eng.sacerasi.util.BinEncUtility;
 import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
@@ -187,6 +177,11 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
         }
         mapTiContenuto.populatedMap(bt, "ti_contenuto", "ti_contenuto");
         filtriVersamentiOggetto.getTi_contenuto_oggetto().setDecodeMap(mapTiContenuto);
+
+        // MEV 39443
+        XfoTrasfTableBean xfoTrasfTableBean = comboHelper.getAllXfoTrasf();
+        filtriVersamentiOggetto.getId_trasformazione().setDecodeMap(
+                DecodeMap.Factory.newInstance(xfoTrasfTableBean, "id_trasf", "cd_trasf"));
 
         filtriVersamentiOggetto.setEditMode();
     }
@@ -1384,13 +1379,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 // MEV 39090
                 String tiContenutoOggetto = getForm().getFiltriVersamentiOggetto()
                         .getTi_contenuto_oggetto().parse();
+                // MEV 39344
+                BigDecimal idTrasformazione = getForm().getFiltriVersamentiOggetto()
+                        .getId_trasformazione().parse();
 
                 MonVLisStatoVersTableBean monVLisStatoVersTableBean = new MonVLisStatoVersTableBean();
                 try {
                     monVLisStatoVersTableBean = versamentoOggettoEjb.getMonVLisStatoVersTableBean(
                             getUser().getIdUtente(), idAmbiente, idVers, idTipoOggetto, idOggetto,
                             cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject,
-                            tiVersFile, note, tiContenutoOggetto);
+                            tiVersFile, note, tiContenutoOggetto, idTrasformazione);
                 } catch (ParerUserError e) {
                     getMessageBox().addError(e.getDescription());
                 }
@@ -1476,13 +1474,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
             // MEV 30090
             String tiContenutoOggetto = getForm().getFiltriVersamentiOggetto()
                     .getTi_contenuto_oggetto().parse();
+            // MEV 39344
+            BigDecimal idTrasformazione = getForm().getFiltriVersamentiOggetto()
+                    .getId_trasformazione().parse();
 
             MonVLisStatoVersTableBean monVLisStatoVersTableBean = new MonVLisStatoVersTableBean();
             try {
                 monVLisStatoVersTableBean = versamentoOggettoEjb.getMonVLisStatoVersTableBean(
                         getUser().getIdUtente(), idAmbiente, idVers, idTipoOggetto, idOggetto,
                         cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject,
-                        tiVersFile, note, tiContenutoOggetto);
+                        tiVersFile, note, tiContenutoOggetto, idTrasformazione);
             } catch (ParerUserError e) {
                 getMessageBox().addError(e.getDescription());
             }

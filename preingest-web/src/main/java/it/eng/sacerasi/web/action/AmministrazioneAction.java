@@ -6824,6 +6824,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         getForm().getConfiguration().getFl_appart_ambiente_combo().setEditMode();
         getForm().getConfiguration().getFl_appart_vers_combo().setEditMode();
         getForm().getConfiguration().getFl_appart_tipo_oggetto_combo().setEditMode();
+        getForm().getConfiguration().getCd_versione_app_ini().setEditMode();
+        getForm().getConfiguration().getCd_versione_app_fine().setEditMode();
 
         getForm().getConfiguration().getLoad_config_list().setEditMode();
 
@@ -6851,6 +6853,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String flAppartVers = getForm().getConfiguration().getFl_appart_vers_combo().parse();
         String flAppartTipoOggetto = getForm().getConfiguration().getFl_appart_tipo_oggetto_combo()
                 .parse();
+        String cdVersioneAppIni = getForm().getConfiguration().getCd_versione_app_ini().parse();
+        String cdVersioneAppFine = getForm().getConfiguration().getCd_versione_app_fine().parse();
 
         // Carico i valori delle combo della lista
         getForm().getConfigurationList().getTi_gestione_param()
@@ -6861,7 +6865,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         // Carico i valori della lista configurazioni
         PigParamApplicTableBean paramApplicTableBean = amministrazioneEjb
                 .getPigParamApplicTableBean(tiParamApplic, tiGestioneParam, flAppartApplic,
-                        flAppartAmbiente, flAppartVers, flAppartTipoOggetto);
+                        flAppartAmbiente, flAppartVers, flAppartTipoOggetto, cdVersioneAppIni,
+                        cdVersioneAppFine);
 
         getForm().getConfigurationList().setTable(paramApplicTableBean);
         getForm().getConfigurationList().getTable().setPageSize(300);
@@ -6914,6 +6919,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String flAppartVers = getForm().getConfiguration().getFl_appart_vers_combo().parse();
         String flAppartTipoOggetto = getForm().getConfiguration().getFl_appart_tipo_oggetto_combo()
                 .parse();
+        String cdVersioneAppIni = getForm().getConfiguration().getCd_versione_app_ini().parse();
+        String cdVersioneAppFine = getForm().getConfiguration().getCd_versione_app_fine().parse();
 
         // Carico i valori delle combo della lista
         getForm().getConfigurationList().getTi_gestione_param()
@@ -6925,7 +6932,8 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         PigParamApplicTableBean paramApplicTableBean = amministrazioneEjb
                 .getPigParamApplicTableBean(tiParamApplic, tiGestioneParam, flAppartApplic,
                         flAppartAmbiente, flAppartVers, flAppartTipoOggetto,
-                        getForm().getConfigurationList().isFilterValidRecords());
+                        getForm().getConfigurationList().isFilterValidRecords(), cdVersioneAppIni,
+                        cdVersioneAppFine);
 
         paramApplicTableBean = obfuscatePasswordParamApplic(paramApplicTableBean);
 
@@ -7915,12 +7923,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         String flAppartVersatore = getForm().getConfiguration().getFl_appart_vers_combo().parse();
         String flAppartTipoOggetto = getForm().getConfiguration().getFl_appart_tipo_oggetto_combo()
                 .parse();
+        String cdVersioneAppIni = getForm().getConfiguration().getCd_versione_app_ini().parse();
+        String cdVersioneAppFine = getForm().getConfiguration().getCd_versione_app_fine().parse();
 
         // Carico i valori della lista configurazioni
         PigParamApplicTableBean paramApplicTableBean = amministrazioneEjb
                 .getPigParamApplicTableBean(tiParamApplic, tiGestioneParam, flAppartApplic,
                         flAppartAmbiente, flAppartVersatore, flAppartTipoOggetto,
-                        getForm().getConfigurationList().isFilterValidRecords());
+                        getForm().getConfigurationList().isFilterValidRecords(), cdVersioneAppIni,
+                        cdVersioneAppFine);
 
         paramApplicTableBean = obfuscatePasswordParamApplic(paramApplicTableBean);
 

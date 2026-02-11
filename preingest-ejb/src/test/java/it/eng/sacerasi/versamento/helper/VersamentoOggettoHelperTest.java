@@ -74,9 +74,10 @@ public class VersamentoOggettoHelperTest {
         List<String> tiStatoObject = aListOfString(2);
         List<String> tiVersFile = aListOfString(2);
         String tiContenutoOggetto = aString();
+        BigDecimal idTrasformazione = aBigDecimal();
         helper.getMonVLisStatoVers(idUtente, idAmbiente, idVers, idTipoOggetto, idOggetto,
                 cdKeyObject, dsObject, dataDa, dataA, tiStatoEsterno, tiStatoObject, tiVersFile,
-                note, tiContenutoOggetto);
+                note, tiContenutoOggetto, idTrasformazione);
         assertTrue(true);
     }
 }

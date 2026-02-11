@@ -62,7 +62,7 @@ public class GestioneJobHelper extends GenericHelper {
                         + "WHEN u.nm_job = 'INIZIALIZZAZIONE_LOG' then 'INIZIALIZZAZIONE_LOG_SACER_PREINGEST' "
                         + "ELSE u.nm_job END = lastSched.nm_job) " + "WHERE u.ds_Job IS NOT NULL ");
 
-        if (nmAmbito.size() > 0) {
+        if (!nmAmbito.isEmpty()) {
             queryStr.append(whereWord).append("u.nm_ambito IN (?1) ");
             whereWord = "AND ";
         }
@@ -73,19 +73,42 @@ public class GestioneJobHelper extends GenericHelper {
         }
 
         if (tiStatoList != null && !tiStatoList.isEmpty()) {
+
+            // CASO 1: Solo ATTIVI (Esclude Disattivi)
             if (tiStatoList.contains("ATTIVO") && !tiStatoList.contains("DISATTIVO")) {
-                queryStr.append(whereWord).append(
+
+                // Apro parentesi esterna per isolare il blocco di logica stato
+                queryStr.append(whereWord).append(" ( ");
+
+                queryStr.append(
                         "u.dt_Prossima_Attivazione IS NOT NULL AND (u.ti_Stato_Timer IN ('ATTIVO') OR u.ti_Stato_Timer IS NULL) ");
+
                 if (tiStatoList.contains(STATO_IN_ESECUZIONE)) {
                     queryStr.append("OR lastSched.fl_Job_Attivo = '1' ");
                 }
+
+                // Chiudo parentesi esterna
+                queryStr.append(" ) ");
+
+                // CASO 2: Solo DISATTIVI (Esclude Attivi)
             } else if (!tiStatoList.contains("ATTIVO") && tiStatoList.contains("DISATTIVO")) {
-                queryStr.append(whereWord).append(
+
+                // Apro parentesi esterna
+                queryStr.append(whereWord).append(" ( ");
+
+                queryStr.append(
                         "(u.dt_Prossima_Attivazione IS NULL OR u.ti_Stato_Timer IN ('ESECUZIONE_SINGOLA')) ");
+
                 if (tiStatoList.contains(STATO_IN_ESECUZIONE)) {
                     queryStr.append("OR lastSched.fl_Job_Attivo = '1' ");
                 }
+
+                // Chiudo parentesi esterna
+                queryStr.append(" ) ");
+
+                // CASO 3: Solo IN_ESECUZIONE (senza filtri su Attivo/Disattivo specifici)
             } else if (tiStatoList.contains(STATO_IN_ESECUZIONE)) {
+                // Qui è un AND semplice, non servono parentesi extra ma male non fanno
                 queryStr.append("AND lastSched.fl_Job_Attivo = '1' ");
             }
         }
@@ -94,7 +117,7 @@ public class GestioneJobHelper extends GenericHelper {
         // CREO LA QUERY ATTRAVERSO L'ENTITY MANAGER
         Query query = getEntityManager().createNativeQuery(queryStr.toString());
 
-        if (nmAmbito.size() > 0) {
+        if (!nmAmbito.isEmpty()) {
             query.setParameter(1, nmAmbito);
         }
 

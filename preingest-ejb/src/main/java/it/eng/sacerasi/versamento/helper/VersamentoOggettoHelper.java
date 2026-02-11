@@ -55,6 +55,7 @@ public class VersamentoOggettoHelper extends GenericHelper {
      * @param tiVersFile         tipo versamento file
      * @param note               campo note dell'oggetto
      * @param tiContenutoOggetto tipo contenuto oggetto
+     * @param idTrasformazione   id trasformazione
      * @return la lista di record
      */
     @SuppressWarnings("unchecked")
@@ -62,7 +63,7 @@ public class VersamentoOggettoHelper extends GenericHelper {
             BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject, String cdKeyObject,
             String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
             List<String> tiStatoObject, List<String> tiVersFile, String note,
-            String tiContenutoOggetto) {
+            String tiContenutoOggetto, BigDecimal idTrasformazione) {
         StringBuilder queryStr = new StringBuilder(
                 "SELECT m FROM MonVLisStatoVers m WHERE m.id.idUserIam =:idUserIam AND m.idAmbienteVers = :idAmbiente");
         String clause = " AND ";
@@ -104,6 +105,11 @@ public class VersamentoOggettoHelper extends GenericHelper {
             queryStr.append(clause).append("m.tiContenutoOggetto = :tiContenutoOggetto");
         }
 
+        // MEV 39344
+        if (idTrasformazione != null) {
+            queryStr.append(clause).append("m.idTrasformazione = :idTrasformazione");
+        }
+
         queryStr.append(" ORDER BY m.dtVers DESC");
         Query query = getEntityManager().createQuery(queryStr.toString());
         query.setParameter("idUserIam", HibernateUtils.bigDecimalFrom(idUtente));
@@ -141,6 +147,9 @@ public class VersamentoOggettoHelper extends GenericHelper {
         }
         if (StringUtils.isNotBlank(tiContenutoOggetto)) {
             query.setParameter("tiContenutoOggetto", tiContenutoOggetto);
+        }
+        if (idTrasformazione != null) {
+            query.setParameter("idTrasformazione", idTrasformazione);
         }
         return query.getResultList();
     }

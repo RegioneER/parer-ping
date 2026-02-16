@@ -59,6 +59,7 @@
         <MultiSelect Type="STRING" Description="Categoria oggetto" Name="ti_vers_file" />
         <Input Type="STRING" Description="Note" Name="note" />
         <ComboBox Type="STRING" Description="Tipo contenuto" Name="ti_contenuto_oggetto"/>
+        <ComboBox Type="INTEGER" Description="Trasformazione" Name="id_trasformazione" WithSearchComp="true"/>
         
         <Button Name="ricercaVersamentiOggetto" Description="Ricerca versamenti oggetto" Type="STRING"/>
     </Fields>

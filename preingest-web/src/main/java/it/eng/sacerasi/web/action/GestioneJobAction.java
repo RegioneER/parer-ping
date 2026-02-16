@@ -215,7 +215,6 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
                 getForm().getRecuperaVersErr().getDt_reg_log_job_ini(), dataAttivazioneJob);
 
         gestisciStatoJob(recuperaVersamentiErrati);
-
         // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="UI Gestione job per Recupero da Sacer">
         dataAttivazioneJob = getActivationDateJob(Constants.NomiJob.RECUPERO_SACER.name());
@@ -250,7 +249,6 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
         // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="UI Gestione job per Allineamento
         // organizzazioni">
-        // nextActivation = allineamentoOrganizzazioniTimer.getNextElaboration(nomeApplicazione);
         dataAttivazioneJob = getActivationDateJob(
                 Constants.NomiJob.ALLINEAMENTO_ORGANIZZAZIONI.name());
         StatoJob allineamentoOrganizazzioni = new StatoJob(
@@ -334,7 +332,6 @@ public class GestioneJobAction extends GestioneJobAbstractAction {
         // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="UI Gestione job per Invio strumenti
         // urbanistici">
-        // nextActivation = allineamentoOrganizzazioniTimer.getNextElaboration(nomeApplicazione);
         dataAttivazioneJob = getActivationDateJob(
                 Constants.NomiJob.INVIO_STRUMENTI_URBANISTICI.name());
         StatoJob invioStrumentiUrbanistici = new StatoJob(

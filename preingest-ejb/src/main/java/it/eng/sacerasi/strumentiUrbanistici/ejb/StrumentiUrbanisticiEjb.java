@@ -40,8 +40,10 @@ import it.eng.sacerasi.viewEntity.PigVSuCheck;
 import it.eng.sacerasi.viewEntity.PigVSuLisDocsPiano;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.web.util.ComboGetter;
+
 import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_FLAG;
 import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_VALORE;
+
 import it.eng.sacerasi.web.util.Utils;
 import it.eng.sacerasi.ws.replicaUtente.ejb.ModificaUtenteEjb;
 import it.eng.spagoLite.db.base.BaseTableInterface;
@@ -49,6 +51,7 @@ import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.decodemap.DecodeMapIF;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,23 +60,31 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.annullamento.ejb.AnnullamentoEjb;
+import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
 import it.eng.sacerasi.entity.PigStrumUrbStoricoStati;
+import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.exception.ParerUserError;
+import it.eng.sacerasi.job.invioSU.ejb.InvioSUHelper;
 import it.eng.sacerasi.sisma.dto.DocUploadDto;
 import it.eng.sacerasi.slite.gen.tablebean.PigStrumUrbStoricoStatiTableBean;
+import it.eng.sacerasi.web.ejb.MonitoraggioEjb;
+import it.eng.sacerasi.web.helper.MonitoraggioHelper;
 import it.eng.sacerasi.web.util.Transform;
+
 import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author MIacolucci
  */
 @SuppressWarnings("rawtypes")
@@ -96,6 +107,14 @@ public class StrumentiUrbanisticiEjb {
     private ConfigurationHelper configurationHelper;
     @EJB
     private LazyListHelper lazyListHelper;
+    @EJB
+    private InvioSUHelper invioSUHelper;
+    @EJB
+    private MonitoraggioEjb monitoraggioEjb;
+    @EJB
+    private MonitoraggioHelper monitoraggioHelper;
+    @EJB
+    private AnnullamentoEjb annullamentoEjb;
 
     public BaseTableInterface findTipiStrumentiUrbanisticiTB() {
         BaseTable tab = new BaseTable();
@@ -644,13 +663,8 @@ public class StrumentiUrbanisticiEjb {
                 .findByIdWithLock(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
 
         // MEV 31096
-        strumentiUrbanisticiHelper.creaStatoStorico(pigStrumentiUrbanistici,
-                pigStrumentiUrbanistici.getTiStato().name(), pigStrumentiUrbanistici.getDtStato(),
-                "");
-
-        pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.BOZZA); // RIMETTE IN
-        // BOZZA
-        pigStrumentiUrbanistici.setDtStato(new Date());
+        strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                PigStrumentiUrbanistici.TiStato.BOZZA);
     }
 
     // MEV29495 - ora elenca solo gli SU in stato VERSATO
@@ -865,12 +879,95 @@ public class StrumentiUrbanisticiEjb {
                 PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
     }
 
-    public Date recuperoErroreSU(BigDecimal idSu, String nuovoStato) {
+    public Date recuperoErroreSU(BigDecimal idSu, String nuovoStato)
+            throws ParerUserError, ParerInternalError {
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idSu);
-        pigStrumentiUrbanistici.setTiStato(PigStrumentiUrbanistici.TiStato.valueOf(nuovoStato));
-        pigStrumentiUrbanistici.setDtStato(new Date());
+
+        recuperaErroriPerOggettiGenerati(pigStrumentiUrbanistici.getIdStrumentiUrbanistici());
+
+        pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                PigStrumentiUrbanistici.TiStato.valueOf(nuovoStato));
+
         return pigStrumentiUrbanistici.getDtStato();
+    }
+
+    private void recuperaErroriPerOggettiGenerati(long idSu)
+            throws ParerUserError, ParerInternalError {
+        PigStrumentiUrbanistici pigSu = strumentiUrbanisticiHelper
+                .findById(PigStrumentiUrbanistici.class, idSu);
+        PigVers vers = pigSu.getPigVer();
+        boolean isPadreAnnullato = false;
+
+        if (invioSUHelper.existsPigObjectPerVersatore(vers.getIdVers(), pigSu.getCdKey())) {
+            PigObject pigObjectPadre = invioSUHelper
+                    .getPigObjectPerVersatoreStrumUrb(vers.getIdVers(), pigSu.getCdKey());
+            BigDecimal idObjectPadre = BigDecimal.valueOf(pigObjectPadre.getIdObject());
+            BigDecimal idTipoObjectPadre = BigDecimal
+                    .valueOf(pigObjectPadre.getPigTipoObject().getIdTipoObject());
+            Constants.StatoOggetto stato = Constants.StatoOggetto
+                    .valueOf(pigObjectPadre.getTiStatoObject());
+
+            switch (stato) {
+            case ERRORE_TRASFORMAZIONE:
+                // Setto in errore il padre (CHIUSO_ERR_TRASFORMAZIONE o
+                // CHIUSO_ERR_VERSAMENTO_A_PING) e poi lo
+                // annullo.
+                monitoraggioEjb.recuperaErrore(idObjectPadre,
+                        Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name(), idTipoObjectPadre);
+                annullamentoOggettoDaSU(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            case ERRORE_VERSAMENTO_A_PING:
+                // Setto in errore il padre (CHIUSO_ERR_TRASFORMAZIONE o
+                // CHIUSO_ERR_VERSAMENTO_A_PING) e poi lo
+                // annullo.
+                monitoraggioEjb.recuperaErrore(idObjectPadre,
+                        Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name(),
+                        idTipoObjectPadre);
+                annullamentoOggettoDaSU(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            case CHIUSO_ERR_TRASFORMAZIONE:
+            case CHIUSO_ERR_VERSAMENTO_A_PING:
+            case CHIUSO_ERR_NOTIF:
+                // Annullo il padre.
+                annullamentoOggettoDaSU(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            default:
+                break;
+            }
+
+            if (!isPadreAnnullato) {
+                // Se il padre non era da annullare, allora forse uno dei figli.
+                List<PigObject> pigObjectsFigli = monitoraggioHelper.getFigliWithStatus(
+                        pigObjectPadre.getIdObject(),
+                        Constants.StatoOggetto.CHIUSO_ERR_SCHED.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_VERS.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name());
+
+                for (PigObject pigObjectFiglio : pigObjectsFigli) {
+                    BigDecimal idObjectFiglio = BigDecimal.valueOf(pigObjectFiglio.getIdObject());
+                    annullamentoOggettoDaSU(idObjectFiglio);
+                }
+            }
+        }
+    }
+
+    private void annullamentoOggettoDaSU(BigDecimal idObject)
+            throws ParerUserError, ParerInternalError {
+        String errore = monitoraggioEjb.preAnnullamentoSetupNewTx(idObject);
+
+        if (errore != null) {
+            throw new ParerUserError("Errore inaspettato nel recupero dell'errore");
+        } else {
+            annullamentoEjb.annullaOggetto(idObject, false, false,
+                    "Recupero errore da interfaccia Strumenti Urbanistici", "");
+        }
     }
 
     public String getOggettoStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico) {

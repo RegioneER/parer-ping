@@ -803,6 +803,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                         .equals(Constants.StatoOggetto.TRASFORMAZIONE_IN_CORSO.name())) {
                     getForm().getOggettoDetailButtonList().getSettaErroreTrasformazioneDetail()
                             .setHidden(false);
+                    getForm().getOggettoDetailButtonList().getSettaErroreTrasformazioneDetail()
+                            .setReadonly(false);
+
+                    if (monitoraggioEjb.isTrasformazioneInCorso(objRB.getIdObject())) {
+                        getForm().getOggettoDetailButtonList().getSettaErroreTrasformazioneDetail()
+                                .setReadonly(true);
+                    }
                 }
                 // MEV 27802 - abilito la possibilità di mandare in errore anche per
                 // PREPARAZIONE_OGG_IN_CORSO

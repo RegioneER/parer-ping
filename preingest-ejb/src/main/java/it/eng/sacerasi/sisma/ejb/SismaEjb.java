@@ -31,10 +31,12 @@ import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.sacerasi.annullamento.ejb.AnnullamentoEjb;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.IamUser;
 import it.eng.sacerasi.entity.PigAmbienteVers;
 import it.eng.sacerasi.entity.PigErrore;
+import it.eng.sacerasi.entity.PigObject;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSismaDocEntry;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
@@ -48,6 +50,8 @@ import it.eng.sacerasi.entity.PigSismaStoricoStati;
 import it.eng.sacerasi.entity.PigSismaValAtto;
 import it.eng.sacerasi.entity.PigSismaValDoc;
 import it.eng.sacerasi.entity.PigVers;
+import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.sisma.dto.DatiAnagraficiDto;
 import it.eng.sacerasi.sisma.dto.DocSismaDto;
@@ -59,7 +63,9 @@ import it.eng.sacerasi.sisma.dto.SismaDto;
 import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 import it.eng.sacerasi.util.DateUtil;
 import it.eng.sacerasi.viewEntity.PigVSismaChecks;
+import it.eng.sacerasi.web.ejb.MonitoraggioEjb;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
+import it.eng.sacerasi.web.helper.MonitoraggioHelper;
 import it.eng.sacerasi.web.util.ComboGetter;
 import it.eng.sacerasi.web.util.Transform;
 import it.eng.sacerasi.web.util.Utils;
@@ -69,11 +75,12 @@ import it.eng.spagoLite.db.base.BaseTableInterface;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.decodemap.DecodeMapIF;
+
 import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
- *
  * @author MIacolucci
  */
 @SuppressWarnings("rawtypes")
@@ -84,6 +91,8 @@ public class SismaEjb {
     @EJB
     private SismaHelper sismaHelper;
     @EJB
+    private InvioSismaHelper invioSismaHelper;
+    @EJB
     private ModificaUtenteEjb modificaUtenteHelper;
     @EJB
     private MessaggiHelper messaggiHelper;
@@ -91,6 +100,12 @@ public class SismaEjb {
     private ConfigurationHelper configurationHelper;
     @EJB
     private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB
+    private MonitoraggioEjb monitoraggioEjb;
+    @EJB
+    private MonitoraggioHelper monitoraggioHelper;
+    @EJB
+    private AnnullamentoEjb annullamentoEjb;
     @EJB
     private LazyListHelper lazyListHelper;
 
@@ -142,10 +157,11 @@ public class SismaEjb {
                         pigSismaFinanziamento.getDsTipoFinanziamento());
 
                 // Accende o meno il download del rapporto di versamento
-                if (!tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)
-                        && (pigSisma.getTiStato().name().equals(PigSisma.TiStato.VERSATO.name())
-                                || pigSisma.getTiStato().name()
-                                        .equals(PigSisma.TiStato.COMPLETATO.name()))) {
+                if (!tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO) && (pigSisma
+                        .getTiStato().name().equals(PigSisma.TiStato.VERSATO.name())
+                        || pigSisma.getTiStato().name().equals(PigSisma.TiStato.COMPLETATO.name())
+                        || sismaHelper.existsStatoStorico(BigDecimal.valueOf(pigSisma.getIdSisma()),
+                                PigSisma.TiStato.VERSATO.name()))) {
                     riga.setString("download", "download");
                 }
                 if (pigSisma.getTiStato().name().equals(PigSisma.TiStato.COMPLETATO.name())) {
@@ -802,12 +818,7 @@ public class SismaEjb {
         PigSisma pigSisma = sismaHelper.findByIdWithLock(PigSisma.class, idSisma);
 
         // MEV 30936
-        sismaHelper.creaStatoStorico(pigSisma, pigSisma.getTiStato().name(), pigSisma.getDtStato(),
-                pigSisma.getCdErr() != null ? pigSisma.getCdErr() + " - " + pigSisma.getDsErr()
-                        : "");
-
-        pigSisma.setTiStato(PigSisma.TiStato.BOZZA); // RIMETTE IN BOZZA
-        pigSisma.setDtStato(new Date());
+        sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.BOZZA);
 
         // MEV28570 - pulisco lo stato della verifica agenzia sui documenti
         List<PigSismaDocumenti> pigSismaDocumentis = pigSisma.getPigSismaDocumentis();
@@ -1098,10 +1109,13 @@ public class SismaEjb {
         }
     }
 
-    public Date recuperoErroreSisma(BigDecimal idSu, String nuovoStato) {
+    public Date recuperoErroreSisma(BigDecimal idSu, String nuovoStato)
+            throws ParerUserError, ParerInternalError {
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSu);
 
-        sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.valueOf(nuovoStato));
+        recuperaErroriPerOggettiGenerati(pigSisma.getIdSisma());
+
+        pigSisma = sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.valueOf(nuovoStato));
 
         if (nuovoStato.equals(PigSisma.TiStato.BOZZA.name())) {
             // MEV 27430 - pulisco lo stato della verifica agenzia sui documenti
@@ -1202,6 +1216,92 @@ public class SismaEjb {
             }
         }
         return table;
+    }
+
+    private void recuperaErroriPerOggettiGenerati(long idSisma)
+            throws ParerUserError, ParerInternalError {
+        PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSisma);
+        PigVers vers; // Conterrà il versatore su cui versare!
+        boolean isPadreAnnullato = false;
+        Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
+                .getTipoVersatore(pigSisma.getPigVer());
+        if (tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)
+                || pigSisma.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
+            // Il progetto è già arrivato in agenzia
+            vers = pigSisma.getPigVerAg();
+        } else {
+            vers = pigSisma.getPigVer();
+        }
+
+        if (invioSismaHelper.existsPigObjectPerVersatore(vers.getIdVers(), pigSisma.getCdKey())) {
+            PigObject pigObjectPadre = invioSismaHelper
+                    .getPigObjectPerVersatoreSisma(vers.getIdVers(), pigSisma.getCdKey());
+            BigDecimal idObjectPadre = BigDecimal.valueOf(pigObjectPadre.getIdObject());
+            BigDecimal idTipoObjectPadre = BigDecimal
+                    .valueOf(pigObjectPadre.getPigTipoObject().getIdTipoObject());
+            Constants.StatoOggetto stato = Constants.StatoOggetto
+                    .valueOf(pigObjectPadre.getTiStatoObject());
+
+            switch (stato) {
+            case ERRORE_TRASFORMAZIONE:
+                // Setto in errore il padre (CHIUSO_ERR_TRASFORMAZIONE o
+                // CHIUSO_ERR_VERSAMENTO_A_PING) e poi lo
+                // annullo.
+                monitoraggioEjb.recuperaErrore(idObjectPadre,
+                        Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_TRASFORMAZIONE.name(), idTipoObjectPadre);
+                annullamentoOggettoDaSisma(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            case ERRORE_VERSAMENTO_A_PING:
+                // Setto in errore il padre (CHIUSO_ERR_TRASFORMAZIONE o
+                // CHIUSO_ERR_VERSAMENTO_A_PING) e poi lo
+                // annullo.
+                monitoraggioEjb.recuperaErrore(idObjectPadre,
+                        Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_VERSAMENTO_A_PING.name(),
+                        idTipoObjectPadre);
+                annullamentoOggettoDaSisma(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            case CHIUSO_ERR_TRASFORMAZIONE:
+            case CHIUSO_ERR_VERSAMENTO_A_PING:
+            case CHIUSO_ERR_NOTIF:
+                // Annullo il padre.
+                annullamentoOggettoDaSisma(idObjectPadre);
+                isPadreAnnullato = true;
+                break;
+            default:
+                break;
+            }
+
+            if (!isPadreAnnullato) {
+                // Se il padre non era da annullare, allora forse uno dei figli.
+                List<PigObject> pigObjectsFigli = monitoraggioHelper.getFigliWithStatus(
+                        pigObjectPadre.getIdObject(),
+                        Constants.StatoOggetto.CHIUSO_ERR_SCHED.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_CODA.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_VERS.name(),
+                        Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name());
+
+                for (PigObject pigObjectFiglio : pigObjectsFigli) {
+                    BigDecimal idObjectFiglio = BigDecimal.valueOf(pigObjectFiglio.getIdObject());
+                    annullamentoOggettoDaSisma(idObjectFiglio);
+                }
+            }
+        }
+    }
+
+    private void annullamentoOggettoDaSisma(BigDecimal idObject)
+            throws ParerUserError, ParerInternalError {
+        String errore = monitoraggioEjb.preAnnullamentoSetupNewTx(idObject);
+
+        if (errore != null) {
+            throw new ParerUserError("Errore inaspettato nel recupero dell'errore");
+        } else {
+            annullamentoEjb.annullaOggetto(idObject, false, false,
+                    "Recupero errore da interfaccia Sisma", "");
+        }
     }
 
     public static class AutorizzazioneDto {

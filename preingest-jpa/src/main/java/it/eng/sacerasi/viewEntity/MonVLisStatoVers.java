@@ -83,6 +83,9 @@ public class MonVLisStatoVers implements Serializable {
     // MEV 39090
     private String tiContenutoOggetto;
 
+    // MEV 39344
+    BigDecimal idTrasformazione;
+
     private MonVLisStatoVersId monVLisStatoVersId;
 
     public MonVLisStatoVers() {
@@ -312,6 +315,15 @@ public class MonVLisStatoVers implements Serializable {
 
     public void setTiStatoVisualizzato(String tiStatoVisualizzato) {
         this.tiStatoVisualizzato = tiStatoVisualizzato;
+    }
+
+    @Column(name = "ID_TRASFORMAZIONE")
+    public BigDecimal getIdTrasformazione() {
+        return idTrasformazione;
+    }
+
+    public void setIdTrasformazione(BigDecimal idTrasformazione) {
+        this.idTrasformazione = idTrasformazione;
     }
 
     @EmbeddedId()

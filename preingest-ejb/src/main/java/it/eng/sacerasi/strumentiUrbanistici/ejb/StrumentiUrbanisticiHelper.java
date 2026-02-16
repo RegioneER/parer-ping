@@ -233,15 +233,15 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         pigStrumentiUrbanistici = getEntityManager().find(PigStrumentiUrbanistici.class,
                 su.getIdStrumentiUrbanistici());
 
-        // MEV 37686
-        pigStrumentiUrbanistici.setTiStato(tiStato);
-        pigStrumentiUrbanistici.setDtStato(new Date());
-
         // MEV 31096
         creaStatoStorico(pigStrumentiUrbanistici, pigStrumentiUrbanistici.getTiStato().name(),
                 pigStrumentiUrbanistici.getDtStato(),
                 pigStrumentiUrbanistici.getCdErr() != null ? pigStrumentiUrbanistici.getCdErr()
                         + " - " + pigStrumentiUrbanistici.getDsErr() : "");
+
+        // MEV 37686
+        pigStrumentiUrbanistici.setTiStato(tiStato);
+        pigStrumentiUrbanistici.setDtStato(new Date());
 
         return pigStrumentiUrbanistici;
     }
@@ -554,5 +554,18 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         query.setParameter("nomefile", nomefile);
 
         return (PigStrumUrbDocumenti) query.getSingleResult();
+    }
+
+    // MEV 39529
+    public boolean esisteOggettoGeneratoInChiusoErrVers(String cdKey, BigDecimal idVers) {
+        String queryStr = "SELECT COUNT(obj) FROM PigObject obj "
+                + "WHERE obj.pigObjectPadre.cdKeyObject = :cdKeyObject "
+                + "AND obj.pigVer.idVers = :idVers " + "AND obj.tiStatoObject = 'CHIUSO_ERR_VERS'";
+
+        Query query = getEntityManager().createQuery(queryStr);
+
+        query.setParameter("cdKeyObject", cdKey);
+        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        return (Long) query.getSingleResult() > 0;
     }
 }

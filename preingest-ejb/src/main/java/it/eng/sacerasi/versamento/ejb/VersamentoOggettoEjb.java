@@ -93,6 +93,7 @@ public class VersamentoOggettoEjb {
      * @param tiVersFile         tipo versamento file
      * @param note               campo note dell'oggetto
      * @param tiContenutoOggetto tipo contenuto oggetto
+     * @param idTrasformazione   id della trasformazione
      *
      * @return entity bean {@link MonVLisStatoVersTableBean}
      *
@@ -102,10 +103,11 @@ public class VersamentoOggettoEjb {
             BigDecimal idAmbiente, BigDecimal idVers, BigDecimal idTipoOggetto, BigDecimal idObject,
             String cdKeyObject, String dsObject, Date dataDa, Date dataA, String tiStatoEsterno,
             List<String> tiStatoObject, List<String> tiVersFile, String note,
-            String tiContenutoOggetto) throws ParerUserError {
+            String tiContenutoOggetto, BigDecimal idTrasformazione) throws ParerUserError {
         List<MonVLisStatoVers> listObjects = helper.getMonVLisStatoVers(idUtente, idAmbiente,
                 idVers, idTipoOggetto, idObject, cdKeyObject, dsObject, dataDa, dataA,
-                tiStatoEsterno, tiStatoObject, tiVersFile, note, tiContenutoOggetto);
+                tiStatoEsterno, tiStatoObject, tiVersFile, note, tiContenutoOggetto,
+                idTrasformazione);
         MonVLisStatoVersTableBean table = new MonVLisStatoVersTableBean();
         if (!listObjects.isEmpty()) {
             try {

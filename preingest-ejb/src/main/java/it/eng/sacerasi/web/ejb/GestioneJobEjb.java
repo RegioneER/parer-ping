@@ -44,7 +44,9 @@ public class GestioneJobEjb {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GestioneJobEjb.class);
     private static final String ATTIVO = "ATTIVO";
+    private static final String INATTIVO = "INATTIVO";
     private static final String DISATTIVO = "DISATTIVO";
+    private static final String IN_ESECUZIONE = "IN_ESECUZIONE";
 
     @EJB
     GestioneJobHelper helper;
@@ -159,7 +161,7 @@ public class GestioneJobEjb {
                         row.setTimestamp("dt_prossima_attivazione",
                                 new Timestamp(((Date) job[2]).getTime()));
                         if ((String) job[9] == null || (((String) job[9]).equals(ATTIVO)
-                                || ((String) job[9]).equals("INATTIVO"))) {
+                                || ((String) job[9]).equals(INATTIVO))) {
                             attivo = true;
                         }
                     }
@@ -169,16 +171,17 @@ public class GestioneJobEjb {
                                 new Timestamp(((Date) job[4]).getTime()));
                     }
 
-                    if (attivo) {
+                    if (job[5] != null && ((Character) job[5]).toString().equals("1")) {
+                        row.setString("stato_job", IN_ESECUZIONE);
+                        row.setString("operazione_job_start", "0");
+                        row.setString("operazione_job_stop", "0");
+                        row.setString("operazione_job_single", "0");
+                    } else if (attivo) {
+                        // Se è SCHEDULATO
                         row.setString("stato_job", ATTIVO);
                         row.setString("operazione_job_start", "0");
                         row.setString("operazione_job_single", "0");
                         row.setString("operazione_job_stop", "1");
-                    } else if (job[5] != null && ((Character) job[5]).toString().equals("1")) {
-                        row.setString("stato_job", "IN_ESECUZIONE");
-                        row.setString("operazione_job_start", "0");
-                        row.setString("operazione_job_stop", "0");
-                        row.setString("operazione_job_single", "0");
                     }
                     // Se è in ESECUZIONE_SINGOLA
                     else if (((String) job[9] != null // ti_stato_timer
@@ -256,7 +259,7 @@ public class GestioneJobEjb {
                     if (attivo) {
                         row.setString("stato_job", ATTIVO);
                     } else if (job[5] != null && ((Character) job[5]).toString().equals("1")) {
-                        row.setString("stato_job", "IN_ESECUZIONE");
+                        row.setString("stato_job", IN_ESECUZIONE);
 
                     } else {
                         row.setString("stato_job", DISATTIVO);

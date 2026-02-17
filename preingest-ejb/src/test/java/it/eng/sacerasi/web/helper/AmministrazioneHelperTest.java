@@ -815,7 +815,7 @@ public class AmministrazioneHelperTest {
         String flAppartVers = aString();
         String flAppartTipoOggetto = aString();
         helper.getPigParamApplicList(tiParamApplic, tiGestioneParam, flAppartApplic,
-                flAppartAmbiente, flAppartVers, flAppartTipoOggetto);
+                flAppartAmbiente, flAppartVers, flAppartTipoOggetto, null, null);
         assertTrue(true);
     }
 

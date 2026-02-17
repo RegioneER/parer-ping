@@ -673,6 +673,8 @@
         <ComboBox Name="fl_appart_ambiente_combo" Description="Parametri di ambiente" Type="STRING"/>
         <ComboBox Name="fl_appart_vers_combo" Description="Parametri di versatore" Type="STRING"/>
         <ComboBox Name="fl_appart_tipo_oggetto_combo" Description="Parametri di entità" Type="STRING"/>
+        <Input Name="cd_versione_app_ini" Description="Introdotto con" Type="STRING" MaxLength="11" />
+        <Input Name="cd_versione_app_fine" Description="Cessato con" Type="STRING" MaxLength="11" />
         <Button Name="load_config_list" Description="Carica Parametri" Type="STRING" />
         <Button Name="edit_config" Description="Edita Parametri" Type="STRING" />
         <Button Name="add_config" Description="Aggiungi Parametro" Type="STRING" />

@@ -1702,12 +1702,14 @@ public class AmministrazioneHelper extends GenericHelper {
      * @param flAppartVers        flag 1/0 (true/false)
      * @param flAppartAmbiente    flag 1/0 (true/false)
      * @param flAppartTipoOggetto flag 1/0 (true/false)
+     * @param cdVersioneAppIni    numero versione
+     * @param cdVersioneAppFine   numero versione
      *
      * @return lista elementi di tipi {@link PigParamApplic}
      */
     public List<PigParamApplic> getPigParamApplicList(String tiParamApplic, String tiGestioneParam,
             String flAppartApplic, String flAppartAmbiente, String flAppartVers,
-            String flAppartTipoOggetto) {
+            String flAppartTipoOggetto, String cdVersioneAppIni, String cdVersioneAppFine) {
         StringBuilder queryStr = new StringBuilder(
                 "SELECT paramApplic FROM PigParamApplic paramApplic ");
         String whereWord = " WHERE ";
@@ -1734,7 +1736,17 @@ public class AmministrazioneHelper extends GenericHelper {
         if (flAppartTipoOggetto != null) {
             queryStr.append(whereWord)
                     .append("paramApplic.flAppartTipoOggetto = :flAppartTipoOggetto ");
+            whereWord = "AND ";
         }
+        if (cdVersioneAppIni != null) {
+            queryStr.append(whereWord).append("paramApplic.cdVersioneAppIni = :cdVersioneAppIni ");
+            whereWord = "AND ";
+        }
+        if (cdVersioneAppFine != null) {
+            queryStr.append(whereWord)
+                    .append("paramApplic.cdVersioneAppFine = :cdVersioneAppFine ");
+        }
+
         queryStr.append("ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic ");
         Query q = getEntityManager().createQuery(queryStr.toString());
         if (tiParamApplic != null) {
@@ -1755,6 +1767,13 @@ public class AmministrazioneHelper extends GenericHelper {
         if (flAppartTipoOggetto != null) {
             q.setParameter("flAppartTipoOggetto", flAppartTipoOggetto);
         }
+        if (cdVersioneAppIni != null) {
+            q.setParameter("cdVersioneAppIni", cdVersioneAppIni);
+        }
+        if (cdVersioneAppFine != null) {
+            q.setParameter("cdVersioneAppFine", cdVersioneAppFine);
+        }
+
         return q.getResultList();
     }
 
@@ -1855,12 +1874,15 @@ public class AmministrazioneHelper extends GenericHelper {
      * @param flAppartTipoOggetto flag 1/0 (true/false)
      * @param filterValid         true o false per filtrare i parametri attivi (sulla base della
      *                            versione applicativo)
+     * @param cdVersioneAppIni    numero versione
+     * @param cdVersioneAppFine   numero versione
      *
      * @return lista elementi di tipi {@link PigParamApplic}
      */
     public List<PigParamApplic> getPigParamApplicList(String tiParamApplic, String tiGestioneParam,
             String flAppartApplic, String flAppartAmbiente, String flAppartVers,
-            String flAppartTipoOggetto, boolean filterValid) {
+            String flAppartTipoOggetto, boolean filterValid, String cdVersioneAppIni,
+            String cdVersioneAppFine) {
         StringBuilder queryStr = new StringBuilder(
                 "SELECT paramApplic FROM PigParamApplic paramApplic ");
         String whereWord = " WHERE ";
@@ -1888,8 +1910,16 @@ public class AmministrazioneHelper extends GenericHelper {
             queryStr.append(whereWord)
                     .append("paramApplic.flAppartTipoOggetto = :flAppartTipoOggetto ");
         }
+
+        if (cdVersioneAppIni != null) {
+            queryStr.append(whereWord).append("paramApplic.cdVersioneAppIni = :cdVersioneAppIni ");
+            whereWord = "AND ";
+        }
         if (filterValid) {
             queryStr.append(whereWord).append("paramApplic.cdVersioneAppFine IS NULL ");
+        } else if (cdVersioneAppFine != null) {
+            queryStr.append(whereWord)
+                    .append("paramApplic.cdVersioneAppFine = :cdVersioneAppFine ");
         }
 
         queryStr.append("ORDER BY paramApplic.tiParamApplic, paramApplic.nmParamApplic ");
@@ -1912,6 +1942,13 @@ public class AmministrazioneHelper extends GenericHelper {
         if (flAppartTipoOggetto != null) {
             q.setParameter("flAppartTipoOggetto", flAppartTipoOggetto);
         }
+        if (cdVersioneAppIni != null) {
+            q.setParameter("cdVersioneAppIni", cdVersioneAppIni);
+        }
+        if (!filterValid && cdVersioneAppFine != null) {
+            q.setParameter("cdVersioneAppFine", cdVersioneAppFine);
+        }
+
         return q.getResultList();
     }
 

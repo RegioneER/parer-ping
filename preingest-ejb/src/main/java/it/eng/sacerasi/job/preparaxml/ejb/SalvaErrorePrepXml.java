@@ -184,7 +184,17 @@ public class SalvaErrorePrepXml {
             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                     .getPigStrumUrbByCdKeyAndTiStato(
                             tmpPigObject.getPigObjectPadre().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
+
+            // MEV 30026
+            if (pigStrumentiUrbanistici == null) {
+                pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                        .getPigStrumUrbByCdKeyAndTiStato(
+                                strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                                        tmpPigObject.getPigObjectPadre().getCdKeyObject()),
+                                PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+            }
+
             if (pigStrumentiUrbanistici != null) {
                 PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
                 pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(

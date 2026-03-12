@@ -208,7 +208,7 @@
         <ComboBox Type="STRING" Description="Tipo Conservazione" Name="ti_conservazione" />
         <ComboBox Name="id_trasf" Description="Trasformazione" Type="INTEGER" Trigger="true" />
         <ComboBox Name="ti_priorita" Description="Priorità trasformazione" Type="STRING" />
-        <ComboBox Name="ti_priorita_versamento" Description="Priorità versamento" Type="STRING" AddBlank="false" />
+        <ComboBox Name="ti_priorita_versamento" Description="Priorità versamento" Type="STRING" AddBlank="true" />
         <ComboBox Name="ti_contenuto" Description="Tipo contenuto" Type="STRING" />
         <Input Name="ds_reg_exp_cd_vers" Description="Regular expression" Type="STRING"/>
         

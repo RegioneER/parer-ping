@@ -61,10 +61,10 @@
             <sl:contentTitle title="Dettaglio strumento urbanistico" />            
             <c:choose>
                 <c:when test="${requestScope.nascondiUpdate}">
-                    <slf:listNavBarDetail name="<%=StrumentiUrbanisticiForm.StrumentiUrbanisticiList.NAME%>" hideOperationButton="true"/>  
+                    <slf:fieldBarDetailTag name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.NAME%>" hideOperationButton="true"/>
                 </c:when>
                 <c:otherwise>
-                    <slf:listNavBarDetail name="<%=StrumentiUrbanisticiForm.StrumentiUrbanisticiList.NAME%>" hideOperationButton="false"/>  
+                    <slf:fieldBarDetailTag name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.NAME%>" hideOperationButton="false" hideDeleteButton="true"/>
                 </c:otherwise>
             </c:choose>
             <sl:newLine />
@@ -116,7 +116,33 @@
                     <sl:newLine />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiGeneraliOutput.IDENTIFICATIVO_COLLEGATO2_OUT%>" width="w100" labelWidth="w30" controlWidth="w70"  />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiGeneraliOutput.ANNO_COLLEGATO2_OUT%>" width="w100" labelWidth="w30" controlWidth="w70"  />
-                </slf:section> 
+                </slf:section>
+                <slf:section name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanisticaSection.NAME%>" styleClass="importantContainer containerRight w40">
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ID_PUC%>" width="w100" controlWidth="w60" labelWidth="w30" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.NR_BURERT%>" width="w100" controlWidth="w60" labelWidth="w30" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.DT_BURERT%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.CD_REPERTORIO%>" width="w100" controlWidth="w60" labelWidth="w30" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ANNO_PROTOCOLLO%>" width="w100" controlWidth="w30" labelWidth="w30" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.CD_PROTOCOLLO%>" width="w100" labelWidth="w30" controlWidth="w60"/>
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.DT_PROTOCOLLO%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.CLASSIFICA_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ID_FASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.OGGETTO_FASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ID_SOTTOFASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.OGGETTO_SOTTOFASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
+                    <sl:newLine />
+                </slf:section>
                 <sl:newLine />
                 <sl:newLine />
                 <slf:section name="<%=StrumentiUrbanisticiForm.DocumentiCaricatiSection.NAME%>" styleClass="importantContainer">  

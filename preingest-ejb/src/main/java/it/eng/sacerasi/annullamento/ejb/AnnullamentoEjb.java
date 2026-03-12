@@ -36,6 +36,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.*;
 
 import it.eng.sacerasi.entity.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -199,8 +200,9 @@ public class AnnullamentoEjb {
 
         if (pigSisma != null) {
             // Setta lo stato di PigSisma
-            Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(pigSisma.getPigVer());
-            if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
+            Enum<Constants.TipoVersatoreSisma> tipo = sismaHelper
+                    .getTipoVersatore(pigSisma.getPigVer());
+            if (tipo.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
                     && pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
                 sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_TRASFORMAZIONE_SA);
             } else {
@@ -210,8 +212,18 @@ public class AnnullamentoEjb {
 
         // MEV 31651 - correggo lo stato di un eventuale Strumento Urbanistico
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
-                .getPigStrumUrbByCdKeyAndTiStato(object.getCdKeyObject(),
-                        PigStrumentiUrbanistici.TiStato.ANNULLATO);
+                .getPigStrumUrbByCdKeyAndTiStato(object.getCdKeyObject(), TiStato.ANNULLATO);
+        if (pigStrumentiUrbanistici != null) {
+            strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                    TiStato.IN_TRASFORMAZIONE_ENTE);
+        }
+
+        // MEV 30026 - correggo lo stato di un eventuale Strumento Urbanistico annullato
+        // dall'ufficio
+        pigStrumentiUrbanistici = strumentiUrbanisticiHelper.getPigStrumUrbByCdKeyAndTiStato(
+                strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                        object.getCdKeyObject()),
+                TiStato.ANNULLATO);
         if (pigStrumentiUrbanistici != null) {
             strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
                     PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE);
@@ -266,7 +278,18 @@ public class AnnullamentoEjb {
         if (object.getPigObjectPadre() != null) {
             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                     .getPigStrumUrbByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                            TiStato.IN_VERSAMENTO_ENTE);
+            if (pigStrumentiUrbanistici != null) {
+                strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                        PigStrumentiUrbanistici.TiStato.ERRORE);
+            }
+
+            // MEV 30026
+            pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                    .getPigStrumUrbByCdKeyAndTiStato(
+                            strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                                    object.getPigObjectPadre().getCdKeyObject()),
+                            TiStato.IN_VERSAMENTO);
             if (pigStrumentiUrbanistici != null) {
                 strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
                         PigStrumentiUrbanistici.TiStato.ERRORE);
@@ -951,31 +974,85 @@ public class AnnullamentoEjb {
      * Annulla un eventuale Strumento urbanistico legato all'oggetto passato
      */
     private void annullamentoEventualeStrumentoUrbanistico(PigObject object, String tiVers) {
+        PigVers v = null;
+        PigStrumentiUrbanistici s = null;
         // MEV#20819 - (Punto 4.7 dell'analisi)
         if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
             PigObject oggPadre = object.getPigObjectPadre();
             if (oggPadre != null) {
-                PigVers v = oggPadre.getPigVer();
-                PigStrumentiUrbanistici s = strumentiUrbanisticiHelper.getSUByVersAndCdKey(v,
-                        oggPadre.getCdKeyObject());
-                if (s != null && (s.getTiStato().equals(TiStato.IN_ELABORAZIONE)
-                        || s.getTiStato().equals(TiStato.VERSATO)
-                        || s.getTiStato().equals(TiStato.ERRORE))) {
-                    // Nuova transazione
-                    strumentiUrbanisticiHelper.aggiornaStatoInNuovaTransazione(s,
-                            PigStrumentiUrbanistici.TiStato.ANNULLATO);
+                v = oggPadre.getPigVer();
+                s = strumentiUrbanisticiHelper.getSUByVersAndCdKey(v, oggPadre.getCdKeyObject());
+
+                // MEV 30026
+                if (s == null) {
+                    String cdRepertorio = strumentiUrbanisticiHelper
+                            .getCdRepertorioFromUfficioUrbanisticaObject(
+                                    oggPadre.getCdKeyObject());
+                    String annoProtocollo = strumentiUrbanisticiHelper
+                            .getAnnoProtocolloFromUfficioUrbanisticaObject(
+                                    oggPadre.getCdKeyObject());
+                    String cdProtocollo = strumentiUrbanisticiHelper
+                            .getCdProtocolloFromUfficioUrbanisticaObject(
+                                    oggPadre.getCdKeyObject());
+                    if (!cdRepertorio.isEmpty() && !annoProtocollo.isEmpty()
+                            && !cdProtocollo.isEmpty()) {
+                        s = strumentiUrbanisticiHelper.getSUByCdKeyAndDatiUfficio(
+                                strumentiUrbanisticiHelper
+                                        .getCdKeyFromUfficioUrbanisticaObject(
+                                                oggPadre.getCdKeyObject()),
+                                cdRepertorio,
+                                annoProtocollo,
+                                cdProtocollo);
+                    }
                 }
+
             }
         } else if (tiVers.equals(Constants.TipoVersamento.DA_TRASFORMARE.name())) {
-            PigVers v = object.getPigVer();
-            PigStrumentiUrbanistici s = strumentiUrbanisticiHelper.getSUByVersAndCdKey(v,
-                    object.getCdKeyObject());
-            if (s != null && (s.getTiStato().equals(TiStato.IN_ELABORAZIONE)
-                    || s.getTiStato().equals(TiStato.VERSATO)
-                    || s.getTiStato().equals(TiStato.ERRORE))) {
+            v = object.getPigVer();
+            s = strumentiUrbanisticiHelper.getSUByVersAndCdKey(v, object.getCdKeyObject());
+            // MEV 30026
+            if (s == null) {
+                String cdRepertorio = strumentiUrbanisticiHelper
+                        .getCdRepertorioFromUfficioUrbanisticaObject(
+                                object.getCdKeyObject());
+                String annoProtocollo = strumentiUrbanisticiHelper
+                        .getAnnoProtocolloFromUfficioUrbanisticaObject(
+                                object.getCdKeyObject());
+                String cdProtocollo = strumentiUrbanisticiHelper
+                        .getCdProtocolloFromUfficioUrbanisticaObject(
+                                object.getCdKeyObject());
+                if (!cdRepertorio.isEmpty() && !annoProtocollo.isEmpty()
+                        && !cdProtocollo.isEmpty()) {
+                    s = strumentiUrbanisticiHelper.getSUByCdKeyAndDatiUfficio(
+                            strumentiUrbanisticiHelper
+                                    .getCdKeyFromUfficioUrbanisticaObject(object.getCdKeyObject()),
+                            cdRepertorio,
+                            annoProtocollo,
+                            cdProtocollo);
+                }
+            }
+        }
+
+        if (s != null) {
+            PigStrumentiUrbanistici.TiStato stato = s.getTiStato();
+            String idUfficioUrbanistico = configurationHelper
+                    .getValoreParamApplicByApplic(Constants.ID_UFFICIO_URBANISTICO);
+            if (stato.equals(TiStato.VERSATO) || stato.equals(TiStato.IN_ELABORAZIONE_ENTE)
+                    || (stato.equals(TiStato.ERRORE)
+                            && s.getFlInviatoAEnte().equals(Constants.DB_FALSE))) {
                 // Nuova transazione
                 strumentiUrbanisticiHelper.aggiornaStatoInNuovaTransazione(s,
                         PigStrumentiUrbanistici.TiStato.ANNULLATO);
+            } else if (stato.equals(TiStato.COMPLETATO) || stato.equals(TiStato.IN_ELABORAZIONE)
+                    || (stato.equals(TiStato.ERRORE)
+                            && s.getFlInviatoAEnte().equals(Constants.DB_TRUE))) {
+                if (v.getIdVers().equals(Long.parseLong(idUfficioUrbanistico))) {
+                    // stiamo annullando un oggetto dell'ufficio urbanistica
+                    // Nuova transazione
+                    strumentiUrbanisticiHelper.aggiornaStatoInNuovaTransazione(s,
+                            PigStrumentiUrbanistici.TiStato.VERSATO);
+                    strumentiUrbanisticiHelper.aggiornaInviatoEnteInNuovaTransazione(s, false);
+                }
             }
         }
     }
@@ -1010,25 +1087,22 @@ public class AnnullamentoEjb {
 
         PigSisma pigSisma = sismaHelper.getSismaCdKey(cdKeyObject);
         if (pigSisma != null) {
-            Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
+            Enum<Constants.TipoVersatoreSisma> tipoVersatore = sismaHelper
                     .getTipoVersatore(pigSisma.getPigVer());
-            if (tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)
+            if (tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PRIVATO)
                     && (pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO)
-                            || pigSisma.getTiStato().equals(PigSisma.TiStato.IN_ELABORAZIONE))) {
+                            || pigSisma.getTiStato().equals(PigSisma.TiStato.IN_ELABORAZIONE)
+                            || pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE))) {
 
-                // MEV29704 - porta in da_verificare e non in annullato
-                sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma,
-                        PigSisma.TiStato.DA_VERIFICARE);
-                sismaHelper.pulisciFlagVerificaDocumenti(pigSisma);
+                gestisciAnnullamentoSaPrivato(pigSisma);
 
-            } else if (tipoVersatore.equals(Constants.TipoVersatore.SA_PUBBLICO)
+            } else if (tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
                     && pigSisma.getTiStato().equals(PigSisma.TiStato.VERSATO)) {
-                sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma, PigSisma.TiStato.ANNULLATO);
-                // MAC27281
-                sismaHelper.aggiornaInviatoEnteInNuovaTransazione(pigSisma, false);
-            } else if (tipoVersatore.equals(Constants.TipoVersatore.SA_PUBBLICO)
+                gestisciAnnullamentoSaPubblico(pigSisma);
+            } else if (tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
                     && (pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO)
-                            || pigSisma.getTiStato().equals(PigSisma.TiStato.IN_ELABORAZIONE))) {
+                            || pigSisma.getTiStato().equals(PigSisma.TiStato.IN_ELABORAZIONE)
+                            || pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE))) {
 
                 // se ho annullato il versamento del SA pubblico ma non quello dell'agenzia rimango
                 // in stato completato
@@ -1036,12 +1110,26 @@ public class AnnullamentoEjb {
                         .getValoreParamApplicByApplic(Constants.ID_VERSATORE_AGENZIA);
                 PigObject pigObjectAgenzia = monitoraggioHelper
                         .getPigObject(new BigDecimal(idVersatoreAgenzia), cdKeyObject);
-                if (pigObjectAgenzia.getTiStatoObject()
+                if (pigObjectAgenzia != null && pigObjectAgenzia.getTiStatoObject()
                         .equals(Constants.StatoOggetto.ANNULLATO.name())) {
                     sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma, PigSisma.TiStato.VERSATO);
                 }
             }
         }
+    }
+
+    // MEV 39962
+    private void gestisciAnnullamentoSaPrivato(PigSisma pigSisma) {
+        // MEV29704 - porta in da_verificare e non in annullato
+        sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma,
+                PigSisma.TiStato.DA_VERIFICARE);
+        sismaHelper.pulisciFlagVerificaDocumenti(pigSisma);
+    }
+
+    private void gestisciAnnullamentoSaPubblico(PigSisma pigSisma) {
+        sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma, PigSisma.TiStato.ANNULLATO);
+        // MAC27281
+        sismaHelper.aggiornaInviatoEnteInNuovaTransazione(pigSisma, false);
     }
 
     // MEV 26398
@@ -1061,11 +1149,12 @@ public class AnnullamentoEjb {
         // del'attuatore pubblico.
         PigSisma pigSisma = sismaHelper.getSismaCdKey(cdKeyObject);
         if (pigSisma != null) {
-            Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
+            Enum<Constants.TipoVersatoreSisma> tipoVersatore = sismaHelper
                     .getTipoVersatore(pigSisma.getPigVer());
-            return tipoVersatore.equals(Constants.TipoVersatore.SA_PUBBLICO)
-                    && pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO) && sismaHelper
-                            .getTipoVersatore(pigVers).equals(Constants.TipoVersatore.SA_PUBBLICO);
+            return tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
+                    && pigSisma.getTiStato().equals(PigSisma.TiStato.COMPLETATO)
+                    && sismaHelper.getTipoVersatore(pigVers)
+                            .equals(Constants.TipoVersatoreSisma.SA_PUBBLICO);
         }
 
         return false;

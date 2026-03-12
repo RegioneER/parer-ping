@@ -1,24 +1,16 @@
-## 8.5.0 (11-02-2026)
+## 9.0.0 (12-03-2026)
 
-### Novità: 2
-- [#40018](https://parermine.regione.emilia-romagna.it/issues/40018) Patch di sicurezza per interventi legati a CVE
-- [#38427](https://parermine.regione.emilia-romagna.it/issues/38427) Modifica alla pagina gestione parametri
+### Bugfix: 2
+- [#40150](https://parermine.regione.emilia-romagna.it/issues/40150) Correzione doppia scrittura dell'evento FINE_SCHEDULAZIONE nel job PRODUCER_CODA_VERS
+- [#40102](https://parermine.regione.emilia-romagna.it/issues/40102) Correzione versione libreria Eclipselink Moxy per compliancy Java 11+
 
-## 8.4.0 (06-02-2026)
-
-### Bugfix: 6
-- [#39983](https://parermine.regione.emilia-romagna.it/issues/39983) Correzione della concatenazione parametri per versatore per cui si generano oggetti
-- [#39906](https://parermine.regione.emilia-romagna.it/issues/39906) Correzione in fase di inserimento di un nuovo tipo oggetto – campo Tipo contenuto
-- [#39897](https://parermine.regione.emilia-romagna.it/issues/39897) Correzione della gestione degli stati in lista stati strumento urbanistico e sisma
-- [#39632](https://parermine.regione.emilia-romagna.it/issues/39632) Correzione dello stato attivazione e in esecuzione in gestione job
-- [#38432](https://parermine.regione.emilia-romagna.it/issues/38432) Correzione del problema di lentezza nella configurazione dei parametri della trasformazione sul tipo oggetto
-- [#38424](https://parermine.regione.emilia-romagna.it/issues/38424) Correzione del problema di lentezza nella configurazione dei multiversatori
-
-### Novità: 7
-- [#39968](https://parermine.regione.emilia-romagna.it/issues/39968) Aumento a 4000 caratteri del campo DL_ERR_SACER 
-- [#39533](https://parermine.regione.emilia-romagna.it/issues/39533) Introduzione scope type "request" gestione controller web Spring
-- [#39433](https://parermine.regione.emilia-romagna.it/issues/39433) Modifica alla ricerca oggetto: filtro per trasformazione
-- [#39425](https://parermine.regione.emilia-romagna.it/issues/39425) Modifica alla funzione Set errore trasformazione quando la trasformazione è in corso
-- [#39384](https://parermine.regione.emilia-romagna.it/issues/39384) SISMA - Scarico Rdv soggetti attuatori pubblici
-- [#35161](https://parermine.regione.emilia-romagna.it/issues/35161) Introduzione del recupera errori in SU che annulla la sessione dell'oggetto in PING
-- [#35160](https://parermine.regione.emilia-romagna.it/issues/35160) Introduzione del recupera errori in sisma che annulla la sessione dell'oggetto in PING
+### Novità: 9
+- [#40191](https://parermine.regione.emilia-romagna.it/issues/40191) Adeguamento ping xml ai nuovi sviluppi di strumenti urbanistici (profilo archivistico)
+- [#40123](https://parermine.regione.emilia-romagna.it/issues/40123) Aggiunta campi al dettaglio strumenti urbanistici per l'urbanistica
+- [#40110](https://parermine.regione.emilia-romagna.it/issues/40110) Modifica alla lista strumenti urbanistici
+- [#39963](https://parermine.regione.emilia-romagna.it/issues/39963) Gestione degli stati dei progetti Strumenti Urbanistici nei casi di annullamento e recupero oggetti
+- [#39962](https://parermine.regione.emilia-romagna.it/issues/39962) Gestione degli stati dei progetti SISMA nei casi di annullamento e recupero oggetti 
+- [#39904](https://parermine.regione.emilia-romagna.it/issues/39904) Adeguamento del progetto sacerping-xml ai nuovi sviluppi di strumenti urbanistici
+- [#39622](https://parermine.regione.emilia-romagna.it/issues/39622) Gestione delle altre fasi di elaborazione per l'ufficio urbanistica
+- [#39258](https://parermine.regione.emilia-romagna.it/issues/39258) Gestione dell'annullamento da parte dell'ufficio urbanistica
+- [#30026](https://parermine.regione.emilia-romagna.it/issues/30026) Nuovo flusso strumenti urbanistici per la gestione del versamento in urbanistica

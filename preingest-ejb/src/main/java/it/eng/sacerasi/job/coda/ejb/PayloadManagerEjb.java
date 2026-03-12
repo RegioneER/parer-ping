@@ -356,12 +356,24 @@ public class PayloadManagerEjb {
                                 // MEV 22064 - Il SU va in stato ERRORE
                                 if (object.getPigObjectPadre() != null) {
                                     // MEV 22064 - ora lo stato da gestire è IN_VERSAMENTO e non più
-                                    // IN_ELABORAZIONE per
-                                    // i SU.
+                                    // IN_ELABORAZIONE per i SU.
                                     PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                                             .getPigStrumUrbByCdKeyAndTiStato(
                                                     object.getPigObjectPadre().getCdKeyObject(),
-                                                    PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                                                    PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
+
+                                    // MEV 30026
+                                    if (pigStrumentiUrbanistici == null) {
+                                        // lo cerchiamo in ufficio urbanistica
+                                        pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                                                .getPigStrumUrbByCdKeyAndTiStato(
+                                                        strumentiUrbanisticiHelper
+                                                                .getCdKeyFromUfficioUrbanisticaObject(
+                                                                        object.getPigObjectPadre()
+                                                                                .getCdKeyObject()),
+                                                        PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                                    }
+
                                     if (pigStrumentiUrbanistici != null) {
                                         PigErrore errore = messaggiHelper
                                                 .retrievePigErrore("PING-ERRSU27");
@@ -377,7 +389,7 @@ public class PayloadManagerEjb {
                                         // MEV 31151 - se esiste un errore già settato e è quello
                                         // generico lo
                                         // sostituiamo con quello nuovo,
-                                        // altrimenti (per ora) il primo errore non geenrico
+                                        // altrimenti (per ora) il primo errore non generico
                                         // segnalato è quello
                                         // principale.
                                         if (pigStrumentiUrbanistici.getCdErr() == null
@@ -522,15 +534,29 @@ public class PayloadManagerEjb {
                             // IN_ELABORAZIONE per i SU.
                             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                                     .getPigStrumUrbByCdKeyAndTiStato(oggettoPadre.getCdKeyObject(),
-                                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
+
+                            // Se è l'ente che sta versando aggiorno la flag per segnalare il primo
+                            // versamento avvenuto.
                             if (pigStrumentiUrbanistici != null) {
                                 strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
                                         PigStrumentiUrbanistici.TiStato.VERSATO);
                             }
 
+                            // controlliamo se è invece l'ufficio urbanistica a versare.
+                            pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                                    .getPigStrumUrbByCdKeyAndTiStato(
+                                            strumentiUrbanisticiHelper
+                                                    .getCdKeyFromUfficioUrbanisticaObject(
+                                                            oggettoPadre.getCdKeyObject()),
+                                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                            if (pigStrumentiUrbanistici != null) {
+                                strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                                        PigStrumentiUrbanistici.TiStato.COMPLETATO);
+                            }
+
                             // MEV 30935 - ora lo stato da gestire è IN_VERSAMENTO e non più
-                            // IN_ELABORAZIONE per i
-                            // Sisma.
+                            // IN_ELABORAZIONE per i Sisma.
                             /* Imposta lo stato VERSATO o COMPLETATO nell'eventuale Oggetto SISMA */
                             PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(
                                     oggettoPadre.getCdKeyObject(), PigSisma.TiStato.IN_VERSAMENTO);

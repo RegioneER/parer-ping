@@ -17,17 +17,7 @@ import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.entity.IamUser;
-import it.eng.sacerasi.entity.PigAmbienteVers;
-import it.eng.sacerasi.entity.PigErrore;
-import it.eng.sacerasi.entity.PigStrumUrbAtto;
-import it.eng.sacerasi.entity.PigStrumUrbCollegamenti;
-import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
-import it.eng.sacerasi.entity.PigStrumUrbPianoDocReq;
-import it.eng.sacerasi.entity.PigStrumUrbPianoStato;
-import it.eng.sacerasi.entity.PigStrumUrbValDoc;
-import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
-import it.eng.sacerasi.entity.PigVers;
+import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.grantEntity.OrgAmbiente;
 import it.eng.sacerasi.grantEntity.OrgEnte;
 import it.eng.sacerasi.grantEntity.OrgStrut;
@@ -55,7 +45,6 @@ import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -129,17 +118,12 @@ public class StrumentiUrbanisticiEjb {
 
     public BaseTable findSUByVersAndStatesTB(RicercaStrumentiUrbanisticiDTO rDTO,
             BigDecimal idVers) {
-        EnumSet set = EnumSet.of(PigStrumentiUrbanistici.TiStato.BOZZA,
-                PigStrumentiUrbanistici.TiStato.ERRORE,
-                PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO,
-                PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE,
-                PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO,
-                PigStrumentiUrbanistici.TiStato.VERSATO, PigStrumentiUrbanistici.TiStato.ANNULLATO,
-                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+        return lazyListHelper.getTableBean(strumentiUrbanisticiHelper.findSUEnte(rDTO, idVers),
+                this::suResultsToTable);
+    }
 
-        return lazyListHelper.getTableBean(
-                strumentiUrbanisticiHelper.findSUByVersAndStates(rDTO, idVers, set),
+    public BaseTable findSUStatesTBUfficioUrbanistica(RicercaStrumentiUrbanisticiDTO rDTO) {
+        return lazyListHelper.getTableBean(strumentiUrbanisticiHelper.findSUUfficio(rDTO, null),
                 this::suResultsToTable);
     }
 
@@ -154,6 +138,7 @@ public class StrumentiUrbanisticiEjb {
                 BaseRow riga = new BaseRow();
                 riga.setBigDecimal("id_strumenti_urbanistici",
                         new BigDecimal(pigStrumentiUrbanistici.getIdStrumentiUrbanistici()));
+                riga.setString("nm_ente", pigStrumentiUrbanistici.getPigVer().getNmVers());
                 riga.setString("nm_tipo_strumento_urbanistico",
                         pigStrumUrbPianoStato.getNmTipoStrumentoUrbanistico());
                 riga.setString("ti_fase_strumento", pigStrumUrbPianoStato.getTiFaseStrumento());
@@ -168,9 +153,32 @@ public class StrumentiUrbanisticiEjb {
                         .getDimensioneDocumentiBySU(pigStrumentiUrbanistici));
                 // Accende o meno il download del rapporto di versamento
                 if (pigStrumentiUrbanistici.getTiStato().name()
-                        .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
+                        .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())
+                        || pigStrumentiUrbanistici.getTiStato().name()
+                                .equals(PigStrumentiUrbanistici.TiStato.COMPLETATO.name())
+                        || strumentiUrbanisticiHelper.existsStatoStorico(
+                                BigDecimal.valueOf(
+                                        pigStrumentiUrbanistici.getIdStrumentiUrbanistici()),
+                                PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
                     riga.setString("download", "download");
                 }
+                // MEV 40110
+                if (pigStrumentiUrbanistici.getTiStato().name()
+                        .equals(PigStrumentiUrbanistici.TiStato.COMPLETATO.name())) {
+                    riga.setString("download_urbanistica", "download");
+                }
+                if (pigStrumentiUrbanistici.getFlInviatoAEnte().equals(Constants.DB_TRUE)
+                        && pigStrumentiUrbanistici.getCdRepertorio() != null
+                        && pigStrumentiUrbanistici.getAnnoProtocollo() != null
+                        && pigStrumentiUrbanistici.getCdProtocollo() != null) {
+                    riga.setString("id_versamento_urbanistica",
+                            pigStrumentiUrbanistici.getAnnoProtocollo()
+                                    + "_"
+                                    + pigStrumentiUrbanistici.getCdRepertorio()
+                                    + "_"
+                                    + pigStrumentiUrbanistici.getCdProtocollo());
+                }
+
                 strumUrbTable.add(riga);
             }
         }
@@ -297,10 +305,6 @@ public class StrumentiUrbanisticiEjb {
         return ogg;
     }
 
-    public boolean existsSUByVersAndCdKey(PigVers pigVer, String cdKey) {
-        return strumentiUrbanisticiHelper.getSUByVersAndCdKey(pigVer, cdKey) != null;
-    }
-
     public BaseTableInterface findPigStrumUrbPianoStatoByNomeTipoTB(String nomeTipo) {
         BaseTable tab = new BaseTable();
         List<PigStrumUrbPianoStato> valori = strumentiUrbanisticiHelper
@@ -325,9 +329,11 @@ public class StrumentiUrbanisticiEjb {
         return id;
     }
 
-    public String getXmlRichiestaRappVersByIdStrumUrb(BigDecimal id) {
+    public String getXmlRichiestaRappVersByIdStrumUrb(BigDecimal id,
+            boolean estraiRapportoAgenzia, SUDto dto) {
         String xml = null;
-        Object[] ogg = strumentiUrbanisticiHelper.findDatiAmbienteByIdSU(id);
+        Object[] ogg = strumentiUrbanisticiHelper.findDatiAmbienteByIdSU(id, estraiRapportoAgenzia,
+                dto);
         PigStrumentiUrbanistici pigStrumentiUrbanistici = (PigStrumentiUrbanistici) ogg[0];
         OrgStrut orgStrut = (OrgStrut) ogg[1];
         OrgEnte orgEnte = (OrgEnte) ogg[2];
@@ -337,15 +343,24 @@ public class StrumentiUrbanisticiEjb {
         String loginname = configurationHelper
                 .getValoreParamApplicByApplic(Constants.NmParamApplic.USERID_RECUP_UD.name());
 
+        String numero = strumentiUrbanisticiHelper
+                .estraiAttoDaIdentificativo(pigStrumentiUrbanistici.getCdKey())
+                + "_" + pigStrumentiUrbanistici.getNumero();
+        String anno = pigStrumentiUrbanistici.getAnno().toString();
+
+        if (estraiRapportoAgenzia) {
+            numero = pigStrumentiUrbanistici.getCdRepertorio() + "_"
+                    + pigStrumentiUrbanistici.getCdProtocollo();
+            anno = pigStrumentiUrbanistici.getAnnoProtocollo().toString();
+        }
+
         xml = "<Recupero>\n" + "  <Versione>" + versione + "</Versione>\n" + "  <Versatore>\n"
                 + "    <Ambiente>" + orgAmbiente.getNmAmbiente() + "</Ambiente>\n" + "    <Ente>"
                 + orgEnte.getNmEnte() + "</Ente>\n" + "    <Struttura>" + orgStrut.getNmStrut()
                 + "</Struttura>\n" + "    <UserID>" + loginname + "</UserID>    \n"
                 + "  </Versatore>\n" + "  <Chiave>\n" + "    <Numero>"
-                + strumentiUrbanisticiHelper
-                        .estraiAttoDaIdentificativo(pigStrumentiUrbanistici.getCdKey())
-                + "_" + pigStrumentiUrbanistici.getNumero() + "</Numero>\n" + "    <Anno>"
-                + pigStrumentiUrbanistici.getAnno().longValueExact() + "</Anno>\n"
+                + numero + "</Numero>\n" + "    <Anno>"
+                + anno + "</Anno>\n"
                 + "    <TipoRegistro>STRUMENTI URBANISTICI</TipoRegistro>    \n" + "  </Chiave>\n"
                 + "</Recupero> \n" + " ";
         return xml;
@@ -371,6 +386,7 @@ public class StrumentiUrbanisticiEjb {
         dto.setDtStato(su.getDtStato());
         StrumentiUrbanisticiHelper.DatiAnagraficiDto datiDto = getDatiVersatoreByIdVers(
                 new BigDecimal(su.getPigVer().getIdVers()));
+        dto.setDatiAnagraficiDto(datiDto);
         // MEV26936
         PigStrumUrbAtto pigStrumUrbAtto = strumentiUrbanisticiHelper.findPigStrumUrbAtto(
                 datiDto.getTipologia(),
@@ -379,6 +395,22 @@ public class StrumentiUrbanisticiEjb {
 
         // MEV37524
         dto.setIdVers(BigDecimal.valueOf(su.getPigVer().getIdVers()));
+
+        // MEV 30026
+        dto.setIdPuc((su.getIdPuc() != null) ? BigDecimal.valueOf(su.getIdPuc()) : null);
+        dto.setAnnoProtocollo(su.getAnnoProtocollo());
+        dto.setCdProtocollo(su.getCdProtocollo());
+        dto.setDtProtocollo(su.getDtProtocollo());
+        dto.setNrBurert(su.getNrBurert());
+        dto.setDtBurert(su.getDtBurert());
+        dto.setCdRepertorio(su.getCdRepertorio());
+
+        // MEV 40123
+        dto.setClassificaUrb(su.getClassificaUrb());
+        dto.setIdFascicoloUrb(su.getIdFascicoloUrb());
+        dto.setOggettoFascicoloUrb(su.getOggettoFascicoloUrb());
+        dto.setIdSottofascicoloUrb(su.getIdSottofascicoloUrb());
+        dto.setOggettoSottofascicoloUrb(su.getOggettoSottofascicoloUrb());
 
         dto.setCdErr(su.getCdErr());
         dto.setDsErr(su.getDsErr());
@@ -455,6 +487,8 @@ public class StrumentiUrbanisticiEjb {
                     dto.getNmTipoStrumentoUrbanistico()));
             dto.setDtStato(new Date());
             pigStrumentiUrbanistici.setDtStato(dto.getDtStato());
+            pigStrumentiUrbanistici.setFlInviatoAEnte(
+                    dto.isFlInviatoAEnte() ? Constants.DB_TRUE : Constants.DB_FALSE);
             strumentiUrbanisticiHelper.insertEntity(pigStrumentiUrbanistici, true);
             dto.setIdStrumentiUrbanistici(pigStrumentiUrbanistici.getIdStrumentiUrbanistici());
             dto.setCdKey(pigStrumentiUrbanistici.getCdKey());
@@ -539,6 +573,9 @@ public class StrumentiUrbanisticiEjb {
             pigStrumentiUrbanistici.setDsDescrizione(dto.getDsDescrizione());
             pigStrumentiUrbanistici.setOggetto(calcolaOggetto(pigVers, pigStrumentiUrbanistici,
                     dto.getNmTipoStrumentoUrbanistico()));
+            pigStrumentiUrbanistici.setFlInviatoAEnte(
+                    dto.isFlInviatoAEnte() ? Constants.DB_TRUE : Constants.DB_FALSE);
+
             dto.setDtStato(new Date());
             dto.setDtCreazione(pigStrumentiUrbanistici.getDtCreazione());
             pigStrumentiUrbanistici.setDtStato(dto.getDtStato());
@@ -554,6 +591,7 @@ public class StrumentiUrbanisticiEjb {
             dto.setCdKey(pigStrumentiUrbanistici.getCdKey());
             dto.setOggetto(pigStrumentiUrbanistici.getOggetto());
             dto.setTiStato(pigStrumentiUrbanistici.getTiStato().name());
+
         }
         return dto;
     }
@@ -625,7 +663,7 @@ public class StrumentiUrbanisticiEjb {
     }
 
     public boolean versaStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico,
-            long idUserIamCorrente) {
+            long idUserIamCorrente, boolean versatoAEnte) {
         boolean retOk = false;
         // Locca SU e tutti i suoi DOC!!
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
@@ -654,6 +692,11 @@ public class StrumentiUrbanisticiEjb {
             retOk = true;
         }
         pigStrumentiUrbanistici.setDtStato(new Date());
+
+        // MEV 30026 - gestione flag versamento a ente
+        pigStrumentiUrbanistici
+                .setFlInviatoAEnte(versatoAEnte ? Constants.DB_TRUE : Constants.DB_FALSE);
+
         return retOk;
     }
 
@@ -667,8 +710,8 @@ public class StrumentiUrbanisticiEjb {
                 PigStrumentiUrbanistici.TiStato.BOZZA);
     }
 
-    // MEV29495 - ora elenca solo gli SU in stato VERSATO
-    public DecodeMap findNumeriByVersAnnoTipoSUFaseSoloVersati(BigDecimal idPigVers,
+    // MEV29495 e MEV39622 - ora elenca solo gli SU in stato COMPLETATO
+    public DecodeMap findNumeriByVersAnnoTipoSUFaseSoloCompletati(BigDecimal idPigVers,
             BigDecimal anno, String nmTipoStrumento, String fase) {
         PigVers pigVers = strumentiUrbanisticiHelper.findById(PigVers.class, idPigVers);
         List<PigStrumentiUrbanistici> strumenti = strumentiUrbanisticiHelper
@@ -873,10 +916,20 @@ public class StrumentiUrbanisticiEjb {
     }
 
     // Torna la deodemap con i due stati per il recupero errori
-    public DecodeMapIF getNuoviStatiPerRecuperoErroriDM() {
-        return ComboGetter.getMappaOrdinalGenericEnum("ti_nuovo_stato",
-                PigStrumentiUrbanistici.TiStato.BOZZA,
-                PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
+    public DecodeMapIF getNuoviStatiPerRecuperoErroriDM(BigDecimal idStrumentoUrbanistico) {
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                .findById(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
+        if (pigStrumentiUrbanistici.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
+            // È già stato inviato all'ente quindi si sta versando in ufficio
+            return ComboGetter.getMappaOrdinalGenericEnum("ti_nuovo_stato",
+                    PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO,
+                    PigStrumentiUrbanistici.TiStato.VERSATO);
+        } else {
+            // Non ancora inviato a ente
+            return ComboGetter.getMappaOrdinalGenericEnum("ti_nuovo_stato",
+                    PigStrumentiUrbanistici.TiStato.BOZZA,
+                    PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO);
+        }
     }
 
     public Date recuperoErroreSU(BigDecimal idSu, String nuovoStato)
@@ -889,6 +942,13 @@ public class StrumentiUrbanisticiEjb {
         pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
                 PigStrumentiUrbanistici.TiStato.valueOf(nuovoStato));
 
+        // MEV 30026
+        if (nuovoStato.equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())) {
+            // Se si riporta in bozza, allora si resetta anche il flag di invio a ente
+            pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                    .aggiornaInviatoEnteInNuovaTransazione(pigStrumentiUrbanistici, false);
+        }
+
         return pigStrumentiUrbanistici.getDtStato();
     }
 
@@ -897,11 +957,22 @@ public class StrumentiUrbanisticiEjb {
         PigStrumentiUrbanistici pigSu = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idSu);
         PigVers vers = pigSu.getPigVer();
+        String cdKey = pigSu.getCdKey();
         boolean isPadreAnnullato = false;
 
-        if (invioSUHelper.existsPigObjectPerVersatore(vers.getIdVers(), pigSu.getCdKey())) {
+        // MEV 30026 - se la SU è stata inviata a ente, allora l'oggetto padre è quello dell'ufficio
+        // urbanistico, altrimenti è quello dell'ente
+        if (pigSu.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
+            String idUfficioUrbanistico = configurationHelper
+                    .getValoreParamApplicByApplic(Constants.ID_UFFICIO_URBANISTICO);
+            vers = strumentiUrbanisticiHelper.findById(PigVers.class,
+                    new BigDecimal(idUfficioUrbanistico));
+            cdKey = strumentiUrbanisticiHelper.getCdKeyPerUfficio(pigSu);
+        }
+
+        if (invioSUHelper.existsPigObjectPerVersatore(vers.getIdVers(), cdKey)) {
             PigObject pigObjectPadre = invioSUHelper
-                    .getPigObjectPerVersatoreStrumUrb(vers.getIdVers(), pigSu.getCdKey());
+                    .getPigObjectPerVersatoreStrumUrb(vers.getIdVers(), cdKey);
             BigDecimal idObjectPadre = BigDecimal.valueOf(pigObjectPadre.getIdObject());
             BigDecimal idTipoObjectPadre = BigDecimal
                     .valueOf(pigObjectPadre.getPigTipoObject().getIdTipoObject());
@@ -997,6 +1068,51 @@ public class StrumentiUrbanisticiEjb {
         return strumentiUrbanisticiHelper.existsPigStrumUrbDocumenti(idStrumentoUrbanistico);
     }
 
+    /*
+     * Determina se il versatore passato è di tipo UFFICIO_URBANISTICA, ENTE oppure nessuno dei due
+     * (NULL)
+     */
+    public Enum<Constants.TipoVersatoreStrumentiUrbanistici> getTipoVersatore(BigDecimal id) {
+        PigVers pigVers = strumentiUrbanisticiHelper.getPigVersById(id);
+        return strumentiUrbanisticiHelper.getTipoVersatore(pigVers);
+    }
+
+    // MEV 30026
+    public SUDto salvaDatiUfficioUrbanistica(SUDto dto) {
+        PigStrumentiUrbanistici strumentiUrbanistici = strumentiUrbanisticiHelper
+                .findById(PigStrumentiUrbanistici.class, dto.getIdStrumentiUrbanistici());
+
+        strumentiUrbanistici.setIdPuc(dto.getIdPuc().longValue());
+        strumentiUrbanistici.setNrBurert(dto.getNrBurert());
+        strumentiUrbanistici.setDtBurert(dto.getDtBurert());
+        strumentiUrbanistici.setCdRepertorio(dto.getCdRepertorio());
+        strumentiUrbanistici.setAnnoProtocollo(dto.getAnnoProtocollo());
+        strumentiUrbanistici.setCdProtocollo(dto.getCdProtocollo());
+        strumentiUrbanistici.setDtProtocollo(dto.getDtProtocollo());
+
+        strumentiUrbanistici.setClassificaUrb(dto.getClassificaUrb());
+        strumentiUrbanistici.setIdFascicoloUrb(dto.getIdFascicoloUrb());
+        strumentiUrbanistici.setOggettoFascicoloUrb(dto.getOggettoFascicoloUrb());
+        strumentiUrbanistici.setIdSottofascicoloUrb(dto.getIdSottofascicoloUrb());
+        strumentiUrbanistici.setOggettoSottofascicoloUrb(dto.getOggettoSottofascicoloUrb());
+
+        return dto;
+    }
+
+    // MEV 30026
+    public boolean controllaUnivocitaDatiUfficio(BigDecimal idStrumentoUrbanistico,
+            String registroUfficio, BigDecimal annoUfficio, String numeroUfficio) {
+        if (registroUfficio == null || annoUfficio == null || numeroUfficio == null) {
+            return true;
+        }
+
+        List<PigStrumentiUrbanistici> pigStrumentiUrbanisticis = strumentiUrbanisticiHelper
+                .findPigStrumentiUrbanisticiByVersAndDatiUfficio(idStrumentoUrbanistico,
+                        registroUfficio, annoUfficio, numeroUfficio);
+
+        return pigStrumentiUrbanisticis.isEmpty();
+    }
+
     public static class NavigazioneStrumDto extends GenericDto {
 
         private boolean verificaInCorso;
@@ -1026,7 +1142,6 @@ public class StrumentiUrbanisticiEjb {
         public void setFileMancante(boolean fileMancante) {
             this.fileMancante = fileMancante;
         }
-
     }
 
     public static class DocStrumDto extends GenericDto {
@@ -1178,6 +1293,26 @@ public class StrumentiUrbanisticiEjb {
         private String faseCollegata2;
         private String cdErr;
         private String dsErr;
+
+        // MEV 30036 - dati ufficio urbanistica
+        private BigDecimal idPuc;
+        private String nrBurert;
+        private Date dtBurert;
+        private String cdRepertorio;
+        private BigDecimal annoProtocollo;
+        private String cdProtocollo;
+        private Date dtProtocollo;
+        private boolean flInviatoAEnte;
+
+        // MEV 40123
+        private String classificaUrb;
+        private String idFascicoloUrb;
+        private String oggettoFascicoloUrb;
+        private String idSottofascicoloUrb;
+        private String oggettoSottofascicoloUrb;
+
+        // per mostrare i dati anagrafici in dettaglio SU in vista ufficio urbanistica
+        private StrumentiUrbanisticiHelper.DatiAnagraficiDto datiAnagraficiDto;
 
         public SUDto() {
         }
@@ -1380,6 +1515,119 @@ public class StrumentiUrbanisticiEjb {
 
         public void setTiAtto(PigStrumUrbAtto tiAtto) {
             this.tiAtto = tiAtto;
+        }
+
+        public BigDecimal getIdPuc() {
+            return idPuc;
+        }
+
+        public void setIdPuc(BigDecimal idPuc) {
+            this.idPuc = idPuc;
+        }
+
+        public String getNrBurert() {
+            return nrBurert;
+        }
+
+        public void setNrBurert(String nrBurert) {
+            this.nrBurert = nrBurert;
+        }
+
+        public Date getDtBurert() {
+            return dtBurert;
+        }
+
+        public void setDtBurert(Date dtBurert) {
+            this.dtBurert = dtBurert;
+        }
+
+        public String getCdRepertorio() {
+            return cdRepertorio;
+        }
+
+        public void setCdRepertorio(String cdRepertorio) {
+            this.cdRepertorio = cdRepertorio;
+        }
+
+        public BigDecimal getAnnoProtocollo() {
+            return annoProtocollo;
+        }
+
+        public void setAnnoProtocollo(BigDecimal annoProtocollo) {
+            this.annoProtocollo = annoProtocollo;
+        }
+
+        public String getCdProtocollo() {
+            return cdProtocollo;
+        }
+
+        public void setCdProtocollo(String cdProtocollo) {
+            this.cdProtocollo = cdProtocollo;
+        }
+
+        public Date getDtProtocollo() {
+            return dtProtocollo;
+        }
+
+        public void setDtProtocollo(Date dtProtocollo) {
+            this.dtProtocollo = dtProtocollo;
+        }
+
+        public boolean isFlInviatoAEnte() {
+            return flInviatoAEnte;
+        }
+
+        public void setFlInviatoAEnte(boolean flInviatoAEnte) {
+            this.flInviatoAEnte = flInviatoAEnte;
+        }
+
+        public StrumentiUrbanisticiHelper.DatiAnagraficiDto getDatiAnagraficiDto() {
+            return datiAnagraficiDto;
+        }
+
+        public void setDatiAnagraficiDto(
+                StrumentiUrbanisticiHelper.DatiAnagraficiDto datiAnagraficiDto) {
+            this.datiAnagraficiDto = datiAnagraficiDto;
+        }
+
+        public String getClassificaUrb() {
+            return classificaUrb;
+        }
+
+        public void setClassificaUrb(String classificaUrb) {
+            this.classificaUrb = classificaUrb;
+        }
+
+        public String getIdFascicoloUrb() {
+            return idFascicoloUrb;
+        }
+
+        public void setIdFascicoloUrb(String idFascicoloUrb) {
+            this.idFascicoloUrb = idFascicoloUrb;
+        }
+
+        public String getOggettoFascicoloUrb() {
+            return oggettoFascicoloUrb;
+        }
+
+        public void setOggettoFascicoloUrb(String oggettoFascicoloUrb) {
+            this.oggettoFascicoloUrb = oggettoFascicoloUrb;
+        }
+
+        public String getIdSottofascicoloUrb() {
+            return idSottofascicoloUrb;
+        }
+
+        public void setIdSottofascicoloUrb(String idSottofascicoloUrb) {
+            this.idSottofascicoloUrb = idSottofascicoloUrb;
+        }
+
+        public String getOggettoSottofascicoloUrb() {
+            return oggettoSottofascicoloUrb;
+        }
+
+        public void setOggettoSottofascicoloUrb(String oggettoSottofascicoloUrb) {
+            this.oggettoSottofascicoloUrb = oggettoSottofascicoloUrb;
         }
     }
 

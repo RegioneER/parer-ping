@@ -81,6 +81,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
+ *
  * @author MIacolucci
  */
 @SuppressWarnings("rawtypes")
@@ -130,7 +131,8 @@ public class SismaEjb {
                 PigSisma pigSisma = (PigSisma) sisma[0];
                 PigVers pigVers = (PigVers) sisma[1];
                 // MEV26290
-                Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper.getTipoVersatore(pigVers);
+                Enum<Constants.TipoVersatoreSisma> tipoVersatore = sismaHelper
+                        .getTipoVersatore(pigVers);
                 PigSismaFinanziamento pigSismaFinanziamento = (PigSismaFinanziamento) sisma[2];
                 PigSismaProgettiAg pigSismaProgettiAg = (PigSismaProgettiAg) sisma[3];
                 PigSismaFaseProgetto pigSismaFaseProgetto = (PigSismaFaseProgetto) sisma[4];
@@ -157,7 +159,7 @@ public class SismaEjb {
                         pigSismaFinanziamento.getDsTipoFinanziamento());
 
                 // Accende o meno il download del rapporto di versamento
-                if (!tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO) && (pigSisma
+                if (!tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PRIVATO) && (pigSisma
                         .getTiStato().name().equals(PigSisma.TiStato.VERSATO.name())
                         || pigSisma.getTiStato().name().equals(PigSisma.TiStato.COMPLETATO.name())
                         || sismaHelper.existsStatoStorico(BigDecimal.valueOf(pigSisma.getIdSisma()),
@@ -1066,7 +1068,7 @@ public class SismaEjb {
             // se si sta salvando il dato agenzia e sisma è di un SA privato allora si salvano i
             // dati
             if (sismaHelper.getTipoVersatore(pigSisma.getPigVer())
-                    .equals(Constants.TipoVersatore.SA_PRIVATO)) {
+                    .equals(Constants.TipoVersatoreSisma.SA_PRIVATO)) {
                 pigSisma.setAnnoAg(sismaDto.getAnnoAg());
                 pigSisma.setNumeroAg(sismaDto.getNumeroAg());
                 pigSisma.setDataAg(sismaDto.getDataAg());
@@ -1163,8 +1165,9 @@ public class SismaEjb {
      */
     public PigSisma aggiornaStatoInviatoASacer(PigSisma pigSisma) {
         if (pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
-            Enum<Constants.TipoVersatore> tipo = sismaHelper.getTipoVersatore(pigSisma.getPigVer());
-            if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)) {
+            Enum<Constants.TipoVersatoreSisma> tipo = sismaHelper
+                    .getTipoVersatore(pigSisma.getPigVer());
+            if (tipo.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)) {
                 sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.VERSATO);
             } else {
                 sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.COMPLETATO);
@@ -1181,7 +1184,7 @@ public class SismaEjb {
      * Determina se il versatore passato è di tipo AGENZIA, SA_PUBBLICO, SA_PRIVATO oppure nessuno
      * dei tre (NULL)
      */
-    public Enum<Constants.TipoVersatore> getTipoVersatore(BigDecimal id) {
+    public Enum<Constants.TipoVersatoreSisma> getTipoVersatore(BigDecimal id) {
         PigVers pigVers = sismaHelper.getPigVersById(id);
         return sismaHelper.getTipoVersatore(pigVers);
     }
@@ -1223,9 +1226,9 @@ public class SismaEjb {
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSisma);
         PigVers vers; // Conterrà il versatore su cui versare!
         boolean isPadreAnnullato = false;
-        Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
+        Enum<Constants.TipoVersatoreSisma> tipoVersatore = sismaHelper
                 .getTipoVersatore(pigSisma.getPigVer());
-        if (tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)
+        if (tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PRIVATO)
                 || pigSisma.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
             // Il progetto è già arrivato in agenzia
             vers = pigSisma.getPigVerAg();
@@ -1349,7 +1352,7 @@ public class SismaEjb {
         private String registroAg;
         private String dsTipoFinanziamento;
         private String oggetto;
-        private Enum<Constants.TipoVersatore> tipoVersatore;
+        private Enum<Constants.TipoVersatoreSisma> tipoVersatore;
 
         public long getIdSisma() {
             return idSisma;
@@ -1511,11 +1514,11 @@ public class SismaEjb {
             this.oggetto = oggetto;
         }
 
-        public Enum<Constants.TipoVersatore> getTipoVersatore() {
+        public Enum<Constants.TipoVersatoreSisma> getTipoVersatore() {
             return tipoVersatore;
         }
 
-        public void setTipoVersatore(Enum<Constants.TipoVersatore> tipoVersatore) {
+        public void setTipoVersatore(Enum<Constants.TipoVersatoreSisma> tipoVersatore) {
             this.tipoVersatore = tipoVersatore;
         }
     }

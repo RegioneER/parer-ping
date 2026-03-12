@@ -48,8 +48,9 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 public class PigStrumentiUrbanistici implements Serializable {
 
     public enum TiStato {
-        BOZZA, ERRORE, RICHIESTA_INVIO, INVIO_IN_CORSO, IN_ELABORAZIONE, IN_TRASFORMAZIONE,
-        IN_VERSAMENTO, VERSATO, ANNULLATO
+        BOZZA, ERRORE, RICHIESTA_INVIO, INVIO_IN_CORSO, IN_ELABORAZIONE_ENTE,
+        IN_TRASFORMAZIONE_ENTE, IN_VERSAMENTO_ENTE, IN_ELABORAZIONE, IN_TRASFORMAZIONE,
+        IN_VERSAMENTO, VERSATO, ANNULLATO, COMPLETATO
     }
 
     private static final long serialVersionUID = 1L;
@@ -71,6 +72,23 @@ public class PigStrumentiUrbanistici implements Serializable {
     private PigVers pigVer;
     private List<PigStrumUrbCollegamenti> pigStrumUrbCollegamentis = new ArrayList<>();
     private List<PigStrumUrbDocumenti> pigStrumUrbDocumentis = new ArrayList<>();
+
+    // MEV 30026
+    private Long idPuc;
+    private String nrBurert;
+    private Date dtBurert;
+    private String cdRepertorio;
+    private BigDecimal annoProtocollo;
+    private String cdProtocollo;
+    private Date dtProtocollo;
+    private String flInviatoAEnte;
+
+    // MEV 40123
+    private String classificaUrb;
+    private String idFascicoloUrb;
+    private String oggettoFascicoloUrb;
+    private String idSottofascicoloUrb;
+    private String oggettoSottofascicoloUrb;
 
     public PigStrumentiUrbanistici() {
         // for Hibernate
@@ -284,4 +302,122 @@ public class PigStrumentiUrbanistici implements Serializable {
         return pigStrumUrbDocumenti;
     }
 
+    @Column(name = "ID_PUC")
+    public Long getIdPuc() {
+        return idPuc;
+    }
+
+    public void setIdPuc(Long idPuc) {
+        this.idPuc = idPuc;
+    }
+
+    @Column(name = "NR_BURERT")
+    public String getNrBurert() {
+        return nrBurert;
+    }
+
+    public void setNrBurert(String nrBurert) {
+        this.nrBurert = nrBurert;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATA_BURERT")
+    public Date getDtBurert() {
+        return dtBurert;
+    }
+
+    public void setDtBurert(Date dtBurert) {
+        this.dtBurert = dtBurert;
+    }
+
+    @Column(name = "REPERTORIO")
+    public String getCdRepertorio() {
+        return cdRepertorio;
+    }
+
+    public void setCdRepertorio(String cdRepertorio) {
+        this.cdRepertorio = cdRepertorio;
+    }
+
+    @Column(name = "ANNO_PROTOCOLLO")
+    public BigDecimal getAnnoProtocollo() {
+        return annoProtocollo;
+    }
+
+    public void setAnnoProtocollo(BigDecimal annoProtocollo) {
+        this.annoProtocollo = annoProtocollo;
+    }
+
+    @Column(name = "NR_PROTOCOLLO")
+    public String getCdProtocollo() {
+        return cdProtocollo;
+    }
+
+    public void setCdProtocollo(String cdProtocollo) {
+        this.cdProtocollo = cdProtocollo;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATA_PROTOCOLLO")
+    public Date getDtProtocollo() {
+        return dtProtocollo;
+    }
+
+    public void setDtProtocollo(Date dtProtocollo) {
+        this.dtProtocollo = dtProtocollo;
+    }
+
+    @Column(name = "FL_INVIATO_A_ENTE")
+    public String getFlInviatoAEnte() {
+        return flInviatoAEnte;
+    }
+
+    public void setFlInviatoAEnte(String flInviatoAEnte) {
+        this.flInviatoAEnte = flInviatoAEnte;
+    }
+
+    @Column(name = "CLASSIFICA_URB")
+    public String getClassificaUrb() {
+        return classificaUrb;
+    }
+
+    public void setClassificaUrb(String classificaUrb) {
+        this.classificaUrb = classificaUrb;
+    }
+
+    @Column(name = "ID_FASCICOLO_URB")
+    public String getIdFascicoloUrb() {
+        return idFascicoloUrb;
+    }
+
+    public void setIdFascicoloUrb(String idFascicoloUrb) {
+        this.idFascicoloUrb = idFascicoloUrb;
+    }
+
+    @Column(name = "OGGETTO_FASCICOLO_URB")
+    public String getOggettoFascicoloUrb() {
+        return oggettoFascicoloUrb;
+    }
+
+    public void setOggettoFascicoloUrb(String oggettoFascicoloUrb) {
+        this.oggettoFascicoloUrb = oggettoFascicoloUrb;
+    }
+
+    @Column(name = "ID_SOTTOFASCICOLO_URB")
+    public String getIdSottofascicoloUrb() {
+        return idSottofascicoloUrb;
+    }
+
+    public void setIdSottofascicoloUrb(String idSottofascicoloUrb) {
+        this.idSottofascicoloUrb = idSottofascicoloUrb;
+    }
+
+    @Column(name = "OGGETTO_SOTTOFASCICOLO_URB")
+    public String getOggettoSottofascicoloUrb() {
+        return oggettoSottofascicoloUrb;
+    }
+
+    public void setOggettoSottofascicoloUrb(String oggettoSottofascicoloUrb) {
+        this.oggettoSottofascicoloUrb = oggettoSottofascicoloUrb;
+    }
 }

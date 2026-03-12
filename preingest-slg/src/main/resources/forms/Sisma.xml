@@ -49,7 +49,7 @@
     <Section Name="DocumentiCaricatiSection" Description="" Legend="Documenti caricati" ShowButton="false" LoadOpened="true"/>
     <Section Name="AggiuntaDocumentiFacoltativiSection" Description="" Legend="Aggiunta documenti facoltativi" ShowButton="false" LoadOpened="true"/>
     <Section Name="ErroriRiepilogoSection" Description="" Legend="Errori" ShowButton="false" LoadOpened="true"/>
-    <Section Name="SismaDetailStatiSection" Descripction="" Legend="Lista Stati Sisma" ShowButton="true" LoadOpened="false"/>
+    <Section Name="SismaDetailStatiSection" Description="" Legend="Lista Stati Sisma" ShowButton="true" LoadOpened="false"/>
     
     <Wizard Name="InserimentoWizard" Description="Versamento progetto ricostruzione">
         <Step Name="Sisma" Description="Inserimento Dati"/>
@@ -97,7 +97,6 @@
     </Fields>
 
     <Fields Name="DatiAgenzia" Description="Dati agenzia" >
-<!--        <Input Name="registro_ag" Type="STRING" Description="Registro" Required="true"  MaxLength="60"/> -->
         <ComboBox Name="registro_ag" Type="STRING" Description="Registro" Required="true" />
         <ComboBox Name="anno_ag" Description="Anno" Type="STRING" Required="true"/>        
         <Input Name="numero_ag" Type="STRING" Description="Numero" Required="true"  MaxLength="20" />

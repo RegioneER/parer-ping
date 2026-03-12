@@ -41,8 +41,6 @@
                 $("#Id_set_valori_param").prop("disabled", true);
                 $("#Id_set_valori_param").val(null);
                 $("#Ti_calc_key_unita_doc").prop("disabled", false);
-                $("#Ti_priorita_versamento").prop("disabled", true);
-                $("#Ti_priorita_versamento").val('');
 
                 if ((value === "ZIP_CON_XML_SACER" || value === "DA_TRASFORMARE")) {
                     $("#Cd_registro_unita_doc_sacer").prop("disabled", true);
@@ -58,7 +56,6 @@
                     $("#Fl_forza_collegamento").prop("disabled", true);
                     $("#Ti_conservazione").prop("disabled", true);
                     $("#Cd_registro_unita_doc_sacer").val(null);
-                    
                 }
                 
                 // MEV#27321 - Introduzione della priorità di versamento di un oggetto ZIP_CON_XML_SACER e NO_ZIP
@@ -73,12 +70,13 @@
                     $("#Ds_reg_exp_cd_vers").prop("disabled", false);
                     $("#Ti_calc_key_unita_doc").prop("disabled", true);
                     $("#Ti_calc_key_unita_doc").val(null);
+                    $("#Ti_priorita_versamento").prop("disabled", true);
+                    $("#Ti_priorita_versamento").val('');
                 }
                 
                 if (value === "ZIP_CON_XML_SACER" || value === "NO_ZIP" || value === "ZIP_NO_XML_SACER") {
                     $('#Ti_contenuto').prop("disabled", false); 
                 }
-        
         
                 if ((value === "ZIP_NO_XML_SACER")) {
                     $("#Cd_registro_unita_doc_sacer").prop("disabled", true);

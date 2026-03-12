@@ -107,20 +107,6 @@ public class InvioSismaTimer extends JobTimer {
             jobLogger.writeAtomicLog(Constants.NomiJob.INVIO_SISMA,
                     Constants.TipiRegLogJob.INIZIO_SCHEDULAZIONE, null);
             invioSismaEjb.invioSisma();
-            // } catch (ParerInternalError e) {
-            // //questo log viene scritto solo in caso di errore.
-            // String message = null;
-            // Exception nativeExcp = e.getNativeException();
-            // if (nativeExcp != null) {
-            // message = nativeExcp.getMessage();
-            // }
-            // if (e.getCause() != null) {
-            // message = e.getCause().getMessage();
-            // }
-            // jobLogger.writeAtomicLog(Constants.NomiJob.VERIFICA_DOCUMENTI_STRUMENTI_URBANISTICI,
-            // Constants.TipiRegLogJob.ERRORE, message);
-            // logger.error("Errore nell'esecuzione del job di verifica documenti strumenti
-            // urbanistici", e);
         } catch (Exception e) {
             // questo log viene scritto solo in caso di errore.
             String message = null;

@@ -18,13 +18,8 @@
 package it.eng.sacerasi.strumentiUrbanistici.ejb;
 
 import it.eng.paginator.util.HibernateUtils;
-import it.eng.sacerasi.entity.PigStrumUrbAtto;
-import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
-import it.eng.sacerasi.entity.PigStrumUrbPianoDocReq;
-import it.eng.sacerasi.entity.PigStrumUrbPianoStato;
-import it.eng.sacerasi.entity.PigStrumUrbStoricoStati;
-import it.eng.sacerasi.entity.PigStrumUrbValDoc;
-import it.eng.sacerasi.entity.PigStrumentiUrbanistici;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.entity.PigStrumentiUrbanistici.TiStato;
 import it.eng.sacerasi.entity.PigVers;
 import it.eng.sacerasi.helper.GenericHelper;
@@ -32,27 +27,31 @@ import it.eng.sacerasi.strumentiUrbanistici.dto.RicercaStrumentiUrbanisticiDTO;
 import it.eng.sacerasi.viewEntity.PigVSuCalcolaAmbitoTerr;
 import it.eng.sacerasi.viewEntity.PigVSuCheck;
 import it.eng.sacerasi.viewEntity.PigVSuLisDocsPiano;
+
 import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_FLAG;
 import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_VALORE;
 import static it.eng.sacerasi.web.util.ComboGetter.CAMPO_ANNO;
+
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.spagoLite.db.base.row.BaseRow;
 import it.eng.spagoLite.db.base.table.BaseTable;
 import it.eng.spagoLite.db.decodemap.DecodeMapIF;
 import it.eng.spagoLite.db.oracle.decode.DecodeMap;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.ejb.*;
 import javax.persistence.Query;
+
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
- *
  * @author MIacolucci
  */
 @SuppressWarnings("unchecked")
@@ -60,15 +59,53 @@ import org.apache.commons.lang3.time.DateUtils;
 @LocalBean
 public class StrumentiUrbanisticiHelper extends GenericHelper {
 
+    @EJB
+    private ConfigurationHelper configurationHelper;
+
     public List<String> findTipiStrumentiUrbanistici() {
         String queryStr = "SELECT DISTINCT p.nmTipoStrumentoUrbanistico FROM PigVSuList p ORDER BY p.nmTipoStrumentoUrbanistico";
         Query query = getEntityManager().createQuery(queryStr);
         return query.getResultList();
     }
 
-    public Query findSUByVersAndStates(RicercaStrumentiUrbanisticiDTO rDTO, BigDecimal idVers,
+    public Query findSUUfficio(RicercaStrumentiUrbanisticiDTO rDTO, BigDecimal idVers) {
+        EnumSet<TiStato> set = EnumSet.of(PigStrumentiUrbanistici.TiStato.ERRORE,
+                PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO,
+                PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO,
+                PigStrumentiUrbanistici.TiStato.ANNULLATO,
+                PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE,
+                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
+                PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO,
+                PigStrumentiUrbanistici.TiStato.COMPLETATO);
+
+        String queryStr = "SELECT s, p FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato p WHERE ((s.tiStato IN :set AND s.flInviatoAEnte = '1') OR ( s.tiStato = 'VERSATO')) ";
+        return findSU(queryStr, rDTO, idVers, set);
+    }
+
+    public Query findSUEnte(RicercaStrumentiUrbanisticiDTO rDTO, BigDecimal idVers) {
+        EnumSet<TiStato> set = EnumSet.of(PigStrumentiUrbanistici.TiStato.BOZZA,
+                PigStrumentiUrbanistici.TiStato.ERRORE,
+                PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO,
+                PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE_ENTE,
+                PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO,
+                PigStrumentiUrbanistici.TiStato.VERSATO,
+                PigStrumentiUrbanistici.TiStato.ANNULLATO,
+                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE_ENTE,
+                PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE,
+                PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE,
+                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
+                PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO,
+                PigStrumentiUrbanistici.TiStato.COMPLETATO);
+
+        String queryStr = "SELECT s, p FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato p WHERE s.tiStato IN :set ";
+        return findSU(queryStr, rDTO, idVers, set);
+    }
+
+    public Query findSU(String queryStr, RicercaStrumentiUrbanisticiDTO rDTO, BigDecimal idVers,
             Set<TiStato> set) {
-        String queryStr = "SELECT s, p FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato p WHERE s.pigVer.idVers=:idVers AND s.tiStato IN :set ";
+        if (idVers != null) {
+            queryStr += " AND s.pigVer.idVers=:idVers ";
+        }
 
         if (rDTO.isTiStrumentoUrbanistico()) {
             queryStr += " AND p.nmTipoStrumentoUrbanistico = :nmTipoStrumentoUrbanistico ";
@@ -98,10 +135,41 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
             set = EnumSet.of(TiStato.valueOf(rDTO.getNmStato()));
         }
 
+        if (rDTO.isIdPuc()) {
+            queryStr += " AND s.idPuc = :idPuc ";
+        }
+
+        if (rDTO.isNrBurert()) {
+            queryStr += " AND s.nrBurert = :nrBurert ";
+        }
+
+        if (rDTO.isDtBurert()) {
+            queryStr += " AND s.dtBurert >= :dtBurertStart AND s.dtBurert < :dtBurertEnd";
+        }
+
+        if (rDTO.isCdRepertorio()) {
+            queryStr += " AND s.cdRepertorio = :cdRepertorio ";
+        }
+
+        if (rDTO.isAnnoProtocollo()) {
+            queryStr += " AND s.annoProtocollo = :annoProtocollo ";
+        }
+
+        if (rDTO.isCdProtocollo()) {
+            queryStr += " AND s.cdProtocollo = :cdProtocollo ";
+        }
+
+        if (rDTO.isDtProtocollo()) {
+            queryStr += " AND s.dtProtocollo >= :dtProtocolloStart AND s.dtProtocollo < :dtProtocolloEnd";
+        }
+
         queryStr += " ORDER BY s.dtCreazione DESC";
         Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
         query.setParameter("set", set);
+
+        if (idVers != null) {
+            query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        }
 
         if (rDTO.isTiStrumentoUrbanistico()) {
             query.setParameter("nmTipoStrumentoUrbanistico", rDTO.getTiStrumentoUrbanistico());
@@ -128,6 +196,36 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
             query.setParameter("numero", "%" + rDTO.getCdNumero() + "%");
         }
 
+        if (rDTO.isIdPuc()) {
+            query.setParameter("idPuc", rDTO.getIdPuc());
+        }
+
+        if (rDTO.isNrBurert()) {
+            query.setParameter("nrBurert", rDTO.getNrBurert());
+        }
+
+        if (rDTO.isDtBurert()) {
+            query.setParameter("dtBurertStart", rDTO.getDtBurert());
+            query.setParameter("dtBurertEnd", DateUtils.addDays(rDTO.getDtBurert(), 1));
+        }
+
+        if (rDTO.isCdRepertorio()) {
+            query.setParameter("cdRepertorio", rDTO.getCdRepertorio());
+        }
+
+        if (rDTO.isAnnoProtocollo()) {
+            query.setParameter("annoProtocollo", rDTO.getAnnoProtocollo());
+        }
+
+        if (rDTO.isCdProtocollo()) {
+            query.setParameter("cdProtocollo", rDTO.getCdProtocollo());
+        }
+
+        if (rDTO.isDtProtocollo()) {
+            query.setParameter("dtProtocolloStart", rDTO.getDtProtocollo());
+            query.setParameter("dtProtocolloEnd", DateUtils.addDays(rDTO.getDtProtocollo(), 1));
+        }
+
         return query;
     }
 
@@ -139,10 +237,10 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         return query.getResultList();
     }
 
-    // MEV29495 - ora elenca solo gli SU in stato VERSATO
+    // MEV29495 e MEV39622- ora elenca solo gli SU in stato COMPLETATO
     public List<PigStrumentiUrbanistici> findNumeriByVersAnnoTipoSUFase(PigVers pigVer,
             BigDecimal anno, String nmTipoStrumento, String fase) {
-        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND s.tiStato = 'VERSATO'";
+        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND s.tiStato = 'COMPLETATO'";
         Query query = getEntityManager().createQuery(queryStr);
         query.setParameter("pigVer", pigVer);
         query.setParameter("anno", anno);
@@ -154,6 +252,42 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     public PigStrumentiUrbanistici getSUByVersAndCdKey(PigVers pigVer, String cdKey) {
         List<PigStrumentiUrbanistici> l = findSUByVersAndCdKey(pigVer, cdKey);
         return l.isEmpty() ? null : l.iterator().next();
+    }
+
+    public PigStrumentiUrbanistici getSUByCdKeyAndDatiUfficio(String cdKey, String cdRepertorio,
+            String annoProtocollo, String cdProtocollo) {
+
+        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s WHERE s.cdKey=:cdKey AND s.cdRepertorio=:cdRepertorio AND s.annoProtocollo=:annoProtocollo AND s.cdProtocollo=:cdProtocollo";
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("cdKey", cdKey);
+        query.setParameter("cdRepertorio", cdRepertorio);
+        query.setParameter("annoProtocollo", new BigDecimal(annoProtocollo));
+        query.setParameter("cdProtocollo", cdProtocollo);
+        List<PigStrumentiUrbanistici> resultList = query.getResultList();
+        if (!resultList.isEmpty()) {
+            return resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    // MEV 30026
+    public String getCdKeyPerUfficio(PigStrumentiUrbanistici su) {
+        StrumentiUrbanisticiEjb.SUDto suDto = new StrumentiUrbanisticiEjb.SUDto();
+        suDto.setCdKey(su.getCdKey());
+        suDto.setCdRepertorio(su.getCdRepertorio());
+        suDto.setAnnoProtocollo(su.getAnnoProtocollo());
+        suDto.setCdProtocollo(su.getCdProtocollo());
+        return getCdKeyPerUfficio(suDto);
+    }
+
+    public String getCdKeyPerUfficio(StrumentiUrbanisticiEjb.SUDto su) {
+        return su.getCdKey() + "_"
+                + su.getAnnoProtocollo()
+                + "_"
+                + su.getCdRepertorio()
+                + "_"
+                + su.getCdProtocollo();
     }
 
     public List<PigStrumUrbPianoStato> findPigStrumUrbPianoStatoByNomeTipo(String nomeTipo) {
@@ -242,6 +376,20 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         // MEV 37686
         pigStrumentiUrbanistici.setTiStato(tiStato);
         pigStrumentiUrbanistici.setDtStato(new Date());
+
+        return pigStrumentiUrbanistici;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public PigStrumentiUrbanistici aggiornaInviatoEnteInNuovaTransazione(PigStrumentiUrbanistici su,
+            boolean isInviato) {
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = getEntityManager()
+                .find(PigStrumentiUrbanistici.class, su.getIdStrumentiUrbanistici());
+        if (isInviato) {
+            pigStrumentiUrbanistici.setFlInviatoAEnte(Constants.DB_TRUE);
+        } else {
+            pigStrumentiUrbanistici.setFlInviatoAEnte(Constants.DB_FALSE);
+        }
 
         return pigStrumentiUrbanistici;
     }
@@ -341,21 +489,39 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         return dimensione;
     }
 
-    public Object[] findDatiAmbienteByIdSU(BigDecimal id) {
+    public Object[] findDatiAmbienteByIdSU(BigDecimal id, boolean estraiRapportoAgenzia,
+            StrumentiUrbanisticiEjb.SUDto dto) {
         Object[] ogg = null;
+        Query query = null;
+
+        BigDecimal idVers = dto.getIdVers();
+        String cdKey = dto.getCdKey();
+
+        if (estraiRapportoAgenzia) {
+            String idUfficioUrbanistico = configurationHelper
+                    .getValoreParamApplicByApplic(Constants.ID_UFFICIO_URBANISTICO);
+
+            idVers = new BigDecimal(idUfficioUrbanistico);
+            cdKey = getCdKeyPerUfficio(dto);
+        }
+
         // per correggere il problema della SUE#26429 - [problema rapporto di versamento]
         // COMGUASTALLA_AOO1_SU
         // inserita join con pigVer
         String queryStr = "select su, str, en, amb "
                 + "from   PigStrumentiUrbanistici su, PigObject po, PigObject son, PigUnitaDocObject udo, "
                 + "       SIUsrOrganizIam orgIam, OrgStrut str, OrgEnte en, OrgAmbiente amb "
-                + "where  po.pigVer = su.pigVer and po.cdKeyObject = su.cdKey "
+                // + "where po.pigVer = su.pigVer and po.cdKeyObject = su.cdKey "
+                + "where  po.pigVer.idVers = :idVers and po.cdKeyObject = :cdKey "
                 + "and    udo.pigObject.idObject = son.idObject "
                 + "and    orgIam.idOrganizIam = udo.idOrganizIam and son.pigObjectPadre.idObject = po.idObject "
                 + "and    str.idStrut = orgiam.idOrganizApplic and en.idEnte = str.orgEnte.idEnte "
                 + "and    amb.idAmbiente = en.orgAmbiente.idAmbiente and su.idStrumentiUrbanistici=:id";
-        Query query = getEntityManager().createQuery(queryStr);
+        query = getEntityManager().createQuery(queryStr);
         query.setParameter("id", HibernateUtils.longFrom(id));
+        query.setParameter("idVers", HibernateUtils.longFrom(idVers));
+        query.setParameter("cdKey", cdKey);
+
         List<Object[]> l = query.getResultList();
         if (!l.isEmpty()) {
             ogg = l.iterator().next();
@@ -363,8 +529,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         return ogg;
     }
 
-    public static class DatiAnagraficiDto {
-
+    public static class DatiAnagraficiDto implements Serializable {
         private BigDecimal idEnteSiam;
         private String denominazione;
         private String tipologia;
@@ -424,6 +589,17 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
                 HibernateUtils.longFrom(idStrumentoUrbanistico));
         List<PigStrumentiUrbanistici> lista = query.getResultList();
         return !lista.isEmpty();
+    }
+
+    // MEV 40110
+    public boolean existsStatoStorico(BigDecimal idStrumentiUrbanistici, String stato) {
+        Query query = getEntityManager().createQuery(
+                "SELECT CASE WHEN (count(s) > 0) THEN true ELSE false END FROM PigStrumUrbStoricoStati s WHERE s.pigStrumentiUrbanistici.idStrumentiUrbanistici = :idStrumentiUrbanistici AND s.tiStato = :stato",
+                Boolean.class);
+        query.setParameter("idStrumentiUrbanistici",
+                HibernateUtils.longFrom(idStrumentiUrbanistici));
+        query.setParameter("stato", stato);
+        return (boolean) query.getSingleResult();
     }
 
     // MEV 26278
@@ -498,10 +674,10 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         return cdKey.substring(5);
     }
 
-    // MEV 29495
+    // MEV 29495 e MEV 39622 - ora elenca solo gli SU in stato COMPLETATO
     public DecodeMap getSUVersatiAnnoByPianoStato(String nmTipoStrumentoUrbanistico,
             String tiFaseStrumento) {
-        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE s.tiStato = 'VERSATO' "
+        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE s.tiStato = 'COMPLETATO' "
                 + "AND s.pigStrumUrbPianoStato.nmTipoStrumentoUrbanistico = :nmTipoStrumentoUrbanistico "
                 + "AND s.pigStrumUrbPianoStato.tiFaseStrumento = :tiFaseStrumento ORDER BY s.anno";
         Query query = getEntityManager().createQuery(queryStr);
@@ -567,5 +743,106 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         query.setParameter("cdKeyObject", cdKey);
         query.setParameter("idVers", HibernateUtils.longFrom(idVers));
         return (Long) query.getSingleResult() > 0;
+    }
+
+    // MEV 30026
+    public PigVers getPigVersById(BigDecimal idVers) {
+        return getPigVersById(idVers.longValueExact());
+    }
+
+    public PigVers getPigVersById(long idVers) {
+        return getEntityManager().find(PigVers.class, idVers);
+    }
+
+    public boolean controllaUnivocitaDatiUfficioUrbanistica(String cdKey, BigDecimal idPuc,
+            String cdRepertorio,
+            BigDecimal annoProtocollo, String cdProtocollo) {
+        Query query = getEntityManager().createQuery("SELECT su FROM PigStrumentiUrbanistici su "
+                + "WHERE su.cdKey <> :cdKey AND (su.idPuc = :idPuc "
+                + "OR (su.cdRepertorio = :cdRepertorio AND su.annoProtocollo = :annoProtocollo "
+                + "AND su.cdProtocollo = :cdProtocollo))");
+        query.setParameter("cdKey", cdKey);
+        query.setParameter("idPuc", HibernateUtils.longFrom(idPuc));
+        query.setParameter("annoProtocollo", annoProtocollo);
+        query.setParameter("cdRepertorio", cdRepertorio);
+        query.setParameter("cdProtocollo", cdProtocollo);
+        List<PigStrumentiUrbanistici> lista = query.getResultList();
+
+        return lista.isEmpty();
+    }
+
+    // MEV 30026
+    public List<PigStrumentiUrbanistici> findPigStrumentiUrbanisticiByVersAndDatiUfficio(
+            BigDecimal idStrumentiUrbanistici, String registroUfficio, BigDecimal annoUfficio,
+            String numeroUfficio) {
+        String queryStr = "SELECT su FROM PigStrumentiUrbanistici su WHERE  su.cdRepertorio = :registroUfficio "
+                + " AND su.annoProtocollo = :annoUfficio AND su.cdProtocollo = :numeroUfficio AND NOT su.tiStato = :tiStato AND NOT su.idStrumentiUrbanistici = :idStrumentiUrbanistici ";
+        Query query = getEntityManager().createQuery(queryStr);
+        query.setParameter("registroUfficio", registroUfficio);
+        query.setParameter("annoUfficio", annoUfficio);
+        query.setParameter("numeroUfficio", numeroUfficio);
+        query.setParameter("tiStato", PigStrumentiUrbanistici.TiStato.ANNULLATO);
+        query.setParameter("idStrumentiUrbanistici",
+                HibernateUtils.longFrom(idStrumentiUrbanistici));
+        return query.getResultList();
+    }
+
+    /*
+     * Ritorna il tipo di versatore pesasto come parametro
+     */
+    public Enum<Constants.TipoVersatoreStrumentiUrbanistici> getTipoVersatore(PigVers pigVers) {
+        Enum<Constants.TipoVersatoreStrumentiUrbanistici> tipoVersatore = null;
+
+        String idUfficioUrbanistico = configurationHelper
+                .getValoreParamApplicByApplic(Constants.ID_UFFICIO_URBANISTICO);
+        BigDecimal id = new BigDecimal(pigVers.getIdVers());
+        if (id.equals(new BigDecimal(idUfficioUrbanistico))) {
+            tipoVersatore = Constants.TipoVersatoreStrumentiUrbanistici.UFFICIO_URABANISTICA;
+        } else {
+            tipoVersatore = Constants.TipoVersatoreStrumentiUrbanistici.ENTE;
+        }
+        return tipoVersatore;
+    }
+
+    // MEV 30026
+    public String getCdKeyFromUfficioUrbanisticaObject(String cdKeyObject) {
+        Pattern pattern = Pattern.compile("^(?:[^_]*_){2}[^_]*(_)");
+        Matcher matcher = pattern.matcher(cdKeyObject);
+        if (matcher.find()) {
+            int position = matcher.start(1);
+            return cdKeyObject.substring(0, position);// Position of the 4th underscore
+        }
+
+        return cdKeyObject;
+    }
+
+    public String getCdRepertorioFromUfficioUrbanisticaObject(String cdKeyObject) {
+        Pattern pattern = Pattern.compile("^(?:[^_]*_){4}([^_]*)");
+        Matcher matcher = pattern.matcher(cdKeyObject);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return "";
+    }
+
+    public String getAnnoProtocolloFromUfficioUrbanisticaObject(String cdKeyObject) {
+        Pattern pattern = Pattern.compile("^(?:[^_]*_){3}([^_]*)");
+        Matcher matcher = pattern.matcher(cdKeyObject);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return "";
+    }
+
+    public String getCdProtocolloFromUfficioUrbanisticaObject(String cdKeyObject) {
+        Pattern pattern = Pattern.compile("^(?:[^_]*_){5}([^_]*)");
+        Matcher matcher = pattern.matcher(cdKeyObject);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return "";
     }
 }

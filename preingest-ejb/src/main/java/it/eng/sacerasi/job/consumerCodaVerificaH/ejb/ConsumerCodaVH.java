@@ -271,7 +271,7 @@ public class ConsumerCodaVH implements MessageListener {
             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                     .getPigStrumUrbByCdKeyAndTiStato(
                             tmpPigObject.getPigObjectPadre().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
             if (pigStrumentiUrbanistici != null) {
                 PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
                 pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(

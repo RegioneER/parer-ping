@@ -35,6 +35,7 @@ public class Constants {
     public static final String NUM_FASCICOLI_CODA_VERS = "NUM_FASCICOLI_CODA_VERS";
 
     public static final String ID_VERSATORE_AGENZIA = "ID_VERSATORE_AGENZIA";
+    public static final String ID_UFFICIO_URBANISTICO = "ID_UFFICIO_URBANISTICO";
     public static final String URL_ALLINEA_ENTE_CONVENZ = "URL_ALLINEA_ENTE_CONVENZ";
     public static final String USERID_REPLICA_ORG = "USERID_REPLICA_ORG";
     public static final String PSW_REPLICA_ORG = "PSW_REPLICA_ORG";
@@ -589,8 +590,16 @@ public class Constants {
     public static final String TIPO_VERSATORE_SISMA_SELEZIONATO = "TIPO_VERSATORE_SISMA_SELEZIONATO";
     public static final String TIPO_VERSATORE_SISMA_UTENTE = "TIPO_VERSATORE_SISMA_UTENTE";
 
-    public enum TipoVersatore {
+    // MEV 30026
+    public static final String TIPO_VERSATORE_STRUMENTIURBANISTICI_UTENTE = "TIPO_VERSATORE_STRUMENTIURBANISTICI_UTENTE";
+
+    public enum TipoVersatoreSisma {
         AGENZIA, SA_PUBBLICO, SA_PRIVATO
+    }
+
+    // MEV 30026
+    public enum TipoVersatoreStrumentiUrbanistici {
+        UFFICIO_URABANISTICA, ENTE
     }
 
     // MEV 26012

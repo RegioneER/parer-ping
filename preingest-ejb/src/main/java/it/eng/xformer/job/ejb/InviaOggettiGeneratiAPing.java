@@ -165,19 +165,7 @@ public class InviaOggettiGeneratiAPing {
                                     pot.getPigObject().getIdObject(),
                                     Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                            // MEV 22064 - trova e modifica lo stato del SU
-                            aggiornaStatoEventualeStrumentoUrbanistico(
-                                    pot.getPigObject().getCdKeyObject(),
-                                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                    PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                            // MEV 30935 - trova e modifica lo stato del Sisma
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                                    "PING-ERRSU27");
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                    Constants.PING_ERRSSISMA27);
+                            impostaErrorePerSUeSisma(pot.getPigObject());
 
                             // passa all'oggetto successivo
                             continue;
@@ -201,19 +189,7 @@ public class InviaOggettiGeneratiAPing {
                             jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
                                     Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                            // MEV 22064 - trova e modifica lo stato del SU
-                            aggiornaStatoEventualeStrumentoUrbanistico(
-                                    pot.getPigObject().getCdKeyObject(),
-                                    PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                    PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                            // MEV 30935 - trova e modifica lo stato del Sisma
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                                    "PING-ERRSU27");
-                            aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                    PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                    Constants.PING_ERRSSISMA27);
+                            impostaErrorePerSUeSisma(pot.getPigObject());
 
                             // passa all'oggetto successivo
                             continue;
@@ -249,19 +225,7 @@ public class InviaOggettiGeneratiAPing {
                                         pot.getPigObject().getIdObject(),
                                         Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                                // MEV 22064 - trova e modifica lo stato del SU
-                                aggiornaStatoEventualeStrumentoUrbanistico(
-                                        pot.getPigObject().getCdKeyObject(),
-                                        PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                        PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                                // MEV 30935 - trova e modifica lo stato del Sisma
-                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                        PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                                        "PING-ERRSU27");
-                                aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                        PigSisma.TiStato.IN_TRASFORMAZIONE_SA,
-                                        PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
+                                impostaErrorePerSUeSisma(pot.getPigObject());
 
                                 // passa all'oggetto successivo
                                 continue;
@@ -308,6 +272,11 @@ public class InviaOggettiGeneratiAPing {
 
                     // MEV 22064 - trova e modifica lo stato del SU
                     aggiornaStatoEventualeStrumentoUrbanistico(po.getCdKeyObject(),
+                            PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE_ENTE,
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE, null);
+                    aggiornaStatoEventualeStrumentoUrbanistico(
+                            strumentiUrbanisticiHelper
+                                    .getCdKeyFromUfficioUrbanisticaObject(po.getCdKeyObject()),
                             PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
                             PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO, null);
 
@@ -346,18 +315,7 @@ public class InviaOggettiGeneratiAPing {
                     jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
                             Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                    // MEV 22064 - trova e modifica lo stato del SU
-                    aggiornaStatoEventualeStrumentoUrbanistico(pot.getPigObject().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                            PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                    // MEV 30935 - trova e modifica lo stato del Sisma
-                    aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                            PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                            "PING-ERRSU27");
-                    aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                            PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                            Constants.PING_ERRSSISMA27);
+                    impostaErrorePerSUeSisma(pot.getPigObject());
                 }
                 return;
             }
@@ -411,19 +369,7 @@ public class InviaOggettiGeneratiAPing {
                         jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
                                 Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                        // MEV 22064 - trova e modifica lo stato del SU
-                        aggiornaStatoEventualeStrumentoUrbanistico(
-                                pot.getPigObject().getCdKeyObject(),
-                                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                        // MEV 30935 - trova e modifica lo stato del Sisma
-                        aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                                "PING-ERRSU27");
-                        aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                Constants.PING_ERRSSISMA27);
+                        impostaErrorePerSUeSisma(pot.getPigObject());
                     }
                 }
 
@@ -495,19 +441,7 @@ public class InviaOggettiGeneratiAPing {
                         jobHelper.changePigObjectAndSessionState(pot.getPigObject(),
                                 Constants.Stato.ERRORE_VERSAMENTO_A_PING.name());
 
-                        // MEV 22064 - trova e modifica lo stato del SU
-                        aggiornaStatoEventualeStrumentoUrbanistico(
-                                pot.getPigObject().getCdKeyObject(),
-                                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
-                                PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
-
-                        // MEV 30935 - trova e modifica lo stato del Sisma
-                        aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                PigSisma.TiStato.IN_TRASFORMAZIONE, PigSisma.TiStato.ERRORE,
-                                "PING-ERRSU27");
-                        aggiornaStatoEventualeSisma(pot.getPigObject().getCdKeyObject(),
-                                PigSisma.TiStato.IN_TRASFORMAZIONE_SA, PigSisma.TiStato.ERRORE,
-                                Constants.PING_ERRSSISMA27);
+                        impostaErrorePerSUeSisma(pot.getPigObject());
                     }
                 }
 
@@ -593,6 +527,24 @@ public class InviaOggettiGeneratiAPing {
             }
 
         }
+    }
+
+    private void impostaErrorePerSUeSisma(PigObject po) {
+        // MEV 22064 - trova e modifica lo stato del SU
+        aggiornaStatoEventualeStrumentoUrbanistico(po.getCdKeyObject(),
+                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE_ENTE,
+                PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
+        aggiornaStatoEventualeStrumentoUrbanistico(
+                strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                        po.getCdKeyObject()),
+                PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE,
+                PigStrumentiUrbanistici.TiStato.ERRORE, "PING-ERRSU27");
+
+        // MEV 30935 - trova e modifica lo stato del Sisma
+        aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE,
+                PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
+        aggiornaStatoEventualeSisma(po.getCdKeyObject(), PigSisma.TiStato.IN_TRASFORMAZIONE_SA,
+                PigSisma.TiStato.ERRORE, Constants.PING_ERRSSISMA27);
     }
 
     static public class ConnectionInfo {

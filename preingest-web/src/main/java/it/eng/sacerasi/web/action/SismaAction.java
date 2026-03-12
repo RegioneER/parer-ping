@@ -58,7 +58,7 @@ import org.springframework.web.client.RestClientException;
 
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.common.Constants.TipoVersatore;
+import it.eng.sacerasi.common.Constants.TipoVersatoreSisma;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
@@ -147,9 +147,9 @@ public class SismaAction extends SismaAbstractAction {
 
     private boolean isUtenteAgenzia() {
         boolean flag = false;
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_UTENTE);
-        if (tipo.equals(TipoVersatore.AGENZIA)) {
+        if (tipo.equals(TipoVersatoreSisma.AGENZIA)) {
             flag = true;
         }
         return flag;
@@ -343,7 +343,7 @@ public class SismaAction extends SismaAbstractAction {
                         getForm().getDatiAgenzia().getNumero_ag().parse())) {
                     getMessageBox().addError(String.format(
                             messaggiHelper.retrievePigErrore(PING_ERRSISMA_20).getDsErrore()
-                                    .replace("\\{0\\}", "%s"),
+                                    .replace("{0}", "%s"),
                             getForm().getDatiAgenzia().getRegistro_ag().parse() + "-"
                                     + getForm().getDatiAgenzia().getAnno_ag().parse() + "-"
                                     + getForm().getDatiAgenzia().getNumero_ag().parse()));
@@ -422,7 +422,7 @@ public class SismaAction extends SismaAbstractAction {
                                 getForm().getDatiAgenzia().getNumero_ag().parse())) {
                             getMessageBox().addError(String.format(
                                     messaggiHelper.retrievePigErrore(PING_ERRSISMA_20).getDsErrore()
-                                            .replace("\\{0\\}", "%s"),
+                                            .replace("{0}", "%s"),
                                     getForm().getDatiAgenzia().getRegistro_ag().parse() + "-"
                                             + getForm().getDatiAgenzia().getAnno_ag().parse() + "-"
                                             + getForm().getDatiAgenzia().getNumero_ag().parse()));
@@ -574,7 +574,7 @@ public class SismaAction extends SismaAbstractAction {
              * DETERMINA E METTE IN SESSIONE la tipologia di versatore dell'Utente oppure lo
              * annulla.
              */
-            Enum<Constants.TipoVersatore> tipo = sismaEjb
+            Enum<TipoVersatoreSisma> tipo = sismaEjb
                     .getTipoVersatore(getVersatoreDellUtenteLoggato());
             if (tipo == null) {
                 // L'utente non può operare con sisma!
@@ -720,19 +720,17 @@ public class SismaAction extends SismaAbstractAction {
                 getForm().getDatiAgenzia().setViewMode(); // ma non permette editing dei campi
                 getForm().getDatiProfiloArchivistico().setStatus(Status.update);
                 getForm().getDatiProfiloArchivistico().setViewMode();
-                getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode(); // Abilita
-                // editing
-                // della
-                // lista
+                // Abilita editing della lista
+                getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode();
             } else if (statoSisma.equals(PigSisma.TiStato.VERIFICATO.name())) {
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "false");
                 getForm().getDatiAgenzia().setStatus(Status.update);
                 getForm().getDatiAgenzia().setViewMode();
                 getForm().getDatiProfiloArchivistico().setStatus(Status.update);
                 getForm().getDatiProfiloArchivistico().setViewMode();
-                getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode(); // Abilita
-                // editing
-                // della
+                // Abilita editing della lista
+                getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode();
+
                 if (isVersatoreSelezionatoSAPrivato()) {
                     getForm().getDatiAgenzia().setEditMode();
                     if (isDatiAgenziaComplete()) {
@@ -804,10 +802,10 @@ public class SismaAction extends SismaAbstractAction {
 
     public boolean isUtenteSA() {
         boolean flag = false;
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_UTENTE);
-        if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
-                || tipo.equals(Constants.TipoVersatore.SA_PRIVATO)) {
+        if (tipo.equals(TipoVersatoreSisma.SA_PUBBLICO)
+                || tipo.equals(TipoVersatoreSisma.SA_PRIVATO)) {
             flag = true;
         }
         return flag;
@@ -815,9 +813,9 @@ public class SismaAction extends SismaAbstractAction {
 
     public boolean isUtenteSAPrivato() {
         boolean flag = false;
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_UTENTE);
-        if (tipo.equals(Constants.TipoVersatore.SA_PRIVATO)) {
+        if (tipo.equals(TipoVersatoreSisma.SA_PRIVATO)) {
             flag = true;
         }
         return flag;
@@ -825,24 +823,24 @@ public class SismaAction extends SismaAbstractAction {
 
     public boolean isUtenteSAPubblico() {
         boolean flag = false;
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_UTENTE);
-        if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)) {
+        if (tipo.equals(TipoVersatoreSisma.SA_PUBBLICO)) {
             flag = true;
         }
         return flag;
     }
 
     public boolean isVersatoreSelezionatoSAPubblico() {
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_SELEZIONATO);
-        return tipo.equals(Constants.TipoVersatore.SA_PUBBLICO);
+        return tipo.equals(TipoVersatoreSisma.SA_PUBBLICO);
     }
 
     public boolean isVersatoreSelezionatoSAPrivato() {
-        Constants.TipoVersatore tipo = (Constants.TipoVersatore) getSession()
+        TipoVersatoreSisma tipo = (TipoVersatoreSisma) getSession()
                 .getAttribute(Constants.TIPO_VERSATORE_SISMA_SELEZIONATO);
-        return tipo.equals(Constants.TipoVersatore.SA_PRIVATO);
+        return tipo.equals(TipoVersatoreSisma.SA_PRIVATO);
     }
 
     @Override
@@ -1322,7 +1320,7 @@ public class SismaAction extends SismaAbstractAction {
                     getForm().getDatiAgenzia().getNumero_ag().parse())) {
                 getMessageBox().addError(String.format(
                         messaggiHelper.retrievePigErrore(PING_ERRSISMA_20).getDsErrore()
-                                .replace("\\{0\\}", "%s"),
+                                .replace("{0}", "%s"),
                         getForm().getDatiAgenzia().getRegistro_ag().parse() + "-"
                                 + getForm().getDatiAgenzia().getAnno_ag().parse() + "-"
                                 + getForm().getDatiAgenzia().getNumero_ag().parse()));

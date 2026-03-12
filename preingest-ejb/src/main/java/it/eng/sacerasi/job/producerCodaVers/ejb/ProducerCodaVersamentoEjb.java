@@ -201,7 +201,6 @@ public class ProducerCodaVersamentoEjb {
             log.debug("{} :: scrivo log fine job {} in {}", LOG_PREFIX, NomiJob.PRODUCER_CODA_VERS,
                     TipiRegLogJob.ERRORE);
         }
-        jobLogger.writeLog(NomiJob.PRODUCER_CODA_VERS, TipiRegLogJob.FINE_SCHEDULAZIONE, null);
         log.debug("{} :: nessun errore - scrivo log fine job {}", LOG_PREFIX,
                 NomiJob.PRODUCER_CODA_VERS);
     }

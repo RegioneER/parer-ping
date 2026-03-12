@@ -330,9 +330,9 @@ public class RecuperaVersErrHelper {
 
             if (pigSisma != null) {
                 // Setta lo stato di PigSisma
-                Enum<Constants.TipoVersatore> tipo = sismaHelper
+                Enum<Constants.TipoVersatoreSisma> tipo = sismaHelper
                         .getTipoVersatore(pigSisma.getPigVer());
-                if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
+                if (tipo.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
                         && pigSisma.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
                     sismaHelper.aggiornaStato(pigSisma, PigSisma.TiStato.IN_VERSAMENTO_SA);
                 } else {
@@ -349,9 +349,25 @@ public class RecuperaVersErrHelper {
             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                     .getPigStrumUrbByCdKeyAndTiStato(obj.getPigObjectPadre().getCdKeyObject(),
                             PigStrumentiUrbanistici.TiStato.ERRORE);
+
+            // MEV 30026 - correggo lo stato di un eventuale Strumento Urbanistico annullato
+            // dall'ufficio
+            if (pigStrumentiUrbanistici == null) {
+                pigStrumentiUrbanistici = strumentiUrbanisticiHelper
+                        .getPigStrumUrbByCdKeyAndTiStato(
+                                strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                                        obj.getPigObjectPadre().getCdKeyObject()),
+                                PigStrumentiUrbanistici.TiStato.ERRORE);
+            }
+
             if (pigStrumentiUrbanistici != null) {
-                strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
-                        PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                if (pigStrumentiUrbanistici.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
+                    strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                } else {
+                    strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
+                }
                 log.debug("JOB {} - aggiornato lo stato del SU collegato",
                         Constants.NomiJob.RECUPERA_VERS_ERR.name());
             }

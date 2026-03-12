@@ -3,15 +3,18 @@
       xsi:schemaLocation="http://www.spagoLite.eng.it/xmlbean/form http://ibc3850.ente.regione.emr.it/xsd/latest/Form.xsd" >
                           
     <List Name="StrumentiUrbanisticiList" Description="Strumenti urbanistici" hideInsertButton="true" >
+        <Input Name="nm_ente" Type="STRING" Description="Ente versante" Required="false" />
         <Input Name="nm_tipo_strumento_urbanistico" Type="STRING" Description="Tipo strumento urbanistico" Required="false" />
         <Input Name="ti_fase_strumento" Type="STRING" Description="Fase elaborazione" Required="false"/>
         <Input Name="anno" Type="INTEGER" Description="Anno" Required="false"/>
-        <Input Name="cd_key" Type="STRING" Description="Identificativo strumento" Required="false"/>
+        <Input Name="cd_key" Type="STRING" Description="Id strumento ente" Required="false"/>
         <Input Name="dt_creazione" Type="DATE" Description="Data creazione" Required="false"/>
         <Input Name="dimensione" Type="INTEGER" GroupingDecimal="true" Description="Dimensione" Required="false"/>
         <Input Name="ti_stato" Type="STRING" Description="Stato" Required="false"/>
         <Input Name="ds_descrizione" Type="STRING" Description="Descrizione" Required="false"/>
-        <Link Name="download" Description="Rapporto di versamento" Type="STRING" Tooltip="Scarica rapporto di versamento" isTargetList="false" Target="downloadSUOperation" />
+        <Input Name="id_versamento_urbanistica" Type="STRING" Description="Id strumento Urbanistica" Required="false"/>
+        <Link Name="download" Description="RdV Ente" Type="STRING" Tooltip="Scarica rapporto di versamento" isTargetList="false" Target="downloadSURapportoVersamento" />
+        <Link Name="download_urbanistica" Description="RdV Urbanistica" Type="STRING" Tooltip="Scarica rapporto urbanistica" isTargetList="false" Target="downloadSURapportoUfficioUrbanistica" />
     </List>
     
     <ButtonList Name="StrumentiUrbanisticiButtonList" Description="Bottoni strumenti urbanistici" >  
@@ -36,11 +39,11 @@
     <Section Name="DatiGeneraliSUSection" Description="" Legend="Dati generali" ShowButton="false" LoadOpened="true"/>
     <Section Name="InputDatiSUSection" Description="" Legend="Strumento urbanistico" ShowButton="false" LoadOpened="true"/>
     <Section Name="AltreFasiSection" Description="" Legend="Altre fasi di elaborazione" ShowButton="false" LoadOpened="true"/>
-
+    <Section Name="DatiUfficioUrbanisticaSection" Description="" Legend="Dati ufficio urbanistica" ShowButton="false" LoadOpened="true"/>
     <Section Name="DocumentiCaricatiSection" Description="" Legend="Documenti caricati" ShowButton="false" LoadOpened="true"/>
     <Section Name="AggiuntaDocumentiFacoltativiSection" Description="" Legend="Aggiunta documenti facoltativi" ShowButton="false" LoadOpened="true"/>
     <Section Name="ErroriRiepilogoSection" Description="" Legend="Errori" ShowButton="false" LoadOpened="true"/>
-    <Section Name="SUDetailStatiSection" Descripction="" Legend="Lista Stati Strumento" ShowButton="true" LoadOpened="false"/>
+    <Section Name="SUDetailStatiSection" Description="" Legend="Lista Stati Strumento" ShowButton="true" LoadOpened="false"/>
     
     <Wizard Name="InserimentoWizard" Description="Versamento Strumenti Urbanistici">
         <Step Name="StrumentoUrbanistico" Description="Inserimento Dati"/>
@@ -96,7 +99,8 @@
         <Button Name="verificaDocumentiSU" Description="Verifica documenti" Type="STRING" DisableHourGlass="true" />
     </ButtonList>
 
-    <ButtonList Name="DettaglioButtonList" Description="Dettaglio" >  
+    <ButtonList Name="DettaglioButtonList" Description="Dettaglio" >
+        <Button Name="versaInUfficioUrbanistica" Description="Versa in ufficio urbanistica" Type="STRING" />
         <Button Name="riportaInBozza" Description="Riporta in stato Bozza" Type="STRING" />
         <Button Name="recuperaErrori" Description="Recupera errori" Type="STRING" />
     </ButtonList>
@@ -118,6 +122,14 @@
         <ComboBox Type="STRING" Description="Stato" Name="nm_stato" />
         <Button Type="STRING" Description="Ricerca" Name="ricercaStrumentiUrbanistici"/>
         <Button Type="STRING" Description="Pulisci ricerca" Name="pulisciRicercaStrumentiUrbanistici"/>
+        <!-- MEV 30026 -->
+        <Input Name="id_puc_filtro" Type="INTEGER" Description="Identificativo PUC" />
+        <Input Name="nr_burert_filtro" Type="STRING" Description="Numero BURERT" />
+        <Input Name="dt_burert_filtro" Type="DATE" Description="Data BURERT" />
+        <ComboBox Name="cd_repertorio_filtro" Type="STRING" Description="Repertorio" />
+        <ComboBox Name="anno_protocollo_filtro" Type="INTEGER" Description="Anno protocollo" />
+        <Input Name="cd_protocollo_filtro" Type="STRING" Description="Numero protocollo" />
+        <Input Name="dt_protocollo_filtro" Type="DATE" Description="Data protocollo" />
     </Fields>
     
     <!-- Lista stati di unop strumento urbanistico -->
@@ -126,5 +138,21 @@
         <Input Name="ts_reg_stato" Description="Data registrazione stato" Type="DATETIME" />
         <Input Type="STRING" Description="Descrizione" Name="cd_desc" />
     </List>
-    
+
+    <!-- MEV 30026 -->
+    <Fields Name="DatiUfficioUrbanistica" Description="Dati Ufficio Urbanistica" >
+        <Input Name="id_puc" Type="INTEGER" Description="Identificativo PUC" Required="true" />
+        <Input Name="nr_burert" Type="STRING" Description="Numero BURERT" Required="true" />
+        <Input Name="dt_burert" Type="DATE" Description="Data BURERT" Required="true" />
+        <ComboBox Name="cd_repertorio" Type="STRING" Description="Repertorio" Required="true"/>
+        <ComboBox Name="anno_protocollo" Type="STRING" Description="Anno protocollo" Required="true" />
+        <Input Name="cd_protocollo" Type="STRING" Description="Numero protocollo" Required="true" MaxLength="20"/>
+        <Input Name="dt_protocollo" Type="DATE" Description="Data protocollo" Required="true" />
+        <Input Name="classifica_urb" Type="STRING" Description="Classifica" MaxLength="100" />
+        <Input Name="id_fascicolo_urb" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
+        <Input Name="oggetto_fascicolo_urb" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />
+        <Input Name="id_sottofascicolo_urb" Type="STRING" Description="Identificativo sottofascicolo" MaxLength="100" />
+        <Input Name="oggetto_sottofascicolo_urb" Type="STRING" Description="Oggetto sottofascicolo" MaxLength="100" />
+    </Fields>
+
 </Form>

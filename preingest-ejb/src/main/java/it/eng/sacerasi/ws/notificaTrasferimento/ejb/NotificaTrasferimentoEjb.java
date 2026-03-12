@@ -343,7 +343,7 @@ public class NotificaTrasferimentoEjb {
             // SU.
             PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                     .getPigStrumUrbByCdKeyAndTiStato(object.getPigObjectPadre().getCdKeyObject(),
-                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);
+                            PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE);
             if (pigStrumentiUrbanistici != null) {
                 PigErrore errore = messaggiHelper.retrievePigErrore("PING-ERRSU27");
                 pigStrumentiUrbanistici = strumentiUrbanisticiHelper.aggiornaStato(

@@ -36,10 +36,6 @@
                 $(this).parent().next().next().empty(); // Disabilita modifica
                 $(this).parent().next().next().next().empty(); // Disabilita Cancellazione
             }
-            // Se non è COMPLETATO disabilità la possibilità di scaricare il rapporto di versamento
-//                    if ((statoSu != 'COMPLETATO') && (statoSu != 'VERSATO')) {
-//                        $(this).parent().empty();
-//                    }
         });
         // Cambia l'icona informativa dall'eventuale messaggio di info in check (baffetto)
         $('.ui-icon-info').toggleClass('ui-icon-info').addClass('ui-icon-check');

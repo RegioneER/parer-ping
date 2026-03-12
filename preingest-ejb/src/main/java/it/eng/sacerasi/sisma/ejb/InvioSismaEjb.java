@@ -194,9 +194,9 @@ public class InvioSismaEjb {
          */
         PigVers vers; // Conterrà il versatore su cui versare!
         boolean daVersareInAgenzia = false;
-        Enum<Constants.TipoVersatore> tipoVersatore = sismaHelper
+        Enum<Constants.TipoVersatoreSisma> tipoVersatore = sismaHelper
                 .getTipoVersatore(sismaDaInviare.getPigVer());
-        if (tipoVersatore.equals(Constants.TipoVersatore.SA_PRIVATO)
+        if (tipoVersatore.equals(Constants.TipoVersatoreSisma.SA_PRIVATO)
                 || sismaDaInviare.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
             // Il progetto deve essere inviato per forza solo in agenzia
             vers = sismaDaInviare.getPigVerAg();
@@ -487,9 +487,9 @@ public class InvioSismaEjb {
                             sismaDaInviare.getDtStato(), "");
 
                     // Setta lo stato di PigSisma
-                    Enum<Constants.TipoVersatore> tipo = sismaHelper
+                    Enum<Constants.TipoVersatoreSisma> tipo = sismaHelper
                             .getTipoVersatore(sismaDaInviare.getPigVer());
-                    if (tipo.equals(Constants.TipoVersatore.SA_PUBBLICO)
+                    if (tipo.equals(Constants.TipoVersatoreSisma.SA_PUBBLICO)
                             && sismaDaInviare.getFlInviatoAEnte().equals(Constants.DB_FALSE)) {
                         sismaDaInviare.setTiStato(TiStato.IN_ELABORAZIONE_SA);
                     } else {

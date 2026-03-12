@@ -722,8 +722,8 @@ public class SismaHelper extends GenericHelper {
     /*
      * Ritorna il tipo di versatore pesasto come parametro
      */
-    public Enum<Constants.TipoVersatore> getTipoVersatore(PigVers pigVers) {
-        Enum<Constants.TipoVersatore> tipoVersatore = null;
+    public Enum<Constants.TipoVersatoreSisma> getTipoVersatore(PigVers pigVers) {
+        Enum<Constants.TipoVersatoreSisma> tipoVersatore = null;
         BigDecimal idEnteConvenzionato = pigVers.getIdEnteConvenz();
         BigDecimal idEnteFornitEstern = pigVers.getIdEnteFornitEstern();
 
@@ -731,16 +731,16 @@ public class SismaHelper extends GenericHelper {
                 .getValoreParamApplicByApplic(Constants.ID_VERSATORE_AGENZIA);
         BigDecimal id = new BigDecimal(pigVers.getIdVers());
         if (id.equals(new BigDecimal(idVersatoreAgenzia))) {
-            tipoVersatore = Constants.TipoVersatore.AGENZIA;
+            tipoVersatore = Constants.TipoVersatoreSisma.AGENZIA;
         } else {
             if (idEnteConvenzionato != null) {
                 // Logica usata da PAOLO per determinare se un versatore è produttore o meno
-                tipoVersatore = Constants.TipoVersatore.SA_PUBBLICO;
+                tipoVersatore = Constants.TipoVersatoreSisma.SA_PUBBLICO;
             } else if (idEnteFornitEstern != null) {
                 SIOrgEnteSiam orgEnteSiam = getSIOrgEnteSiamById(idEnteFornitEstern);
                 if (orgEnteSiam.getTiEnteNonConvenz().equals(
                         it.eng.sacerasi.entity.constraint.SIOrgEnteSiam.TiEnteNonConvenz.SOGGETTO_ATTUATORE)) {
-                    tipoVersatore = Constants.TipoVersatore.SA_PRIVATO;
+                    tipoVersatore = Constants.TipoVersatoreSisma.SA_PRIVATO;
                 }
             }
         }

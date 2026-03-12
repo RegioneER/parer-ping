@@ -26,6 +26,7 @@ import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 public class ComboGetter {
 
     public static final String CAMPO_REGISTRO_AG = "registro_ag";
+    public static final String CAMPO_REGISTRO_UU = "cd_repertorio";
     public static final String CAMPO_TI_GESTIONE_PARAM = "ti_gestione_param";
     public static final String CAMPO_TIPOLOGIA = "tipologia";
     public static final String CAMPO_VALORE = "valore";
@@ -208,6 +209,18 @@ public class ComboGetter {
         bt.add(createKeyValueBaseRow(CAMPO_REGISTRO_AG, "CR"));
         bt.add(createKeyValueBaseRow(CAMPO_REGISTRO_AG, "PG"));
         mappaTipologia.populatedMap(bt, CAMPO_REGISTRO_AG, CAMPO_REGISTRO_AG);
+        return mappaTipologia;
+    }
+
+    // MEV 30026
+    public static DecodeMapIF getValoriRegistroUfficioUrbanistica() {
+        BaseTable bt = new BaseTable();
+        /* Imposto i valori della combo */
+        DecodeMap mappaTipologia = new DecodeMap();
+        bt.add(createKeyValueBaseRow(CAMPO_REGISTRO_UU, "PG"));
+        bt.add(createKeyValueBaseRow(CAMPO_REGISTRO_UU, "NP"));
+        bt.add(createKeyValueBaseRow(CAMPO_REGISTRO_UU, "DP"));
+        mappaTipologia.populatedMap(bt, CAMPO_REGISTRO_UU, CAMPO_REGISTRO_UU);
         return mappaTipologia;
     }
 

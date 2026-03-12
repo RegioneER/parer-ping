@@ -72,7 +72,7 @@ public class StrumentiUrbanisticiHelperTest {
     void findSUByVersAndStates_queryIsOk() {
         BigDecimal idVers = BigDecimal.ZERO;
         EnumSet set = EnumSet.of(PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO);
-        helper.findSUByVersAndStates(new RicercaStrumentiUrbanisticiDTO(), idVers, set);
+        helper.findSUEnte(new RicercaStrumentiUrbanisticiDTO(), idVers);
         assertTrue(true);
     }
 
@@ -180,7 +180,7 @@ public class StrumentiUrbanisticiHelperTest {
     @Test
     void findDatiAmbienteByIdSU_queryIsOk() {
         BigDecimal id = aBigDecimal();
-        helper.findDatiAmbienteByIdSU(id);
+        helper.findDatiAmbienteByIdSU(id, false, null);
         assertTrue(true);
     }
 

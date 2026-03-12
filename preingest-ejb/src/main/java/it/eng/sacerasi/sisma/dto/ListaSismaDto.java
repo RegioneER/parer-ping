@@ -46,7 +46,7 @@ public class ListaSismaDto implements Serializable {
     private String registroAg;
     private String dsTipoFinanziamento;
     private String oggetto;
-    private Enum<Constants.TipoVersatore> tipoVersatore;
+    private Enum<Constants.TipoVersatoreSisma> tipoVersatore;
 
     public ListaSismaDto() {
         super();
@@ -212,11 +212,11 @@ public class ListaSismaDto implements Serializable {
         this.oggetto = oggetto;
     }
 
-    public Enum<Constants.TipoVersatore> getTipoVersatore() {
+    public Enum<Constants.TipoVersatoreSisma> getTipoVersatore() {
         return tipoVersatore;
     }
 
-    public void setTipoVersatore(Enum<Constants.TipoVersatore> tipoVersatore) {
+    public void setTipoVersatore(Enum<Constants.TipoVersatoreSisma> tipoVersatore) {
         this.tipoVersatore = tipoVersatore;
     }
 }

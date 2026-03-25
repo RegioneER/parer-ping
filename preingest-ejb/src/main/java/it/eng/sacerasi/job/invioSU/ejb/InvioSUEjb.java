@@ -779,15 +779,17 @@ public class InvioSUEjb {
                     PigStrumentiUrbanistici suCollegato = strumentiUrbanisticiHelper
                             .getSUByVersAndCdKey(strumentoUrbanisticoDaInviare.getPigVer(),
                                     strumUrbCollegamenti.getNumero());
-                    if (suCollegato != null && suCollegato.getTiStato()
-                            .equals(PigStrumentiUrbanistici.TiStato.COMPLETATO)) {
+                    if (suCollegato != null
+                            && !StringUtils.isEmpty(suCollegato.getCdProtocollo())
+                            && suCollegato.getAnnoProtocollo() != null
+                            && !StringUtils.isEmpty(suCollegato.getCdRepertorio())) {
                         anno = strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue();
                         tipoAttoNumeroStr = suCollegato.getCdRepertorio() + "_"
                                 + suCollegato.getCdProtocollo();
                     } else {
                         throw new ParerInternalError(
-                                "Collegamento " + strumUrbCollegamenti.getNumero()
-                                        + " non trovato in stato COMPLETATO per SU "
+                                "Il collegamento " + strumUrbCollegamenti.getNumero()
+                                        + " non ha anno,protocollo o repertorio valorizzati. Impossibile procedere con la creazione dei collegamenti per lo strumento urbanistico "
                                         + strumentoUrbanisticoDaInviare.getCdKey());
                     }
                 }

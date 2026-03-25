@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 import javax.ejb.*;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
@@ -240,7 +241,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     // MEV29495 e MEV39622- ora elenca solo gli SU in stato COMPLETATO
     public List<PigStrumentiUrbanistici> findNumeriByVersAnnoTipoSUFase(PigVers pigVer,
             BigDecimal anno, String nmTipoStrumento, String fase) {
-        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND s.tiStato = 'COMPLETATO'";
+        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND s.tiStato = 'VERSATO'";
         Query query = getEntityManager().createQuery(queryStr);
         query.setParameter("pigVer", pigVer);
         query.setParameter("anno", anno);
@@ -677,7 +678,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     // MEV 29495 e MEV 39622 - ora elenca solo gli SU in stato COMPLETATO
     public DecodeMap getSUVersatiAnnoByPianoStato(String nmTipoStrumentoUrbanistico,
             String tiFaseStrumento) {
-        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE s.tiStato = 'COMPLETATO' "
+        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE s.tiStato = 'VERSATO' "
                 + "AND s.pigStrumUrbPianoStato.nmTipoStrumentoUrbanistico = :nmTipoStrumentoUrbanistico "
                 + "AND s.pigStrumUrbPianoStato.tiFaseStrumento = :tiFaseStrumento ORDER BY s.anno";
         Query query = getEntityManager().createQuery(queryStr);
@@ -769,6 +770,17 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         List<PigStrumentiUrbanistici> lista = query.getResultList();
 
         return lista.isEmpty();
+    }
+
+    public boolean controllaCompletezzaFaseCollegataPerUfficioUrbanistica(PigVers vers,
+            String numeroCollegamento) {
+        PigStrumentiUrbanistici pigStrumentiUrbanistici = getSUByVersAndCdKey(vers,
+                numeroCollegamento);
+
+        return pigStrumentiUrbanistici != null
+                && !StringUtils.isEmpty(pigStrumentiUrbanistici.getCdProtocollo())
+                && pigStrumentiUrbanistici.getAnnoProtocollo() != null
+                && !StringUtils.isEmpty(pigStrumentiUrbanistici.getCdRepertorio());
     }
 
     // MEV 30026

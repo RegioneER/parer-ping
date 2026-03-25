@@ -711,7 +711,7 @@ public class StrumentiUrbanisticiEjb {
     }
 
     // MEV29495 e MEV39622 - ora elenca solo gli SU in stato COMPLETATO
-    public DecodeMap findNumeriByVersAnnoTipoSUFaseSoloCompletati(BigDecimal idPigVers,
+    public DecodeMap findNumeriByVersAnnoTipoSUFaseSoloVersati(BigDecimal idPigVers,
             BigDecimal anno, String nmTipoStrumento, String fase) {
         PigVers pigVers = strumentiUrbanisticiHelper.findById(PigVers.class, idPigVers);
         List<PigStrumentiUrbanistici> strumenti = strumentiUrbanisticiHelper

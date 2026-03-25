@@ -48,7 +48,16 @@ public class PrioritaEjb {
      *
      * @param object {@link PigObject} oggetto da analizzare
      */
-    public void valutaEscalation(PigObject object) {
+    public void valutaEscalation(PigObject object) throws RuntimeException {
+        if (object.getTiPrioritaVersamento() == null
+                || object.getTiPrioritaVersamento().isEmpty()) {
+            log.error(
+                    "L'oggetto id_object={} non ha una priorità di versamento impostata, non è possibile valutare l'escalation",
+                    object.getIdObject());
+            throw new RuntimeException("L'oggetto id_object= " + object.getIdObject()
+                    + " non ha una priorità di versamento impostata, non è possibile valutare l'escalation");
+        }
+
         ComboFlagPrioVersType prioritaAttuale = ComboFlagPrioVersType
                 .getByString(object.getTiPrioritaVersamento());
         log.debug("Verifico se serve aumentare la priorità id_object={} priorita={}",

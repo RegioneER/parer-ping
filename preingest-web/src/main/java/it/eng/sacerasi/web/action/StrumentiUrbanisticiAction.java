@@ -469,7 +469,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
         // MEV 26936 - riempio la decodemap in modo da poter visualizzare il dato.
         if (dto.getAnnoCollegato1() != null && dto.getFaseCollegata1() != null) {
-            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloCompletati(
+            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloVersati(
                     getUser().getIdOrganizzazioneFoglia(),
                     new BigDecimal(dto.getAnnoCollegato1().longValueExact()),
                     dto.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata1());
@@ -481,7 +481,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         }
 
         if (dto.getAnnoCollegato2() != null && dto.getFaseCollegata2() != null) {
-            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloCompletati(
+            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloVersati(
                     getUser().getIdOrganizzazioneFoglia(),
                     new BigDecimal(dto.getAnnoCollegato2().longValueExact()),
                     dto.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata2());
@@ -934,41 +934,6 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 .setValue(getForm().getDatiGeneraliInput().getOggetto().getValue());
         getForm().getDatiGeneraliOutput().getDs_descrizione_out()
                 .setValue(getForm().getDatiGeneraliInput().getDs_descrizione().getValue());
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(true);
-        // getForm().getRiepilogoButtonList().getVersaSU().setEditMode();
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(true);
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setEditMode();
-        // if (verificaDocumentiSUEjb.verificaInCorso(
-        // getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse())) {
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(true);
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(true);
-        // getMessageBox().addWarning("Attenzione: verifica documenti in corso");
-        // } else if (strumentiUrbanisticiEjb.existsPigStrumUrbDocumenti(
-        // getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse())) {
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(true);
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(false);
-        // } else if
-        // (verificaDocumentiSUEjb.existsDocumentiDaVerificarePerStrumentoUrbanisticoByVista(
-        // getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse())) {
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(false);
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(true);
-        // } else {
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(true);
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(true);
-        // }
-        //
-        // // Condizioni di invio per mostrare il bottone "Versamento"
-        // if (getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out() != null) {
-        // BigDecimal idSu = getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out()
-        // .parse();
-        // StrumentiUrbanisticiEjb.NavigazioneStrumDto dto = strumentiUrbanisticiEjb
-        // .getDatiNavigazionePerSU(idSu);
-        // if (dto.isFileMancante() == false && dto.isVerificaErrata() == false
-        // && dto.isVerificaInCorso() == false) {
-        // getForm().getRiepilogoButtonList().getVersaSU().setReadonly(false);
-        // getForm().getRiepilogoButtonList().getVerificaDocumentiSU().setReadonly(true);
-        // }
-        // }
     }
 
     private boolean controlloCoerenzaAnniCollegati() {
@@ -1258,6 +1223,42 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             }
         } else {
             forwardToPublisher(getLastPublisher());
+        }
+
+        String annoCollegato1 = getForm().getDatiGeneraliInput().getAnnoCollegato1()
+                .getValue();
+        String identificativoCollegato1 = getForm().getDatiGeneraliOutput()
+                .getIdentificativoCollegato1_out().getValue();
+        String annoCollegato2 = getForm().getDatiGeneraliInput().getAnnoCollegato1()
+                .getValue();
+        String identificativoCollegato2 = getForm().getDatiGeneraliOutput()
+                .getIdentificativoCollegato2_out().getValue();
+
+        BigDecimal idStrumento = getForm().getStrumentiUrbanisticiList().getTable()
+                .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
+        PigVers enteVersatore = strumentiUrbanisticiHelper
+                .findById(PigStrumentiUrbanistici.class, idStrumento).getPigVer();
+
+        if (!StringUtils.isEmpty(annoCollegato1)
+                && !StringUtils.isEmpty(identificativoCollegato1)
+                && !strumentiUrbanisticiHelper
+                        .controllaCompletezzaFaseCollegataPerUfficioUrbanistica(
+                                enteVersatore, identificativoCollegato1)) {
+            getMessageBox().addError(String.format(
+                    messaggiHelper.retrievePigErrore("PING-ERRSU29").getDsErrore()
+                            .replace("{0}", "%s"),
+                    identificativoCollegato1));
+        }
+
+        if (!StringUtils.isEmpty(annoCollegato2)
+                && !StringUtils.isEmpty(identificativoCollegato2)
+                && !strumentiUrbanisticiHelper
+                        .controllaCompletezzaFaseCollegataPerUfficioUrbanistica(
+                                enteVersatore, identificativoCollegato2)) {
+            getMessageBox().addError(String.format(
+                    messaggiHelper.retrievePigErrore("PING-ERRSU29").getDsErrore()
+                            .replace("{0}", "%s"),
+                    identificativoCollegato1));
         }
 
         if (getMessageBox().isEmpty()) {
@@ -1736,7 +1737,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 .getDecodedValue();
 
         if (!annoCollegato1.equals("") && !faseCollegata1.equals("")) {
-            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloCompletati(
+            DecodeMap ids = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloVersati(
                     getUser().getIdOrganizzazioneFoglia(), new BigDecimal(annoCollegato1), nomeTipo,
                     faseCollegata1);
 
@@ -1758,7 +1759,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 .getValue();
 
         if (!annoCollegato2.equals("") && !faseCollegata2.equals("")) {
-            DecodeMap numeri = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloCompletati(
+            DecodeMap numeri = strumentiUrbanisticiEjb.findNumeriByVersAnnoTipoSUFaseSoloVersati(
                     getUser().getIdOrganizzazioneFoglia(), new BigDecimal(annoCollegato2), nomeTipo,
                     faseCollegata2);
 

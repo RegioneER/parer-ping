@@ -2869,8 +2869,10 @@ public class AmministrazioneEjb {
         if (list.size() > 1) {
             secondLastXsd = list.get(1);
         }
-        if (secondLastXsd != null && secondLastXsd.getIdXsdSpec() != 0) {
-            if (secondLastXsd.getDtVersioneXsd().equals(xsdDatiSpecRowBean.getDtVersioneXsd())) {
+        if (secondLastXsd != null && secondLastXsd.getIdXsdSpec() != null
+                && secondLastXsd.getIdXsdSpec() != 0) {
+            if (secondLastXsd.getDtVersioneXsd() != null && secondLastXsd.getDtVersioneXsd()
+                    .equals(xsdDatiSpecRowBean.getDtVersioneXsd())) {
                 throw new IncoherenceException(
                         "Xsd già inseriti precedentemente in questa data. Impossibile completare l'operazione.");
             }

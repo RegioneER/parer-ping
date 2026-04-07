@@ -241,7 +241,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     // MEV29495 e MEV39622- ora elenca solo gli SU in stato COMPLETATO
     public List<PigStrumentiUrbanistici> findNumeriByVersAnnoTipoSUFase(PigVers pigVer,
             BigDecimal anno, String nmTipoStrumento, String fase) {
-        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND s.tiStato = 'VERSATO'";
+        String queryStr = "SELECT s FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato ps WHERE s.pigVer=:pigVer AND s.anno=:anno AND ps.nmTipoStrumentoUrbanistico=:nmTipoStrumento AND ps.tiFaseStrumento = :fase AND (s.tiStato = 'VERSATO' OR s.flInviatoAEnte = '1')";
         Query query = getEntityManager().createQuery(queryStr);
         query.setParameter("pigVer", pigVer);
         query.setParameter("anno", anno);
@@ -678,7 +678,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     // MEV 29495 e MEV 39622 - ora elenca solo gli SU in stato COMPLETATO
     public DecodeMap getSUVersatiAnnoByPianoStato(String nmTipoStrumentoUrbanistico,
             String tiFaseStrumento) {
-        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE s.tiStato = 'VERSATO' "
+        String queryStr = "SELECT DISTINCT(s.anno) FROM PigStrumentiUrbanistici s WHERE (s.tiStato = 'VERSATO' OR s.flInviatoAEnte = '1')"
                 + "AND s.pigStrumUrbPianoStato.nmTipoStrumentoUrbanistico = :nmTipoStrumentoUrbanistico "
                 + "AND s.pigStrumUrbPianoStato.tiFaseStrumento = :tiFaseStrumento ORDER BY s.anno";
         Query query = getEntityManager().createQuery(queryStr);

@@ -1082,7 +1082,7 @@ public class StrumentiUrbanisticiEjb {
         PigStrumentiUrbanistici strumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, dto.getIdStrumentiUrbanistici());
 
-        strumentiUrbanistici.setIdPuc(dto.getIdPuc().longValue());
+        strumentiUrbanistici.setIdPuc(dto.getIdPuc() != null ? dto.getIdPuc().longValue() : null);
         strumentiUrbanistici.setNrBurert(dto.getNrBurert());
         strumentiUrbanistici.setDtBurert(dto.getDtBurert());
         strumentiUrbanistici.setCdRepertorio(dto.getCdRepertorio());

@@ -657,7 +657,7 @@ public class InvioSUEjb {
             strumentiUrbanistici.setIdPUC(strumentoUrbanisticoDaInviare.getIdPuc().toString());
             strumentiUrbanistici.setNumeroBurert(strumentoUrbanisticoDaInviare.getNrBurert());
             strumentiUrbanistici
-                    .setDataBurert(dateFormat.format(strumentoUrbanisticoDaInviare.getData()));
+                    .setDataBurert(dateFormat.format(strumentoUrbanisticoDaInviare.getDtBurert()));
             strumentiUrbanistici
                     .setIdVersUfficio(strumentoUrbanisticoDaInviare.getPigVer().getNmVers());
             strumentiUrbanistici.setIdentificativoStrumentoUrbanistico(
@@ -670,6 +670,8 @@ public class InvioSUEjb {
             collegamento.setNumero(strumentoUrbanisticoDaInviare.getCdProtocollo());
             collegamento.setAnno(strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue());
             collegamento.setTipoRegistro("PG");
+            collegamento.setFaseStrumento(
+                    "PROTOCOLLAZIONE DELLA COMUNICAZIONE DI AVVENUTO VERSAMENTO");
             collegamenti.getCollegamento().add(collegamento);
 
             collegamento = new Collegamento();
@@ -678,6 +680,7 @@ public class InvioSUEjb {
                     .format(strumentoUrbanisticoDaInviare.getDtBurert());
             collegamento.setAnno(Integer.parseInt(annoBurert));
             collegamento.setTipoRegistro("BURERT");
+            collegamento.setFaseStrumento("BURERT DI PUBBLICAZIONE");
             collegamenti.getCollegamento().add(collegamento);
 
             strumentiUrbanistici.setCollegamenti(collegamenti);

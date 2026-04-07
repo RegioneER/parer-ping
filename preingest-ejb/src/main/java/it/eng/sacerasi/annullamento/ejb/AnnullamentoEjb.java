@@ -258,6 +258,9 @@ public class AnnullamentoEjb {
         object.setTiStatoObject(Constants.StatoOggetto.CHIUSO_ERR_VERS.name());
         object.setIdLastSessioneIngest(new BigDecimal(sessioneCorrente.getIdSessioneIngest()));
 
+        // MAC 40257
+        object.setFlVersSacerDaRecup(null);
+
         // 30208 -gestione sisma e SU
         if (object.getPigObjectPadre() != null) {
             PigSisma pigSisma = sismaHelper.getPigSismaByCdKeyAndTiStato(

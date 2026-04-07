@@ -7,12 +7,12 @@
         <Input Name="nm_tipo_strumento_urbanistico" Type="STRING" Description="Tipo strumento urbanistico" Required="false" />
         <Input Name="ti_fase_strumento" Type="STRING" Description="Fase elaborazione" Required="false"/>
         <Input Name="anno" Type="INTEGER" Description="Anno" Required="false"/>
-        <Input Name="cd_key" Type="STRING" Description="Id strumento ente" Required="false"/>
+        <Input Name="cd_key" Type="STRING" Description="Id strumento" Required="false"/>
         <Input Name="dt_creazione" Type="DATE" Description="Data creazione" Required="false"/>
         <Input Name="dimensione" Type="INTEGER" GroupingDecimal="true" Description="Dimensione" Required="false"/>
         <Input Name="ti_stato" Type="STRING" Description="Stato" Required="false"/>
         <Input Name="ds_descrizione" Type="STRING" Description="Descrizione" Required="false"/>
-        <Input Name="id_versamento_urbanistica" Type="STRING" Description="Id strumento Urbanistica" Required="false"/>
+        <Input Name="id_versamento_urbanistica" Type="STRING" Description="Id Urbanistica" Required="false"/>
         <Link Name="download" Description="RdV Ente" Type="STRING" Tooltip="Scarica rapporto di versamento" isTargetList="false" Target="downloadSURapportoVersamento" />
         <Link Name="download_urbanistica" Description="RdV Urbanistica" Type="STRING" Tooltip="Scarica rapporto urbanistica" isTargetList="false" Target="downloadSURapportoUfficioUrbanistica" />
     </List>
@@ -141,13 +141,13 @@
 
     <!-- MEV 30026 -->
     <Fields Name="DatiUfficioUrbanistica" Description="Dati Ufficio Urbanistica" >
-        <Input Name="id_puc" Type="INTEGER" Description="Identificativo PUC" Required="true" />
-        <Input Name="nr_burert" Type="STRING" Description="Numero BURERT" Required="true" />
-        <Input Name="dt_burert" Type="DATE" Description="Data BURERT" Required="true" />
-        <ComboBox Name="cd_repertorio" Type="STRING" Description="Repertorio" Required="true"/>
-        <ComboBox Name="anno_protocollo" Type="STRING" Description="Anno protocollo" Required="true" />
-        <Input Name="cd_protocollo" Type="STRING" Description="Numero protocollo" Required="true" MaxLength="20"/>
-        <Input Name="dt_protocollo" Type="DATE" Description="Data protocollo" Required="true" />
+        <Input Name="id_puc" Type="INTEGER" Description="* Identificativo PUC" />
+        <Input Name="nr_burert" Type="STRING" Description="* Numero BURERT" />
+        <Input Name="dt_burert" Type="DATE" Description="* Data BURERT" />
+        <ComboBox Name="cd_repertorio" Type="STRING" Description="* Repertorio" />
+        <ComboBox Name="anno_protocollo" Type="STRING" Description="* Anno protocollo" />
+        <Input Name="cd_protocollo" Type="STRING" Description="* Numero protocollo" MaxLength="20"/>
+        <Input Name="dt_protocollo" Type="DATE" Description="* Data protocollo" />
         <Input Name="classifica_urb" Type="STRING" Description="Classifica" MaxLength="100" />
         <Input Name="id_fascicolo_urb" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
         <Input Name="oggetto_fascicolo_urb" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />

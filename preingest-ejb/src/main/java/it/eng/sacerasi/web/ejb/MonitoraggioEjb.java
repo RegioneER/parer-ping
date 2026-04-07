@@ -244,8 +244,6 @@ public class MonitoraggioEjb {
             pigSessioneIngest.setFlSesErrNonRisolub(Constants.DB_TRUE);
         }
 
-        pigObject.setFlVersSacerDaRecup(null);
-
         String statoOggetto = pigObject.getTiStatoObject();
         if (statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR.name())
                 || statoOggetto.equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())

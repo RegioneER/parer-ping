@@ -211,7 +211,7 @@ public class AmministrazioneHelper extends GenericHelper {
                 + "AND organizNoLastliv.nmApplic = :nmApplic "
                 + "AND EXISTS (SELECT user FROM UsrUser user WHERE user.flAttivo = '1' )";
         Query query = getEntityManager().createQuery(queryStr);
-        query.setParameter("idAmbienteVers", idAmbienteVers);
+        query.setParameter("idAmbienteVers", HibernateUtils.longFrom(idAmbienteVers));
         query.setParameter("nmApplic", nmApplic);
         return !query.getResultList().isEmpty();
     }
@@ -916,7 +916,7 @@ public class AmministrazioneHelper extends GenericHelper {
         if (idTipoObj != null) {
             query.setParameter("idTipoObj", HibernateUtils.longFrom(idTipoObj));
         } else if (idTipoFileObj != null) {
-            query.setParameter("idTipoFileObj", idTipoFileObj);
+            query.setParameter("idTipoFileObj", HibernateUtils.longFrom(idTipoFileObj));
         }
         List<PigXsdDatiSpec> list = query.getResultList();
         if (list.isEmpty()) {
@@ -940,7 +940,7 @@ public class AmministrazioneHelper extends GenericHelper {
         if (idTipoObj != null) {
             query.setParameter("idTipoObj", HibernateUtils.longFrom(idTipoObj));
         } else if (idTipoFileObj != null) {
-            query.setParameter("idTipoFileObj", idTipoFileObj);
+            query.setParameter("idTipoFileObj", HibernateUtils.longFrom(idTipoFileObj));
         }
         return query.getResultList();
     }

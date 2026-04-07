@@ -217,15 +217,24 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 getForm().getDocumentiCaricatiList().setViewMode();
             } else if (statoStrumentoUrbanistico
                     .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
-                getForm().getDatiUfficioUrbanistica().setStatus(Status.update);
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "false");
-                getForm().getDatiUfficioUrbanistica().setEditMode();
                 // Disabilita editing della lista
                 getForm().getDocumentiCaricatiList().setViewMode();
 
-                getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setViewMode();
-                if (isDatiUfficioAnagraficaComplete()) {
+                if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                    getForm().getDatiUfficioUrbanistica().setStatus(Status.update);
+                    getForm().getDatiUfficioUrbanistica().setEditMode();
+                    getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setViewMode();
+                } else {
+                    getForm().getDatiUfficioUrbanistica().setStatus(Status.view);
+                    getForm().getDatiUfficioUrbanistica().setViewMode();
                     getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setEditMode();
+                    getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica()
+                            .setReadonly(true);
+                    if (isDatiUfficioAnagraficaComplete()) {
+                        getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica()
+                                .setReadonly(false);
+                    }
                 }
             } else if (statoStrumentoUrbanistico
                     .equals(PigStrumentiUrbanistici.TiStato.ANNULLATO.name())) {
@@ -250,12 +259,32 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             getForm().getDettaglioButtonList().setEditMode();
             getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setViewMode();
 
+            // Se si è in dettaglio mette in sola lettura la data
+            if (!getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                getForm().getDatiGeneraliInput().getData().setReadonly(true);
+                getForm().getDatiGeneraliInput().getData().setRequired(false);
+                getForm().getDatiGeneraliInput().getData().setDescription("Data strumento:");
+            } else {
+                getForm().getDatiGeneraliInput().getData().setReadonly(false);
+                getForm().getDatiGeneraliInput().getData().setRequired(true);
+            }
+
             // può inserire, modificare o cancellare un sisma SOLO se BOZZA,
             // se VERSATO può modificare la descrizione
             if (!(statoStrumentoUrbanistico.equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())
                     || statoStrumentoUrbanistico
                             .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name()))) {
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "true");
+            }
+
+            if (statoStrumentoUrbanistico
+                    .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
+                if (!getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                    getForm().getStrumentiUrbanisticiList().setStatus(Status.update);
+                    getForm().getDatiGeneraliOutput().getDs_descrizione_out().setEditMode();
+                    getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(false);
+                    getForm().getDatiGeneraliInput().getData().setViewMode();
+                }
             }
 
             if (statoStrumentoUrbanistico
@@ -382,15 +411,6 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         getForm().getDatiUfficioUrbanistica().getOggetto_sottofascicolo_urb()
                 .setValue(dto.getOggettoSottofascicoloUrb());
 
-        // Se si è in dettaglio mette in sola lettura la data
-        if (!getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
-            getForm().getDatiGeneraliInput().getData().setReadonly(true);
-            getForm().getDatiGeneraliInput().getData().setRequired(false);
-            getForm().getDatiGeneraliInput().getData().setDescription("Data strumento:");
-        } else {
-            getForm().getDatiGeneraliInput().getData().setReadonly(false);
-            getForm().getDatiGeneraliInput().getData().setRequired(true);
-        }
         getForm().getDatiGeneraliInput().getOggetto().setValue(dto.getOggetto());
         getForm().getDatiGeneraliInput().getDs_descrizione().setValue(dto.getDsDescrizione());
         getForm().getDatiGeneraliOutput().getCd_key_out().setValue(dto.getCdKey());
@@ -529,11 +549,18 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         String stato = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
                 .getString("ti_stato");
         if (stato != null && stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
+            getForm().getStrumentiUrbanisticiList().setStatus(Status.view);
             getForm().getDatiGeneraliOutput().getDs_descrizione_out().setViewMode();
             getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(true);
             getForm().getDatiGeneraliInput().getData().setViewMode();
-            getForm().getStrumentiUrbanisticiList().setStatus(Status.view);
+
+            if (isUtenteUfficioUrbanistico()) {
+                getForm().getDatiUfficioUrbanistica().setStatus(Status.view);
+                getForm().getDatiUfficioUrbanistica().setViewMode();
+            }
         }
+
+        forwardToPublisher(getLastPublisher());
     }
 
     @Override
@@ -543,48 +570,48 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         String stato = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
                 .getString("ti_stato");
         if (stato != null && stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
-            getForm().getDatiGeneraliOutput().post(getRequest());
-            getForm().getDatiUfficioUrbanistica().postAndValidate(getRequest(), getMessageBox());
-
             BigDecimal idStrumento = getForm().getStrumentiUrbanisticiList().getTable()
                     .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
-            String descrizione = getForm().getDatiGeneraliOutput().getDs_descrizione_out()
-                    .getValue();
-            strumentiUrbanisticiEjb.salvaDescrizioneStrumento(idStrumento, descrizione);
 
-            // MEV 30026
-            if (getMessageBox().isEmpty()) {
-                if (!strumentiUrbanisticiEjb.controllaUnivocitaDatiUfficio(idStrumento,
-                        getForm().getDatiUfficioUrbanistica().getCd_repertorio().parse(),
-                        new BigDecimal(
-                                getForm().getDatiUfficioUrbanistica().getAnno_protocollo().parse()),
-                        getForm().getDatiUfficioUrbanistica().getCd_protocollo().parse())) {
-                    getMessageBox().addError(String.format(
-                            messaggiHelper.retrievePigErrore("PING-ERRSU20").getDsErrore()
-                                    .replace("{0}", "%s"),
-                            getForm().getDatiUfficioUrbanistica().getCd_repertorio().parse() + "-"
-                                    + getForm().getDatiUfficioUrbanistica().getAnno_protocollo()
-                                            .parse()
-                                    + "-" + getForm().getDatiUfficioUrbanistica().getCd_protocollo()
-                                            .parse()));
-                }
-            }
-
-            // MEV30026
             getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setViewMode();
-            if (getMessageBox().isEmpty()) {
-                salvaDatiUfficioUrbanistica(idStrumento.longValueExact());
 
-                if (isDatiUfficioAnagraficaComplete()) {
+            if (isUtenteUfficioUrbanistico()) {
+                getForm().getDatiUfficioUrbanistica().postAndValidate(getRequest(),
+                        getMessageBox());
+
+                // MEV30026
+                if (getMessageBox().isEmpty()) {
+                    salvaDatiUfficioUrbanistica(idStrumento.longValueExact());
                     getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica().setEditMode();
-                }
-            }
 
-            getForm().getStrumentiUrbanisticiList().setStatus(Status.view);
-            getForm().getDatiGeneraliOutput().getDs_descrizione_out().setViewMode();
-            getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(true);
-            getMessageBox().addInfo("Descrizione aggiornata con successo.");
-            getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+                    if (isDatiUfficioAnagraficaComplete()) {
+                        getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica()
+                                .setReadonly(false);
+                        getMessageBox().addInfo(
+                                "Dati salvati con successo. Ora è possibile versare in ufficio urbanistica.");
+                    } else {
+                        getForm().getDettaglioButtonList().getVersaInUfficioUrbanistica()
+                                .setReadonly(true);
+                        getMessageBox().addInfo(
+                                "Dati salvati con successo. Non tutti i dati necessari all'invio sono compilati.");
+                    }
+
+                    getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+                    getForm().getDatiUfficioUrbanistica().setStatus(Status.view);
+                    getForm().getDatiUfficioUrbanistica().setViewMode();
+                }
+            } else {
+                getForm().getDatiGeneraliOutput().post(getRequest());
+                String descrizione = getForm().getDatiGeneraliOutput().getDs_descrizione_out()
+                        .getValue();
+                strumentiUrbanisticiEjb.salvaDescrizioneStrumento(idStrumento, descrizione);
+
+                getForm().getStrumentiUrbanisticiList().setStatus(Status.view);
+                getForm().getDatiGeneraliOutput().getDs_descrizione_out().setViewMode();
+                getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(true);
+                getMessageBox().addInfo("Descrizione aggiornata con successo.");
+                getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+            }
         }
         forwardToPublisher(Application.Publisher.DETTAGLIO_STRUMENTI_URBANISTICI);
     }
@@ -613,10 +640,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             String stato = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
                     .getString("ti_stato");
             if (stato != null && stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
-                getForm().getStrumentiUrbanisticiList().setStatus(Status.update);
-                getForm().getDatiGeneraliOutput().getDs_descrizione_out().setEditMode();
-                getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(false);
-                getForm().getDatiGeneraliInput().getData().setViewMode();
+                determinaStato(false);
                 forwardToPublisher(Application.Publisher.DETTAGLIO_STRUMENTI_URBANISTICI);
             } else {
                 getForm().getDatiGeneraliInput().setStatus(Status.update);
@@ -1258,7 +1282,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             getMessageBox().addError(String.format(
                     messaggiHelper.retrievePigErrore("PING-ERRSU29").getDsErrore()
                             .replace("{0}", "%s"),
-                    identificativoCollegato1));
+                    identificativoCollegato2));
         }
 
         if (getMessageBox().isEmpty()) {

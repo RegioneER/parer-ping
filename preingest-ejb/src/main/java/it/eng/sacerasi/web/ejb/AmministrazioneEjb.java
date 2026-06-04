@@ -3779,6 +3779,33 @@ public class AmministrazioneEjb {
         return paramApplicTableBean;
     }
 
+    public PigParamApplicRowBean getPigParamApplicRowBean(BigDecimal idParamApplic) {
+        PigParamApplicRowBean paramApplicRowBean = null;
+        if (idParamApplic == null) {
+            return null;
+        }
+
+        PigParamApplic paramApplic = amministrazioneHelper.findById(PigParamApplic.class,
+                idParamApplic.longValue());
+        if (paramApplic != null) {
+            try {
+                paramApplicRowBean = (PigParamApplicRowBean) Transform.entity2RowBean(paramApplic);
+                paramApplicRowBean.setString("ds_valore_param_applic", "");
+                for (PigValoreParamApplic valoreParamApplic : paramApplic
+                        .getPigValoreParamApplics()) {
+                    if (valoreParamApplic.getTiAppart().equals("APPLIC")) {
+                        paramApplicRowBean.setString("ds_valore_param_applic",
+                                valoreParamApplic.getDsValoreParamApplic());
+                    }
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        return paramApplicRowBean;
+    }
+
     // MEV 32650
     public PigParamApplicTableBean getPigParamApplicTableBean(String tiParamApplic,
             String tiGestioneParam, String flAppartApplic, String flAppartAmbiente,
@@ -3915,6 +3942,40 @@ public class AmministrazioneEjb {
                 for (String row : tiParamApplicList) {
                     BaseRowInterface r = new BaseRow();
                     r.setString(PigParamApplicTableDescriptor.COL_TI_PARAM_APPLIC, row);
+                    table.add(r);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        return table;
+    }
+
+    public BaseTable getCdVersioneAppIniBaseTable() {
+        BaseTable table = new BaseTable();
+        List<String> cdVersioneAppIniList = amministrazioneHelper.getCdVersioneAppIni();
+        if (cdVersioneAppIniList != null && !cdVersioneAppIniList.isEmpty()) {
+            try {
+                for (String row : cdVersioneAppIniList) {
+                    BaseRowInterface r = new BaseRow();
+                    r.setString(PigParamApplicTableDescriptor.COL_CD_VERSIONE_APP_INI, row);
+                    table.add(r);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        return table;
+    }
+
+    public BaseTable getCdVersioneAppFineBaseTable() {
+        BaseTable table = new BaseTable();
+        List<String> cdVersioneAppFineList = amministrazioneHelper.getCdVersioneAppFine();
+        if (cdVersioneAppFineList != null && !cdVersioneAppFineList.isEmpty()) {
+            try {
+                for (String row : cdVersioneAppFineList) {
+                    BaseRowInterface r = new BaseRow();
+                    r.setString(PigParamApplicTableDescriptor.COL_CD_VERSIONE_APP_FINE, row);
                     table.add(r);
                 }
             } catch (Exception e) {

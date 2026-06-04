@@ -42,7 +42,7 @@ import it.eng.sacerasi.job.coda.ejb.PayloadManagerEjb;
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "queueType = 'CODA1'"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue"),
-        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "900") })
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "3900") })
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ConsumerCoda1Ejb implements MessageListener {

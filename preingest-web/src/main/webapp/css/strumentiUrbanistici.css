@@ -51,4 +51,13 @@ a.DownloadSU {
     text-align: center;  
     background-position: top center;
 }
+
+.ui-su-alert {
+     background-color: yellow;
+     margin-top: 2px;
+     border-radius: 10px;
+     border-color: gray;
+     border-style: solid;
+     border-width: thin;
+}
       

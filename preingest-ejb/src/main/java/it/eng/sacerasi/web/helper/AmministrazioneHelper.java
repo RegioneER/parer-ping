@@ -1915,9 +1915,8 @@ public class AmministrazioneHelper extends GenericHelper {
             queryStr.append(whereWord).append("paramApplic.cdVersioneAppIni = :cdVersioneAppIni ");
             whereWord = "AND ";
         }
-        if (filterValid) {
-            queryStr.append(whereWord).append("paramApplic.cdVersioneAppFine IS NULL ");
-        } else if (cdVersioneAppFine != null) {
+
+        if (cdVersioneAppFine != null) {
             queryStr.append(whereWord)
                     .append("paramApplic.cdVersioneAppFine = :cdVersioneAppFine ");
         }
@@ -1945,7 +1944,7 @@ public class AmministrazioneHelper extends GenericHelper {
         if (cdVersioneAppIni != null) {
             q.setParameter("cdVersioneAppIni", cdVersioneAppIni);
         }
-        if (!filterValid && cdVersioneAppFine != null) {
+        if (cdVersioneAppFine != null) {
             q.setParameter("cdVersioneAppFine", cdVersioneAppFine);
         }
 
@@ -1983,6 +1982,20 @@ public class AmministrazioneHelper extends GenericHelper {
      */
     public List<String> getTiParamApplic() {
         String queryStr = "SELECT DISTINCT config.tiParamApplic FROM PigParamApplic config ORDER BY config.tiParamApplic ";
+        Query q = getEntityManager().createQuery(queryStr);
+        return q.getResultList();
+    }
+
+    public List<String> getCdVersioneAppIni() {
+        String queryStr = "SELECT DISTINCT config.cdVersioneAppIni FROM PigParamApplic config "
+                + "WHERE config.cdVersioneAppIni IS NOT NULL ORDER BY config.cdVersioneAppIni ";
+        Query q = getEntityManager().createQuery(queryStr);
+        return q.getResultList();
+    }
+
+    public List<String> getCdVersioneAppFine() {
+        String queryStr = "SELECT DISTINCT config.cdVersioneAppFine FROM PigParamApplic config "
+                + "WHERE config.cdVersioneAppFine IS NOT NULL ORDER BY config.cdVersioneAppFine ";
         Query q = getEntityManager().createQuery(queryStr);
         return q.getResultList();
     }

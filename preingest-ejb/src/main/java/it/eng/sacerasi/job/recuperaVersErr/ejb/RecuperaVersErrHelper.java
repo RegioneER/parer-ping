@@ -329,6 +329,9 @@ public class RecuperaVersErrHelper {
                     obj.getPigObjectPadre().getCdKeyObject(), PigSisma.TiStato.ERRORE);
 
             if (pigSisma != null) {
+                pigSisma.setCdErr(null);
+                pigSisma.setDsErr(null);
+
                 // Setta lo stato di PigSisma
                 Enum<Constants.TipoVersatoreSisma> tipo = sismaHelper
                         .getTipoVersatore(pigSisma.getPigVer());
@@ -361,6 +364,9 @@ public class RecuperaVersErrHelper {
             }
 
             if (pigStrumentiUrbanistici != null) {
+                pigStrumentiUrbanistici.setCdErr(null);
+                pigStrumentiUrbanistici.setDsErr(null);
+
                 if (pigStrumentiUrbanistici.getFlInviatoAEnte().equals(Constants.DB_TRUE)) {
                     strumentiUrbanisticiHelper.aggiornaStato(pigStrumentiUrbanistici,
                             PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO);

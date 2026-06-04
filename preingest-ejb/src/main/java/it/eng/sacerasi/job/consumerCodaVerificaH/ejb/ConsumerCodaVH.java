@@ -67,7 +67,8 @@ import java.util.Date;
         @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "queueType = 'CODA_VER_HASH'"),
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue") })
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue"),
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "900") })
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ConsumerCodaVH implements MessageListener {

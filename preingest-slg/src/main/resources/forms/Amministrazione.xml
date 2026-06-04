@@ -648,7 +648,7 @@
     
     <!-- Registro parametri -->
     
-    <List Name="ConfigurationList" Description="Configurazioni" hideDetailButton="true" hideUpdateButton="true" filterValidRecords="true">
+    <List Name="ConfigurationList" Description="Configurazioni" filterValidRecords="true">
         <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
         <Input Name="ti_param_applic" Description="Funzione" Type="STRING" MaxLength="40"/>
         <ComboBox Name="ti_gestione_param" Description="Gestione" Type="STRING" />
@@ -665,6 +665,24 @@
         <CheckBox Name="fl_appart_vers" Description="Versatore" Type="STRING" />
         <CheckBox Name="fl_appart_tipo_oggetto" Description="Entità" Type="STRING" />
     </List>
+
+    <Fields Name="ConfigurationDetail" Description="Dettaglio parametro configurazione">
+        <Input Name="id_param_applic" Description="Id param applic" Type="INTEGER" Hidden="true"/>
+        <Input Name="ti_param_applic" Description="Funzione" Type="STRING" MaxLength="40" Required="true"/>
+        <ComboBox Name="ti_gestione_param" Description="Gestione" Type="STRING" Required="true" />
+        <Input Name="nm_param_applic" Description="Parametro" Type="STRING" MaxLength="100" Required="true"/>
+        <Input Name="dm_param_applic" Description="Denominazione parametro" Type="STRING" MaxLength="100" />
+        <Input Name="ds_param_applic" Description="Descrizione" Type="STRING" MaxLength="254" Required="true"/>
+        <Input Name="cd_versione_app_ini" Description="Introdotto con" Type="STRING" MaxLength="11" Required="true"/>
+        <Input Name="cd_versione_app_fine" Description="Cessato con" Type="STRING" MaxLength="11"/>
+        <ComboBox Name="ti_valore_param_applic" Description="Tipo valore" Type="STRING" AddBlank="false" Required="true"/>
+        <Input Name="ds_lista_valori_ammessi" Description="Valori possibili" Type="STRING" MaxLength="4000"/>
+        <Input Name="ds_valore_param_applic" Description="Valore applicativo" Type="STRING" MaxLength="4000"/>
+        <CheckBox Name="fl_appart_applic" Description="Applicazione" Type="STRING"/>
+        <CheckBox Name="fl_appart_ambiente" Description="Ambiente" Type="STRING" />
+        <CheckBox Name="fl_appart_vers" Description="Versatore" Type="STRING" />
+        <CheckBox Name="fl_appart_tipo_oggetto" Description="Entità" Type="STRING" />
+    </Fields>
     
     <Fields Name="Configuration" Description="Registro dei parametri">
         <ComboBox Name="ti_param_applic_combo" Description="Funzione" Type="STRING"/>
@@ -673,12 +691,9 @@
         <ComboBox Name="fl_appart_ambiente_combo" Description="Parametri di ambiente" Type="STRING"/>
         <ComboBox Name="fl_appart_vers_combo" Description="Parametri di versatore" Type="STRING"/>
         <ComboBox Name="fl_appart_tipo_oggetto_combo" Description="Parametri di entità" Type="STRING"/>
-        <Input Name="cd_versione_app_ini" Description="Introdotto con" Type="STRING" MaxLength="11" />
-        <Input Name="cd_versione_app_fine" Description="Cessato con" Type="STRING" MaxLength="11" />
-        <Button Name="load_config_list" Description="Carica Parametri" Type="STRING" />
-        <Button Name="edit_config" Description="Edita Parametri" Type="STRING" />
-        <Button Name="add_config" Description="Aggiungi Parametro" Type="STRING" />
-        <Button Name="save_config" Description="Salva Parametri" Type="STRING" />
+        <ComboBox Name="cd_versione_app_ini" Description="Introdotto con" Type="STRING" />
+        <ComboBox Name="cd_versione_app_fine" Description="Cessato con" Type="STRING" />
+        <Button Name="load_config_list" Description="Ricerca" Type="STRING" />
     </Fields>
     
 </Form>

@@ -85,6 +85,7 @@ public class PigStrumentiUrbanistici implements Serializable {
 
     // MEV 40123
     private String classificaUrb;
+    private BigDecimal annoFascicolo;
     private String idFascicoloUrb;
     private String oggettoFascicoloUrb;
     private String idSottofascicoloUrb;
@@ -383,6 +384,15 @@ public class PigStrumentiUrbanistici implements Serializable {
 
     public void setClassificaUrb(String classificaUrb) {
         this.classificaUrb = classificaUrb;
+    }
+
+    @Column(name = "ANNO_FASCICOLO_URB")
+    public BigDecimal getAnnoFascicolo() {
+        return annoFascicolo;
+    }
+
+    public void setAnnoFascicolo(BigDecimal annoFascicolo) {
+        this.annoFascicolo = annoFascicolo;
     }
 
     @Column(name = "ID_FASCICOLO_URB")

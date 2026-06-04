@@ -43,6 +43,9 @@
                     //STEP 1 del wizard
                     initWizardStep1();
 
+                    // MEV 40375
+                    $("#Ds_descrizione").parent().append('<span class="ui-icon ui-icon-alert ui-su-alert" title="Inserire il titolo dello strumento urbanistico"></span>');
+
                     //In caso di modifica aggiunge la domanda se si è sicuri di modificarlo
                     <c:if test="${form.datiGeneraliInput.status eq 'update'}">
                     initWizardStep1UpdateMode();

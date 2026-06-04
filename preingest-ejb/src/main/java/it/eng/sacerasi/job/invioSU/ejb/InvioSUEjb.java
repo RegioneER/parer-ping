@@ -286,8 +286,7 @@ public class InvioSUEjb {
                     // per questioni di univocità aggiungiamo l'id dell'ente versante al pacchetto
                     // dell'ufficio.
                     nomeFilePacchetto = strumentiUrbanisticiHelper
-                            .getCdKeyPerUfficio(strumentoUrbanisticoDaInviare)
-                            + ".zip";
+                            .getCdKeyPerUfficio(strumentoUrbanisticoDaInviare) + ".zip";
                 }
 
                 String rootFtp = configurationHelper
@@ -625,14 +624,16 @@ public class InvioSUEjb {
         if (daVersareInUfficioUrbanistica) {
             strumentiUrbanistici.getEnte().setDenominazioneEnteVersante("REGIONE EMILIA-ROMAGNA");
             strumentiUrbanistici.getEnte().setTipologiaVersatore("PRODUTTORE");
-            strumentiUrbanistici.getEnte()
-                    .setVersatore(vers.getNmVers());
+            strumentiUrbanistici.getEnte().setVersatore(vers.getNmVers());
             String numeroUd = strumentoUrbanisticoDaInviare.getCdRepertorio() + "_"
                     + strumentoUrbanisticoDaInviare.getCdProtocollo();
             strumentiUrbanistici.setNumero(numeroUd);
 
             strumentiUrbanistici
                     .setAnno(strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue());
+
+            // MEV 40375
+            strumentiUrbanistici.setDescrizione(strumentoUrbanisticoDaInviare.getDsDescrizione());
 
             // MEV 30026
             strumentiUrbanistici.setNumeroRegistroEnte(strumentiUrbanisticiHelper
@@ -670,18 +671,21 @@ public class InvioSUEjb {
             collegamento.setNumero(strumentoUrbanisticoDaInviare.getCdProtocollo());
             collegamento.setAnno(strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue());
             collegamento.setTipoRegistro("PG");
-            collegamento.setFaseStrumento(
-                    "PROTOCOLLAZIONE DELLA COMUNICAZIONE DI AVVENUTO VERSAMENTO");
+            collegamento
+                    .setFaseStrumento("PROTOCOLLAZIONE DELLA COMUNICAZIONE DI AVVENUTO VERSAMENTO");
             collegamenti.getCollegamento().add(collegamento);
 
-            collegamento = new Collegamento();
-            collegamento.setNumero(strumentoUrbanisticoDaInviare.getNrBurert());
-            String annoBurert = new SimpleDateFormat("yyyy")
-                    .format(strumentoUrbanisticoDaInviare.getDtBurert());
-            collegamento.setAnno(Integer.parseInt(annoBurert));
-            collegamento.setTipoRegistro("BURERT");
-            collegamento.setFaseStrumento("BURERT DI PUBBLICAZIONE");
-            collegamenti.getCollegamento().add(collegamento);
+            if (StringUtils.isNotBlank(strumentoUrbanisticoDaInviare.getNrBurert())
+                    && strumentoUrbanisticoDaInviare.getDtBurert() != null) {
+                collegamento = new Collegamento();
+                collegamento.setNumero(strumentoUrbanisticoDaInviare.getNrBurert());
+                String annoBurert = new SimpleDateFormat("yyyy")
+                        .format(strumentoUrbanisticoDaInviare.getDtBurert());
+                collegamento.setAnno(Integer.parseInt(annoBurert));
+                collegamento.setTipoRegistro("BURERT");
+                collegamento.setFaseStrumento("BURERT DI PUBBLICAZIONE");
+                collegamenti.getCollegamento().add(collegamento);
+            }
 
             strumentiUrbanistici.setCollegamenti(collegamenti);
 
@@ -693,23 +697,35 @@ public class InvioSUEjb {
                     .setClassifica(strumentoUrbanisticoDaInviare.getClassificaUrb());
             strumentiUrbanistici.setProfiloArchivistico(profiloArchivistico);
 
-            StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.Fascicolo fascicolo = new StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.Fascicolo();
-            fascicolo.setIdentificativo(strumentoUrbanisticoDaInviare.getIdFascicoloUrb());
-            fascicolo.setOggetto(strumentoUrbanisticoDaInviare.getOggettoFascicoloUrb());
-            strumentiUrbanistici.getProfiloArchivistico().getFascicoloPrincipale()
-                    .setFascicolo(fascicolo);
+            if (StringUtils.isNotBlank(strumentoUrbanisticoDaInviare.getIdFascicoloUrb())
+                    && strumentoUrbanisticoDaInviare.getAnnoFascicolo() != null
+                    && StringUtils.isNotBlank(strumentoUrbanisticoDaInviare.getClassificaUrb())) {
+                StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.Fascicolo fascicolo = new StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.Fascicolo();
+                fascicolo.setIdentificativo(strumentoUrbanisticoDaInviare.getAnnoFascicolo() + "."
+                        + strumentoUrbanisticoDaInviare.getClassificaUrb() + "."
+                        + strumentoUrbanisticoDaInviare.getIdFascicoloUrb());
+                fascicolo.setOggetto(strumentoUrbanisticoDaInviare.getOggettoFascicoloUrb());
+                strumentiUrbanistici.getProfiloArchivistico().getFascicoloPrincipale()
+                        .setFascicolo(fascicolo);
 
-            StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.SottoFascicolo sottoFascicolo = new StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.SottoFascicolo();
-            sottoFascicolo
-                    .setIdentificativo(strumentoUrbanisticoDaInviare.getIdSottofascicoloUrb());
-            sottoFascicolo.setOggetto(strumentoUrbanisticoDaInviare.getOggettoSottofascicoloUrb());
-            strumentiUrbanistici.getProfiloArchivistico().getFascicoloPrincipale()
-                    .setSottoFascicolo(sottoFascicolo);
+                if (StringUtils
+                        .isNotBlank(strumentoUrbanisticoDaInviare.getIdSottofascicoloUrb())) {
+                    StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.SottoFascicolo sottoFascicolo = new StrumentiUrbanistici.ProfiloArchivistico.FascicoloPrincipale.SottoFascicolo();
+                    sottoFascicolo
+                            .setIdentificativo(strumentoUrbanisticoDaInviare.getAnnoFascicolo()
+                                    + "." + strumentoUrbanisticoDaInviare.getClassificaUrb() + "."
+                                    + strumentoUrbanisticoDaInviare.getIdFascicoloUrb() + "/"
+                                    + strumentoUrbanisticoDaInviare.getIdSottofascicoloUrb());
+                    sottoFascicolo.setOggetto(
+                            strumentoUrbanisticoDaInviare.getOggettoSottofascicoloUrb());
+                    strumentiUrbanistici.getProfiloArchivistico().getFascicoloPrincipale()
+                            .setSottoFascicolo(sottoFascicolo);
+                }
+            }
         } else {
             // Popolo l'ente
             strumentiUrbanistici.getEnte().setEnteConvenzionato(nmEnteSiam);
-            strumentiUrbanistici.getEnte()
-                    .setDenominazione(vers.getNmVers());
+            strumentiUrbanistici.getEnte().setDenominazione(vers.getNmVers());
 
             if (dto != null) {
                 strumentiUrbanistici.getEnte().setTipologia(dto.getTipologia()); // tipo ente
@@ -765,47 +781,30 @@ public class InvioSUEjb {
         }
         strumentiUrbanistici.setTipiDocumento(tipiDocumento);
 
-        // Collegamenti
-        List<PigStrumUrbCollegamenti> collegamentiList = invioSUHelper
-                .getCollegamenti(strumentoUrbanisticoDaInviare.getIdStrumentiUrbanistici());
-        if (!collegamentiList.isEmpty()) {
-            for (PigStrumUrbCollegamenti strumUrbCollegamenti : collegamentiList) {
-                Collegamento collegamento = new Collegamento();
+        if (!daVersareInUfficioUrbanistica) {
+            // Collegamenti
+            List<PigStrumUrbCollegamenti> collegamentiList = invioSUHelper
+                    .getCollegamenti(strumentoUrbanisticoDaInviare.getIdStrumentiUrbanistici());
+            if (!collegamentiList.isEmpty()) {
+                for (PigStrumUrbCollegamenti strumUrbCollegamenti : collegamentiList) {
+                    Collegamento collegamento = new Collegamento();
 
-                int anno = strumUrbCollegamenti.getAnno().intValue();
-                // MEV 26936 - rimuovo l'anno e '_' dall'identificativo salvato nel campo
-                // numero.
-                String tipoAttoNumeroStr = strumentiUrbanisticiHelper
-                        .estraiNumeroCollegamento(strumUrbCollegamenti.getNumero());
+                    int anno = strumUrbCollegamenti.getAnno().intValue();
+                    // MEV 26936 - rimuovo l'anno e '_' dall'identificativo salvato nel campo
+                    // numero.
+                    String tipoAttoNumeroStr = strumentiUrbanisticiHelper
+                            .estraiNumeroCollegamento(strumUrbCollegamenti.getNumero());
 
-                if (daVersareInUfficioUrbanistica) {
-                    PigStrumentiUrbanistici suCollegato = strumentiUrbanisticiHelper
-                            .getSUByVersAndCdKey(strumentoUrbanisticoDaInviare.getPigVer(),
-                                    strumUrbCollegamenti.getNumero());
-                    if (suCollegato != null
-                            && !StringUtils.isEmpty(suCollegato.getCdProtocollo())
-                            && suCollegato.getAnnoProtocollo() != null
-                            && !StringUtils.isEmpty(suCollegato.getCdRepertorio())) {
-                        anno = strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue();
-                        tipoAttoNumeroStr = suCollegato.getCdRepertorio() + "_"
-                                + suCollegato.getCdProtocollo();
-                    } else {
-                        throw new ParerInternalError(
-                                "Il collegamento " + strumUrbCollegamenti.getNumero()
-                                        + " non ha anno,protocollo o repertorio valorizzati. Impossibile procedere con la creazione dei collegamenti per lo strumento urbanistico "
-                                        + strumentoUrbanisticoDaInviare.getCdKey());
-                    }
+                    tiFaseStrumento = strumUrbCollegamenti.getPigStrumUrbPianoStato()
+                            .getTiFaseStrumento();
+                    tiFaseStrumento = tiFaseStrumento.replaceAll(" ", "_");
+
+                    collegamento.setAnno(anno);
+                    collegamento.setFaseStrumento(tiFaseStrumento);
+                    collegamento.setNumero(tipoAttoNumeroStr);
+                    collegamento.setTipoRegistro("STRUMENTI URBANISTICI");
+                    collegamenti.getCollegamento().add(collegamento);
                 }
-
-                tiFaseStrumento = strumUrbCollegamenti.getPigStrumUrbPianoStato()
-                        .getTiFaseStrumento();
-                tiFaseStrumento = tiFaseStrumento.replaceAll(" ", "_");
-
-                collegamento.setAnno(anno);
-                collegamento.setFaseStrumento(tiFaseStrumento);
-                collegamento.setNumero(tipoAttoNumeroStr);
-                collegamento.setTipoRegistro("STRUMENTI URBANISTICI");
-                collegamenti.getCollegamento().add(collegamento);
             }
         }
 

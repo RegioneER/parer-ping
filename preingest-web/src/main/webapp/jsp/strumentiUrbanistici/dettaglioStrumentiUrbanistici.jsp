@@ -134,6 +134,8 @@
                     <sl:newLine />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.CLASSIFICA_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
                     <sl:newLine />
+                    <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ANNO_FASCICOLO%>" width="w100" labelWidth="w30" controlWidth="w30" />
+                    <sl:newLine />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.ID_FASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />
                     <sl:newLine />
                     <slf:lblField name="<%=StrumentiUrbanisticiForm.DatiUfficioUrbanistica.OGGETTO_FASCICOLO_URB%>" width="w100" labelWidth="w30" controlWidth="w60" />

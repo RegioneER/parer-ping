@@ -989,23 +989,18 @@ public class AnnullamentoEjb {
                 // MEV 30026
                 if (s == null) {
                     String cdRepertorio = strumentiUrbanisticiHelper
-                            .getCdRepertorioFromUfficioUrbanisticaObject(
-                                    oggPadre.getCdKeyObject());
+                            .getCdRepertorioFromUfficioUrbanisticaObject(oggPadre.getCdKeyObject());
                     String annoProtocollo = strumentiUrbanisticiHelper
                             .getAnnoProtocolloFromUfficioUrbanisticaObject(
                                     oggPadre.getCdKeyObject());
                     String cdProtocollo = strumentiUrbanisticiHelper
-                            .getCdProtocolloFromUfficioUrbanisticaObject(
-                                    oggPadre.getCdKeyObject());
+                            .getCdProtocolloFromUfficioUrbanisticaObject(oggPadre.getCdKeyObject());
                     if (!cdRepertorio.isEmpty() && !annoProtocollo.isEmpty()
                             && !cdProtocollo.isEmpty()) {
                         s = strumentiUrbanisticiHelper.getSUByCdKeyAndDatiUfficio(
-                                strumentiUrbanisticiHelper
-                                        .getCdKeyFromUfficioUrbanisticaObject(
-                                                oggPadre.getCdKeyObject()),
-                                cdRepertorio,
-                                annoProtocollo,
-                                cdProtocollo);
+                                strumentiUrbanisticiHelper.getCdKeyFromUfficioUrbanisticaObject(
+                                        oggPadre.getCdKeyObject()),
+                                cdRepertorio, annoProtocollo, cdProtocollo);
                     }
                 }
 
@@ -1016,22 +1011,17 @@ public class AnnullamentoEjb {
             // MEV 30026
             if (s == null) {
                 String cdRepertorio = strumentiUrbanisticiHelper
-                        .getCdRepertorioFromUfficioUrbanisticaObject(
-                                object.getCdKeyObject());
+                        .getCdRepertorioFromUfficioUrbanisticaObject(object.getCdKeyObject());
                 String annoProtocollo = strumentiUrbanisticiHelper
-                        .getAnnoProtocolloFromUfficioUrbanisticaObject(
-                                object.getCdKeyObject());
+                        .getAnnoProtocolloFromUfficioUrbanisticaObject(object.getCdKeyObject());
                 String cdProtocollo = strumentiUrbanisticiHelper
-                        .getCdProtocolloFromUfficioUrbanisticaObject(
-                                object.getCdKeyObject());
+                        .getCdProtocolloFromUfficioUrbanisticaObject(object.getCdKeyObject());
                 if (!cdRepertorio.isEmpty() && !annoProtocollo.isEmpty()
                         && !cdProtocollo.isEmpty()) {
                     s = strumentiUrbanisticiHelper.getSUByCdKeyAndDatiUfficio(
                             strumentiUrbanisticiHelper
                                     .getCdKeyFromUfficioUrbanisticaObject(object.getCdKeyObject()),
-                            cdRepertorio,
-                            annoProtocollo,
-                            cdProtocollo);
+                            cdRepertorio, annoProtocollo, cdProtocollo);
                 }
             }
         }
@@ -1124,8 +1114,7 @@ public class AnnullamentoEjb {
     // MEV 39962
     private void gestisciAnnullamentoSaPrivato(PigSisma pigSisma) {
         // MEV29704 - porta in da_verificare e non in annullato
-        sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma,
-                PigSisma.TiStato.DA_VERIFICARE);
+        sismaHelper.aggiornaStatoInNuovaTransazione(pigSisma, PigSisma.TiStato.DA_VERIFICARE);
         sismaHelper.pulisciFlagVerificaDocumenti(pigSisma);
     }
 

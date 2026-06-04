@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sacerping-jboss</artifactId>
-    <version>9.1.1-SNAPSHOT</version>
+    <version>9.2.0</version>
     <packaging>pom</packaging>
     <name>preingest</name>
     <description>Progetto PING</description>
@@ -18,16 +18,16 @@
         <!-- Skiptests by default : esecuzione su CI -->
         <skipTests>true</skipTests>
         <sacer.xmlmodule.version>2.14.1</sacer.xmlmodule.version>
-        <preingest.xmlmodule.version>3.4.0</preingest.xmlmodule.version>
+        <preingest.xmlmodule.version>3.5.0</preingest.xmlmodule.version>
         <!-- spagofat bom -->
-        <spagofat.version>7.3.0</spagofat.version>
+        <spagofat.version>7.5.0</spagofat.version>
         <parer-kettle-soap-client.version>3.2.0</parer-kettle-soap-client.version>
         <idp-jaas-rdbms.version>0.0.9</idp-jaas-rdbms.version>
         <!-- third party lib -->
         <xadisk.version>1.2.2.5</xadisk.version>
         <javacsv.version>2.0</javacsv.version>
-        <software.amazon.awssdk.version>2.41.20</software.amazon.awssdk.version>
-        <netty.version>4.1.130.Final</netty.version>
+        <software.amazon.awssdk.version>2.42.34</software.amazon.awssdk.version>
+        <netty.version>4.1.132.Final</netty.version>
         <xml-resolver.version>1.2</xml-resolver.version>
         <tika.version>3.2.3</tika.version>  
         <!-- WEBJARS -->        
@@ -41,19 +41,19 @@
         <jaxp-jdk11.version>0.0.3</jaxp-jdk11.version>      
     </properties>
 
-<distributionManagement>
-        <repository>
-	   <id>github</id>
-	   <url>https://maven.pkg.github.com/RegioneER/parer-ping</url>
-	 </repository>      
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/RegioneER/parer-ping</url>
+    </repository>
+  </distributionManagement>
 
-<repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/RegioneER/parer-framework-parerpom</url>            
-        </repository>               
-      </repositories>
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/RegioneER/parer-framework-parerpom</url>
+    </repository>
+  </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -381,8 +381,8 @@
         <module>preingest-slg</module>
         <module>preingest-jpa</module>
     </modules>
-<scm>
-        <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
+  <scm>
+    <developerConnection>scm:git:https://github.com/RegioneER/parer-ping.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 </project>

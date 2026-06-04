@@ -1006,38 +1006,28 @@ public class SismaEjb {
     }
 
     // Salvataggio dell'agenzia quando in stato DA_VERIFICARE o VERIFICATO
-    public PigSisma.TiStato salvaSismaAgenzia(BigDecimal idSisma, Map<BigDecimal, String> mappa,
-            SismaDto sismaDto) {
+    public PigSisma.TiStato gestisciStatiVerificaAgenzia(BigDecimal idSisma,
+            Map<BigDecimal, String> mappaFlagVerifica) {
         PigSisma pigSisma = sismaHelper.getEntityManager().find(PigSisma.class,
                 idSisma.longValueExact());
         PigSisma.TiStato vecchioStato = pigSisma.getTiStato();
         PigSisma.TiStato nuovoStato = vecchioStato;
-        int numFlagValorizzati = 0;
-        int numFlagValorizzatiAOk = 0;
-        for (Map.Entry<BigDecimal, String> entry : mappa.entrySet()) {
+        long numFlagValorizzati = mappaFlagVerifica.values().stream()
+                .filter(valore -> !valore.isEmpty()).count();
+        long numFlagValorizzatiAOk = mappaFlagVerifica.values().stream()
+                .filter(valore -> valore.equals(Constants.DB_TRUE)).count();
+
+        for (Map.Entry<BigDecimal, String> entry : mappaFlagVerifica.entrySet()) {
             BigDecimal key = entry.getKey();
             String value = entry.getValue();
             PigSismaDocumenti pigSismaDocumenti = sismaHelper.getEntityManager()
                     .find(PigSismaDocumenti.class, key.longValueExact());
             String vecchioFlag = pigSismaDocumenti.getTiVerificaAgenzia() == null ? ""
                     : pigSismaDocumenti.getTiVerificaAgenzia();
-            if (value.equals(Constants.DB_TRUE)) {
-                numFlagValorizzatiAOk++;
-                numFlagValorizzati++;
-            } else if (value.equals(Constants.DB_FALSE)) {
-                numFlagValorizzati++;
-            }
-            if (vecchioFlag.equals(value)) {
-                // Il valore NON è cambiato rispetto a prima quindi non fa nulla.
-            } else {
+            if (!vecchioFlag.equals(value)) {
                 // Azzera eventuali dati pregressi tipo flag ecc. e imposta il nuovo valore agenzia
-                if (value.equals(Constants.DB_TRUE)) {
+                if (!value.isBlank()) {
                     pigSismaDocumenti.setTiVerificaAgenzia(value);
-                } else if (value.equals(Constants.DB_FALSE)) {
-                    pigSismaDocumenti.setTiVerificaAgenzia(value);
-                    // pigSismaDocumenti.setFlEsitoVerifica(Constants.DB_FALSE); // Annulla esito
-                    // verifica del Job di
-                    // verifica documenti
                 } else {
                     pigSismaDocumenti.setTiVerificaAgenzia(null);
                     pigSismaDocumenti.setFlEsitoVerifica(Constants.DB_FALSE); // Annulla esito
@@ -1051,47 +1041,31 @@ public class SismaEjb {
         // eventualmente a VERIFICATO
         if (vecchioStato.equals(PigSisma.TiStato.DA_VERIFICARE)) {
             // Se Agenzia ha valorizzato tutti i flag
-            if (mappa.size() == numFlagValorizzati) {
+            if (mappaFlagVerifica.size() == numFlagValorizzati) {
                 // e se sono tutto OK allora passa allo stato VERIFICATO
-                if (mappa.size() == numFlagValorizzatiAOk) {
+                if (mappaFlagVerifica.size() == numFlagValorizzatiAOk) {
                     nuovoStato = PigSisma.TiStato.VERIFICATO;
+                    sismaHelper.aggiornaStato(pigSisma, nuovoStato);
                 } else {
                     nuovoStato = PigSisma.TiStato.DA_RIVEDERE;
+                    sismaHelper.aggiornaStato(pigSisma, nuovoStato);
                 }
-
-                sismaHelper.aggiornaStato(pigSisma, nuovoStato);
             }
             // Se invece si era in VERIFICATO l'agenzia può ancora modificare i dati e far
             // retrocedere lo stato a
             // DA_VERIFICARE
         } else if (vecchioStato.equals(PigSisma.TiStato.VERIFICATO)) {
-            // se si sta salvando il dato agenzia e sisma è di un SA privato allora si salvano i
-            // dati
-            if (sismaHelper.getTipoVersatore(pigSisma.getPigVer())
-                    .equals(Constants.TipoVersatoreSisma.SA_PRIVATO)) {
-                pigSisma.setAnnoAg(sismaDto.getAnnoAg());
-                pigSisma.setNumeroAg(sismaDto.getNumeroAg());
-                pigSisma.setDataAg(sismaDto.getDataAg());
-                pigSisma.setRegistroAg(sismaDto.getRegistroAg());
-                pigSisma.setClassificaAg(sismaDto.getClassificaAg());
-                pigSisma.setIdFascicoloAg(sismaDto.getIdFascicoloAg());
-                pigSisma.setIdSottofascicoloAg(sismaDto.getIdSottofascicoloAg());
-                pigSisma.setOggettoFascicoloAg(sismaDto.getOggettoFascicoloAg());
-                pigSisma.setOggettoSottofascicoloAg(sismaDto.getOggettoSottofascicoloAg());
-            }
-            if (mappa.size() == numFlagValorizzati) {
+            if (mappaFlagVerifica.size() == numFlagValorizzati) {
                 if (numFlagValorizzati != numFlagValorizzatiAOk) {
                     // Può aver messo a KO almeno un flag quindi retrocede a DA_RIVEDERE
                     nuovoStato = PigSisma.TiStato.DA_RIVEDERE;
-                } else {
-                    // Se sono tutti a OK passa oltre senza cambiare stato
+                    sismaHelper.aggiornaStato(pigSisma, nuovoStato);
                 }
             } else {
                 // Retrocede a DA_VERIFICARE perché agenzia potrebbe aver ANNULLATO almeno un flag
                 nuovoStato = PigSisma.TiStato.DA_VERIFICARE;
+                sismaHelper.aggiornaStato(pigSisma, nuovoStato);
             }
-
-            sismaHelper.aggiornaStato(pigSisma, nuovoStato);
         }
         return nuovoStato;
     }

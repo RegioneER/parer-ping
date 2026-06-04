@@ -89,8 +89,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
                 PigStrumentiUrbanistici.TiStato.INVIO_IN_CORSO,
                 PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE_ENTE,
                 PigStrumentiUrbanistici.TiStato.RICHIESTA_INVIO,
-                PigStrumentiUrbanistici.TiStato.VERSATO,
-                PigStrumentiUrbanistici.TiStato.ANNULLATO,
+                PigStrumentiUrbanistici.TiStato.VERSATO, PigStrumentiUrbanistici.TiStato.ANNULLATO,
                 PigStrumentiUrbanistici.TiStato.IN_TRASFORMAZIONE_ENTE,
                 PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO_ENTE,
                 PigStrumentiUrbanistici.TiStato.IN_ELABORAZIONE,
@@ -283,11 +282,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     }
 
     public String getCdKeyPerUfficio(StrumentiUrbanisticiEjb.SUDto su) {
-        return su.getCdKey() + "_"
-                + su.getAnnoProtocollo()
-                + "_"
-                + su.getCdRepertorio()
-                + "_"
+        return su.getCdKey() + "_" + su.getAnnoProtocollo() + "_" + su.getCdRepertorio() + "_"
                 + su.getCdProtocollo();
     }
 
@@ -756,8 +751,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     }
 
     public boolean controllaUnivocitaDatiUfficioUrbanistica(String cdKey, BigDecimal idPuc,
-            String cdRepertorio,
-            BigDecimal annoProtocollo, String cdProtocollo) {
+            String cdRepertorio, BigDecimal annoProtocollo, String cdProtocollo) {
         Query query = getEntityManager().createQuery("SELECT su FROM PigStrumentiUrbanistici su "
                 + "WHERE su.cdKey <> :cdKey AND (su.idPuc = :idPuc "
                 + "OR (su.cdRepertorio = :cdRepertorio AND su.annoProtocollo = :annoProtocollo "
@@ -770,17 +764,6 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
         List<PigStrumentiUrbanistici> lista = query.getResultList();
 
         return lista.isEmpty();
-    }
-
-    public boolean controllaCompletezzaFaseCollegataPerUfficioUrbanistica(PigVers vers,
-            String numeroCollegamento) {
-        PigStrumentiUrbanistici pigStrumentiUrbanistici = getSUByVersAndCdKey(vers,
-                numeroCollegamento);
-
-        return pigStrumentiUrbanistici != null
-                && !StringUtils.isEmpty(pigStrumentiUrbanistici.getCdProtocollo())
-                && pigStrumentiUrbanistici.getAnnoProtocollo() != null
-                && !StringUtils.isEmpty(pigStrumentiUrbanistici.getCdRepertorio());
     }
 
     // MEV 30026

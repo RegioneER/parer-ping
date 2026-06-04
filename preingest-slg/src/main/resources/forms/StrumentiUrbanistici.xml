@@ -83,7 +83,7 @@
         <Input Name="numero" Type="STRING" Description="Numero" Required="true"/>
         <Input Name="data" Type="DATE" Description="Data" Required="true" />
         <Input Name="oggetto" Type="STRING" Description="Oggetto" Required="false" Readonly="true"/>
-        <Input Name="ds_descrizione" Type="STRING" Description="Descrizione" Required="false" MaxLength="1024"/>
+        <Input Name="ds_descrizione" Type="STRING" Description="Descrizione" Required="true" MaxLength="1024"/>
         <Input Name="modificato" Type="STRING" Description="Form Modificata" Hidden="true"/>
         <Button Name="salvaBozza" Description="Salva bozza" Type="STRING"/>
         <ComboBox Name="annoCollegato1" Description="Anno" Type="STRING" Trigger="true" Required="false"/>        
@@ -149,9 +149,10 @@
         <Input Name="cd_protocollo" Type="STRING" Description="* Numero protocollo" MaxLength="20"/>
         <Input Name="dt_protocollo" Type="DATE" Description="* Data protocollo" />
         <Input Name="classifica_urb" Type="STRING" Description="Classifica" MaxLength="100" />
-        <Input Name="id_fascicolo_urb" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
+        <ComboBox Name="anno_fascicolo" Type="STRING" Description="Anno fascicolo" />
+        <Input Name="id_fascicolo_urb" Type="STRING" Description="Numero fascicolo" MaxLength="100" />
         <Input Name="oggetto_fascicolo_urb" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />
-        <Input Name="id_sottofascicolo_urb" Type="STRING" Description="Identificativo sottofascicolo" MaxLength="100" />
+        <Input Name="id_sottofascicolo_urb" Type="STRING" Description="Numero sottofascicolo" MaxLength="100" />
         <Input Name="oggetto_sottofascicolo_urb" Type="STRING" Description="Oggetto sottofascicolo" MaxLength="100" />
     </Fields>
 

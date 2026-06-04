@@ -97,10 +97,10 @@
     </Fields>
 
     <Fields Name="DatiAgenzia" Description="Dati agenzia" >
-        <ComboBox Name="registro_ag" Type="STRING" Description="Registro" Required="true" />
-        <ComboBox Name="anno_ag" Description="Anno" Type="STRING" Required="true"/>        
-        <Input Name="numero_ag" Type="STRING" Description="Numero" Required="true"  MaxLength="20" />
-        <Input Name="data_ag" Type="DATE" Description="Data" Required="true" />
+        <ComboBox Name="registro_ag" Type="STRING" Description="* Registro" />
+        <ComboBox Name="anno_ag" Description="* Anno" Type="STRING" />
+        <Input Name="numero_ag" Type="STRING" Description="* Numero" MaxLength="20" />
+        <Input Name="data_ag" Type="DATE" Description="* Data"/>
         <Input Name="classifica_ag" Type="STRING" Description="Classifica" MaxLength="100" />
         <Input Name="id_fascicolo_ag" Type="STRING" Description="Identificativo fascicolo" MaxLength="100" />
         <Input Name="oggetto_fascicolo_ag" Type="STRING" Description="Oggetto fascicolo" MaxLength="100" />

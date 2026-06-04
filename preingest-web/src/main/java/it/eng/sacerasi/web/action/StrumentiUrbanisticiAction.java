@@ -271,20 +271,8 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
             // può inserire, modificare o cancellare un sisma SOLO se BOZZA,
             // se VERSATO può modificare la descrizione
-            if (!(statoStrumentoUrbanistico.equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())
-                    || statoStrumentoUrbanistico
-                            .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name()))) {
+            if (!statoStrumentoUrbanistico.equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())) {
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "true");
-            }
-
-            if (statoStrumentoUrbanistico
-                    .equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
-                if (!getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
-                    getForm().getStrumentiUrbanisticiList().setStatus(Status.update);
-                    getForm().getDatiGeneraliOutput().getDs_descrizione_out().setEditMode();
-                    getForm().getDatiGeneraliOutput().getDs_descrizione_out().setReadonly(false);
-                    getForm().getDatiGeneraliInput().getData().setViewMode();
-                }
             }
 
             if (statoStrumentoUrbanistico
@@ -350,6 +338,12 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
     private void loadDettaglioStrumentoUrbanistico(BigDecimal idStrumentoUrbanistico)
             throws EMFError, ParerUserError {
+
+        // MEV 30026
+        DateTime oggi = new DateTime();
+        DecodeMapIF dm = ComboGetter.getRangeAnni(2010, oggi.getYear());
+        getForm().getDatiUfficioUrbanistica().getAnno_fascicolo().setDecodeMap(dm);
+
         SUDto dto = strumentiUrbanisticiEjb.getSUById(idStrumentoUrbanistico);
 
         // MEV 30026
@@ -359,9 +353,8 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         getForm().getDatiGeneraliOutput().getNm_ente_out()
                 .setValue((dto.getDatiAnagraficiDto() == null ? ""
                         : dto.getDatiAnagraficiDto().getDenominazione()));
-        getForm().getDatiGeneraliOutput().getNm_unione_out()
-                .setValue((dto.getDatiAnagraficiDto() == null ? ""
-                        : dto.getDatiAnagraficiDto().getUnione()));
+        getForm().getDatiGeneraliOutput().getNm_unione_out().setValue(
+                (dto.getDatiAnagraficiDto() == null ? "" : dto.getDatiAnagraficiDto().getUnione()));
 
         getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out()
                 .setValue(dto.getIdStrumentiUrbanistici() + "");
@@ -410,6 +403,10 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 .setValue(dto.getIdSottofascicoloUrb());
         getForm().getDatiUfficioUrbanistica().getOggetto_sottofascicolo_urb()
                 .setValue(dto.getOggettoSottofascicoloUrb());
+        getForm().getDatiUfficioUrbanistica().getAnno_fascicolo()
+                .setValue(dto.getAnnoFascicolo() != null
+                        ? dto.getAnnoFascicolo().longValueExact() + ""
+                        : "");
 
         getForm().getDatiGeneraliInput().getOggetto().setValue(dto.getOggetto());
         getForm().getDatiGeneraliInput().getDs_descrizione().setValue(dto.getDsDescrizione());
@@ -427,26 +424,22 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         // Collegamenti
         // MEV 29495 - solo gli anni in cui esistono documenti collegabili
         if (!StringUtils.isEmpty(dto.getFaseCollegata1())) {
-            DecodeMap dm = strumentiUrbanisticiHelper.getSUVersatiAnnoByPianoStato(
+            DecodeMap dmp = strumentiUrbanisticiHelper.getSUVersatiAnnoByPianoStato(
                     dto.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata1());
-            getForm().getDatiGeneraliInput().getAnnoCollegato1().setDecodeMap(dm);
+            getForm().getDatiGeneraliInput().getAnnoCollegato1().setDecodeMap(dmp);
         } else {
             // MEV 29495 - riempio tutti i valori possibili per aggirare il comportamento del
             // framework, i dati vengono poi manipolati dal js.
-            DateTime oggi = new DateTime();
-            DecodeMapIF dm = ComboGetter.getRangeAnni(2010, oggi.getYear());
             getForm().getDatiGeneraliInput().getAnnoCollegato1().setDecodeMap(dm);
         }
 
         if (!StringUtils.isEmpty(dto.getFaseCollegata2())) {
-            DecodeMap dm = strumentiUrbanisticiHelper.getSUVersatiAnnoByPianoStato(
-                    dto.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata1());
-            getForm().getDatiGeneraliInput().getAnnoCollegato2().setDecodeMap(dm);
+            DecodeMap dmp = strumentiUrbanisticiHelper.getSUVersatiAnnoByPianoStato(
+                    dto.getNmTipoStrumentoUrbanistico(), dto.getFaseCollegata2());
+            getForm().getDatiGeneraliInput().getAnnoCollegato2().setDecodeMap(dmp);
         } else {
             // MEV 29495 - riempio tutti i valori possibili per aggirare il comportamento del
             // framework, i dati vengono poi manipolati dal js.
-            DateTime oggi = new DateTime();
-            DecodeMapIF dm = ComboGetter.getRangeAnni(2010, oggi.getYear());
             getForm().getDatiGeneraliInput().getAnnoCollegato2().setDecodeMap(dm);
         }
 
@@ -567,8 +560,11 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
     public void saveDettaglio() throws EMFError {
         // MEV#24085 - Strumenti urbanistici - rendere modificabile il campo "Descrizione" anche
         // dopo il versamento
-        String stato = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
-                .getString("ti_stato");
+        BigDecimal idStrumentoUrbanistico = getForm().getStrumentiUrbanisticiList().getTable()
+                .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
+        SUDto dto = strumentiUrbanisticiEjb.getSUById(idStrumentoUrbanistico);
+
+        String stato = dto.getTiStato();
         if (stato != null && stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
             BigDecimal idStrumento = getForm().getStrumentiUrbanisticiList().getTable()
                     .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
@@ -637,9 +633,15 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         } else if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
             // MEV#24085 - Strumenti urbanistici - rendere modificabile il campo "Descrizione" anche
             // dopo il versamento
-            String stato = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
-                    .getString("ti_stato");
-            if (stato != null && stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())) {
+            BigDecimal idStrumentoUrbanistico = getForm().getStrumentiUrbanisticiList().getTable()
+                    .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
+            SUDto dto = strumentiUrbanisticiEjb.getSUById(idStrumentoUrbanistico);
+
+            String stato = dto.getTiStato();
+
+            if (isUtenteUfficioUrbanistico() && stato != null
+                    && (stato.equals(PigStrumentiUrbanistici.TiStato.VERSATO.name())
+                            || stato.equals(PigStrumentiUrbanistici.TiStato.ERRORE.name()))) {
                 determinaStato(false);
                 forwardToPublisher(Application.Publisher.DETTAGLIO_STRUMENTI_URBANISTICI);
             } else {
@@ -1209,15 +1211,21 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
     @Override
     public void versaSU() throws Throwable {
-        if (!strumentiUrbanisticiEjb.versaStrumentoUrbanistico(
-                getForm().getDatiGeneraliOutput().getId_strumenti_urbanistici_out().parse(),
-                getUser().getIdUtente(), false)) {
-            PigErrore err = messaggiHelper.retrievePigErrore("PING-ERRSU23");
-            getMessageBox().addWarning(err.getDsErrore());
-            forwardToPublisher(getLastPublisher());
+        BigDecimal idStrumentoUrb = getForm().getDatiGeneraliOutput()
+                .getId_strumenti_urbanistici_out().parse();
+
+        if (getMessageBox().isEmpty()) {
+            if (!strumentiUrbanisticiEjb.versaStrumentoUrbanistico(idStrumentoUrb,
+                    getUser().getIdUtente(), false)) {
+                PigErrore err = messaggiHelper.retrievePigErrore("PING-ERRSU23");
+                getMessageBox().addWarning(err.getDsErrore());
+                forwardToPublisher(getLastPublisher());
+            } else {
+                loadStrumentiUrbanistici();
+                forwardToPublisher(Application.Publisher.STRUMENTI_URBANISTICI);
+            }
         } else {
-            loadStrumentiUrbanistici();
-            forwardToPublisher(Application.Publisher.STRUMENTI_URBANISTICI);
+            forwardToPublisher(getLastPublisher());
         }
     }
 
@@ -1249,41 +1257,17 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             forwardToPublisher(getLastPublisher());
         }
 
-        String annoCollegato1 = getForm().getDatiGeneraliInput().getAnnoCollegato1()
-                .getValue();
+        String annoCollegato1 = getForm().getDatiGeneraliInput().getAnnoCollegato1().getValue();
         String identificativoCollegato1 = getForm().getDatiGeneraliOutput()
                 .getIdentificativoCollegato1_out().getValue();
-        String annoCollegato2 = getForm().getDatiGeneraliInput().getAnnoCollegato1()
-                .getValue();
+        String annoCollegato2 = getForm().getDatiGeneraliInput().getAnnoCollegato1().getValue();
         String identificativoCollegato2 = getForm().getDatiGeneraliOutput()
                 .getIdentificativoCollegato2_out().getValue();
 
-        BigDecimal idStrumento = getForm().getStrumentiUrbanisticiList().getTable()
-                .getCurrentRow().getBigDecimal(ID_STRUMENTI_URBANISTICI);
+        BigDecimal idStrumento = getForm().getStrumentiUrbanisticiList().getTable().getCurrentRow()
+                .getBigDecimal(ID_STRUMENTI_URBANISTICI);
         PigVers enteVersatore = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idStrumento).getPigVer();
-
-        if (!StringUtils.isEmpty(annoCollegato1)
-                && !StringUtils.isEmpty(identificativoCollegato1)
-                && !strumentiUrbanisticiHelper
-                        .controllaCompletezzaFaseCollegataPerUfficioUrbanistica(
-                                enteVersatore, identificativoCollegato1)) {
-            getMessageBox().addError(String.format(
-                    messaggiHelper.retrievePigErrore("PING-ERRSU29").getDsErrore()
-                            .replace("{0}", "%s"),
-                    identificativoCollegato1));
-        }
-
-        if (!StringUtils.isEmpty(annoCollegato2)
-                && !StringUtils.isEmpty(identificativoCollegato2)
-                && !strumentiUrbanisticiHelper
-                        .controllaCompletezzaFaseCollegataPerUfficioUrbanistica(
-                                enteVersatore, identificativoCollegato2)) {
-            getMessageBox().addError(String.format(
-                    messaggiHelper.retrievePigErrore("PING-ERRSU29").getDsErrore()
-                            .replace("{0}", "%s"),
-                    identificativoCollegato2));
-        }
 
         if (getMessageBox().isEmpty()) {
             salvaDatiUfficioUrbanistica(getForm().getDatiGeneraliOutput()
@@ -1357,9 +1341,9 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 multipartRequest.add("VERSIONE", versione);
                 multipartRequest.add("LOGINNAME", loginname);
                 multipartRequest.add("PASSWORD", password);
-                multipartRequest.add("XMLSIP", strumentiUrbanisticiEjb
-                        .getXmlRichiestaRappVersByIdStrumUrb(idStrumentiUrbanistici,
-                                estraiRapportoAgenzia, dto));
+                multipartRequest.add("XMLSIP",
+                        strumentiUrbanisticiEjb.getXmlRichiestaRappVersByIdStrumUrb(
+                                idStrumentiUrbanistici, estraiRapportoAgenzia, dto));
                 // Creo la richiesta
                 HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(
                         multipartRequest, header);
@@ -1524,8 +1508,8 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         String isFromAjax = getRequest().getParameter("isFromJavaScript");
         if (Boolean.parseBoolean(isFromAjax)) {
             String tiNuovoStato = (String) getRequest().getParameter("ti_nuovo_stato");
-            if (tiNuovoStato != null && !tiNuovoStato.isEmpty() && getForm()
-                    .getDatiGeneraliOutput().getId_strumenti_urbanistici_out() != null) {
+            if (tiNuovoStato != null && !tiNuovoStato.isEmpty() && getForm().getDatiGeneraliOutput()
+                    .getId_strumenti_urbanistici_out() != null) {
                 BigDecimal idSu = getForm().getDatiGeneraliOutput()
                         .getId_strumenti_urbanistici_out().parse();
                 Date dataStato;
@@ -1904,6 +1888,10 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
         // MEV 40123
         suDto.setClassificaUrb(getForm().getDatiUfficioUrbanistica().getClassifica_urb().parse());
+        if (getForm().getDatiUfficioUrbanistica().getAnno_fascicolo().parse() != null) {
+            suDto.setAnnoFascicolo(new BigDecimal(
+                    getForm().getDatiUfficioUrbanistica().getAnno_fascicolo().parse()));
+        }
         suDto.setIdFascicoloUrb(
                 getForm().getDatiUfficioUrbanistica().getId_fascicolo_urb().parse());
         suDto.setOggettoFascicoloUrb(

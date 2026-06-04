@@ -44,6 +44,7 @@ import it.eng.spagoLite.db.oracle.decode.DecodeMap;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -172,10 +173,8 @@ public class StrumentiUrbanisticiEjb {
                         && pigStrumentiUrbanistici.getAnnoProtocollo() != null
                         && pigStrumentiUrbanistici.getCdProtocollo() != null) {
                     riga.setString("id_versamento_urbanistica",
-                            pigStrumentiUrbanistici.getAnnoProtocollo()
-                                    + "_"
-                                    + pigStrumentiUrbanistici.getCdRepertorio()
-                                    + "_"
+                            pigStrumentiUrbanistici.getAnnoProtocollo() + "_"
+                                    + pigStrumentiUrbanistici.getCdRepertorio() + "_"
                                     + pigStrumentiUrbanistici.getCdProtocollo());
                 }
 
@@ -329,8 +328,8 @@ public class StrumentiUrbanisticiEjb {
         return id;
     }
 
-    public String getXmlRichiestaRappVersByIdStrumUrb(BigDecimal id,
-            boolean estraiRapportoAgenzia, SUDto dto) {
+    public String getXmlRichiestaRappVersByIdStrumUrb(BigDecimal id, boolean estraiRapportoAgenzia,
+            SUDto dto) {
         String xml = null;
         Object[] ogg = strumentiUrbanisticiHelper.findDatiAmbienteByIdSU(id, estraiRapportoAgenzia,
                 dto);
@@ -343,9 +342,8 @@ public class StrumentiUrbanisticiEjb {
         String loginname = configurationHelper
                 .getValoreParamApplicByApplic(Constants.NmParamApplic.USERID_RECUP_UD.name());
 
-        String numero = strumentiUrbanisticiHelper
-                .estraiAttoDaIdentificativo(pigStrumentiUrbanistici.getCdKey())
-                + "_" + pigStrumentiUrbanistici.getNumero();
+        String numero = strumentiUrbanisticiHelper.estraiAttoDaIdentificativo(
+                pigStrumentiUrbanistici.getCdKey()) + "_" + pigStrumentiUrbanistici.getNumero();
         String anno = pigStrumentiUrbanistici.getAnno().toString();
 
         if (estraiRapportoAgenzia) {
@@ -358,9 +356,8 @@ public class StrumentiUrbanisticiEjb {
                 + "    <Ambiente>" + orgAmbiente.getNmAmbiente() + "</Ambiente>\n" + "    <Ente>"
                 + orgEnte.getNmEnte() + "</Ente>\n" + "    <Struttura>" + orgStrut.getNmStrut()
                 + "</Struttura>\n" + "    <UserID>" + loginname + "</UserID>    \n"
-                + "  </Versatore>\n" + "  <Chiave>\n" + "    <Numero>"
-                + numero + "</Numero>\n" + "    <Anno>"
-                + anno + "</Anno>\n"
+                + "  </Versatore>\n" + "  <Chiave>\n" + "    <Numero>" + numero + "</Numero>\n"
+                + "    <Anno>" + anno + "</Anno>\n"
                 + "    <TipoRegistro>STRUMENTI URBANISTICI</TipoRegistro>    \n" + "  </Chiave>\n"
                 + "</Recupero> \n" + " ";
         return xml;
@@ -411,6 +408,7 @@ public class StrumentiUrbanisticiEjb {
         dto.setOggettoFascicoloUrb(su.getOggettoFascicoloUrb());
         dto.setIdSottofascicoloUrb(su.getIdSottofascicoloUrb());
         dto.setOggettoSottofascicoloUrb(su.getOggettoSottofascicoloUrb());
+        dto.setAnnoFascicolo(su.getAnnoFascicolo());
 
         dto.setCdErr(su.getCdErr());
         dto.setDsErr(su.getDsErr());
@@ -1091,6 +1089,7 @@ public class StrumentiUrbanisticiEjb {
         strumentiUrbanistici.setDtProtocollo(dto.getDtProtocollo());
 
         strumentiUrbanistici.setClassificaUrb(dto.getClassificaUrb());
+        strumentiUrbanistici.setAnnoFascicolo(dto.getAnnoFascicolo());
         strumentiUrbanistici.setIdFascicoloUrb(dto.getIdFascicoloUrb());
         strumentiUrbanistici.setOggettoFascicoloUrb(dto.getOggettoFascicoloUrb());
         strumentiUrbanistici.setIdSottofascicoloUrb(dto.getIdSottofascicoloUrb());
@@ -1306,6 +1305,7 @@ public class StrumentiUrbanisticiEjb {
 
         // MEV 40123
         private String classificaUrb;
+        private BigDecimal annoFascicolo;
         private String idFascicoloUrb;
         private String oggettoFascicoloUrb;
         private String idSottofascicoloUrb;
@@ -1596,6 +1596,14 @@ public class StrumentiUrbanisticiEjb {
 
         public void setClassificaUrb(String classificaUrb) {
             this.classificaUrb = classificaUrb;
+        }
+
+        public BigDecimal getAnnoFascicolo() {
+            return annoFascicolo;
+        }
+
+        public void setAnnoFascicolo(BigDecimal annoFascicolo) {
+            this.annoFascicolo = annoFascicolo;
         }
 
         public String getIdFascicoloUrb() {

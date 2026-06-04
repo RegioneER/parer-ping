@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "queueType = 'CODA3'"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/queue/ProducerCodaVersQueue"),
-        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "3600") })
+        @ActivationConfigProperty(propertyName = "transactionTimeout", propertyValue = "3900") })
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ConsumerCoda3Ejb implements MessageListener {

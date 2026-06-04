@@ -101,7 +101,6 @@ import it.eng.sacerasi.slite.gen.tablebean.PigSismaStoricoStatiTableBean;
 import org.springframework.web.client.RestTemplate;
 
 /**
- *
  * @author MIacolucci
  */
 public class SismaAction extends SismaAbstractAction {
@@ -331,56 +330,53 @@ public class SismaAction extends SismaAbstractAction {
                 .getBigDecimal(ID_SISMA);
         getForm().getSismaList().getTable().getCurrentRow().getBigDecimal("id_versatore");
         if (stato.equals(PigSisma.TiStato.VERSATO.name())) {
-            getForm().getDatiAgenzia().postAndValidate(getRequest(), getMessageBox());
-            getForm().getDatiProfiloArchivistico().post(getRequest());
-            getForm().getDocumentiCaricatiList().post(getRequest());
+            getForm().getDettaglioButtonList().getVersaInAgenzia().setViewMode();
+            if (isUtenteAgenzia()) {
+                getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
+                getForm().getDatiAgenzia().postAndValidate(getRequest(), getMessageBox());
+                getForm().getDatiProfiloArchivistico().post(getRequest());
+                getForm().getDocumentiCaricatiList().post(getRequest());
 
-            if (getMessageBox().isEmpty()) {
-                if (!sismaEjb.controllaUnivocitaDatiAgenzia(idSisma,
-                        getUser().getIdOrganizzazioneFoglia().longValueExact(),
-                        getForm().getDatiAgenzia().getRegistro_ag().parse(),
-                        new BigDecimal(getForm().getDatiAgenzia().getAnno_ag().parse()),
-                        getForm().getDatiAgenzia().getNumero_ag().parse())) {
-                    getMessageBox().addError(String.format(
-                            messaggiHelper.retrievePigErrore(PING_ERRSISMA_20).getDsErrore()
-                                    .replace("{0}", "%s"),
-                            getForm().getDatiAgenzia().getRegistro_ag().parse() + "-"
-                                    + getForm().getDatiAgenzia().getAnno_ag().parse() + "-"
-                                    + getForm().getDatiAgenzia().getNumero_ag().parse()));
+                if (getMessageBox().isEmpty()) {
+                    salvaDatiAgenzia(idSisma.longValueExact());
+
+                    if (isDatiAgenziaComplete()) {
+                        getForm().getDettaglioButtonList().getVersaInAgenzia().setReadonly(false);
+                        getMessageBox().addInfo(
+                                "Dati salvati con successo. Ora è possibile versare in agenzia ricostruzione.");
+                    } else {
+                        getForm().getDettaglioButtonList().getVersaInAgenzia().setReadonly(true);
+                        getMessageBox().addInfo(
+                                "Dati salvati con successo. Non tutti i dati necessari all'invio sono compilati.");
+                    }
+
+                    getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+                    getForm().getDatiAgenzia().setStatus(Status.view);
+                    getForm().getDatiAgenzia().setViewMode();
+                    getForm().getDatiProfiloArchivistico().setStatus(Status.view);
+                    getForm().getDatiProfiloArchivistico().setViewMode();
                 }
             }
-
-            if (getMessageBox().isEmpty()) {
-                salvaDatiAgenzia(idSisma.longValueExact());
-
-                if (isDatiAgenziaComplete()) {
-                    getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
-                }
-            }
-
         } else if (stato.equals(PigSisma.TiStato.DA_VERIFICARE.name())
                 || stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
+            // solo l'utente agenzia può aver scatenato questo ramo.
             SismaDto sismaDto = new SismaDto();
 
             getForm().getDocumentiCaricatiList().post(getRequest());
 
-            // MEV 30691 - Se devo andare in stato DA_RIVEDERE mostro un pop-up.
-            int numFlagValorizzati = 0;
-            int numFlagValorizzatiADaRivedere = 0;
-
-            for (Iterator<? extends BaseRowInterface> iterator = getForm()
-                    .getDocumentiCaricatiList().getTable().iterator(); iterator.hasNext();) {
-                BaseRowInterface riga = iterator.next();
+            HashMap<BigDecimal, String> mappaFlagVerifica = new HashMap<>();
+            for (BaseRowInterface riga : getForm().getDocumentiCaricatiList()
+                    .getTable()) {
+                BigDecimal idRiga = riga.getBigDecimal("id_sisma_documenti");
                 String valore = riga.getString("ti_verifica_agenzia");
-
-                if (!valore.isEmpty()) {
-                    numFlagValorizzati++;
-
-                    if (valore.equals(Constants.DB_FALSE)) {
-                        numFlagValorizzatiADaRivedere++;
-                    }
-                }
+                mappaFlagVerifica.put(idRiga, valore);
             }
+
+            // MEV 30691 - Se devo andare in stato DA_RIVEDERE mostro un pop-up.
+            long numFlagValorizzati = mappaFlagVerifica.values().stream()
+                    .filter(valore -> !valore.isEmpty()).count();
+            long numFlagValorizzatiADaRivedere = mappaFlagVerifica.values().stream()
+                    .filter(valore -> valore.equals(Constants.DB_FALSE)).count();
 
             String popUpDaRivedereMostrato = (String) getRequest()
                     .getAttribute("popUpDaRivedereMostrato");
@@ -395,48 +391,60 @@ public class SismaAction extends SismaAbstractAction {
             // MAC#24999 - correzione errore in fase di salvataggio dei dati dell'agenzia di un
             // progetto
             if (stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
-                // MAC 29844 - se non tutti i documenti sono verificati ignora il cotrollo qui sotto
-                boolean tuttiDocumentiInVerificaOk = true;
-
-                for (Iterator<? extends BaseRowInterface> iterator = getForm()
-                        .getDocumentiCaricatiList().getTable().iterator(); iterator.hasNext();) {
-                    BaseRowInterface riga = iterator.next();
-                    String valore = riga.getString("ti_verifica_agenzia");
-                    if (valore.equals(Constants.DB_FALSE)) {
-                        tuttiDocumentiInVerificaOk = false;
-                        break;
-                    }
-                }
-
-                if (tuttiDocumentiInVerificaOk
-                        && getForm().getDatiGeneraliOutput().getNatura_soggetto_attuatore_out()
-                                .getValue().equals("PRIVATO")
+                // MAC 29844 - se non tutti i documenti sono verificati ignora il controllo qui
+                // sotto
+                if (getForm().getDatiGeneraliOutput().getNatura_soggetto_attuatore_out()
+                        .getValue().equals("PRIVATO")
                         && getForm().getDatiAgenzia().postAndValidate(getRequest(),
                                 getMessageBox())) {
                     if (getMessageBox().isEmpty()) {
+                        getForm().getDatiProfiloArchivistico().post(getRequest());
+                        getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
 
-                        if (!sismaEjb.controllaUnivocitaDatiAgenzia(idSisma,
-                                getUser().getIdOrganizzazioneFoglia().longValueExact(),
-                                getForm().getDatiAgenzia().getRegistro_ag().parse(),
-                                new BigDecimal(getForm().getDatiAgenzia().getAnno_ag().parse()),
-                                getForm().getDatiAgenzia().getNumero_ag().parse())) {
-                            getMessageBox().addError(String.format(
-                                    messaggiHelper.retrievePigErrore(PING_ERRSISMA_20).getDsErrore()
-                                            .replace("{0}", "%s"),
-                                    getForm().getDatiAgenzia().getRegistro_ag().parse() + "-"
-                                            + getForm().getDatiAgenzia().getAnno_ag().parse() + "-"
-                                            + getForm().getDatiAgenzia().getNumero_ag().parse()));
+                        if (getMessageBox().isEmpty()) {
+                            salvaDatiAgenzia(idSisma.longValueExact());
+
+                            if (isDatiAgenziaComplete()) {
+                                getForm().getDettaglioButtonList().getVersaInAgenzia()
+                                        .setReadonly(false);
+                                getMessageBox().addInfo(
+                                        "Dati salvati con successo. Ora è possibile versare in agenzia ricostruzione.");
+                            } else {
+                                getForm().getDettaglioButtonList().getVersaInAgenzia()
+                                        .setReadonly(true);
+                                getMessageBox().addInfo(
+                                        "Dati salvati con successo. Non tutti i dati necessari all'invio sono compilati.");
+                            }
+
+                            getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+                            getForm().getDatiAgenzia().setStatus(Status.view);
+                            getForm().getDatiAgenzia().setViewMode();
+                            getForm().getDatiProfiloArchivistico().setStatus(Status.view);
+                            getForm().getDatiProfiloArchivistico().setViewMode();
+                            getForm().getDocumentiCaricatiList().getTi_verifica_agenzia()
+                                    .setViewMode();
                         }
-                    }
-
-                    if (getMessageBox().isEmpty()) {
-                        sismaDto = salvaDatiAgenzia(idSisma.longValueExact());
                     }
                 }
             }
 
-            if (getMessageBox().isEmpty()) {
-                saveDettaglio1(sismaDto, idSisma);
+            if (!getMessageBox().hasError()) {
+                PigSisma.TiStato nuovoStato = sismaEjb.gestisciStatiVerificaAgenzia(idSisma,
+                        mappaFlagVerifica);
+                if (!getForm().getDatiGeneraliOutput().getTi_stato_out().getValue()
+                        .equals(nuovoStato.name())) {
+                    // Se lo stato è cambiato dopo il salvataggio ricarica e ricalcola tutto
+                    getMessageBox()
+                            .addInfo("Il progetto ha cambiato stato in " + nuovoStato.name());
+                    getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(nuovoStato.name());
+                    getMessageBox().setViewMode(MessageBox.ViewMode.plain);
+                    if (nuovoStato.equals(PigSisma.TiStato.DA_RIVEDERE)) {
+                        getMessageBox().addMessage(new Message(MessageLevel.INF,
+                                "Per completare l’iter è necessario predisporre la PEC da inoltrare al soggetto attuatore, comunicando l’avvenuto rigetto degli elaborati caricati, le motivazioni e le operazioni da compiere per perfezionare il caricamento della documentazione corretta."));
+                    }
+                }
+
+                determinaStato(false);
             }
         }
 
@@ -448,34 +456,6 @@ public class SismaAction extends SismaAbstractAction {
         getRequest().setAttribute("popUpDaRivedereMostrato", Constants.DB_TRUE);
         saveDettaglio();
         forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
-    }
-
-    private void saveDettaglio1(SismaDto sismaDto, BigDecimal idSisma) throws EMFError {
-        getForm().getDocumentiCaricatiList().post(getRequest());
-        HashMap<BigDecimal, String> mappa = new HashMap<>();
-        for (Iterator<? extends BaseRowInterface> iterator = getForm().getDocumentiCaricatiList()
-                .getTable().iterator(); iterator.hasNext();) {
-            BaseRowInterface riga = iterator.next();
-            BigDecimal idRiga = riga.getBigDecimal("id_sisma_documenti");
-            String valore = riga.getString("ti_verifica_agenzia");
-            mappa.put(idRiga, valore);
-        }
-        PigSisma.TiStato nuovoStato = sismaEjb.salvaSismaAgenzia(idSisma, mappa, sismaDto);
-        if (getForm().getDatiGeneraliOutput().getTi_stato_out().getValue()
-                .equals(nuovoStato.name())) {
-            // non fa nulla
-        } else {
-            // Se lo stato è cambiato dopo il salvataggio ricarica e ricalcola tutto
-            getMessageBox().addInfo("Il progetto ha cambiato stato in " + nuovoStato.name());
-            getForm().getDatiGeneraliOutput().getTi_stato_out().setValue(nuovoStato.name());
-            getMessageBox().setViewMode(MessageBox.ViewMode.plain);
-            if (nuovoStato.equals(PigSisma.TiStato.DA_RIVEDERE)) {
-                getMessageBox().addMessage(new Message(MessageLevel.INF,
-                        "Per completare l’iter è necessario predisporre la PEC da inoltrare al soggetto attuatore, comunicando l’avvenuto rigetto degli elaborati caricati, le motivazioni e le operazioni da compiere per perfezionare il caricamento della documentazione corretta."));
-            }
-        }
-
-        determinaStato(false);
     }
 
     /*
@@ -516,9 +496,13 @@ public class SismaAction extends SismaAbstractAction {
                 forwardToPublisher(Application.Publisher.SISMA_WIZARD);
             }
         } else if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
-            getForm().getDatiGeneraliInput().setStatus(Status.update);
-            determinaStato(true);
-            forwardToPublisher(Application.Publisher.SISMA_WIZARD);
+            if (isUtenteAgenzia()) {
+                determinaStato(false);
+                forwardToPublisher(Application.Publisher.DETTAGLIO_SISMA);
+            } else {
+                determinaStato(true);
+                forwardToPublisher(Application.Publisher.SISMA_WIZARD);
+            }
         }
     }
 
@@ -714,6 +698,7 @@ public class SismaAction extends SismaAbstractAction {
                 getForm().getDatiProfiloArchivistico().setStatus(Status.view);
                 getForm().getDatiProfiloArchivistico().setViewMode();
                 getForm().getDocumentiCaricatiList().setViewMode();
+                getForm().getDettaglioButtonList().getVersaInAgenzia().setViewMode();
             } else if (statoSisma.equals(PigSisma.TiStato.DA_VERIFICARE.name())) {
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "false");
                 getForm().getDatiAgenzia().setStatus(Status.update); // Accende il salva
@@ -722,33 +707,62 @@ public class SismaAction extends SismaAbstractAction {
                 getForm().getDatiProfiloArchivistico().setViewMode();
                 // Abilita editing della lista
                 getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode();
+                getForm().getDettaglioButtonList().getVersaInAgenzia().setViewMode();
             } else if (statoSisma.equals(PigSisma.TiStato.VERIFICATO.name())) {
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "false");
-                getForm().getDatiAgenzia().setStatus(Status.update);
-                getForm().getDatiAgenzia().setViewMode();
-                getForm().getDatiProfiloArchivistico().setStatus(Status.update);
-                getForm().getDatiProfiloArchivistico().setViewMode();
-                // Abilita editing della lista
-                getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode();
 
-                if (isVersatoreSelezionatoSAPrivato()) {
-                    getForm().getDatiAgenzia().setEditMode();
-                    if (isDatiAgenziaComplete()) {
-                        getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
+                if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                    getForm().getDatiAgenzia().setStatus(Status.update);
+                    getForm().getDatiProfiloArchivistico().setStatus(Status.update);
+                    // Abilita editing della lista
+                    getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setEditMode();
+                    if (isVersatoreSelezionatoSAPrivato()) {
+                        getForm().getDatiAgenzia().setEditMode();
+                        getForm().getDatiProfiloArchivistico().setEditMode();
+                    } else if (isVersatoreSelezionatoSAPubblico()) {
+                        getForm().getDatiAgenzia().setViewMode();
+                        getForm().getDatiProfiloArchivistico().setViewMode();
+
+                        getForm().getDettaglioButtonList().getVersaSisma().setEditMode();
+                        getForm().getDettaglioButtonList().getVersaSisma().setReadonly(true);
                     }
-                } else if (isVersatoreSelezionatoSAPubblico()) {
-                    getForm().getDettaglioButtonList().getVersaSisma().setEditMode();
+                } else {
+                    getForm().getDatiAgenzia().setStatus(Status.view);
+                    getForm().getDatiAgenzia().setViewMode();
+                    getForm().getDatiProfiloArchivistico().setStatus(Status.view);
+                    getForm().getDatiProfiloArchivistico().setViewMode();
+                    // Abilita editing della lista
+                    getForm().getDocumentiCaricatiList().getTi_verifica_agenzia().setViewMode();
+
+                    if (isVersatoreSelezionatoSAPrivato()) {
+                        getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
+                        getForm().getDettaglioButtonList().getVersaInAgenzia()
+                                .setReadonly(!isDatiAgenziaComplete());
+                    } else if (isVersatoreSelezionatoSAPubblico()) {
+                        getForm().getDettaglioButtonList().getVersaSisma().setEditMode();
+                        getForm().getDettaglioButtonList().getVersaSisma().setReadonly(false);
+                    }
                 }
             } else if (statoSisma.equals(PigSisma.TiStato.VERSATO.name())) {
-                getForm().getDatiAgenzia().setStatus(Status.update);
                 getRequest().setAttribute(CAMPO_NASCONDI_UPDATE, "false");
-                getForm().getDatiAgenzia().setEditMode();
-                getForm().getDatiProfiloArchivistico().setStatus(Status.update);
-                getForm().getDatiProfiloArchivistico().setEditMode();
                 getForm().getDocumentiCaricatiList().setViewMode(); // Disabilita editing della
                 // lista
-                if (isDatiAgenziaComplete()) {
+
+                if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                    getForm().getDatiAgenzia().setStatus(Status.update);
+                    getForm().getDatiAgenzia().setEditMode();
+                    getForm().getDatiProfiloArchivistico().setStatus(Status.update);
+                    getForm().getDatiProfiloArchivistico().setEditMode();
+                    getForm().getDettaglioButtonList().getVersaInAgenzia().setViewMode();
+                } else {
+                    getForm().getDatiAgenzia().setStatus(Status.view);
+                    getForm().getDatiAgenzia().setViewMode();
+                    getForm().getDatiProfiloArchivistico().setStatus(Status.view);
+                    getForm().getDatiProfiloArchivistico().setViewMode();
                     getForm().getDettaglioButtonList().getVersaInAgenzia().setEditMode();
+
+                    getForm().getDettaglioButtonList().getVersaInAgenzia()
+                            .setReadonly(!isDatiAgenziaComplete());
                 }
             } else if (statoSisma.equals(PigSisma.TiStato.ANNULLATO.name())) {
                 getForm().getDatiAgenzia().setViewMode();
@@ -795,6 +809,10 @@ public class SismaAction extends SismaAbstractAction {
                 getForm().getDettaglioButtonList().getRiportaInBozza().setEditMode();
             } else {
                 getForm().getDettaglioButtonList().getRiportaInBozza().setViewMode();
+            }
+
+            if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)) {
+                getForm().getDatiGeneraliInput().setStatus(Status.update);
             }
         }
         // Gestione WIZARD 1 2 3
@@ -1337,7 +1355,9 @@ public class SismaAction extends SismaAbstractAction {
                     getUser().getIdUtente(), getUser().getIdOrganizzazioneFoglia());
             if (esitoSalvataggio.isOk()) {
                 loadSisma();
-                if (esitoSalvataggio.getStato().equals(PigSisma.TiStato.RICHIESTA_INVIO)) {
+                if (esitoSalvataggio.getStato().equals(PigSisma.TiStato.RICHIESTA_INVIO)
+                        && getForm().getDatiGeneraliOutput().getNatura_soggetto_attuatore_out()
+                                .getValue().equals("PUBBLICO")) {
                     getMessageBox().setViewMode(MessageBox.ViewMode.plain);
                     getMessageBox().addMessage(new Message(MessageLevel.INF,
                             "Per completare il procedimento è necessario predisporre la PEC da inoltrare al soggetto attuatore ed agli enti coinvolti "

@@ -14,10 +14,11 @@ package it.eng.parer.objectstorage.ejb;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PreDestroy;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 
@@ -37,17 +38,24 @@ import software.amazon.awssdk.services.s3.S3Client;
 import it.eng.sacerasi.common.Constants;
 
 /**
- * Cache per i client AWS. Siccome la creazione di un client � un'attivit� computazionalmente
- * pesante e a noi ne servono pochi (direi al massimo 2) lasciamoli in memoria
+ * Cache lock-free per i client AWS S3.
+ *
+ * <p>
+ * La creazione di un {@link S3Client} è computazionalmente pesante (setup del connection pool
+ * Apache HttpClient). Tenendo i client in cache tramite {@link ConcurrentHashMap} con
+ * {@link ConcurrencyManagementType#BEAN} si evita il lock a livello EJB Container e si ottiene
+ * accesso completamente lock-free dopo la prima inizializzazione.
+ * </p>
  *
  * @author Snidero_L
  */
 @Singleton
+@ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class AwsClient {
 
     private final Logger log = LoggerFactory.getLogger(AwsClient.class);
 
-    private final Map<CacheKey, S3Client> clientCache = new HashMap<>();
+    private final Map<CacheKey, S3Client> clientCache = new ConcurrentHashMap<>();
 
     @EJB
     protected ConfigurationHelper configurationHelper;
@@ -66,8 +74,8 @@ public class AwsClient {
 
     /*
      * Nota: con l'introduzione di
-     * https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html � necessario
-     * abilitare "forzatamente" la modalit� path style (attenzione: in futuro sar� deprecata!)
+     * https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html è necessario
+     * abilitare "forzatamente" la modalità path style (attenzione: in futuro sarà deprecata!)
      */
     private S3Client createS3Client(URI storageAddress, String accessKeyId, String secretKey) {
 
@@ -80,7 +88,7 @@ public class AwsClient {
                 .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
                 .httpClientBuilder(ApacheHttpClient.builder().maxConnections(maxConnections())
                         .connectionTimeout(connectionTimeoutOfMinutes())
-                        .socketTimeout(socketTimeoutOfMinutes()))
+                        .socketTimeout(socketTimeoutOfMinutes()).tcpKeepAlive(true))
                 .build();
     }
 
@@ -149,47 +157,32 @@ public class AwsClient {
         }
     }
 
-    private static class CacheKey {
+    private static final class CacheKey {
+        private final URI storageAddress;
+        private final String accessKeyId;
+        private final String secretKey;
 
-        private URI storageAddress;
-        private String accessKeyId;
-        private String secretKey;
-
-        public CacheKey(URI storageAddress, String accessKeyId, String secretKey) {
+        CacheKey(URI storageAddress, String accessKeyId, String secretKey) {
             this.storageAddress = storageAddress;
             this.accessKeyId = accessKeyId;
             this.secretKey = secretKey;
         }
 
         @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((storageAddress == null) ? 0 : storageAddress.hashCode());
-            result = prime * result + ((accessKeyId == null) ? 0 : accessKeyId.hashCode());
-            result = prime * result + ((secretKey == null) ? 0 : secretKey.hashCode());
-            return result;
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (!(o instanceof CacheKey))
+                return false;
+            CacheKey that = (CacheKey) o;
+            return java.util.Objects.equals(storageAddress, that.storageAddress)
+                    && java.util.Objects.equals(accessKeyId, that.accessKeyId)
+                    && java.util.Objects.equals(secretKey, that.secretKey);
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final CacheKey other = (CacheKey) obj;
-            if (!Objects.equals(this.accessKeyId, other.accessKeyId)) {
-                return false;
-            }
-            if (!Objects.equals(this.secretKey, other.secretKey)) {
-                return false;
-            }
-            return Objects.equals(this.storageAddress, other.storageAddress);
+        public int hashCode() {
+            return java.util.Objects.hash(storageAddress, accessKeyId, secretKey);
         }
     }
 

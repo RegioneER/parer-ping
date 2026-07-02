@@ -42,14 +42,14 @@ import javax.xml.bind.Marshaller;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.spagoCore.error.EMFError;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigObject;
@@ -91,9 +91,7 @@ import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
 
 import java.util.Optional;
 
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  * @author Gilioli_P
@@ -128,7 +126,7 @@ public class InvioSUEjb {
     @EJB
     private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private VersamentoOggettoEjb versamentoOggettoEjb;
 
@@ -192,7 +190,7 @@ public class InvioSUEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciInvioStrumentoUrbanistico(long idStrumentoUrbanisticoDaInviare)
-            throws InvioSUException, ObjectStorageException, IOException {
+            throws InvioSUException, ObjectStorageException, IOException, BackendException {
 
         String nmTipoObject = "StrumentoUrbanistico";
 
@@ -315,9 +313,9 @@ public class InvioSUEjb {
                             // MEV 34843
                             PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti
                                     .getPigStrumUrbDocumentiStorage();
-                            BackendStorage backend = salvataggioBackendHelper
+                            BackendStorage backend = backendHelper
                                     .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForStrumentiUrbanistici(
                                             backend.getBackendName(),
                                             pigStrumUrbDocumentiStorage.getNmBucket());
@@ -326,20 +324,16 @@ public class InvioSUEjb {
                             String nmFileOrig = strumUrbDocumenti.getNmFileOrig();
                             // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di
                             // una sola informazione stile ack)
-                            boolean doesObjectExist = salvataggioBackendHelper
-                                    .doesObjectExist(config, nmFileOs);
+                            boolean doesObjectExist = backendHelper.doesS3ObjectExist(config,
+                                    nmFileOs);
                             if (doesObjectExist) {
                                 File tempFile = File.createTempFile(nmFileOrig, "",
                                         new File(dirCompletaFtp));
-                                try (FileOutputStream fosTemp = new FileOutputStream(tempFile);) {
-                                    ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                                            .getObject(config, nmFileOs);
-                                    // Partendo dall'input stream S3 Amazon, recupero il file
-                                    IOUtils.copy(objectContent, fosTemp);
+                                try (FileOutputStream fosTemp = new FileOutputStream(tempFile)) {
+                                    backendHelper.getS3Object(config, nmFileOs, fosTemp);
                                     String nomeFileLowerCase = strumUrbDocumenti
                                             .getPigStrumUrbValDoc().getNmTipoDocumento()
                                             .replace(" ", "_").toLowerCase() + ".zip";
-                                    // Aggiungo il file scaricato dall'OS al file zip
                                     addToZipFile(tempFile, zos, nomeFileLowerCase);
                                 } finally {
                                     if (tempFile != null) {
@@ -435,7 +429,7 @@ public class InvioSUEjb {
                             .valueOf(vers.getPigAmbienteVer().getIdAmbienteVers());
                     BigDecimal idVers = BigDecimal.valueOf(vers.getIdVers());
                     BigDecimal idTipoObject = BigDecimal.valueOf(pigTipoObject.getIdTipoObject());
-                    BackendStorage backendVersamento = salvataggioBackendHelper
+                    BackendStorage backendVersamento = backendHelper
                             .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
                     String nmFileOs = null;
 
@@ -451,13 +445,13 @@ public class InvioSUEjb {
                                             + it.eng.xformer.common.Constants.STANDARD_PACKAGE_EXTENSION));
                         } else if (backendVersamento.isObjectStorage()) {
                             // MEV 34843
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForVersamento(
                                             backendVersamento.getBackendName());
                             nmFileOs = versamentoOggettoEjb.computeOsFileKey(idVers, cdKeyObject,
                                     VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
-                            salvataggioBackendHelper.putS3Object(config, nmFileOs,
-                                    fileTemporaneoGenerale, Optional.empty());
+                            backendHelper.putS3Object(config, nmFileOs, fileTemporaneoGenerale,
+                                    Optional.empty());
                         }
                     } catch (IOException | ObjectStorageException ex) {
                         log.error(InvioSUEjb.class.getSimpleName()
@@ -501,7 +495,7 @@ public class InvioSUEjb {
                             fileDepositatoType.setIdBackend(backendVersamento.getBackendId());
 
                             if (backendVersamento.isObjectStorage()) {
-                                ObjectStorageBackend config = salvataggioBackendHelper
+                                ObjectStorageBackend config = backendHelper
                                         .getObjectStorageConfigurationForVersamento(
                                                 backendVersamento.getBackendName());
                                 String tenantOs = configurationHelper.getValoreParamApplicByApplic(
@@ -656,7 +650,8 @@ public class InvioSUEjb {
                 strumentiUrbanistici.setTipologiaEnteSU("COMUNE");
             }
             strumentiUrbanistici.setIdPUC(strumentoUrbanisticoDaInviare.getIdPuc().toString());
-            strumentiUrbanistici.setNumeroBurert(strumentoUrbanisticoDaInviare.getNrBurert());
+            strumentiUrbanistici
+                    .setNumeroBurert(strumentoUrbanisticoDaInviare.getNrBurert().toString());
             strumentiUrbanistici
                     .setDataBurert(dateFormat.format(strumentoUrbanisticoDaInviare.getDtBurert()));
             strumentiUrbanistici
@@ -668,17 +663,17 @@ public class InvioSUEjb {
                             + "_" + strumentoUrbanisticoDaInviare.getNumero());
 
             Collegamento collegamento = new Collegamento();
-            collegamento.setNumero(strumentoUrbanisticoDaInviare.getCdProtocollo());
+            collegamento.setNumero(strumentoUrbanisticoDaInviare.getCdProtocollo().toString());
             collegamento.setAnno(strumentoUrbanisticoDaInviare.getAnnoProtocollo().intValue());
             collegamento.setTipoRegistro("PG");
             collegamento
                     .setFaseStrumento("PROTOCOLLAZIONE DELLA COMUNICAZIONE DI AVVENUTO VERSAMENTO");
             collegamenti.getCollegamento().add(collegamento);
 
-            if (StringUtils.isNotBlank(strumentoUrbanisticoDaInviare.getNrBurert())
+            if (strumentoUrbanisticoDaInviare.getNrBurert() != null
                     && strumentoUrbanisticoDaInviare.getDtBurert() != null) {
                 collegamento = new Collegamento();
-                collegamento.setNumero(strumentoUrbanisticoDaInviare.getNrBurert());
+                collegamento.setNumero(strumentoUrbanisticoDaInviare.getNrBurert().toString());
                 String annoBurert = new SimpleDateFormat("yyyy")
                         .format(strumentoUrbanisticoDaInviare.getDtBurert());
                 collegamento.setAnno(Integer.parseInt(annoBurert));

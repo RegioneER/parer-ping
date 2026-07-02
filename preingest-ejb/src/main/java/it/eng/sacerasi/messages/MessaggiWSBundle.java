@@ -201,6 +201,7 @@ public class MessaggiWSBundle {
      */
     public static final String PING_NOT_020 = "PING-NOT-020";
     public static final String PING_NOT_021 = "PING-NOT-021"; // MAC 28343
+    public static final String PING_NOT_022 = "PING-NOT-022";
 
     // ERRORI RICERCA DIARIO
     public static final String PING_DIARIO_001 = "PING-DIARIO-001";

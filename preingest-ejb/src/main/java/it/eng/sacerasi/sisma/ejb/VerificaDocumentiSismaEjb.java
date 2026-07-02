@@ -12,11 +12,12 @@
  */
 package it.eng.sacerasi.sisma.ejb;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -35,14 +36,15 @@ import javax.interceptor.Interceptors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigSisma;
@@ -56,10 +58,6 @@ import it.eng.sacerasi.job.util.VerificheDocumentiSUSismaEtc;
 import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.sisma.dto.VerificaZipFileResponse;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  *
@@ -89,7 +87,7 @@ public class VerificaDocumentiSismaEjb {
     @Resource
     private SessionContext sessionContext;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void callVerificaDocumentiAsync(BigDecimal idSisma) {
@@ -145,7 +143,7 @@ public class VerificaDocumentiSismaEjb {
     // MEV26267 - in caso di verifica fallita genero un report con l'elenco dei file in errore.
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     private void eseguiVerifica(BigDecimal idSismaDocumenti)
-            throws IOException, ObjectStorageException {
+            throws IOException, ObjectStorageException, BackendException {
         Integer numFiles = null;
         PigErrore errore = null;
         String report = null;
@@ -156,23 +154,19 @@ public class VerificaDocumentiSismaEjb {
         // MEV 34843
         PigSismaDocumentiStorage pigSismaDocumentiStorage = sismaDocumenti
                 .getPigSismaDocumentiStorage();
-        BackendStorage backend = salvataggioBackendHelper
+        BackendStorage backend = backendHelper
                 .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-        ObjectStorageBackend config = salvataggioBackendHelper
-                .getObjectStorageConfigurationForSisma(backend.getBackendName(),
-                        pigSismaDocumentiStorage.getNmBucket());
+        ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForSisma(
+                backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
 
         // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione
         // stile ack)
         // Accedo al bucket e recupero il file documento, se esiste
-        boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+        boolean doesObjectExist = backendHelper.doesS3ObjectExist(config,
                 pigSismaDocumentiStorage.getCdKeyFile());
         if (doesObjectExist) {
             File tempFile = null;
             try {
-                // Recupero l'oggetto
-                ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper
-                        .getObject(config, pigSismaDocumentiStorage.getCdKeyFile());
                 // Creo il file (che mi aspetto zip) in una cartella temporanea
                 String rootFtp = configurationHelper
                         .getValoreParamApplicByApplic(Constants.ROOT_FTP);
@@ -188,7 +182,7 @@ public class VerificaDocumentiSismaEjb {
                 // fileserver
 
                 try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                    IOUtils.copy(object, fos);
+                    backendHelper.getS3Object(config, pigSismaDocumentiStorage.getCdKeyFile(), fos);
                 }
 
                 // Controllo che sia effettivamente un file zip

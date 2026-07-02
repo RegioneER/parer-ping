@@ -12,7 +12,6 @@
  */
 package it.eng.sacerasi.ws.notificaTrasferimento.ejb;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,9 +28,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xadisk.connector.outbound.XADiskConnectionFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.aop.TransactionInterceptor;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
@@ -83,19 +84,17 @@ public class NotificaTrasferimentoEjb {
     private XADiskConnectionFactory xadCf;
 
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFileInNewTx(String nmAmbiente,
-            String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
-            throws ObjectStorageException {
+            String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati) {
         return notificaAvvenutoTrasferimentoFile(nmAmbiente, nmVersatore, cdKeyObject,
                 listaFileDepositati);
     }
 
     public NotificaTrasferimentoRisposta notificaAvvenutoTrasferimentoFile(String nmAmbiente,
-            String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
-            throws ObjectStorageException {
+            String nmVersatore, String cdKeyObject, ListaFileDepositatoType listaFileDepositati) {
 
         log.debug(
                 "Ricevuta richiesta di NotificaTrasferimento con i parametri : nmAmbiente = {}, "
@@ -105,13 +104,6 @@ public class NotificaTrasferimentoEjb {
         RispostaNotificaWS risp = new RispostaNotificaWS();
         risp.setNotificaResponse(new NotificaTrasferimentoRisposta());
         risp.getNotificaResponse().setCdEsito(Constants.EsitoServizio.OK.name());
-
-        // MEV 34843
-        // Aggiungo i dati del backend, il nome file os è impostato dal chiamante, che siano il
-        // versamento oggetto o un
-        // software che usa i ws.
-        notificaTrasferimentoCheckHelper.addBackendInfos(nmAmbiente, nmVersatore, cdKeyObject,
-                listaFileDepositati);
 
         // Istanzio l'oggetto che contiene i parametri ricevuti
         NotificaTrasferimentoInput nti = new NotificaTrasferimentoInput(nmAmbiente, nmVersatore,
@@ -136,7 +128,7 @@ public class NotificaTrasferimentoEjb {
                 ctx.getBusinessObject(NotificaTrasferimentoEjb.class).handleCheckError(nte, risp,
                         now);
             }
-        } catch (ParerInternalError | ObjectStorageException pie) {
+        } catch (ParerInternalError | BackendException | ObjectStorageException pie) {
             // RollBack già eseguito
             log.error(pie.getMessage() + " ROLLBACK : " + ctx.getRollbackOnly());
         }
@@ -163,7 +155,7 @@ public class NotificaTrasferimentoEjb {
             TransactionInterceptor.class })
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void handleCheckSuccess(NotificaTrasferimentoExt nte, RispostaNotificaWS risp,
-            final Date now) throws ParerInternalError, ObjectStorageException {
+            final Date now) throws ParerInternalError, ObjectStorageException, BackendException {
         // Nessun errore nei controlli
         log.debug(
                 "Cancellazione di tutti i file dalla tabella PigFileObject per l'oggetto corrente");
@@ -247,7 +239,7 @@ public class NotificaTrasferimentoEjb {
             TransactionInterceptor.class })
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void handleCheckError(NotificaTrasferimentoExt nte, RispostaNotificaWS risp,
-            final Date now) throws ParerInternalError, ObjectStorageException {
+            final Date now) throws ParerInternalError, BackendException, ObjectStorageException {
         RispostaControlli tmpRispCon = new RispostaControlli();
         if (nte.isFlAggiornaOggetto()) {
             // Se l'errore è diverso da PING_NOT_006
@@ -309,15 +301,13 @@ public class NotificaTrasferimentoEjb {
             for (FileDepositatoRespType fileDep : risp.getNotificaResponse()
                     .getListaFileDepositati().getFileDepositato()) {
 
-                BackendStorage backend = salvataggioBackendHelper
-                        .getBackend(fileDep.getIdBackend());
+                BackendStorage backend = backendHelper.getBackend(fileDep.getIdBackend());
                 if (backend.isObjectStorage()) {
-                    ObjectStorageBackend config = salvataggioBackendHelper
+                    ObjectStorageBackend config = backendHelper
                             .getObjectStorageConfigurationForVersamento(backend.getBackendName());
 
-                    if (salvataggioBackendHelper.doesObjectExist(config,
-                            fileDep.getNmNomeFileOs())) {
-                        salvataggioBackendHelper.deleteObject(config, fileDep.getNmNomeFileOs());
+                    if (backendHelper.doesS3ObjectExist(config, fileDep.getNmNomeFileOs())) {
+                        backendHelper.deleteS3Object(config, fileDep.getNmNomeFileOs());
                     }
                 } else if (backend.isFile() && nte.getFtpPath() != null) {
                     // Elimina file se presenti nella directory ftp

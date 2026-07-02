@@ -17,12 +17,12 @@
  */
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -37,12 +37,11 @@ import org.apache.commons.fileupload.util.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import javax.ejb.EJBTransactionRolledbackException;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiEjb.SUDto;
 import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
 
@@ -62,7 +61,7 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
     @EJB(mappedName = "java:app/SacerAsync-ejb/StrumentiUrbanisticiEjb")
     private StrumentiUrbanisticiEjb strumentiUrbanisticiEjb;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
     private VersamentoOggettoEjb versamentoOggettoEjb;
 
@@ -93,71 +92,77 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
                 FileItemIterator iter = upload.getItemIterator(req);
                 while (iter.hasNext()) {
                     FileItemStream item = iter.next();
-                    InputStream input = item.openStream();
-                    // Gestisce un form field.
-                    if (item.isFormField()) {
-                        nomeCampo = item.getFieldName();
-                        String value = Streams.asString(input);
-                        if ("name".equals(nomeCampo)) {
-                            nomeFile = value;
-                        } else if ("chunks".equals(nomeCampo)) {
-                            chunks = Integer.parseInt(value);
-                        } else if ("chunk".equals(nomeCampo)) {
-                            chunk = Integer.parseInt(value);
-                        } else if ("nmTipoDocumento".equals(nomeCampo)) {
-                            nmTipoDocumento = value;
-                        } else if ("idSessione".equals(nomeCampo)) {
-                            idSessione = value;
-                        } else if ("dimensione".equals(nomeCampo)) {
-                            dimensione = new BigDecimal(value);
-                        }
-                    } // Gestisce un multi-part MIME encoded file.
-                    else {
-                        if (chunk == 0) {
-                            /*
-                             * Prima di iniziare determina il nome del FileOS e lo mette in sessione
-                             * di Upload. Ottiene dalla sessione l'ID dello strumento urbanistico
-                             */
-                            StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) req
-                                    .getSession().getAttribute("###_FORM_CONTAINER");
-                            BigDecimal idStrumento = form.getDatiGeneraliOutput()
-                                    .getId_strumenti_urbanistici_out().parse();
-
-                            // MEV 34843
-                            BackendStorage backendVersamento = salvataggioBackendHelper
-                                    .getBackendForStrumentiUrbanistici();
-                            ObjectStorageBackend config = salvataggioBackendHelper
-                                    .getObjectStorageConfigurationForStrumentiUrbanistici(
-                                            backendVersamento.getBackendName());
-
-                            SUDto su = strumentiUrbanisticiEjb.getSUById(idStrumento);
-                            String nmFileOs = versamentoOggettoEjb.computeOsFileKey(su.getIdVers(),
-                                    nomeFile, VersamentoOggettoEjb.OS_KEY_POSTFIX.SU.name());
-                            s3UploadSession = new S3UploadSessionSU(salvataggioBackendHelper,
-                                    idStrumento, config.getBucket(), nmFileOs);
-                            if (s3UploadSession.existsFileOnOS()) {
-                                responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
-                                log.info(String.format(
-                                        "Il file [%s] già esiste sull'object storage!", nmFileOs));
-                                inErrore = true;
-                            } else {
-                                req.getSession().setAttribute(idSessione, s3UploadSession);
+                    try (InputStream input = item.openStream()) {
+                        // Gestisce un form field.
+                        if (item.isFormField()) {
+                            nomeCampo = item.getFieldName();
+                            String value = Streams.asString(input);
+                            if ("name".equals(nomeCampo)) {
+                                nomeFile = value;
+                            } else if ("chunks".equals(nomeCampo)) {
+                                chunks = Integer.parseInt(value);
+                            } else if ("chunk".equals(nomeCampo)) {
+                                chunk = Integer.parseInt(value);
+                            } else if ("nmTipoDocumento".equals(nomeCampo)) {
+                                nmTipoDocumento = value;
+                            } else if ("idSessione".equals(nomeCampo)) {
+                                idSessione = value;
+                            } else if ("dimensione".equals(nomeCampo)) {
+                                dimensione = new BigDecimal(value);
                             }
-                        } else {
-                            s3UploadSession = (S3UploadSessionSU) req.getSession()
-                                    .getAttribute(idSessione);
-                        }
-                        /* Fa l'upload del chunk, se è l'ultimo registra il documento anche su DB */
-                        if (inErrore == false
-                                && s3UploadSession.uploadChunk(input, chunk, chunks)) {
-                            StrumentiUrbanisticiEjb.DocStrumDto dto = new StrumentiUrbanisticiEjb.DocStrumDto();
-                            dto.setIdStrumentiUrbanistici(
-                                    s3UploadSession.getIdStrumentiUrbanistici());
-                            dto.setNmFileOrig(nomeFile);
-                            dto.setNmFileOs(s3UploadSession.getKeyName());
-                            dto.setNmTipoDocumento(nmTipoDocumento);
-                            dto.setDimensione(dimensione);
-                            strumentiUrbanisticiEjb.salvaTipoDocumento(dto);
+                        } // Gestisce un multi-part MIME encoded file.
+                        else {
+                            if (chunk == 0) {
+                                /*
+                                 * Prima di iniziare determina il nome del FileOS e lo mette in
+                                 * sessione di Upload. Ottiene dalla sessione l'ID dello strumento
+                                 * urbanistico
+                                 */
+                                StrumentiUrbanisticiForm form = (StrumentiUrbanisticiForm) req
+                                        .getSession().getAttribute("###_FORM_CONTAINER");
+                                BigDecimal idStrumento = form.getDatiGeneraliOutput()
+                                        .getId_strumenti_urbanistici_out().parse();
+
+                                // MEV 34843
+                                BackendStorage backendVersamento = backendHelper
+                                        .getBackendForStrumentiUrbanistici();
+                                ObjectStorageBackend config = backendHelper
+                                        .getObjectStorageConfigurationForStrumentiUrbanistici(
+                                                backendVersamento.getBackendName());
+
+                                SUDto su = strumentiUrbanisticiEjb.getSUById(idStrumento);
+                                String nmFileOs = versamentoOggettoEjb.computeOsFileKey(
+                                        su.getIdVers(),
+                                        nomeFile, VersamentoOggettoEjb.OS_KEY_POSTFIX.SU.name());
+                                s3UploadSession = new S3UploadSessionSU(backendHelper, idStrumento,
+                                        config.getBucket(), nmFileOs);
+                                if (s3UploadSession.existsFileOnOS()) {
+                                    responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
+                                    log.info("Il file [{}] già esiste sull'object storage!",
+                                            nmFileOs);
+                                    inErrore = true;
+                                } else {
+                                    req.getSession().setAttribute(idSessione, s3UploadSession);
+                                }
+                            } else {
+                                s3UploadSession = (S3UploadSessionSU) req.getSession()
+                                        .getAttribute(idSessione);
+                            }
+                            /*
+                             * Fa l'upload del chunk, se è l'ultimo registra il documento anche su
+                             * DB
+                             */
+                            if (inErrore == false
+                                    && s3UploadSession.uploadChunk(input, chunk, chunks)) {
+                                StrumentiUrbanisticiEjb.DocStrumDto dto = new StrumentiUrbanisticiEjb.DocStrumDto();
+                                dto.setIdStrumentiUrbanistici(
+                                        s3UploadSession.getIdStrumentiUrbanistici());
+                                dto.setNmFileOrig(nomeFile);
+                                dto.setNmFileOs(s3UploadSession.getKeyName());
+                                dto.setNmTipoDocumento(nmTipoDocumento);
+                                dto.setDimensione(dimensione);
+                                strumentiUrbanisticiEjb.salvaTipoDocumento(dto);
+                            }
                         }
                     }
                 }
@@ -176,8 +181,8 @@ public class MultipartFileUploadToS3Servlet extends HttpServlet {
             responseString = RESP_ERROR;
         }
         if (chunk == chunks - 1) {
-            log.debug("nome：" + nomeFile);
-            log.debug("nmTipoDocumento：" + nmTipoDocumento);
+            log.debug("nome：{}", nomeFile);
+            log.debug("nmTipoDocumento：{}", nmTipoDocumento);
             req.getSession().removeAttribute(idSessione);
         }
         resp.setContentType(JSON);

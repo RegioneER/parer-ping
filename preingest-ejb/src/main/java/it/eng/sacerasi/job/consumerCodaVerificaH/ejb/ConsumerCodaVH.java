@@ -34,6 +34,8 @@ import javax.jms.TextMessage;
 import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import static it.eng.sacerasi.common.Constants.JPA_PORPERTIES_TIMEOUT;
 import it.eng.sacerasi.entity.PigObject;
@@ -136,7 +138,8 @@ public class ConsumerCodaVH implements MessageListener {
         } catch (JMSException ex) {
             log.error(DESC_CONSUMER + " :: errore nel consumer: JMSException ", ex);
             mdc.setRollbackOnly();
-        } catch (JsonProcessingException | ParerInternalError | ObjectStorageException ex) {
+        } catch (JsonProcessingException | ParerInternalError | BackendException
+                | ObjectStorageException ex) {
             log.error(DESC_CONSUMER
                     + " ::  errore nel consumer, rollback transazione: ParerInternalError  ", ex);
             mdc.setRollbackOnly();

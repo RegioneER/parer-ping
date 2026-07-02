@@ -12,40 +12,35 @@
  */
 package it.eng.parer.objectstorage.helper;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-
-import it.eng.sacerasi.entity.*;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
-import org.apache.commons.lang3.StringUtils;
-
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.ejb.AwsClient;
-import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import it.eng.sacerasi.common.Constants;
-import it.eng.sacerasi.util.CRC32CChecksum;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.StringUtils;
+
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.ejb.AwsClient;
+import it.eng.parer.objectstorage.ejb.ObjectStorageConfigCache;
+import it.eng.parer.objectstorage.exceptions.BackendException;
+import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.common.Constants;
+import it.eng.sacerasi.entity.DecBackend;
+import it.eng.sacerasi.entity.DecConfigObjectStorage;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
@@ -53,8 +48,8 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadResponse;
-import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
+import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -64,9 +59,9 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
 
-@Stateless(mappedName = "SalvataggioBackendHelper")
+@Stateless(mappedName = "BackendHelper")
 @LocalBean
-public class SalvataggioBackendHelper {
+public class BackendHelper {
 
     public static final String CONF_VERSAMENTO = "VERSAMENTO_OGGETTO";
     public static final String CONF_STRUMENTI_URBANISTICI = "COMPONENTI_SU";
@@ -75,7 +70,9 @@ public class SalvataggioBackendHelper {
     public static final String CONF_SISMA_TRASFORMATI = "COMPONENTI_SISMA_TRASFORMATI";
     public static final String CONF_REPORT_TRASFORMAZIONI = "REPORT_TRASFORMAZIONI";
 
-    private static final int BUFFER_SIZE = 10 * 1024 * 1024;
+    private static final String BUCKET = "BUCKET";
+    private static final String ACCESS_KEY_ID_SYS_PROP = "ACCESS_KEY_ID_SYS_PROP";
+    private static final String SECRET_KEY_SYS_PROP = "SECRET_KEY_SYS_PROP";
 
     @EJB
     protected ConfigurationHelper configurationHelper;
@@ -83,8 +80,13 @@ public class SalvataggioBackendHelper {
     @EJB
     protected AwsClient s3Clients;
 
+    @EJB
+    protected ObjectStorageConfigCache configCache;
+
     @PersistenceContext(unitName = "SacerAsiJPA")
     private EntityManager entityManager;
+
+    private static final int BUFFER_SIZE = 128 * 1024; // 128 KB
 
     /**
      * @param configuration configurazione per accedere all'object storage
@@ -94,14 +96,14 @@ public class SalvataggioBackendHelper {
      *
      * @throws ObjectStorageException in caso di errore
      */
-    public ResponseInputStream<GetObjectResponse> getObject(ObjectStorageBackend configuration,
+    public ResponseInputStream<GetObjectResponse> getS3Object(ObjectStorageBackend configuration,
             String objectKey) throws ObjectStorageException {
         try {
-            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+            S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                     configuration.getAccessKeyId(), configuration.getSecretKey());
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(configuration.getBucket()).key(objectKey).build();
-            return s3SourceClient.getObject(getObjectRequest);
+            return s3Client.getObject(getObjectRequest);
 
         } catch (AwsServiceException | SdkClientException e) {
             throw ObjectStorageException.builder()
@@ -110,6 +112,29 @@ public class SalvataggioBackendHelper {
                     .cause(e).build();
         }
 
+    }
+
+    /**
+     * Scarica un oggetto S3 scrivendolo sull'OutputStream fornito tramite {@code IOUtils.copyLarge}
+     * con buffer da {@value #BUFFER_SIZE} byte (10 MB).
+     * <p>
+     * Lo stream S3 viene sempre chiuso al termine tramite try-with-resources; il caller è
+     * responsabile della chiusura dell'OutputStream di destinazione.
+     * </p>
+     *
+     * @param configuration configurazione per accedere all'object storage
+     * @param objectKey     chiave dell'oggetto
+     * @param outputStream  stream di destinazione
+     *
+     * @throws ObjectStorageException in caso di errore S3
+     * @throws IOException            in caso di errore I/O sulla scrittura
+     */
+    public void getS3Object(ObjectStorageBackend configuration, String objectKey,
+            OutputStream outputStream) throws ObjectStorageException, IOException {
+        try (ResponseInputStream<GetObjectResponse> object = getS3Object(configuration,
+                objectKey)) {
+            IOUtils.copyLarge(object, outputStream, new byte[BUFFER_SIZE]);
+        }
     }
 
     public void putS3Object(ObjectStorageBackend config, String nomeOggetto, String contenuto,
@@ -132,11 +157,11 @@ public class SalvataggioBackendHelper {
                 putObjectBuilder.checksumCRC32C(base64crc32c.get());
             }
 
-            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+            S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                     configuration.getAccessKeyId(), configuration.getSecretKey());
 
             PutObjectRequest objectRequest = putObjectBuilder.build();
-            s3SourceClient.putObject(objectRequest, requestBody);
+            s3Client.putObject(objectRequest, requestBody);
 
         } catch (S3Exception e) {
             throw ObjectStorageException.builder()
@@ -146,16 +171,16 @@ public class SalvataggioBackendHelper {
         }
     }
 
-    public void deleteObject(ObjectStorageBackend configuration, String objectKey)
+    public void deleteS3Object(ObjectStorageBackend configuration, String objectKey)
             throws ObjectStorageException {
         try {
             DeleteObjectRequest delOb = DeleteObjectRequest.builder()
                     .bucket(configuration.getBucket()).key(objectKey).build();
 
-            S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+            S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                     configuration.getAccessKeyId(), configuration.getSecretKey());
 
-            s3SourceClient.deleteObject(delOb);
+            s3Client.deleteObject(delOb);
         } catch (S3Exception e) {
             throw ObjectStorageException.builder()
                     .message("{0}: impossibile eliminare dal bucket {1} oggetto con chiave {2}",
@@ -164,15 +189,15 @@ public class SalvataggioBackendHelper {
         }
     }
 
-    public boolean doesObjectExist(ObjectStorageBackend configuration, String key) {
-        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+    public boolean doesS3ObjectExist(ObjectStorageBackend configuration, String key) {
+        S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                 configuration.getAccessKeyId(), configuration.getSecretKey());
 
         HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
                 .bucket(configuration.getBucket()).build();
 
         try {
-            s3SourceClient.headObject(objectRequest);
+            s3Client.headObject(objectRequest);
 
             return true;
 
@@ -181,41 +206,37 @@ public class SalvataggioBackendHelper {
         }
     }
 
-    public CreateMultipartUploadResponse initiateMultipartUpload(
+    public CreateMultipartUploadResponse initiateS3MultipartUpload(
             CreateMultipartUploadRequest initiateMultipartUploadRequest,
             ObjectStorageBackend configuration) {
-        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+        S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                 configuration.getAccessKeyId(), configuration.getSecretKey());
-        return s3SourceClient.createMultipartUpload(initiateMultipartUploadRequest);
+        return s3Client.createMultipartUpload(initiateMultipartUploadRequest);
     }
 
-    public CompleteMultipartUploadResponse completeMultipartUpload(
+    public CompleteMultipartUploadResponse completeS3MultipartUpload(
             CompleteMultipartUploadRequest completeMultipartUploadRequest,
             ObjectStorageBackend configuration) {
-        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+        S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                 configuration.getAccessKeyId(), configuration.getSecretKey());
-        return s3SourceClient.completeMultipartUpload(completeMultipartUploadRequest);
+        return s3Client.completeMultipartUpload(completeMultipartUploadRequest);
     }
 
-    public UploadPartResponse uploadPart(UploadPartRequest uploadPartRequest, byte[] byteArray,
+    public UploadPartResponse uploadS3Part(UploadPartRequest uploadPartRequest, byte[] byteArray,
             ObjectStorageBackend configuration) {
-        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+        S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                 configuration.getAccessKeyId(), configuration.getSecretKey());
-        return s3SourceClient.uploadPart(uploadPartRequest, RequestBody.fromBytes(byteArray));
+        return s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(byteArray));
     }
 
-    public Long getObjectSize(ObjectStorageBackend configuration, String key) {
-        S3Client s3SourceClient = s3Clients.getClient(configuration.getAddress(),
+    public Long getS3ObjectSize(ObjectStorageBackend configuration, String key) {
+        S3Client s3Client = s3Clients.getClient(configuration.getAddress(),
                 configuration.getAccessKeyId(), configuration.getSecretKey());
 
         HeadObjectRequest objectRequest = HeadObjectRequest.builder().key(key)
                 .bucket(configuration.getBucket()).build();
-        return s3SourceClient.headObject(objectRequest).contentLength();
+        return s3Client.headObject(objectRequest).contentLength();
     }
-
-    private static final String BUCKET = "BUCKET";
-    private static final String ACCESS_KEY_ID_SYS_PROP = "ACCESS_KEY_ID_SYS_PROP";
-    private static final String SECRET_KEY_SYS_PROP = "SECRET_KEY_SYS_PROP";
 
     /**
      * Ottieni la configurazione per potersi collegare a quel bucket dell'Object Storage scelto.
@@ -229,6 +250,16 @@ public class SalvataggioBackendHelper {
      * @throws ObjectStorageException in caso di errore
      */
     public ObjectStorageBackend getObjectStorageConfiguration(final String nomeBackend,
+            final String tipoUsoOs) throws ObjectStorageException {
+        ObjectStorageBackend cached = configCache.getOsConfig(nomeBackend, tipoUsoOs);
+        if (cached != null) {
+            return cached;
+        }
+        ObjectStorageBackend loaded = loadObjectStorageConfiguration(nomeBackend, tipoUsoOs);
+        return configCache.putOsConfigIfAbsent(nomeBackend, tipoUsoOs, loaded);
+    }
+
+    private ObjectStorageBackend loadObjectStorageConfiguration(final String nomeBackend,
             final String tipoUsoOs) throws ObjectStorageException {
         TypedQuery<DecConfigObjectStorage> query = entityManager.createQuery(
                 "Select c from DecConfigObjectStorage c where c.tiUsoConfigObjectStorage = :tipoUsoOs and c.decBackend.nmBackend = :nomeBackend order by c.nmConfigObjectStorage",
@@ -272,16 +303,12 @@ public class SalvataggioBackendHelper {
                             "Impossibile stabilire la tipologia del parametro per l'object storage")
                     .build();
         }
-
-        final String accessKeyId = System.getProperty(nomeSystemPropertyAccessKeyId);
-        final String secretKey = System.getProperty(nomeSystemPropertySecretKey);
-        final URI osURI = URI.create(storageAddress);
-        final String stagingBucket = bucket;
-        final Long idBackend = backendId;
-
+        final String finalBucket = bucket;
+        final URI finalAddress = URI.create(storageAddress);
+        final String finalAccessKeyId = System.getProperty(nomeSystemPropertyAccessKeyId);
+        final String finalSecretKey = System.getProperty(nomeSystemPropertySecretKey);
+        final Long finalBackendId = backendId;
         return new ObjectStorageBackend() {
-            private static final long serialVersionUID = -7032516962480163852L;
-
             @Override
             public String getBackendName() {
                 return nomeBackend;
@@ -289,27 +316,27 @@ public class SalvataggioBackendHelper {
 
             @Override
             public URI getAddress() {
-                return osURI;
+                return finalAddress;
             }
 
             @Override
             public String getBucket() {
-                return stagingBucket;
+                return finalBucket;
             }
 
             @Override
             public String getAccessKeyId() {
-                return accessKeyId;
+                return finalAccessKeyId;
             }
 
             @Override
             public String getSecretKey() {
-                return secretKey;
+                return finalSecretKey;
             }
 
             @Override
             public Long getBackendId() {
-                return idBackend;
+                return finalBackendId;
             }
         };
     }
@@ -337,10 +364,20 @@ public class SalvataggioBackendHelper {
     }
 
     public DecBackend getBackendEntity(String nomeBackend) {
+        Long cachedId = configCache.getBackendId(nomeBackend);
+        if (cachedId != null) {
+            return entityManager.getReference(DecBackend.class, cachedId);
+        }
+        return loadBackendEntity(nomeBackend);
+    }
+
+    private DecBackend loadBackendEntity(String nomeBackend) {
         TypedQuery<DecBackend> query = entityManager.createQuery(
                 "Select d from DecBackend d where d.nmBackend = :nomeBackend", DecBackend.class);
         query.setParameter("nomeBackend", nomeBackend);
-        return query.getSingleResult();
+        DecBackend backend = query.getSingleResult();
+        configCache.putBackendIdIfAbsent(nomeBackend, backend.getIdDecBackend());
+        return backend;
     }
 
     public DecBackend getBackendEntity(Long id) {
@@ -354,28 +391,28 @@ public class SalvataggioBackendHelper {
      *
      * @return Informazioni sul Backend identificato
      *
-     * @throws ObjectStorageException in caso di errore
+     * @throws BackendException in caso di errore
      */
-    public BackendStorage getBackend(String nomeBackend) throws ObjectStorageException {
+    public BackendStorage getBackend(String nomeBackend) throws BackendException {
+        BackendStorage cached = configCache.getBackend(nomeBackend);
+        if (cached != null) {
+            return cached;
+        }
         try {
-
             DecBackend backend = getBackendEntity(nomeBackend);
-            final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
+            final BackendStorage.STORAGE_TYPE tipo = BackendStorage.STORAGE_TYPE
                     .valueOf(backend.getNmTipoBackend());
-            final String backendName = backend.getNmBackend();
+            final String nmBackend = backend.getNmBackend();
             final Long idBackend = backend.getIdDecBackend();
-
-            return new BackendStorage() {
-                private static final long serialVersionUID = 5092016605462729859L;
-
+            BackendStorage loaded = new BackendStorage() {
                 @Override
-                public BackendStorage.STORAGE_TYPE getType() {
-                    return type;
+                public STORAGE_TYPE getType() {
+                    return tipo;
                 }
 
                 @Override
                 public String getBackendName() {
-                    return backendName;
+                    return nmBackend;
                 }
 
                 @Override
@@ -383,32 +420,31 @@ public class SalvataggioBackendHelper {
                     return idBackend;
                 }
             };
-
+            return configCache.putBackendIfAbsent(nomeBackend, loaded);
         } catch (IllegalArgumentException | NonUniqueResultException e) {
-            throw ObjectStorageException.builder()
+            throw BackendException.builder()
                     .message("Impossibile ottenere le informazioni di backend").cause(e).build();
         }
-
     }
 
     // MEV34843 - restituisce il backend per il versamento oggetti
     public BackendStorage getBackendForVersamento(BigDecimal idAmbienteVers, BigDecimal idVers,
-            BigDecimal idTipoObject) throws ObjectStorageException {
+            BigDecimal idTipoObject) throws BackendException {
         String backendName = lookupBackendForVersamenti(idAmbienteVers, idVers, idTipoObject);
         return getBackend(backendName);
     }
 
-    public BackendStorage getBackendForSisma() throws ObjectStorageException {
+    public BackendStorage getBackendForSisma() throws BackendException {
         String backendName = lookupBackendForSisma();
         return getBackend(backendName);
     }
 
-    public BackendStorage getBackendForStrumentiUrbanistici() throws ObjectStorageException {
+    public BackendStorage getBackendForStrumentiUrbanistici() throws BackendException {
         String backendName = lookupBackendForStrumentiUrbanistici();
         return getBackend(backendName);
     }
 
-    public BackendStorage getBackendForReportTrasformazioni() throws ObjectStorageException {
+    public BackendStorage getBackendForReportTrasformazioni() throws BackendException {
         String backendName = lookupBackendForReportTrasformazioni();
         return getBackend(backendName);
     }
@@ -420,41 +456,8 @@ public class SalvataggioBackendHelper {
 
     public ObjectStorageBackend getObjectStorageConfigurationForVersamento(String nomeBackend,
             String nomeBucketUtilizzato) throws ObjectStorageException {
-        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-                CONF_VERSAMENTO);
-        return new ObjectStorageBackend() {
-            private static final long serialVersionUID = -7032516962480163852L;
-
-            @Override
-            public String getBackendName() {
-                return nomeBackend;
-            }
-
-            @Override
-            public URI getAddress() {
-                return objectStorageConfiguration.getAddress();
-            }
-
-            @Override
-            public String getBucket() {
-                return nomeBucketUtilizzato;
-            }
-
-            @Override
-            public String getAccessKeyId() {
-                return objectStorageConfiguration.getAccessKeyId();
-            }
-
-            @Override
-            public String getSecretKey() {
-                return objectStorageConfiguration.getSecretKey();
-            }
-
-            @Override
-            public Long getBackendId() {
-                return objectStorageConfiguration.getBackendId();
-            }
-        };
+        return overrideBucketNameOnOSConfiguration(
+                getObjectStorageConfiguration(nomeBackend, CONF_VERSAMENTO), nomeBucketUtilizzato);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForSisma(String nomeBackend)
@@ -469,41 +472,8 @@ public class SalvataggioBackendHelper {
 
     public ObjectStorageBackend getObjectStorageConfigurationForSisma(String nomeBackend,
             String nomeBucketUtilizzato) throws ObjectStorageException {
-        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-                CONF_SISMA);
-        return new ObjectStorageBackend() {
-            private static final long serialVersionUID = -7032516962480163852L;
-
-            @Override
-            public String getBackendName() {
-                return nomeBackend;
-            }
-
-            @Override
-            public URI getAddress() {
-                return objectStorageConfiguration.getAddress();
-            }
-
-            @Override
-            public String getBucket() {
-                return nomeBucketUtilizzato;
-            }
-
-            @Override
-            public String getAccessKeyId() {
-                return objectStorageConfiguration.getAccessKeyId();
-            }
-
-            @Override
-            public String getSecretKey() {
-                return objectStorageConfiguration.getSecretKey();
-            }
-
-            @Override
-            public Long getBackendId() {
-                return objectStorageConfiguration.getBackendId();
-            }
-        };
+        return overrideBucketNameOnOSConfiguration(
+                getObjectStorageConfiguration(nomeBackend, CONF_SISMA), nomeBucketUtilizzato);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForStrumentiUrbanistici(
@@ -518,41 +488,9 @@ public class SalvataggioBackendHelper {
 
     public ObjectStorageBackend getObjectStorageConfigurationForStrumentiUrbanistici(
             String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
-        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-                CONF_STRUMENTI_URBANISTICI);
-        return new ObjectStorageBackend() {
-            private static final long serialVersionUID = -7032516962480163852L;
-
-            @Override
-            public String getBackendName() {
-                return nomeBackend;
-            }
-
-            @Override
-            public URI getAddress() {
-                return objectStorageConfiguration.getAddress();
-            }
-
-            @Override
-            public String getBucket() {
-                return nomeBucketUtilizzato;
-            }
-
-            @Override
-            public String getAccessKeyId() {
-                return objectStorageConfiguration.getAccessKeyId();
-            }
-
-            @Override
-            public String getSecretKey() {
-                return objectStorageConfiguration.getSecretKey();
-            }
-
-            @Override
-            public Long getBackendId() {
-                return objectStorageConfiguration.getBackendId();
-            }
-        };
+        return overrideBucketNameOnOSConfiguration(
+                getObjectStorageConfiguration(nomeBackend, CONF_STRUMENTI_URBANISTICI),
+                nomeBucketUtilizzato);
     }
 
     public ObjectStorageBackend getObjectStorageConfigurationForReportTrasformazioni(
@@ -562,39 +500,42 @@ public class SalvataggioBackendHelper {
 
     public ObjectStorageBackend getObjectStorageConfigurationForReportTrasformazioni(
             String nomeBackend, String nomeBucketUtilizzato) throws ObjectStorageException {
-        ObjectStorageBackend objectStorageConfiguration = getObjectStorageConfiguration(nomeBackend,
-                CONF_REPORT_TRASFORMAZIONI);
-        return new ObjectStorageBackend() {
-            private static final long serialVersionUID = -7032516962480163852L;
+        return overrideBucketNameOnOSConfiguration(
+                getObjectStorageConfiguration(nomeBackend, CONF_REPORT_TRASFORMAZIONI),
+                nomeBucketUtilizzato);
+    }
 
+    private ObjectStorageBackend overrideBucketNameOnOSConfiguration(ObjectStorageBackend base,
+            String newBucket) {
+        return new ObjectStorageBackend() {
             @Override
             public String getBackendName() {
-                return nomeBackend;
+                return base.getBackendName();
             }
 
             @Override
-            public URI getAddress() {
-                return objectStorageConfiguration.getAddress();
+            public java.net.URI getAddress() {
+                return base.getAddress();
             }
 
             @Override
             public String getBucket() {
-                return nomeBucketUtilizzato;
+                return newBucket;
             }
 
             @Override
             public String getAccessKeyId() {
-                return objectStorageConfiguration.getAccessKeyId();
+                return base.getAccessKeyId();
             }
 
             @Override
             public String getSecretKey() {
-                return objectStorageConfiguration.getSecretKey();
+                return base.getSecretKey();
             }
 
             @Override
             public Long getBackendId() {
-                return objectStorageConfiguration.getBackendId();
+                return base.getBackendId();
             }
         };
     }
@@ -606,28 +547,28 @@ public class SalvataggioBackendHelper {
      *
      * @return Informazioni sul Backend identificato
      *
-     * @throws ObjectStorageException in caso di errore
+     * @throws BackendException in caso di errore
      */
-    public BackendStorage getBackend(Long backendId) throws ObjectStorageException {
+    public BackendStorage getBackend(Long backendId) throws BackendException {
+        BackendStorage cached = configCache.getBackendById(backendId);
+        if (cached != null) {
+            return cached;
+        }
         try {
-
             DecBackend backend = getBackendEntity(backendId);
-            final BackendStorage.STORAGE_TYPE type = BackendStorage.STORAGE_TYPE
+            final BackendStorage.STORAGE_TYPE tipo = BackendStorage.STORAGE_TYPE
                     .valueOf(backend.getNmTipoBackend());
-            final String backendName = backend.getNmBackend();
+            final String nmBackend = backend.getNmBackend();
             final Long idBackend = backend.getIdDecBackend();
-
-            return new BackendStorage() {
-                private static final long serialVersionUID = 5092016605462729859L;
-
+            BackendStorage loaded = new BackendStorage() {
                 @Override
-                public BackendStorage.STORAGE_TYPE getType() {
-                    return type;
+                public STORAGE_TYPE getType() {
+                    return tipo;
                 }
 
                 @Override
                 public String getBackendName() {
-                    return backendName;
+                    return nmBackend;
                 }
 
                 @Override
@@ -635,78 +576,10 @@ public class SalvataggioBackendHelper {
                     return idBackend;
                 }
             };
-
+            return configCache.putBackendByIdIfAbsent(backendId, loaded);
         } catch (IllegalArgumentException | NonUniqueResultException e) {
-            throw ObjectStorageException.builder()
+            throw BackendException.builder()
                     .message("Impossibile ottenere le informazioni di backend").cause(e).build();
         }
-
-    }
-
-    public void addBackendInfosToFilesDepositati(String nmAmbiente, String nmVersatore,
-            String cdKeyObject, ListaFileDepositatoType listaFileDepositati)
-            throws ObjectStorageException {
-        String queryStr = "SELECT obj FROM PigObject obj INNER JOIN obj.pigVer vers "
-                + "WHERE vers.pigAmbienteVer.nmAmbienteVers = :nmAmbiente AND vers.nmVers = :nmVers AND obj.cdKeyObject = :cdKey";
-        javax.persistence.Query query = entityManager.createQuery(queryStr);
-        query.setParameter("nmAmbiente", nmAmbiente);
-        query.setParameter("nmVers", nmVersatore);
-        query.setParameter("cdKey", cdKeyObject);
-
-        List<PigObject> results = query.getResultList();
-        if (results.isEmpty()) {
-            throw ObjectStorageException.builder()
-                    .message(
-                            "Impossibile ottenere le informazioni di backend, oggetto non trovato.")
-                    .build();
-        }
-
-        PigObject obj = results.get(0);
-        PigVers vers = obj.getPigVer();
-        PigAmbienteVers ambienteVers = vers.getPigAmbienteVer();
-
-        BackendStorage backendVersamento = getBackendForVersamento(
-                BigDecimal.valueOf(ambienteVers.getIdAmbienteVers()),
-                BigDecimal.valueOf(vers.getIdVers()),
-                BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
-
-        String tenantOs = configurationHelper
-                .getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE);
-
-        for (FileDepositatoType file : listaFileDepositati.getFileDepositato()) {
-            file.setIdBackend(backendVersamento.getBackendId());
-
-            if (backendVersamento.isObjectStorage()) {
-                ObjectStorageBackend config = getObjectStorageConfigurationForVersamento(
-                        backendVersamento.getBackendName());
-
-                file.setNmOsTenant(tenantOs);
-                file.setNmOsBucket(config.getBucket());
-            }
-        }
-    }
-
-    /**
-     * Calcola il checksum CRC32C (base64 encoded) del file da inviare via S3
-     * <p>
-     * Nota: questa scelta deriva dal modello supportato dal vendor
-     * (https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html)
-     *
-     * @param resource file
-     *
-     * @return rappresentazione base64 del contenuto calcolato
-     *
-     * @throws IOException errore generico
-     */
-    private String calculateFileCRC32CBase64(Path resource) throws IOException {
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int readed;
-        CRC32CChecksum crc32c = new CRC32CChecksum();
-        try (InputStream is = Files.newInputStream(resource)) {
-            while ((readed = is.read(buffer)) != -1) {
-                crc32c.update(buffer, 0, readed);
-            }
-        }
-        return Base64.getEncoder().encodeToString(crc32c.getValueAsBytes());
     }
 }

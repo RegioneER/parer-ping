@@ -50,8 +50,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.common.ejb.CommonDb;
 import it.eng.sacerasi.ws.util.Util;
@@ -88,18 +89,18 @@ public class SalvataggioDati {
     @EJB
     private CommonDb commonDb;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     @Resource(mappedName = "jca/xadiskLocal")
     private XADiskConnectionFactory xadCf;
 
     public void deleteFileObject(NotificaTrasferimentoExt nte)
-            throws ObjectStorageException, ParerInternalError {
+            throws ObjectStorageException, BackendException, ParerInternalError {
         // elimino tutti i file dalla tabella PIG_FILE_OBJECT per l’oggetto corrente
         PigObject obj = entityManager.find(PigObject.class, nte.getIdObject());
         PigVers vers = obj.getPigVer();
 
-        BackendStorage backendForVersamento = salvataggioBackendHelper.getBackendForVersamento(
+        BackendStorage backendForVersamento = backendHelper.getBackendForVersamento(
                 BigDecimal.valueOf(vers.getPigAmbienteVer().getIdAmbienteVers()),
                 BigDecimal.valueOf(vers.getIdVers()),
                 BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
@@ -112,14 +113,13 @@ public class SalvataggioDati {
                 // Questo controllo è per evitare che venga cancellato il file con lo stesso nome
                 // appena riversato.
                 if (!Objects.equals(backendForVersamento.getBackendId(), pfos.getIdDecBackend())) {
-                    BackendStorage backend = salvataggioBackendHelper
-                            .getBackend(pfos.getIdDecBackend());
-                    ObjectStorageBackend config = salvataggioBackendHelper
+                    BackendStorage backend = backendHelper.getBackend(pfos.getIdDecBackend());
+                    ObjectStorageBackend config = backendHelper
                             .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
                                     pfos.getNmBucket());
 
-                    if (salvataggioBackendHelper.doesObjectExist(config, pfos.getCdKeyFile())) {
-                        salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
+                    if (backendHelper.doesS3ObjectExist(config, pfos.getCdKeyFile())) {
+                        backendHelper.deleteS3Object(config, pfos.getCdKeyFile());
                     }
                 }
 
@@ -139,7 +139,7 @@ public class SalvataggioDati {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public RispostaControlli creaFileObjects(NotificaTrasferimentoExt nte,
-            RispostaNotificaWS rispostaWs) throws ObjectStorageException {
+            RispostaNotificaWS rispostaWs) throws ObjectStorageException, BackendException {
         RispostaControlli rispostaControlli = new RispostaControlli();
 
         for (FileDepositatoRespType fileDepRest : rispostaWs.getNotificaResponse()
@@ -148,13 +148,11 @@ public class SalvataggioDati {
             long size = 0L;
 
             // MEV21995 e MEV34843 recupera la dimensione del file su object storage
-            BackendStorage backend = salvataggioBackendHelper
-                    .getBackend(fileDepRest.getIdBackend());
+            BackendStorage backend = backendHelper.getBackend(fileDepRest.getIdBackend());
             if (backend.isObjectStorage()) {
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForVersamento(backend.getBackendName());
-                size = salvataggioBackendHelper.getObjectSize(config,
-                        fileDepRest.getNmNomeFileOs());
+                size = backendHelper.getS3ObjectSize(config, fileDepRest.getNmNomeFileOs());
             } else if (backend.isFile()) {
                 File file = new File(
                         nte.getFtpPath() + File.separator + fileDepRest.getNmNomeFile());

@@ -15,7 +15,7 @@ package it.eng.sacerasi.strumentiUrbanistici.ejb;
 import it.eng.paginator.helper.LazyListHelper;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.grantEntity.OrgAmbiente;
@@ -54,6 +54,7 @@ import javax.ejb.Stateless;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.annullamento.ejb.AnnullamentoEjb;
 import it.eng.sacerasi.entity.PigObject;
@@ -92,7 +93,7 @@ public class StrumentiUrbanisticiEjb {
     @EJB
     private MessaggiHelper messaggiHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private ConfigurationHelper configurationHelper;
     @EJB
@@ -499,7 +500,8 @@ public class StrumentiUrbanisticiEjb {
         return dto;
     }
 
-    public SUDto modificaStrumentoUrbanistico(SUDto dto) throws ObjectStorageException {
+    public SUDto modificaStrumentoUrbanistico(SUDto dto)
+            throws ObjectStorageException, BackendException {
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findByIdWithLock(PigStrumentiUrbanistici.class, dto.getIdStrumentiUrbanistici());
         PigStrumUrbPianoStato pigStrumUrbPianoStato = strumentiUrbanisticiHelper
@@ -531,14 +533,14 @@ public class StrumentiUrbanisticiEjb {
                         // MEV 34843
                         PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
                                 .getPigStrumUrbDocumentiStorage();
-                        BackendStorage backend = salvataggioBackendHelper
+                        BackendStorage backend = backendHelper
                                 .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                        ObjectStorageBackend config = salvataggioBackendHelper
+                        ObjectStorageBackend config = backendHelper
                                 .getObjectStorageConfigurationForStrumentiUrbanistici(
                                         backend.getBackendName(),
                                         pigStrumUrbDocumentiStorage.getNmBucket());
 
-                        this.salvataggioBackendHelper.deleteObject(config,
+                        this.backendHelper.deleteS3Object(config,
                                 pigStrumUrbDocumentiStorage.getCdKeyFile());
                         PigStrumUrbDocumenti pigStrumUrbDocumentiLock = strumentiUrbanisticiHelper
                                 .findByIdWithLock(PigStrumUrbDocumenti.class,
@@ -632,7 +634,8 @@ public class StrumentiUrbanisticiEjb {
         }
     }
 
-    public void cancellaSU(BigDecimal idStrumentoUrbanistico) throws ObjectStorageException {
+    public void cancellaSU(BigDecimal idStrumentoUrbanistico)
+            throws ObjectStorageException, BackendException {
         PigStrumentiUrbanistici su = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
         // Rimuove i doc da SO
@@ -641,16 +644,16 @@ public class StrumentiUrbanisticiEjb {
             if (pigStrumUrbDocumenti.getPigStrumUrbDocumentiStorage() != null) {
                 PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
                         .getPigStrumUrbDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForStrumentiUrbanistici(
                                 backend.getBackendName(),
                                 pigStrumUrbDocumentiStorage.getNmBucket());
 
-                if (salvataggioBackendHelper.doesObjectExist(config,
+                if (backendHelper.doesS3ObjectExist(config,
                         pigStrumUrbDocumentiStorage.getCdKeyFile())) {
-                    this.salvataggioBackendHelper.deleteObject(config,
+                    this.backendHelper.deleteS3Object(config,
                             pigStrumUrbDocumentiStorage.getCdKeyFile());
                 }
 
@@ -729,7 +732,7 @@ public class StrumentiUrbanisticiEjb {
     }
 
     public String cancellaDoc(BigDecimal idStrumentoUrbanistico, String nmFileOrig)
-            throws ObjectStorageException {
+            throws ObjectStorageException, BackendException {
         String str = null;
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, idStrumentoUrbanistico);
@@ -748,14 +751,13 @@ public class StrumentiUrbanisticiEjb {
                 // MEV 34843
                 PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
                         .getPigStrumUrbDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForStrumentiUrbanistici(
                                 backend.getBackendName(),
                                 pigStrumUrbDocumentiStorage.getNmBucket());
-                salvataggioBackendHelper.deleteObject(config,
-                        pigStrumUrbDocumentiStorage.getCdKeyFile());
+                backendHelper.deleteS3Object(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
             }
         } else {
             str = "Non è possibile eliminare un file di uno strumento urbanistico già inviato";
@@ -853,7 +855,8 @@ public class StrumentiUrbanisticiEjb {
     }
 
     /* DTOs */
-    public DocStrumDto salvaTipoDocumento(DocStrumDto dto) throws ObjectStorageException {
+    public DocStrumDto salvaTipoDocumento(DocStrumDto dto)
+            throws ObjectStorageException, BackendException {
         PigStrumUrbDocumenti pigStrumUrbDocumenti = new PigStrumUrbDocumenti();
         PigStrumentiUrbanistici pigStrumentiUrbanistici = strumentiUrbanisticiHelper
                 .findById(PigStrumentiUrbanistici.class, dto.getIdStrumentiUrbanistici());
@@ -871,9 +874,9 @@ public class StrumentiUrbanisticiEjb {
         pigStrumUrbDocumenti.setFlEsitoVerifica(Constants.DB_FALSE);
 
         // MEV 34843
-        BackendStorage backendForStrumentiUrbanistici = salvataggioBackendHelper
+        BackendStorage backendForStrumentiUrbanistici = backendHelper
                 .getBackendForStrumentiUrbanistici();
-        ObjectStorageBackend config = salvataggioBackendHelper
+        ObjectStorageBackend config = backendHelper
                 .getObjectStorageConfigurationForStrumentiUrbanistici(
                         backendForStrumentiUrbanistici.getBackendName());
 
@@ -1295,11 +1298,11 @@ public class StrumentiUrbanisticiEjb {
 
         // MEV 30036 - dati ufficio urbanistica
         private BigDecimal idPuc;
-        private String nrBurert;
+        private BigDecimal nrBurert;
         private Date dtBurert;
         private String cdRepertorio;
         private BigDecimal annoProtocollo;
-        private String cdProtocollo;
+        private BigDecimal cdProtocollo;
         private Date dtProtocollo;
         private boolean flInviatoAEnte;
 
@@ -1525,11 +1528,11 @@ public class StrumentiUrbanisticiEjb {
             this.idPuc = idPuc;
         }
 
-        public String getNrBurert() {
+        public BigDecimal getNrBurert() {
             return nrBurert;
         }
 
-        public void setNrBurert(String nrBurert) {
+        public void setNrBurert(BigDecimal nrBurert) {
             this.nrBurert = nrBurert;
         }
 
@@ -1557,11 +1560,11 @@ public class StrumentiUrbanisticiEjb {
             this.annoProtocollo = annoProtocollo;
         }
 
-        public String getCdProtocollo() {
+        public BigDecimal getCdProtocollo() {
             return cdProtocollo;
         }
 
-        public void setCdProtocollo(String cdProtocollo) {
+        public void setCdProtocollo(BigDecimal cdProtocollo) {
             this.cdProtocollo = cdProtocollo;
         }
 

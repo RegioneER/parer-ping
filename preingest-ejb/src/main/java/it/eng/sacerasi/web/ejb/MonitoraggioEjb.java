@@ -48,8 +48,9 @@ import org.xadisk.filesystem.exceptions.LockingFailedException;
 import org.xadisk.filesystem.exceptions.NoTransactionAssociatedException;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.ejb.CommonDb;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
@@ -112,7 +113,7 @@ public class MonitoraggioEjb {
     @EJB
     private CorrispondenzeVersHelper corVersHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/KettleWsClient")
     private KettleWsClient kwsClient;
 
@@ -254,7 +255,7 @@ public class MonitoraggioEjb {
 
             try {
                 deleteDirAndOS(pigObject, pigSessioneIngest);
-            } catch (ObjectStorageException e) {
+            } catch (ObjectStorageException | BackendException e) {
                 throw new ParerInternalError(e);
             }
         }
@@ -1010,7 +1011,7 @@ public class MonitoraggioEjb {
     }
 
     public void deleteDirAndOS(PigObject pigObject, PigSessioneIngest pigSessioneIngest)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         /* Cancello la cartella nell'area FTP */
         deleteDir(new BigDecimal(pigObject.getPigVer().getIdVers()),
                 pigSessioneIngest.getCdKeyObject());
@@ -1019,14 +1020,13 @@ public class MonitoraggioEjb {
         for (PigFileObject fileObject : pigObject.getPigFileObjects()) {
             if (fileObject.getPigFileObjectStorage() != null) {
                 PigFileObjectStorage pfos = fileObject.getPigFileObjectStorage();
-                BackendStorage backend = salvataggioBackendHelper
-                        .getBackend(pfos.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                BackendStorage backend = backendHelper.getBackend(pfos.getIdDecBackend());
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
                                 pfos.getNmBucket());
 
-                if (salvataggioBackendHelper.doesObjectExist(config, pfos.getCdKeyFile()))
-                    salvataggioBackendHelper.deleteObject(config, pfos.getCdKeyFile());
+                if (backendHelper.doesS3ObjectExist(config, pfos.getCdKeyFile()))
+                    backendHelper.deleteS3Object(config, pfos.getCdKeyFile());
             }
         }
     }

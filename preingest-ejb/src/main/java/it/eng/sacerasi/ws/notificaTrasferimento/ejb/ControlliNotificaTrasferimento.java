@@ -20,6 +20,7 @@ import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
 import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -31,7 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 
@@ -50,7 +52,7 @@ public class ControlliNotificaTrasferimento {
     private EntityManager entityManager;
 
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     /**
      * Verifica lo stato dell'oggetto
@@ -454,7 +456,7 @@ public class ControlliNotificaTrasferimento {
         RispostaControlli rispostaControlli = new RispostaControlli();
         rispostaControlli.setrBoolean(false);
 
-        if (salvataggioBackendHelper.doesObjectExist(config, nomeFileOs)) {
+        if (backendHelper.doesS3ObjectExist(config, nomeFileOs)) {
             rispostaControlli.setrBoolean(true);
         } else {
             rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOT_014);
@@ -493,6 +495,30 @@ public class ControlliNotificaTrasferimento {
                 rispostaControlli
                         .setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOT_015));
             }
+        }
+
+        return rispostaControlli;
+    }
+
+    public RispostaControlli verificaBackendInfosToFilesDepositati(String nmAmbiente,
+            String nmVersatore, String cdKeyObject) {
+        RispostaControlli rispostaControlli = new RispostaControlli();
+        rispostaControlli.setrBoolean(false);
+
+        String queryStr = "SELECT obj FROM PigObject obj INNER JOIN obj.pigVer vers "
+                + "WHERE vers.pigAmbienteVer.nmAmbienteVers = :nmAmbiente AND vers.nmVers = :nmVers AND obj.cdKeyObject = :cdKey";
+        javax.persistence.Query query = entityManager.createQuery(queryStr);
+        query.setParameter("nmAmbiente", nmAmbiente);
+        query.setParameter("nmVers", nmVersatore);
+        query.setParameter("cdKey", cdKeyObject);
+
+        List<PigObject> results = query.getResultList();
+        if (!results.isEmpty()) {
+            rispostaControlli.setrBoolean(true);
+            rispostaControlli.setrObject(results.get(0));
+        } else {
+            rispostaControlli.setCodErr(MessaggiWSBundle.PING_NOT_022);
+            rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.PING_NOT_022));
         }
 
         return rispostaControlli;

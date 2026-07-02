@@ -60,7 +60,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +68,7 @@ import it.eng.parer.kettle.exceptions.KettleException;
 import it.eng.parer.kettle.exceptions.KettleServiceException;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.corrispondenzeVers.helper.CorrispondenzeVersHelper;
 import it.eng.sacerasi.entity.PigErrore;
@@ -127,8 +128,8 @@ public class EseguiTrasformazione {
     @EJB(mappedName = "java:app/SacerAsync-ejb/GenericJobHelper")
     private GenericJobHelper jobHelper;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
 
     @EJB
     private MessaggiHelper messaggiHelper;
@@ -298,9 +299,8 @@ public class EseguiTrasformazione {
             String messaggio = "File memorizzato su Object Storage ma Object Storage inattivo.";
 
             try {
-                backend = salvataggioBackendHelper
-                        .getBackend(pfo.getPigFileObjectStorage().getIdDecBackend());
-            } catch (ObjectStorageException ex) {
+                backend = backendHelper.getBackend(pfo.getPigFileObjectStorage().getIdDecBackend());
+            } catch (BackendException ex) {
                 messaggio = "Backend on configurato";
             }
 
@@ -552,10 +552,9 @@ public class EseguiTrasformazione {
                     // MEV34843 - aggiunti nuovi parametri.
                     ObjectStorageBackend config = null;
                     try {
-                        config = salvataggioBackendHelper
-                                .getObjectStorageConfigurationForVersamento(
-                                        backend.getBackendName(),
-                                        pfo.getPigFileObjectStorage().getNmBucket());
+                        config = backendHelper.getObjectStorageConfigurationForVersamento(
+                                backend.getBackendName(),
+                                pfo.getPigFileObjectStorage().getNmBucket());
                     } catch (ObjectStorageException ex) {
                         throw new ParerInternalError(
                                 "EseguiTraformazione: errore nel recupero delle conf OS.", ex);

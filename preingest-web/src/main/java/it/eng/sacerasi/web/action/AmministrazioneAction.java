@@ -323,14 +323,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
     @Override
     public void loadDettaglio() throws EMFError {
         if (getNavigationEvent().equals(ListAction.NE_DETTAGLIO_VIEW)
-                && getTableName().equals(getForm().getConfigurationList().getName())
                 || getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE)
                 || getNavigationEvent().equals(ListAction.NE_NEXT)
                 || getNavigationEvent().equals(ListAction.NE_PREV)) {
-            loadDettaglioConfiguration(
-                    getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE));
-            forwardToPublisher(Application.Publisher.CONFIGURATION_DETAIL);
-            return;
+            if (getTableName().equals(getForm().getConfigurationList().getName())) {
+                loadDettaglioConfiguration(
+                        getNavigationEvent().equals(ListAction.NE_DETTAGLIO_UPDATE));
+                forwardToPublisher(Application.Publisher.CONFIGURATION_DETAIL);
+                return;
+            }
         }
 
         try {
@@ -7979,18 +7980,15 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
         }
 
         if (rowBean.getString("ds_valore_param_applic_ambiente_amm") != null) {
-            rowBean.setString("ds_valore_param_applic_ambiente_amm",
-                    Constants.OBFUSCATED_STRING);
+            rowBean.setString("ds_valore_param_applic_ambiente_amm", Constants.OBFUSCATED_STRING);
         }
 
         if (rowBean.getString("ds_valore_param_applic_ambiente_gest") != null) {
-            rowBean.setString("ds_valore_param_applic_ambiente_gest",
-                    Constants.OBFUSCATED_STRING);
+            rowBean.setString("ds_valore_param_applic_ambiente_gest", Constants.OBFUSCATED_STRING);
         }
 
         if (rowBean.getString("ds_valore_param_applic_ambiente_cons") != null) {
-            rowBean.setString("ds_valore_param_applic_ambiente_cons",
-                    Constants.OBFUSCATED_STRING);
+            rowBean.setString("ds_valore_param_applic_ambiente_cons", Constants.OBFUSCATED_STRING);
         }
 
         if (rowBean.getString("ds_valore_param_applic_tipo_oggetto_amm") != null) {

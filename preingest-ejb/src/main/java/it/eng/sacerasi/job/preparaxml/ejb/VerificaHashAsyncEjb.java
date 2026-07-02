@@ -35,8 +35,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants.TipiEncBinari;
 import it.eng.sacerasi.common.Constants.TipiHash;
 import it.eng.sacerasi.entity.PigFileObject;
@@ -64,10 +65,10 @@ public class VerificaHashAsyncEjb {
     ConfigurationHelper configurationHelper = null;
 
     @EJB
-    SalvataggioBackendHelper salvataggioBackendHelper;
+    BackendHelper backendHelper;
 
     public void verificaHash(String rootDirectory, OggettoInCoda oggetto)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         PigObject pigObject;
         PigTipoObject pigTipoObject;
         OggettoInCoda oggettoInCoda = oggetto;
@@ -138,7 +139,7 @@ public class VerificaHashAsyncEjb {
     }
 
     private boolean verificaHash(FileObjectExt file)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         boolean tmpret = false;
         String tmpHash;
 
@@ -214,25 +215,24 @@ public class VerificaHashAsyncEjb {
      * calcolo l'hash in streaming, lento ma mi tutela da eventuali out of memory
      */
     private String calculateHashFromOS(FileObjectExt file, String tipoHash)
-            throws NoSuchAlgorithmException, IOException, ObjectStorageException {
+            throws NoSuchAlgorithmException, IOException, ObjectStorageException, BackendException {
         MessageDigest md = MessageDigest.getInstance(tipoHash);
         int ch;
-        final int BUFFER_SIZE = 100 * 1024 * 1024; // 100 MB
+        // 128 KB: dimensione ottimale per streaming S3 (allineato a
+        // SalvataggioBackendHelper.BUFFER_SIZE)
+        final int BUFFER_SIZE = 128 * 1024;
 
-        BackendStorage backend = salvataggioBackendHelper.getBackend(file.getIdBackend());
-        ObjectStorageBackend config = salvataggioBackendHelper
-                .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
-                        file.getNmBucket());
+        BackendStorage backend = backendHelper.getBackend(file.getIdBackend());
+        ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForVersamento(
+                backend.getBackendName(), file.getNmBucket());
 
-        ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper.getObject(config,
-                file.getCdKeyFile());
-
-        DigestInputStream dis = new DigestInputStream(ogg, md);
-        log.debug("Provider {}", md.getProvider());
-
-        byte[] buffer = new byte[BUFFER_SIZE];
-        while ((ch = dis.read(buffer)) != -1) {
-            log.trace("Letti {} bytes", ch);
+        try (ResponseInputStream<GetObjectResponse> ogg = backendHelper.getS3Object(config,
+                file.getCdKeyFile()); DigestInputStream dis = new DigestInputStream(ogg, md)) {
+            log.debug("Provider {}", md.getProvider());
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while ((ch = dis.read(buffer)) != -1) {
+                log.trace("Letti {} bytes", ch);
+            }
         }
 
         byte[] pwdHash = md.digest();

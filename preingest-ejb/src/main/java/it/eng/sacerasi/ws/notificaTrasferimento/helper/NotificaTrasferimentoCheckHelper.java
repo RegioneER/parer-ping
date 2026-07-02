@@ -16,9 +16,8 @@
  */
 package it.eng.sacerasi.ws.notificaTrasferimento.helper;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,20 +27,31 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import it.eng.sacerasi.ws.notificaTrasferimento.dto.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.ejb.CommonDb;
+import it.eng.sacerasi.entity.PigAmbienteVers;
+import it.eng.sacerasi.entity.PigObject;
+import it.eng.sacerasi.entity.PigVers;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 import it.eng.sacerasi.ws.dto.RispostaControlli;
 import it.eng.sacerasi.ws.ejb.ControlliWS;
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoRespType;
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.FileDepositatoType;
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.ListaFileDepositatoType;
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.NotificaTrasferimentoExt;
+import it.eng.sacerasi.ws.notificaTrasferimento.dto.RispostaNotificaWS;
 import it.eng.sacerasi.ws.notificaTrasferimento.ejb.ControlliNotificaTrasferimento;
 
 @Stateless(mappedName = "NotificaTrasferimentoCheckHelper")
@@ -58,13 +68,15 @@ public class NotificaTrasferimentoCheckHelper {
     @EJB
     private CommonDb commonDb;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
+    @EJB
+    private ConfigurationHelper configurationHelper;
 
     public void check(NotificaTrasferimentoExt notificaTrasferimentoExt,
-            RispostaNotificaWS rispostaWs) throws ObjectStorageException {
+            RispostaNotificaWS rispostaWs) {
         RispostaControlli rispostaControlli = new RispostaControlli();
         //
-        String ambiente = null;
+        String nmAmbiente = null;
         String nmVersatore = null;
         String cdKeyObject = null;
         String inputFtp = null;
@@ -99,15 +111,15 @@ public class NotificaTrasferimentoCheckHelper {
                     setRispostaWsError(rispostaWs, rispostaControlli);
                 }
             } else {
-                ambiente = notificaTrasferimentoExt.getNotificaTrasf().getNmAmbiente();
-                rispostaWs.getNotificaResponse().setNmAmbiente(ambiente);
+                nmAmbiente = notificaTrasferimentoExt.getNotificaTrasf().getNmAmbiente();
+                rispostaWs.getNotificaResponse().setNmAmbiente(nmAmbiente);
             }
         }
 
         Long idVersatore = null;
         if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
             rispostaControlli.reset();
-            rispostaControlli = controlliWS.verificaNomeVersatore(ambiente,
+            rispostaControlli = controlliWS.verificaNomeVersatore(nmAmbiente,
                     notificaTrasferimentoExt.getNotificaTrasf().getNmVersatore());
             if (!rispostaControlli.isrBoolean()) {
                 if (rispostaControlli.getCodErr() == null) {
@@ -149,7 +161,7 @@ public class NotificaTrasferimentoCheckHelper {
         Long idObject = null;
         if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
             rispostaControlli.reset();
-            rispostaControlli = controlliWS.verificaCdKeyObject(ambiente, nmVersatore,
+            rispostaControlli = controlliWS.verificaCdKeyObject(nmAmbiente, nmVersatore,
                     notificaTrasferimentoExt.getNotificaTrasf().getCdKeyObject());
             if (!rispostaControlli.isrBoolean()) {
                 if (rispostaControlli.getCodErr() == null) {
@@ -172,7 +184,7 @@ public class NotificaTrasferimentoCheckHelper {
         Long lastSessionId = null;
         if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
             rispostaControlli.reset();
-            rispostaControlli = controlliNotif.verificaStatoOggetto(ambiente, nmVersatore,
+            rispostaControlli = controlliNotif.verificaStatoOggetto(nmAmbiente, nmVersatore,
                     cdKeyObject);
             notificaTrasferimentoExt.setFlCancellaFile(false);
             if (!rispostaControlli.isrBoolean()) {
@@ -207,7 +219,7 @@ public class NotificaTrasferimentoCheckHelper {
         // NOT_007
         if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
             rispostaControlli.reset();
-            rispostaControlli = controlliNotif.verificaCoerenzaTipoVersamentoFile(ambiente,
+            rispostaControlli = controlliNotif.verificaCoerenzaTipoVersamentoFile(nmAmbiente,
                     nmVersatore, cdKeyObject, notificaTrasferimentoExt.getNotificaTrasf()
                             .getFileDepositati().getFileDepositato());
             if (!rispostaControlli.isrBoolean()) {
@@ -292,20 +304,98 @@ public class NotificaTrasferimentoCheckHelper {
             }
             notificaTrasferimentoExt.setTipoFileObjects(tipiFileObj);
         }
+
+        // MEV 34843
+        // Aggiungo i dati del backend, il nome file os è impostato dal chiamante, che siano il
+        // versamento oggetto o un
+        // software che usa i ws.
+        // MEV21995 e MEV34843 aggiungo le informazioni eventuali sul salvataggio su object storage
+        if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
+            rispostaControlli.reset();
+            rispostaControlli = controlliNotif.verificaBackendInfosToFilesDepositati(nmAmbiente,
+                    nmVersatore, cdKeyObject);
+
+            if (!rispostaControlli.isrBoolean()) {
+                setRispostaWsError(rispostaWs, rispostaControlli);
+            } else {
+                //
+                try {
+                    PigObject obj = (PigObject) rispostaControlli.getrObject();
+                    PigVers vers = obj.getPigVer();
+                    PigAmbienteVers ambienteVers = vers.getPigAmbienteVer();
+
+                    // get backend
+                    BackendStorage backendVersamento = backendHelper.getBackendForVersamento(
+                            BigDecimal.valueOf(ambienteVers.getIdAmbienteVers()),
+                            BigDecimal.valueOf(vers.getIdVers()),
+                            BigDecimal.valueOf(obj.getPigTipoObject().getIdTipoObject()));
+
+                    ObjectStorageBackend osConfig = backendVersamento.isObjectStorage()
+                            ? backendHelper.getObjectStorageConfigurationForVersamento(
+                                    backendVersamento.getBackendName())
+                            : null;
+
+                    String tenantOs = backendVersamento.isObjectStorage()
+                            ? configurationHelper
+                                    .getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE)
+                            : StringUtils.EMPTY;
+
+                    ListaFileDepositatoType listaFileDepositato = notificaTrasferimentoExt
+                            .getNotificaTrasf().getFileDepositati();
+
+                    for (FileDepositatoType file : listaFileDepositato.getFileDepositato()) {
+                        file.setIdBackend(backendVersamento.getBackendId());
+                        if (backendVersamento.isObjectStorage()) {
+                            file.setNmOsTenant(tenantOs);
+                            file.setNmOsBucket(osConfig.getBucket());
+                        }
+                    }
+                } catch (BackendException | ObjectStorageException ex) {
+                    log.error(ex.getMessage());
+                    rispostaControlli.reset();
+                    rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                            String.join("\n", ExceptionUtils.getRootCauseStackTrace(ex))));
+                    setRispostaWsError(rispostaWs, rispostaControlli);
+                }
+            }
+        }
+
         // NOT_014
         if (rispostaWs.getSeverity() != SeverityEnum.ERROR) {
             rispostaControlli.reset();
             for (FileDepositatoType fileDep : notificaTrasferimentoExt.getNotificaTrasf()
                     .getFileDepositati().getFileDepositato()) {
                 // MEV21995 e MEV 34843 se il file non è su Object Storage controllo su ftp
-                BackendStorage backend = salvataggioBackendHelper
-                        .getBackend(fileDep.getIdBackend());
+                BackendStorage backend = null;
+                try {
+                    backend = backendHelper.getBackend(fileDep.getIdBackend());
+                } catch (BackendException bex) {
+                    log.error(bex.getMessage());
+                    rispostaControlli.reset();
+                    rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+                    rispostaControlli.setDsErr(MessaggiWSBundle.getString(MessaggiWSBundle.ERR_666,
+                            String.join("\n", ExceptionUtils.getRootCauseStackTrace(bex))));
+                    setRispostaWsError(rispostaWs, rispostaControlli);
+                    return;
+                }
 
                 if (backend.isObjectStorage()) {
-                    ObjectStorageBackend config = salvataggioBackendHelper
-                            .getObjectStorageConfigurationForVersamento(backend.getBackendName());
-                    rispostaControlli = controlliNotif.verificaNomeFileObjectStorage(config,
-                            fileDep.getNmNomeFileOs());
+                    try {
+                        ObjectStorageBackend config = backendHelper
+                                .getObjectStorageConfigurationForVersamento(
+                                        backend.getBackendName());
+                        rispostaControlli = controlliNotif.verificaNomeFileObjectStorage(config,
+                                fileDep.getNmNomeFileOs());
+                    } catch (ObjectStorageException osex) {
+                        log.error(osex.getMessage());
+                        rispostaControlli.reset();
+                        rispostaControlli.setCodErr(MessaggiWSBundle.ERR_666);
+                        rispostaControlli.setDsErr(MessaggiWSBundle.getString(
+                                MessaggiWSBundle.ERR_666,
+                                String.join("\n", ExceptionUtils.getRootCauseStackTrace(osex))));
+                        setRispostaWsError(rispostaWs, rispostaControlli);
+                    }
 
                 } else if (backend.isFile()) {
                     rispostaControlli = controlliNotif.verificaNomeFileFtp(ftpPath,
@@ -356,13 +446,6 @@ public class NotificaTrasferimentoCheckHelper {
             }
         }
 
-    }
-
-    // MEV 34843
-    public void addBackendInfos(String nmAmbiente, String nmVersatore, String cdKeyObject,
-            ListaFileDepositatoType listaFileDepositati) throws ObjectStorageException {
-        salvataggioBackendHelper.addBackendInfosToFilesDepositati(nmAmbiente, nmVersatore,
-                cdKeyObject, listaFileDepositati);
     }
 
     private void setRispostaWsError(RispostaNotificaWS rispostaWs,

@@ -12,10 +12,13 @@
  */
 package it.eng.sacerasi.job.verificaDocumentiSU.ejb;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,14 +37,15 @@ import javax.interceptor.Interceptors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
@@ -55,10 +59,6 @@ import it.eng.sacerasi.messages.MessaggiHelper;
 import it.eng.sacerasi.strumentiUrbanistici.dto.VerificaZipFileResponse;
 import it.eng.sacerasi.viewEntity.PigVSuLisDocDaVerif;
 import it.eng.sacerasi.web.helper.ConfigurationHelper;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  *
@@ -88,7 +88,7 @@ public class VerificaDocumentiSUEjb {
     @Resource
     private SessionContext sessionContext;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     public void verificaDocumenti() throws IOException, ObjectStorageException {
         log.info(VerificaDocumentiSUEjb.class.getSimpleName()
@@ -111,9 +111,9 @@ public class VerificaDocumentiSUEjb {
                 // MEV 34843
                 PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti
                         .getPigStrumUrbDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForStrumentiUrbanistici(
                                 backend.getBackendName(),
                                 pigStrumUrbDocumentiStorage.getNmBucket());
@@ -122,19 +122,19 @@ public class VerificaDocumentiSUEjb {
                 // informazione stile
                 // ack)
                 // Accedo al bucket e recupero il file, se esiste
-                boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+                boolean doesObjectExist = backendHelper.doesS3ObjectExist(config,
                         pigStrumUrbDocumentiStorage.getCdKeyFile());
 
                 if (doesObjectExist) {
                     File tempFile = null;
                     try {
-                        ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                                .getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
-                        // Partendo dall'input stream S3 Amazon, recupero il file
                         // Creo il file (che mi aspetto zip) in una cartella temporanea
                         tempFile = File.createTempFile(pigStrumUrbDocumentiStorage.getCdKeyFile(),
                                 null, new File(System.getProperty("java.io.tmpdir")));
-                        IOUtils.copy(objectContent, new FileOutputStream(tempFile));
+                        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                            backendHelper.getS3Object(config,
+                                    pigStrumUrbDocumentiStorage.getCdKeyFile(), fos);
+                        }
 
                         // 1° Controllo che sia effettivamente un file zip
                         if (!FilenameUtils.getExtension(strumUrbDocumenti.getNmFileOrig())
@@ -271,7 +271,7 @@ public class VerificaDocumentiSUEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     private void eseguiVerifica(BigDecimal idStrumUrbDocumenti)
-            throws IOException, ObjectStorageException {
+            throws IOException, ObjectStorageException, BackendException {
         Integer numFiles = null;
         PigErrore errore = null;
         String report = null;
@@ -282,26 +282,21 @@ public class VerificaDocumentiSUEjb {
         // MEV 34843
         PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = strumUrbDocumenti
                 .getPigStrumUrbDocumentiStorage();
-        BackendStorage backend = salvataggioBackendHelper
+        BackendStorage backend = backendHelper
                 .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-        ObjectStorageBackend config = salvataggioBackendHelper
+        ObjectStorageBackend config = backendHelper
                 .getObjectStorageConfigurationForStrumentiUrbanistici(backend.getBackendName(),
                         pigStrumUrbDocumentiStorage.getNmBucket());
 
         // Chiamata di tipo HEAD (non contiene il body in quanto ho bisogno di una sola informazione
         // stile ack)
         // Accedo al bucket e recupero il file documento, se esiste
-        boolean doesObjectExist = salvataggioBackendHelper.doesObjectExist(config,
+        boolean doesObjectExist = backendHelper.doesS3ObjectExist(config,
                 pigStrumUrbDocumentiStorage.getCdKeyFile());
 
         if (doesObjectExist) {
             File tempFile = null;
             try {
-                // Recupero l'oggetto
-                ResponseInputStream<GetObjectResponse> objectContent = salvataggioBackendHelper
-                        .getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
-                // Partendo dall'input stream S3 Amazon, recupero il file
-                // Creo il file (che mi aspetto zip) in una cartella temporanea
                 String rootFtp = configurationHelper
                         .getValoreParamApplicByApplic(Constants.ROOT_FTP);
                 String dsPathInputFtp = strumUrbDocumenti.getPigStrumentiUrbanistici().getPigVer()
@@ -310,12 +305,11 @@ public class VerificaDocumentiSUEjb {
                 String dirCompletaFtp = rootFtp + dsPathInputFtp + cdKey;
                 // Creo la directory
                 NfsUtils.createEmptyDir(dirCompletaFtp);
-                // Ci piazzo il file zip temporaneo sul quale farò i controlli
+                // Creo il file zip temporaneo sul quale farò i controlli
                 tempFile = File.createTempFile("SU_", null, new File(dirCompletaFtp));
-                // Il file temporaneo deve essere messo in input_folder o in una analoga in
-                // fileserver
                 try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                    IOUtils.copy(objectContent, fos);
+                    backendHelper.getS3Object(config, pigStrumUrbDocumentiStorage.getCdKeyFile(),
+                            fos);
                 }
 
                 // Controllo che sia effettivamente un file zip

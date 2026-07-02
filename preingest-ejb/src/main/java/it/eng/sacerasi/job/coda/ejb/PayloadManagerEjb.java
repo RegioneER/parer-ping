@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.StatoUnitaDocObject;
 import it.eng.sacerasi.common.Constants.StatoUnitaDocSessione;
@@ -90,7 +90,7 @@ public class PayloadManagerEjb {
     @EJB
     private SismaHelper sismaHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private RichiestaSacerHelper richiestaSacerHelper;
     @EJB
@@ -442,14 +442,13 @@ public class PayloadManagerEjb {
                                 if (fileObject.getPigFileObjectStorage() != null) {
                                     PigFileObjectStorage pfos = fileObject
                                             .getPigFileObjectStorage();
-                                    BackendStorage backend = salvataggioBackendHelper
+                                    BackendStorage backend = backendHelper
                                             .getBackend(pfos.getIdDecBackend());
-                                    ObjectStorageBackend config = salvataggioBackendHelper
+                                    ObjectStorageBackend config = backendHelper
                                             .getObjectStorageConfigurationForVersamento(
                                                     backend.getBackendName(), pfos.getNmBucket());
 
-                                    salvataggioBackendHelper.deleteObject(config,
-                                            pfos.getCdKeyFile());
+                                    backendHelper.deleteS3Object(config, pfos.getCdKeyFile());
                                 }
                             }
                         }

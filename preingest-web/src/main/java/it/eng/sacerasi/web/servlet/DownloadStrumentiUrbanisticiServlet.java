@@ -12,15 +12,10 @@
  */
 package it.eng.sacerasi.web.servlet;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
-
-import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
-import it.eng.spagoCore.error.EMFError;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,13 +25,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.entity.PigStrumUrbDocumenti;
 import it.eng.sacerasi.entity.PigStrumUrbDocumentiStorage;
+import it.eng.sacerasi.slite.gen.form.StrumentiUrbanisticiForm;
 import it.eng.sacerasi.strumentiUrbanistici.ejb.StrumentiUrbanisticiHelper;
+import it.eng.spagoCore.error.EMFError;
 
 /**
  * @author MIacolucci
@@ -46,8 +45,8 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
 
     private static final long serialVersionUID = -2790402629889569112L;
 
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
     @EJB
     private StrumentiUrbanisticiHelper strumentiUrbanisticiHelper;
 
@@ -78,27 +77,19 @@ public class DownloadStrumentiUrbanisticiServlet extends HttpServlet {
                 // MEV 34843
                 PigStrumUrbDocumentiStorage pigStrumUrbDocumentiStorage = pigStrumUrbDocumenti
                         .getPigStrumUrbDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigStrumUrbDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForStrumentiUrbanistici(
                                 backend.getBackendName(),
                                 pigStrumUrbDocumentiStorage.getNmBucket());
 
-                ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper
-                        .getObject(config, pigStrumUrbDocumentiStorage.getCdKeyFile());
-
-                byte[] buf = new byte[1024];
-                int count = 0;
                 // This should send the file to browser
                 OutputStream out = response.getOutputStream();
-                while ((count = ogg.read(buf)) != -1) {
-                    out.write(buf, 0, count);
-                }
+                backendHelper.getS3Object(config, pigStrumUrbDocumentiStorage.getCdKeyFile(), out);
                 out.flush();
-                ogg.close();
             }
-        } catch (ObjectStorageException e) {
+        } catch (BackendException | ObjectStorageException | IOException e) {
             log.error(
                     "DownloadStrumentiUrbanisticiServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
                     e);

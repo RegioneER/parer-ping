@@ -44,10 +44,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StreamUtils;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 
 import it.eng.paginator.util.HibernateUtils;
@@ -86,7 +87,7 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
     private ConfigurationHelper configurationHelper;
 
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
 
     public List<XfoTrasf> searchXfoTrasf(RicercaTrasformazioneBean filtri) {
         String queryStr = "SELECT x FROM XfoTrasf x";
@@ -396,13 +397,13 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
     }
 
     public void saveReport(PigSessioneIngest pigSessioneIngest, String idOggetto, String report)
-            throws ObjectStorageException, ParerInternalError {
+            throws ObjectStorageException, BackendException, ParerInternalError {
         String timestamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
         String nomeOggetto = idOggetto + "/reports/" + timestamp + "/" + UUID.randomUUID();
 
-        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper
+        BackendStorage backendForReportTrasformazioni = backendHelper
                 .getBackendForReportTrasformazioni();
-        ObjectStorageBackend config = salvataggioBackendHelper
+        ObjectStorageBackend config = backendHelper
                 .getObjectStorageConfigurationForReportTrasformazioni(
                         backendForReportTrasformazioni.getBackendName());
 
@@ -417,7 +418,7 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
         pigSessioneIngest.setXfoReportObjectStorage(xros);
 
         if (backendForReportTrasformazioni.isObjectStorage()) {
-            salvataggioBackendHelper.putS3Object(config, nomeOggetto, report, Optional.empty());
+            backendHelper.putS3Object(config, nomeOggetto, report, Optional.empty());
         } else {
             throw new ParerInternalError(
                     "Il backend per i report trasformazione deve avere tipo OS.");
@@ -425,22 +426,22 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
     }
 
     public String loadReport(PigSessioneIngest pigSessioneIngest)
-            throws IOException, ObjectStorageException {
+            throws IOException, ObjectStorageException, BackendException {
         XfoReportObjectStorage xros = pigSessioneIngest.getXfoReportObjectStorage();
-        BackendStorage backendForReportTrasformazioni = salvataggioBackendHelper
+        BackendStorage backendForReportTrasformazioni = backendHelper
                 .getBackend(xros.getIdDecBackend());
-        ObjectStorageBackend config = salvataggioBackendHelper
+        ObjectStorageBackend config = backendHelper
                 .getObjectStorageConfigurationForReportTrasformazioni(
                         backendForReportTrasformazioni.getBackendName(), xros.getNmBucket());
 
-        ResponseInputStream<GetObjectResponse> is = salvataggioBackendHelper.getObject(config,
-                xros.getCdKeyFile());
-
-        return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+        try (ResponseInputStream<GetObjectResponse> is = backendHelper.getS3Object(config,
+                xros.getCdKeyFile())) {
+            return StreamUtils.copyToString(is, StandardCharsets.UTF_8);
+        }
     }
 
     public void saveReportIntoPigSession(PigObject po, String report)
-            throws ObjectStorageException, ParerInternalError {
+            throws ObjectStorageException, BackendException, ParerInternalError {
         for (PigSessioneIngest psi : po.getPigSessioneIngests()) {
             if (po.getIdLastSessioneIngest().longValue() == psi.getIdSessioneIngest()) {
                 this.saveReport(psi, String.valueOf(po.getIdObject()), report);
@@ -450,7 +451,7 @@ public class TrasformazioniHelper extends TrasformazioniQueryHelper {
     }
 
     public String getSessionReport(BigDecimal sessionId)
-            throws IOException, TransformerException, ObjectStorageException {
+            throws IOException, TransformerException, ObjectStorageException, BackendException {
         PigSessioneIngest psi = this.findById(PigSessioneIngest.class, sessionId);
         String report = "";
         if (psi.getXfoReportObjectStorage() != null) {

@@ -89,8 +89,10 @@ import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.exception.AuthWSException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.web.helper.S3ServletHelper;
 
 import java.nio.file.Files;
@@ -122,8 +124,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
     private WsHelper wsHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
     private VersamentoOggettoEjb versamentoOggettoEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/S3ServletHelper")
     private S3ServletHelper servletHelper;
 
@@ -609,8 +611,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
                 // MEV 34843
                 BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
-                BackendStorage backendVersamento = salvataggioBackendHelper
-                        .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
+                BackendStorage backendVersamento = backendHelper.getBackendForVersamento(idAmbiente,
+                        idVers, idTipoObject);
 
                 PigTipoObjectRowBean pigTipoObjectRowBean = amministrazioneEjb
                         .getPigTipoObjectRowBean(idTipoObject);
@@ -898,7 +900,16 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                     if (fileDestinazione != null) {
                         FileUtils.deleteQuietly(fileDestinazione);
                     }
-                    FileUtils.moveFileToDirectory(file, ftpPathDir, true);
+
+                    FileUtils.copyFile(file, fileDestinazione, false);
+                    try {
+                        FileUtils.delete(file);
+                    } catch (IOException e) {
+                        log.error(
+                                "VersamentoOggettoAction - Errore inatteso nel cancellare il file temporaneo versato:{}",
+                                ExceptionUtils.getRootCauseMessage(e));
+                    }
+
                     // Messaggio per l'utente
                     getMessageBox().addInfo(
                             "Fase 2 completata: l'oggetto \u00E8 stato trasferito nell'area di salvataggio");
@@ -1030,8 +1041,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
     private NotificaTrasferimentoRisposta executeNotificaTrasferimento(String nmAmbiente,
             String nmVersatore, String nmTipoFile, String cdKeyObject, String dsHashFileVers,
-            String estensioneFileCaricato, String tiHashFileVers, Long backendId)
-            throws ObjectStorageException {
+            String estensioneFileCaricato, String tiHashFileVers, Long backendId) {
         ListaFileDepositatoType listaFile = new ListaFileDepositatoType();
         listaFile.setFileDepositato(new ArrayList<>());
 
@@ -1147,7 +1157,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                         .getPigAmbienteVersByVers(idVers);
                 BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
 
-                BackendStorage backendStorage = salvataggioBackendHelper.getBackendForVersamento(
+                BackendStorage backendStorage = backendHelper.getBackendForVersamento(
                         idAmbienteVers, idVers, pigTipoObjectRowBean.getIdTipoObject());
 
                 Input<String> fileToUpload = (Input<String>) formFields.getComponent(
@@ -1176,7 +1186,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                 if (versaOggettoButton != null) {
                     versaOggettoButton.setHidden(backendStorage.isObjectStorage());
                 }
-            } catch (ObjectStorageException ex) {
+            } catch (BackendException ex) {
                 throw new EMFError(EMFError.BLOCKING, ex.getMessage());
             }
         }
@@ -1656,9 +1666,8 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
                             .getPigAmbienteVersByVers(idVers);
                     BigDecimal idAmbienteVers = pigAmbienteVersRowBean.getIdAmbienteVers();
 
-                    BackendStorage backendStorage = salvataggioBackendHelper
-                            .getBackendForVersamento(idAmbienteVers, idVers,
-                                    pigTipoObjectRowBean.getIdTipoObject());
+                    BackendStorage backendStorage = backendHelper.getBackendForVersamento(
+                            idAmbienteVers, idVers, pigTipoObjectRowBean.getIdTipoObject());
 
                     // MEV27034
                     DecodeMap cdVersioneXmlDecodeMap = DecodeMap.Factory.newInstance(
@@ -1712,7 +1721,7 @@ public class VersamentoOggettoAction extends VersamentoOggettoAbstractAction {
 
                         return;
                     }
-                } catch (ObjectStorageException ex) {
+                } catch (BackendException ex) {
                     throw new EMFError(EMFError.BLOCKING, ex.getMessage());
                 }
 

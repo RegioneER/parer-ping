@@ -73,8 +73,9 @@ import org.xml.sax.SAXException;
 import it.eng.parer.jboss.timer.service.JbossTimerEjb;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.annullamento.ejb.AnnullamentoEjb;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.ejb.CommonDb;
@@ -182,9 +183,6 @@ import it.eng.spagoLite.security.Secure;
 import it.eng.spagoLite.security.menu.impl.Menu;
 import it.eng.xformer.helper.TrasformazioniHelper;
 
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-
 /**
  * @author Gilioli_P
  */
@@ -218,8 +216,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     private JbossTimerEjb jbossTimerEjb;
     @EJB(mappedName = "java:app/SacerAsync-ejb/TrasformazioniHelper")
     private TrasformazioniHelper trasformazioniHelper;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/GestioneJobEjb")
     private GestioneJobEjb gestioneJobEjb;
     // singleton ejb di gestione cache dei parser Castor
@@ -490,7 +488,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     try {
                         report = trasformazioniHelper.getSessionReport(idSessioneIngest);
                         getForm().getVersamentoDetail().getReport_xml().setValue(report);
-                    } catch (IOException | TransformerException | ObjectStorageException ex) {
+                    } catch (IOException | TransformerException | ObjectStorageException
+                            | BackendException ex) {
                         //
                     }
                 } // Se ho cliccato sul dettaglio di un Oggetto derivante da versamenti falliti
@@ -671,6 +670,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     private void loadDettaglioObject(BigDecimal idObject) throws EMFError, ParerUserError {
         // Carico il rowbean del dettaglio oggetto
         MonVVisObjRowBean objRB = monitoraggioHelper.getMonVVisObjRowBean(idObject);
+
+        // MAC 40699
+        final String rootFtp = commonDb.getRootFtpParam();
+        final String versInputPath = monitoraggioHelper.getDsPathInputFtp(objRB.getIdVers());
+        final String dir = objRB.getCdKeyObject() + File.separator;
+        File fileInput = new File(rootFtp + versInputPath + dir);
+        final boolean cartellaEsiste = fileInput.exists();
+
         getForm().getOggettoDetail().getTi_gest_oggetti_figli()
                 .setDecodeMap(ComboGetter.getMappaSortedGenericEnum("ti_gest_oggetti_figli",
                         Constants.TipoGestioneOggettiFigli.getTipoGestioneOggettiFigli()));
@@ -789,13 +796,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 getForm().getOggettoDetailButtonList().getAnnullaOggettoDetail().setHidden(false);
                 // MEV#14652 - Nuovo ramo - Punto 50 dell'analisi
             } else {
-                String rootFtp = commonDb.getRootFtpParam();
                 String pathInput = monitoraggioHelper.getDsPathInputFtp(objRB.getIdVers());
 
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.ANNULLATO.name())
-                        && (existsCartellaOggetto(rootFtp, pathInput, objRB.getCdKeyObject())
-                                || monitoraggioHelper
-                                        .areFileObjectsStoredInObjectStorage(idObject))) {
+                        && (cartellaEsiste || monitoraggioHelper
+                                .areFileObjectsStoredInObjectStorage(idObject))) {
                     getForm().getOggettoDetailButtonList().getSettaDaTrasformareDetail()
                             .setHidden(false);
                 }
@@ -834,7 +839,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 String report = trasformazioniHelper
                         .getSessionReport(objRB.getIdLastSessioneIngest());
                 getForm().getOggettoDetail().getReport_xml().setValue(report);
-            } catch (IOException | TransformerException | ObjectStorageException ex) {
+            } catch (IOException | TransformerException | ObjectStorageException
+                    | BackendException ex) {
                 // TODO
             }
 
@@ -996,20 +1002,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     }
                 }
             } else if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_OK.name()) || // MAC
-            // 29616
-            // -
-            // Estensione
-            // annullamento
-            // oggetti in chiuso
-            // ok con warning
+            // 29616 - Estensione annullamento oggetti in chiuso ok con warning
                     objRB.getTiStatoObject().startsWith(Constants.StatoOggetto.CHIUSO_OK.name()) || // MEV
-                    // #14561
-                    // -
-                    // Estensione
-                    // annullamento
-                    // oggetti in errore
-                    // (aggiunti 4 altri
-                    // test in OR)
+                    // #14561 - Estensione annullamento oggetti in errore (aggiunti 4 altri test in
+                    // OR)
                     objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
                     || objRB.getTiStatoObject()
                             .equals(Constants.StatoOggetto.CHIUSO_ERR_NOTIF.name())
@@ -1163,7 +1159,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         }
 
         // Visualizzo il bottone di download XML solo se lo stesso Ã¨ presente - Punto 2
-        if (objRB.getBlXml() != null && objRB.getBlXml().length() > 0) {
+        if (objRB.getBlXml() != null && !objRB.getBlXml().isEmpty()) {
             getForm().getOggettoDetailButtonList().getDownloadXMLOggetto()
                     .setDisableHourGlass(true);
             getForm().getOggettoDetailButtonList().getDownloadXMLOggetto().setEditMode();
@@ -1191,32 +1187,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             boolean areFileObjectsStoredInObjectStorage = monitoraggioHelper
                     .areFileObjectsStoredInObjectStorage(idObject);
 
-            // Verifico se esiste la directory per il download
-            String rootDir = commonDb.getRootFtpParam();
-            String versInputPath = monitoraggioHelper.getDsPathInputFtp(objRB.getIdVers());
-            String dir = objRB.getCdKeyObject() + File.separator;
-
-            File fileInput = new File(rootDir + versInputPath + dir);
-
             // MEV26012
             for (MonVLisFileObjectRowBean fileObjectRow : fileObjectTableBean) {
                 final String cdFilePath = "cd_file_path";
                 if (fileObjectRow.getCdKeyFile() != null) {
-                    fileObjectRow.setObject(cdFilePath, "--");
-                    try {
-                        BackendStorage backend = salvataggioBackendHelper
-                                .getBackend(fileObjectRow.getIdBackend().longValue());
-                        if (salvataggioBackendHelper.doesObjectExist(
-                                salvataggioBackendHelper.getObjectStorageConfigurationForVersamento(
-                                        backend.getBackendName(), fileObjectRow.getNmBucket()),
-                                fileObjectRow.getCdKeyFile())) {
-                            fileObjectRow.setObject(cdFilePath, fileObjectRow.getCdKeyFile());
-                        }
-                    } catch (ObjectStorageException e) {
-                        // Non fare nulla, va bene così.
-                    }
+                    fileObjectRow.setObject(cdFilePath, fileObjectRow.getCdKeyFile());
                 } else {
-                    if (fileInput.exists()) {
+                    if (cartellaEsiste) {
                         fileObjectRow.setObject(cdFilePath,
                                 versInputPath + dir + fileObjectRow.getNmFileObject());
                     } else {
@@ -1229,15 +1206,15 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 try {
                     // MEV 34843 - recuperiamo il nome backend per il primo file
                     MonVLisFileObjectRowBean fileObjectRow = fileObjectTableBean.getRow(0);
-                    BackendStorage backend = salvataggioBackendHelper
+                    BackendStorage backend = backendHelper
                             .getBackend(fileObjectRow.getIdBackend().longValue());
                     // MEV 26012
                     getForm().getOggettoDetail().getTi_conservato_su_os()
                             .setValue(backend.getBackendName());
-                } catch (ObjectStorageException ose) {
+                } catch (BackendException bex) {
                     log.error(
                             "Errore nel controllo sull'esistenza backend in load dettaglio object.",
-                            ose);
+                            bex);
                     getForm().getOggettoDetail().getTi_conservato_su_os().setValue("--");
                 }
             } else {
@@ -1252,19 +1229,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     // altri dovrebbero
                     // esistere di conseguenza).
                     MonVLisFileObjectRowBean fileObjectRow = fileObjectTableBean.getRow(0);
-                    BackendStorage backend = salvataggioBackendHelper
+                    BackendStorage backend = backendHelper
                             .getBackend(fileObjectRow.getIdBackend().longValue());
 
-                    ObjectStorageBackend objectStorageConfigurationForVersamento = salvataggioBackendHelper
+                    ObjectStorageBackend objectStorageConfigurationForVersamento = backendHelper
                             .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
                                     fileObjectRow.getNmBucket());
-                    if (salvataggioBackendHelper.doesObjectExist(
-                            objectStorageConfigurationForVersamento,
+                    if (backendHelper.doesS3ObjectExist(objectStorageConfigurationForVersamento,
                             fileObjectRow.getCdKeyFile())) {
                         getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail()
                                 .setHidden(false);
                     }
-                } catch (ObjectStorageException ose) {
+                } catch (BackendException | ObjectStorageException ose) {
                     log.error("Errore nel controllo sull'esistenza file in load dettaglio object.",
                             ose);
                     getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail()
@@ -1273,13 +1249,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             } // MEV 21995 - se la cartella ftp esiste o object storage è spento
             else {
                 getForm().getOggettoDetailButtonList().getDownloadFileOggettoObjDetail()
-                        .setHidden(!fileInput.exists());
+                        .setHidden(!cartellaEsiste);
             }
 
             // MEV 32542
             if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_VERS.name())
-                        && (fileInput.exists() || areFileObjectsStoredInObjectStorage)) {
+                        && (cartellaEsiste || areFileObjectsStoredInObjectStorage)) {
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers()
                             .setHidden(false);
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrVers().setEditMode();
@@ -1293,7 +1269,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             // MEV 37583
             if (tiVers.equals(Constants.TipoVersamento.ZIP_CON_XML_SACER.name())) {
                 if (objRB.getTiStatoObject().equals(Constants.StatoOggetto.CHIUSO_ERR_SCHED.name())
-                        && (fileInput.exists() && areFileObjectsStoredInObjectStorage)) {
+                        && (cartellaEsiste && areFileObjectsStoredInObjectStorage)) {
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrSched()
                             .setHidden(false);
                     getForm().getOggettoDetailButtonList().getRecuperoChiusErrSched().setEditMode();
@@ -6042,20 +6018,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                         String cdKeyFile = row.getString("cd_key_file");
 
                         if (idBucket != null && nmBucket != null && cdKeyFile != null) {
-                            BackendStorage backend = salvataggioBackendHelper
-                                    .getBackend(idBucket.longValue());
+                            BackendStorage backend = backendHelper.getBackend(idBucket.longValue());
 
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForVersamento(
                                             backend.getBackendName(), nmBucket);
-                            ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper
-                                    .getObject(config, cdKeyFile);
-                            byte[] data = new byte[1024];
-                            int count;
                             out.putNextEntry(new ZipEntry(dir + fileInput.getName()));
-                            while ((count = ogg.read(data, 0, 1024)) != -1) {
-                                out.write(data, 0, count);
-                            }
+                            backendHelper.getS3Object(config, cdKeyFile, out);
                             out.closeEntry();
                         }
                     }
@@ -7345,7 +7314,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 .getBigDecimal(ID_SESSIONE_INGEST);
         try {
             report = trasformazioniHelper.getSessionReport(idSessione);
-        } catch (IOException | TransformerException | ObjectStorageException ex) {
+        } catch (IOException | TransformerException | ObjectStorageException
+                | BackendException ex) {
             getMessageBox().addError("Report non disponibile.");
         }
 
@@ -7511,10 +7481,6 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     public void ricercaJobSchedulatiDaGestioneJob() throws EMFError {
         ricercaJobSchedulati();
-    }
-
-    private boolean existsCartellaOggetto(String rootDir, String ftpPath, String ftpDir) {
-        return new File(rootDir + ftpPath + ftpDir).exists();
     }
 
     @Override

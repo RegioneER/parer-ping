@@ -16,17 +16,9 @@
  */
 package it.eng.sacerasi.job.preparaxml.ejb;
 
-import it.eng.sacerasi.common.Constants.NomiJob;
-import it.eng.sacerasi.common.Constants.TipiRegLogJob;
-import it.eng.sacerasi.common.ejb.CommonDb;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.exception.ParerInternalError;
-import it.eng.sacerasi.job.ejb.JobLogger;
-import it.eng.sacerasi.job.preparaxml.dto.OggettoInCoda;
-import it.eng.sacerasi.job.coda.ejb.PrioritaEjb;
-import it.eng.sacerasi.messages.MessaggiWSBundle;
 import java.math.BigDecimal;
 import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -34,10 +26,18 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
-import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
+import it.eng.sacerasi.common.ejb.CommonDb;
+import it.eng.sacerasi.entity.PigObject;
+import it.eng.sacerasi.exception.ParerInternalError;
+import it.eng.sacerasi.job.coda.ejb.PrioritaEjb;
+import it.eng.sacerasi.job.preparaxml.dto.OggettoInCoda;
+import it.eng.sacerasi.messages.MessaggiWSBundle;
+import it.eng.sacerasi.ws.dto.IRispostaWS.SeverityEnum;
 
 /**
  *
@@ -67,7 +67,7 @@ public class PreparaXmlEjb {
     @EJB
     private PrioritaEjb prioritaEjb;
 
-    public void preparaXml() throws ParerInternalError, ObjectStorageException {
+    public void preparaXml() throws ParerInternalError, ObjectStorageException, BackendException {
         List<PigObject> tmpOggetti = null;
         String rootFtpValue;
 
@@ -85,7 +85,7 @@ public class PreparaXmlEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void elabora(OggettoInCoda oggetto, String rootFtpValue)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         preparazioneXml.prepara(oggetto, rootFtpValue);
         if (oggetto.getSeverity() != SeverityEnum.ERROR) {
             produzioneXml.produci(oggetto);

@@ -51,7 +51,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.entity.PigSisma;
 import it.eng.sacerasi.sisma.ejb.SismaHelper;
 import it.eng.sacerasi.versamento.ejb.VersamentoOggettoEjb;
@@ -86,7 +86,7 @@ public class InviaOggettiGeneratiAPing {
     @EJB
     private InvioOggettoAsincronoEjb invioOggettoAsincronoEjb;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private MessaggiHelper messaggiHelper;
     @EJB
@@ -177,7 +177,7 @@ public class InviaOggettiGeneratiAPing {
                         BigDecimal idVers = BigDecimal.valueOf(pot.getPigVer().getIdVers());
                         BigDecimal idTipoObject = BigDecimal
                                 .valueOf(pot.getPigTipoObject().getIdTipoObject());
-                        BackendStorage backendVersamento = salvataggioBackendHelper
+                        BackendStorage backendVersamento = backendHelper
                                 .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
                         String nmFileOs = null;
 
@@ -207,14 +207,14 @@ public class InviaOggettiGeneratiAPing {
                                             StandardCopyOption.REPLACE_EXISTING);
                                 } else if (backendVersamento.isObjectStorage()) {
                                     // MEV 34843
-                                    ObjectStorageBackend config = salvataggioBackendHelper
+                                    ObjectStorageBackend config = backendHelper
                                             .getObjectStorageConfigurationForVersamento(
                                                     backendVersamento.getBackendName());
                                     nmFileOs = versamentoOggettoEjb.computeOsFileKey(idVers,
                                             pot.getCdKeyObjectTrasf(),
                                             VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
-                                    salvataggioBackendHelper.putS3Object(config, nmFileOs,
-                                            inputFile.toFile(), Optional.empty());
+                                    backendHelper.putS3Object(config, nmFileOs, inputFile.toFile(),
+                                            Optional.empty());
                                 }
                             } catch (IOException | ObjectStorageException ex) {
                                 setError(pot, "TRASFORMAZIONE_IO_EXCEPTION",
@@ -337,7 +337,7 @@ public class InviaOggettiGeneratiAPing {
             fileDepositato.setIdBackend(backendVersamento.getBackendId());
 
             if (backendVersamento.isObjectStorage()) {
-                ObjectStorageBackend config = salvataggioBackendHelper
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForVersamento(
                                 backendVersamento.getBackendName());
                 String tenantOs = configurationHelper.getValoreParamApplicByApplic(

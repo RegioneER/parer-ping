@@ -28,12 +28,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.entity.PigSismaDocumenti;
 import it.eng.sacerasi.entity.PigSismaDocumentiStorage;
@@ -52,7 +52,7 @@ public class DownloadSismaServlet extends HttpServlet {
     @EJB(mappedName = "java:app/SacerAsync-ejb/ConfigurationHelper")
     private ConfigurationHelper configurationHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private SismaHelper sismaHelper;
 
@@ -81,26 +81,17 @@ public class DownloadSismaServlet extends HttpServlet {
                 // MEV 34843
                 PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
                         .getPigSismaDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
-                        .getObjectStorageConfigurationForSisma(backend.getBackendName(),
-                                pigSismaDocumentiStorage.getNmBucket());
+                ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForSisma(
+                        backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
 
-                ResponseInputStream<GetObjectResponse> inStream = salvataggioBackendHelper
-                        .getObject(config, pigSismaDocumentiStorage.getCdKeyFile());
-
-                byte[] buf = new byte[1024];
-                int count = 0;
                 // This should send the file to browser
                 OutputStream out = response.getOutputStream();
-                while ((count = inStream.read(buf)) != -1) {
-                    out.write(buf, 0, count);
-                }
+                backendHelper.getS3Object(config, pigSismaDocumentiStorage.getCdKeyFile(), out);
                 out.flush();
-                inStream.close();
             }
-        } catch (ObjectStorageException e) {
+        } catch (BackendException | ObjectStorageException | IOException e) {
             log.error(
                     "DownloadSismaServlet: ERRORE durante la comunicazione con il sistema Object Storage.",
                     e);

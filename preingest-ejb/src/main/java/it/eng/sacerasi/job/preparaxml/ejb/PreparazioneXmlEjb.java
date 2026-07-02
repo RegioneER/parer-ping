@@ -13,8 +13,6 @@
 
 package it.eng.sacerasi.job.preparaxml.ejb;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -52,9 +50,6 @@ import javax.xml.bind.ValidationException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 
-import it.eng.parer.ws.xml.versReq.UnitaDocumentaria;
-import it.eng.parer.ws.xml.versfascicoloV3.IndiceSIPFascicolo;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -63,9 +58,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
+import it.eng.parer.ws.xml.versReq.UnitaDocumentaria;
+import it.eng.parer.ws.xml.versfascicoloV3.IndiceSIPFascicolo;
 import it.eng.sacerasi.common.Chiave;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.TipiEncBinari;
@@ -97,8 +96,6 @@ import it.eng.sacerasi.ws.xml.invioAsync.FileType;
 import it.eng.sacerasi.ws.xml.invioAsync.ListaUnitaDocumentarieType;
 import it.eng.sacerasi.ws.xml.invioAsync.UnitaDocumentariaType;
 import it.eng.sacerasixml.xsd.util.Utils;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 @SuppressWarnings("unchecked")
 @Stateless(mappedName = "PreparazioneXmlEjb")
@@ -117,10 +114,10 @@ public class PreparazioneXmlEjb {
     CorrispondenzeVersHelper corVersHelper;
     //
     @EJB
-    SalvataggioBackendHelper salvataggioBackendHelper;
+    BackendHelper backendHelper;
 
     public void prepara(OggettoInCoda oggettoInCoda, String rootDirectory)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         PigObject pigObject = oggettoInCoda.getRifPigObject();
         PigTipoObject pigTipoObject = pigObject.getPigTipoObject();
         String pathVersatore = pigObject.getPigVer().getDsPathInputFtp();
@@ -1324,23 +1321,24 @@ public class PreparazioneXmlEjb {
 
     // MEV25602
     private void copiaDaOS(OggettoInCoda oggettoInCoda)
-            throws ParerInternalError, ObjectStorageException {
+            throws ParerInternalError, ObjectStorageException, BackendException {
         if (oggettoInCoda.getListaFileObjectExt().size() == 1) {
             FileObjectExt fileObject = oggettoInCoda.getListaFileObjectExt().get(0);
             if (fileObject.getNmBucket() != null && fileObject.getCdKeyFile() != null) {
 
-                BackendStorage backend = salvataggioBackendHelper
-                        .getBackend(fileObject.getIdBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
+                BackendStorage backend = backendHelper.getBackend(fileObject.getIdBackend());
+                ObjectStorageBackend config = backendHelper
                         .getObjectStorageConfigurationForVersamento(backend.getBackendName(),
                                 fileObject.getNmBucket());
 
-                ResponseInputStream<GetObjectResponse> ogg = salvataggioBackendHelper
-                        .getObject(config, fileObject.getCdKeyFile());
-
                 try {
-                    File destinationFile = new File(fileObject.getUrnFile());
-                    FileUtils.copyInputStreamToFile(ogg, destinationFile);
+                    Path destinationPath = Path.of(fileObject.getUrnFile());
+                    if (destinationPath.getParent() != null) {
+                        Files.createDirectories(destinationPath.getParent());
+                    }
+                    try (OutputStream fos = Files.newOutputStream(destinationPath)) {
+                        backendHelper.getS3Object(config, fileObject.getCdKeyFile(), fos);
+                    }
                 } catch (IOException ex) {
                     log.error("Errore in fase di copia verso object storage", ex);
                 }

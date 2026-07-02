@@ -12,8 +12,6 @@
  */
 package it.eng.sacerasi.sisma.ejb;
 
-import it.eng.parer.objectstorage.dto.BackendStorage;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -40,14 +39,15 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
 import it.eng.sacerasi.entity.PigObject;
@@ -87,11 +87,6 @@ import it.eng.sacerasi.ws.notificaTrasferimento.ejb.NotificaTrasferimentoEjb;
 import it.eng.sacerasi.ws.response.InvioOggettoAsincronoRisposta;
 import it.eng.sacerasi.ws.response.NotificaTrasferimentoRisposta;
 
-import java.util.Optional;
-
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-
 @Stateless(mappedName = "InvioSismaEjb")
 @LocalBean
 public class InvioSismaEjb {
@@ -129,7 +124,7 @@ public class InvioSismaEjb {
     @EJB
     private AmministrazioneEjb amministrazioneEjb;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private VersamentoOggettoEjb versamentoOggettoEjb;
 
@@ -185,7 +180,7 @@ public class InvioSismaEjb {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void gestisciInvioSisma(long idSismaDaInviare)
-            throws InvioSismaException, ObjectStorageException {
+            throws InvioSismaException, ObjectStorageException, BackendException {
         // Locko sisma
         PigSisma sismaDaInviare = genericHelper.findByIdWithLock(PigSisma.class, idSismaDaInviare);
         /*
@@ -279,9 +274,9 @@ public class InvioSismaEjb {
                             // MEV 34843
                             PigSismaDocumentiStorage pigSismaDocumentiStorage = sismaDocumenti
                                     .getPigSismaDocumentiStorage();
-                            BackendStorage backend = salvataggioBackendHelper
+                            BackendStorage backend = backendHelper
                                     .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForSisma(backend.getBackendName(),
                                             pigSismaDocumentiStorage.getNmBucket());
 
@@ -291,25 +286,20 @@ public class InvioSismaEjb {
                             // una sola
                             // informazione
                             // stile ack)
-                            boolean doesObjectExist = salvataggioBackendHelper
-                                    .doesObjectExist(config, nmFileOs);
+                            boolean doesObjectExist = backendHelper.doesS3ObjectExist(config,
+                                    nmFileOs);
                             if (doesObjectExist) {
                                 File tempFile = File.createTempFile(nmFileOrig, "",
                                         new File(dirCompletaFtp));
                                 try (FileOutputStream fosTemp = new FileOutputStream(tempFile)) {
-                                    ResponseInputStream<GetObjectResponse> object = salvataggioBackendHelper
-                                            .getObject(config, nmFileOs);
-                                    // Creo il file in una cartella temporanea
-                                    IOUtils.copy(object, fosTemp);
+                                    backendHelper.getS3Object(config, nmFileOs, fosTemp);
+
                                     String nomeFileLowerCase = sismaDocumenti.getPigSismaValDoc()
                                             .getNmTipoDocumento().replace(" ", "_").toLowerCase()
                                             + ".zip";
-                                    // Aggiungo il file scaricato dall'OS al file zip
                                     addToZipFile(tempFile, zos, nomeFileLowerCase);
                                 } finally {
-                                    if (tempFile != null) {
-                                        FileUtils.deleteQuietly(tempFile);
-                                    }
+                                    FileUtils.deleteQuietly(tempFile);
                                 }
                             } else {
                                 log.error("{} --- ERRORE creazione ZIP invio sisma",
@@ -392,7 +382,7 @@ public class InvioSismaEjb {
                             .valueOf(vers.getPigAmbienteVer().getIdAmbienteVers());
                     BigDecimal idVers = BigDecimal.valueOf(vers.getIdVers());
                     BigDecimal idTipoObject = BigDecimal.valueOf(pigTipoObject.getIdTipoObject());
-                    BackendStorage backendVersamento = salvataggioBackendHelper
+                    BackendStorage backendVersamento = backendHelper
                             .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
                     String nmFileOs = null;
 
@@ -408,13 +398,13 @@ public class InvioSismaEjb {
                                             String.join(cdKeyObject, dirCompletaFtp, "/", ".zip")));
                         } else if (backendVersamento.isObjectStorage()) {
                             // MEV 34843
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForVersamento(
                                             backendVersamento.getBackendName());
                             nmFileOs = versamentoOggettoEjb.computeOsFileKey(idVers, cdKeyObject,
                                     VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
-                            salvataggioBackendHelper.putS3Object(config, nmFileOs,
-                                    fileTemporaneoGenerale, Optional.empty());
+                            backendHelper.putS3Object(config, nmFileOs, fileTemporaneoGenerale,
+                                    Optional.empty());
                         }
                     } catch (IOException ex) {
                         log.error("{}{}", InvioSismaEjb.class.getSimpleName(), ERR_INVIO_SISMA);
@@ -454,7 +444,7 @@ public class InvioSismaEjb {
                             fileDepositatoType.setIdBackend(backendVersamento.getBackendId());
 
                             if (backendVersamento.isObjectStorage()) {
-                                ObjectStorageBackend config = salvataggioBackendHelper
+                                ObjectStorageBackend config = backendHelper
                                         .getObjectStorageConfigurationForVersamento(
                                                 backendVersamento.getBackendName());
                                 String tenantOs = configurationHelper.getValoreParamApplicByApplic(

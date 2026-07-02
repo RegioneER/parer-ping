@@ -55,6 +55,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.PigErrore;
@@ -308,15 +309,14 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
 
     private boolean isDatiUfficioAnagraficaComplete() throws EMFError {
         BigDecimal idPuc = getForm().getDatiUfficioUrbanistica().getId_puc().parse();
-        String nrBurert = getForm().getDatiUfficioUrbanistica().getNr_burert().parse();
+        BigDecimal nrBurert = getForm().getDatiUfficioUrbanistica().getNr_burert().parse();
         Timestamp dtBurert = getForm().getDatiUfficioUrbanistica().getDt_burert().parse();
         String cdRepertorio = getForm().getDatiUfficioUrbanistica().getCd_repertorio().parse();
         String annoProtocollo = getForm().getDatiUfficioUrbanistica().getAnno_protocollo().parse();
-        String cdProtocollo = getForm().getDatiUfficioUrbanistica().getCd_protocollo().parse();
+        BigDecimal cdProtocollo = getForm().getDatiUfficioUrbanistica().getCd_protocollo().parse();
         Timestamp dtProtocollo = getForm().getDatiUfficioUrbanistica().getDt_protocollo().parse();
 
-        if (StringUtils.isBlank(nrBurert) || StringUtils.isBlank(cdRepertorio)
-                || StringUtils.isBlank(cdProtocollo)) {
+        if (nrBurert == null || StringUtils.isBlank(cdRepertorio) || cdProtocollo == null) {
             return false;
         }
 
@@ -383,11 +383,13 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         getForm().getDatiUfficioUrbanistica().getAnno_protocollo()
                 .setValue((dto.getAnnoProtocollo() == null) ? ""
                         : dto.getAnnoProtocollo().longValueExact() + "");
-        getForm().getDatiUfficioUrbanistica().getCd_protocollo().setValue(dto.getCdProtocollo());
+        getForm().getDatiUfficioUrbanistica().getCd_protocollo()
+                .setValue(dto.getCdProtocollo() == null ? "" : dto.getCdProtocollo().toString());
         getForm().getDatiUfficioUrbanistica().getCd_repertorio().setValue(dto.getCdRepertorio());
         getForm().getDatiUfficioUrbanistica().getDt_protocollo()
                 .setValue(DateUtil.formatDateWithSlash(dto.getDtProtocollo()));
-        getForm().getDatiUfficioUrbanistica().getNr_burert().setValue(dto.getNrBurert());
+        getForm().getDatiUfficioUrbanistica().getNr_burert()
+                .setValue(dto.getNrBurert() == null ? "" : dto.getNrBurert().toString());
         getForm().getDatiUfficioUrbanistica().getDt_burert()
                 .setValue(DateUtil.formatDateWithSlash(dto.getDtBurert()));
         getForm().getDatiUfficioUrbanistica().getId_puc()
@@ -403,10 +405,8 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 .setValue(dto.getIdSottofascicoloUrb());
         getForm().getDatiUfficioUrbanistica().getOggetto_sottofascicolo_urb()
                 .setValue(dto.getOggettoSottofascicoloUrb());
-        getForm().getDatiUfficioUrbanistica().getAnno_fascicolo()
-                .setValue(dto.getAnnoFascicolo() != null
-                        ? dto.getAnnoFascicolo().longValueExact() + ""
-                        : "");
+        getForm().getDatiUfficioUrbanistica().getAnno_fascicolo().setValue(
+                dto.getAnnoFascicolo() != null ? dto.getAnnoFascicolo().longValueExact() + "" : "");
 
         getForm().getDatiGeneraliInput().getOggetto().setValue(dto.getOggetto());
         getForm().getDatiGeneraliInput().getDs_descrizione().setValue(dto.getDsDescrizione());
@@ -814,7 +814,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
     public boolean inserimentoWizardStrumentoUrbanisticoOnExit() throws EMFError {
         try {
             return salvaStep1();
-        } catch (ObjectStorageException e) {
+        } catch (BackendException | ObjectStorageException exe) {
             return false;
         }
     }
@@ -932,7 +932,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 getForm().getDatiGeneraliInput().getModificato().setValue("N");
             }
             forwardToPublisher(getLastPublisher());
-        } catch (ObjectStorageException e) {
+        } catch (BackendException | ObjectStorageException exe) {
 
         }
     }
@@ -1002,7 +1002,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         return retCode;
     }
 
-    private boolean salvaStep1() throws EMFError, ObjectStorageException {
+    private boolean salvaStep1() throws EMFError, ObjectStorageException, BackendException {
         if (getForm().getDatiGeneraliOutput().getTi_stato_out().getValue() != null
                 && (getForm().getDatiGeneraliOutput().getTi_stato_out().getValue()
                         .equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())
@@ -1141,7 +1141,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         if (dto.getTiStato().equals(PigStrumentiUrbanistici.TiStato.BOZZA.name())) {
             try {
                 strumentiUrbanisticiEjb.cancellaSU(idStrumentiUrbanistici);
-            } catch (ObjectStorageException e) {
+            } catch (BackendException | ObjectStorageException exe) {
 
             }
             getForm().getStrumentiUrbanisticiList().getTable().remove(riga);
@@ -1153,7 +1153,7 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
         forwardToPublisher(getLastPublisher());
     }
 
-    public void rimuoviFile() throws EMFError, ObjectStorageException {
+    public void rimuoviFile() throws EMFError, ObjectStorageException, BackendException {
         JSONObject result = new JSONObject();
         try {
             String nmFileOrig = getRequest().getParameter("nmFileOrig");
@@ -1356,9 +1356,9 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                 String fileName = response.getHeaders().getFirst(CONTENT_DISPOSITION);
                 MediaType contentType = response.getHeaders().getContentType();
                 // Li setto nella response che utilizzerò per il ServletOutputStream
-                getResponse().setContentType(contentType.toString());
-                getResponse().setHeader(CONTENT_DISPOSITION, fileName);
-                if (contentType.getSubtype().equals("zip")) {
+                if (contentType != null && "zip".equals(contentType.getSubtype())) {
+                    getResponse().setContentType(contentType.toString());
+                    getResponse().setHeader(CONTENT_DISPOSITION, fileName);
                     try ( // try-with-resource senza bisogno di close su outStream
                             OutputStream outStream = getServletOutputStream()) {
                         // Leggo dall'inputStream e "riempio" l'outputstream
@@ -1402,7 +1402,6 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
                         messaggioErrore = "Errore durante il tentativo di download del file: impossibile recuperare il nome file";
                     }
                     getMessageBox().addError(messaggioErrore);
-                    forwardToPublisher(getLastPublisher());
                 }
             } catch (ResourceAccessException ex) {
                 getMessageBox().addError(
@@ -1415,8 +1414,6 @@ public class StrumentiUrbanisticiAction extends StrumentiUrbanisticiAbstractActi
             } catch (IOException | RestClientException ex) {
                 getMessageBox().addError("Errore durante il tentativo di download del file");
                 forwardToPublisher(getLastPublisher());
-            } finally {
-                freeze();
             }
         } else {
             PigErrore err = messaggiHelper.retrievePigErrore("PING-ERRSU25");

@@ -29,8 +29,9 @@ import org.codehaus.jettison.json.JSONObject;
 import it.eng.paginator.helper.LazyListHelper;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.annullamento.ejb.AnnullamentoEjb;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.entity.IamUser;
@@ -100,7 +101,7 @@ public class SismaEjb {
     @EJB
     private ConfigurationHelper configurationHelper;
     @EJB
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private BackendHelper backendHelper;
     @EJB
     private MonitoraggioEjb monitoraggioEjb;
     @EJB
@@ -627,7 +628,7 @@ public class SismaEjb {
         return String.format("%s/%s/%s", nmAmbiente, nmVersatore, cdKey);
     }
 
-    public SismaDto modificaSisma(SismaDto dto) throws ObjectStorageException {
+    public SismaDto modificaSisma(SismaDto dto) throws ObjectStorageException, BackendException {
         PigSisma pigSisma = sismaHelper.findByIdWithLock(PigSisma.class, dto.getIdSisma());
         PigSismaValAtto pigSismaValAtto = pigSisma.getPigSismaValAtto();
         PigSismaFaseProgetto pigSismaFaseProgetto = pigSisma.getPigSismaFaseProgetto();
@@ -671,12 +672,12 @@ public class SismaEjb {
                         // MEV 34843
                         PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
                                 .getPigSismaDocumentiStorage();
-                        BackendStorage backend = salvataggioBackendHelper
+                        BackendStorage backend = backendHelper
                                 .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-                        ObjectStorageBackend config = salvataggioBackendHelper
+                        ObjectStorageBackend config = backendHelper
                                 .getObjectStorageConfigurationForSisma(backend.getBackendName(),
                                         pigSismaDocumentiStorage.getNmBucket());
-                        salvataggioBackendHelper.deleteObject(config,
+                        backendHelper.deleteS3Object(config,
                                 pigSismaDocumentiStorage.getCdKeyFile());
                         PigSismaDocumenti pigSismaDocumentiLock = sismaHelper.findByIdWithLock(
                                 PigSismaDocumenti.class, pigSismaDocumenti.getIdSismaDocumenti());
@@ -757,7 +758,7 @@ public class SismaEjb {
                 pigSismaProgettiAg.getDenominazioneIntervento());
     }
 
-    public void cancellaSisma(BigDecimal idSisma) throws ObjectStorageException {
+    public void cancellaSisma(BigDecimal idSisma) throws ObjectStorageException, BackendException {
         //
         PigSisma su = sismaHelper.findById(PigSisma.class, idSisma);
         // Rimuove i doc da SO
@@ -767,16 +768,14 @@ public class SismaEjb {
                 // MEV 34843
                 PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
                         .getPigSismaDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
-                        .getObjectStorageConfigurationForSisma(backend.getBackendName(),
-                                pigSismaDocumentiStorage.getNmBucket());
+                ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForSisma(
+                        backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
 
-                if (salvataggioBackendHelper.doesObjectExist(config,
+                if (backendHelper.doesS3ObjectExist(config,
                         pigSismaDocumentiStorage.getCdKeyFile())) {
-                    salvataggioBackendHelper.deleteObject(config,
-                            pigSismaDocumentiStorage.getCdKeyFile());
+                    backendHelper.deleteS3Object(config, pigSismaDocumentiStorage.getCdKeyFile());
                 }
 
                 sismaHelper.removeEntity(pigSismaDocumentiStorage, true);
@@ -829,7 +828,8 @@ public class SismaEjb {
         }
     }
 
-    public String cancellaDoc(BigDecimal idSisma, String nmFileOrig) throws ObjectStorageException {
+    public String cancellaDoc(BigDecimal idSisma, String nmFileOrig)
+            throws ObjectStorageException, BackendException {
         String str = null;
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, idSisma);
         if (pigSisma.getTiStato().equals(PigSisma.TiStato.BOZZA)
@@ -848,13 +848,11 @@ public class SismaEjb {
                 // MEV 34843
                 PigSismaDocumentiStorage pigSismaDocumentiStorage = pigSismaDocumenti
                         .getPigSismaDocumentiStorage();
-                BackendStorage backend = salvataggioBackendHelper
+                BackendStorage backend = backendHelper
                         .getBackend(pigSismaDocumentiStorage.getIdDecBackend());
-                ObjectStorageBackend config = salvataggioBackendHelper
-                        .getObjectStorageConfigurationForSisma(backend.getBackendName(),
-                                pigSismaDocumentiStorage.getNmBucket());
-                salvataggioBackendHelper.deleteObject(config,
-                        pigSismaDocumentiStorage.getCdKeyFile());
+                ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForSisma(
+                        backend.getBackendName(), pigSismaDocumentiStorage.getNmBucket());
+                backendHelper.deleteS3Object(config, pigSismaDocumentiStorage.getCdKeyFile());
             }
         } else {
             str = "Non è possibile eliminare un file di uno sisma già inviato";
@@ -946,7 +944,8 @@ public class SismaEjb {
     }
 
     /* DTOs */
-    public DocSismaDto salvaTipoDocumento(DocSismaDto dto) throws ObjectStorageException {
+    public DocSismaDto salvaTipoDocumento(DocSismaDto dto)
+            throws ObjectStorageException, BackendException {
         PigSismaDocumenti pigSismaDocumenti = new PigSismaDocumenti();
         PigSisma pigSisma = sismaHelper.findById(PigSisma.class, dto.getIdSisma());
         if (pigSisma.getTiStato().equals(PigSisma.TiStato.ERRORE)) {
@@ -969,11 +968,9 @@ public class SismaEjb {
         }
 
         // MEV 34843
-        BackendStorage backendForStrumentiUrbanistici = salvataggioBackendHelper
-                .getBackendForSisma();
-        ObjectStorageBackend config = salvataggioBackendHelper
-                .getObjectStorageConfigurationForSisma(
-                        backendForStrumentiUrbanistici.getBackendName());
+        BackendStorage backendForStrumentiUrbanistici = backendHelper.getBackendForSisma();
+        ObjectStorageBackend config = backendHelper.getObjectStorageConfigurationForSisma(
+                backendForStrumentiUrbanistici.getBackendName());
 
         PigSismaDocumentiStorage psds = new PigSismaDocumentiStorage();
         psds.setIdDecBackend(backendForStrumentiUrbanistici.getBackendId());

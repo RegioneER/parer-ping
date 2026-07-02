@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.sisma.dto.DocSismaDto;
 import it.eng.sacerasi.sisma.dto.SismaDto;
 import it.eng.sacerasi.sisma.ejb.SismaEjb;
@@ -61,8 +61,8 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
 
     @EJB(mappedName = "java:app/SacerAsync-ejb/SismaEjb")
     private SismaEjb sismaEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/VersamentoOggettoEjb")
     private VersamentoOggettoEjb versamentoOggettoEjb;
 
@@ -139,9 +139,8 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
                                     .parse();
 
                             // MEV 34843
-                            BackendStorage backendVersamento = salvataggioBackendHelper
-                                    .getBackendForSisma();
-                            ObjectStorageBackend config = salvataggioBackendHelper
+                            BackendStorage backendVersamento = backendHelper.getBackendForSisma();
+                            ObjectStorageBackend config = backendHelper
                                     .getObjectStorageConfigurationForSisma(
                                             backendVersamento.getBackendName());
 
@@ -150,8 +149,8 @@ public class MultipartFileUploadSismaToS3Servlet extends HttpServlet {
                             String nmFileOs = versamentoOggettoEjb.computeOsFileKey(
                                     sisma.getIdVers(), nomeFile,
                                     VersamentoOggettoEjb.OS_KEY_POSTFIX.SISMA.name());
-                            s3UploadSessionSisma = new S3UploadSessionSisma(
-                                    salvataggioBackendHelper, idSisma, nmFileOs, config);
+                            s3UploadSessionSisma = new S3UploadSessionSisma(backendHelper, idSisma,
+                                    nmFileOs, config);
                             if (s3UploadSessionSisma.existsOnOS()) {
                                 responseString = RESP_ERROR_FILE_ALREADY_EXISTS;
                                 log.info("Il file {} già esiste sull'object storage!", nmFileOs);

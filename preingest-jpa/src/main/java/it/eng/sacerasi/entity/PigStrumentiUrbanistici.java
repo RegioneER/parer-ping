@@ -75,11 +75,11 @@ public class PigStrumentiUrbanistici implements Serializable {
 
     // MEV 30026
     private Long idPuc;
-    private String nrBurert;
+    private BigDecimal nrBurert;
     private Date dtBurert;
     private String cdRepertorio;
     private BigDecimal annoProtocollo;
-    private String cdProtocollo;
+    private BigDecimal cdProtocollo;
     private Date dtProtocollo;
     private String flInviatoAEnte;
 
@@ -313,11 +313,11 @@ public class PigStrumentiUrbanistici implements Serializable {
     }
 
     @Column(name = "NR_BURERT")
-    public String getNrBurert() {
+    public BigDecimal getNrBurert() {
         return nrBurert;
     }
 
-    public void setNrBurert(String nrBurert) {
+    public void setNrBurert(BigDecimal nrBurert) {
         this.nrBurert = nrBurert;
     }
 
@@ -350,11 +350,11 @@ public class PigStrumentiUrbanistici implements Serializable {
     }
 
     @Column(name = "NR_PROTOCOLLO")
-    public String getCdProtocollo() {
+    public BigDecimal getCdProtocollo() {
         return cdProtocollo;
     }
 
-    public void setCdProtocollo(String cdProtocollo) {
+    public void setCdProtocollo(BigDecimal cdProtocollo) {
         this.cdProtocollo = cdProtocollo;
     }
 

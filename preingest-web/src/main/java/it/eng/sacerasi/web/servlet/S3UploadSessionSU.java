@@ -30,8 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
@@ -56,7 +57,7 @@ public class S3UploadSessionSU implements Serializable {
     private String keyName = null;
     private Date dataInizio = null;
     private Date dataFine = null;
-    private transient SalvataggioBackendHelper salvataggioBackendHelper;
+    private transient BackendHelper backendHelper;
     private List<CompletedPart> partETags = null;
     private transient CreateMultipartUploadResponse initResponse = null;
     private ObjectStorageBackend config;
@@ -77,26 +78,24 @@ public class S3UploadSessionSU implements Serializable {
         return dataFine;
     }
 
-    public S3UploadSessionSU(SalvataggioBackendHelper salvataggioBackendHelper,
-            ObjectStorageBackend config, String keyName) {
+    public S3UploadSessionSU(BackendHelper backendHelper, ObjectStorageBackend config,
+            String keyName) {
         this.bucketName = config.getBucket();
         this.keyName = keyName;
-        this.salvataggioBackendHelper = salvataggioBackendHelper;
+        this.backendHelper = backendHelper;
         this.config = config;
     }
 
-    public S3UploadSessionSU(SalvataggioBackendHelper salvataggioBackendHelper,
-            BigDecimal idStrumentiUrbanistici, String bucketName, String keyName)
-            throws ObjectStorageException {
+    public S3UploadSessionSU(BackendHelper backendHelper, BigDecimal idStrumentiUrbanistici,
+            String bucketName, String keyName) throws ObjectStorageException, BackendException {
         this.idStrumentiUrbanistici = idStrumentiUrbanistici;
         this.bucketName = bucketName;
         this.keyName = keyName;
-        this.salvataggioBackendHelper = salvataggioBackendHelper;
+        this.backendHelper = backendHelper;
 
         // MEV 34843
-        BackendStorage backendVersamento = salvataggioBackendHelper
-                .getBackendForStrumentiUrbanistici();
-        ObjectStorageBackend configSU = salvataggioBackendHelper
+        BackendStorage backendVersamento = backendHelper.getBackendForStrumentiUrbanistici();
+        ObjectStorageBackend configSU = backendHelper
                 .getObjectStorageConfigurationForStrumentiUrbanistici(
                         backendVersamento.getBackendName());
 
@@ -104,7 +103,7 @@ public class S3UploadSessionSU implements Serializable {
     }
 
     public boolean existsFileOnOS() {
-        return salvataggioBackendHelper.doesObjectExist(this.config, this.keyName);
+        return backendHelper.doesS3ObjectExist(this.config, this.keyName);
     }
 
     private void start() {
@@ -118,7 +117,7 @@ public class S3UploadSessionSU implements Serializable {
         // Initiate the multipart upload.
         initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName)
                 .build();
-        initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
+        initResponse = backendHelper.initiateS3MultipartUpload(initRequest, config);
         log.info("Multipart Upload a S3 Inizializzato.");
     }
 
@@ -129,7 +128,7 @@ public class S3UploadSessionSU implements Serializable {
                 .multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build())
                 .build();
 
-        salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
+        backendHelper.completeS3MultipartUpload(compRequest, config);
         dataFine = new Date();
         log.info("Fine UploadMultipart to S3 [{}]", dataFine);
     }
@@ -154,8 +153,7 @@ public class S3UploadSessionSU implements Serializable {
         UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName)
                 .key(keyName).uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
         // Upload the part and add the response's ETag to our list.
-        UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes,
-                config);
+        UploadPartResponse uploadResult = backendHelper.uploadS3Part(uploadRequest, bytes, config);
         log.info("Upload del chunk [{}] OK.", chunk);
         partETags.add(
                 CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());

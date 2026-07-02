@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import it.eng.parer.objectstorage.dto.BackendStorage;
 import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
+import it.eng.parer.objectstorage.helper.BackendHelper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.exception.ParerUserError;
 import it.eng.sacerasi.messages.MessaggiWSBundle;
@@ -97,8 +97,8 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
     private ComboHelper comboHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/NotificaTrasferimentoEjb")
     private NotificaTrasferimentoEjb notificaTrasferimentoEjb;
-    @EJB(mappedName = "java:app/SacerAsync-ejb/SalvataggioBackendHelper")
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    @EJB(mappedName = "java:app/SacerAsync-ejb/BackendHelper")
+    private BackendHelper backendHelper;
     @EJB(mappedName = "java:app/SacerAsync-ejb/S3ServletHelper")
     private S3ServletHelper servletHelper;
 
@@ -236,7 +236,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                         BigDecimal idVers = user.getIdOrganizzazioneFoglia();
                         BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
                         BigDecimal idTipoObject = new BigDecimal(nm_tipo_object);
-                        BackendStorage backendVersamento = salvataggioBackendHelper
+                        BackendStorage backendVersamento = backendHelper
                                 .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
 
                         if (!backendVersamento.isObjectStorage()) {
@@ -251,7 +251,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                             return;
                         }
 
-                        ObjectStorageBackend config = salvataggioBackendHelper
+                        ObjectStorageBackend config = backendHelper
                                 .getObjectStorageConfigurationForVersamento(
                                         backendVersamento.getBackendName());
 
@@ -271,8 +271,8 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
                                     user.getIdOrganizzazioneFoglia(), nomeFile,
                                     VersamentoOggettoEjb.OS_KEY_POSTFIX.PIGOBJECT.name());
 
-                            s3UploadSession = new S3UploadSessionVO(salvataggioBackendHelper,
-                                    config, nmFileOs);
+                            s3UploadSession = new S3UploadSessionVO(backendHelper, config,
+                                    nmFileOs);
                             req.getSession().setAttribute(idSessione, s3UploadSession);
                         } else {
                             s3UploadSession = (S3UploadSessionVO) req.getSession()
@@ -612,9 +612,9 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
 
             // MEV 34843
             BigDecimal idAmbiente = servletHelper.getIdAmbienteVersatore(idVers);
-            BackendStorage backendVersamento = salvataggioBackendHelper
-                    .getBackendForVersamento(idAmbiente, idVers, idTipoObject);
-            ObjectStorageBackend config = salvataggioBackendHelper
+            BackendStorage backendVersamento = backendHelper.getBackendForVersamento(idAmbiente,
+                    idVers, idTipoObject);
+            ObjectStorageBackend config = backendHelper
                     .getObjectStorageConfigurationForVersamento(backendVersamento.getBackendName());
             String tenantOs = configurationHelper
                     .getValoreParamApplicByApplic(Constants.TENANT_OBJECT_STORAGE);
@@ -724,7 +724,7 @@ public class MultipartFileUploadToS3ForVersamentoOggettoServlet extends HttpServ
 
             // Messaggio per l'utente
             if (notificaRisposta.getCdEsito().equals(Constants.EsitoServizio.OK.name())) {
-                log.debug("Versamento oggetto completato con successo: " + cdKeyObject);
+                log.debug("Versamento oggetto completato con successo: {}", cdKeyObject);
             } else {
                 String errorMessage = "Errore " + notificaRisposta.getCdErr() + ": "
                         + notificaRisposta.getDsErr();

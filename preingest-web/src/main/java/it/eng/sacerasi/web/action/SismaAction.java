@@ -56,6 +56,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 
+import it.eng.parer.objectstorage.exceptions.BackendException;
 import it.eng.parer.objectstorage.exceptions.ObjectStorageException;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.TipoVersatoreSisma;
@@ -365,8 +366,7 @@ public class SismaAction extends SismaAbstractAction {
             getForm().getDocumentiCaricatiList().post(getRequest());
 
             HashMap<BigDecimal, String> mappaFlagVerifica = new HashMap<>();
-            for (BaseRowInterface riga : getForm().getDocumentiCaricatiList()
-                    .getTable()) {
+            for (BaseRowInterface riga : getForm().getDocumentiCaricatiList().getTable()) {
                 BigDecimal idRiga = riga.getBigDecimal("id_sisma_documenti");
                 String valore = riga.getString("ti_verifica_agenzia");
                 mappaFlagVerifica.put(idRiga, valore);
@@ -393,8 +393,8 @@ public class SismaAction extends SismaAbstractAction {
             if (stato.equals(PigSisma.TiStato.VERIFICATO.name())) {
                 // MAC 29844 - se non tutti i documenti sono verificati ignora il controllo qui
                 // sotto
-                if (getForm().getDatiGeneraliOutput().getNatura_soggetto_attuatore_out()
-                        .getValue().equals("PRIVATO")
+                if (getForm().getDatiGeneraliOutput().getNatura_soggetto_attuatore_out().getValue()
+                        .equals("PRIVATO")
                         && getForm().getDatiAgenzia().postAndValidate(getRequest(),
                                 getMessageBox())) {
                     if (getMessageBox().isEmpty()) {
@@ -886,7 +886,7 @@ public class SismaAction extends SismaAbstractAction {
     public boolean inserimentoWizardSismaOnExit() throws EMFError {
         try {
             return salvaStep1(false);
-        } catch (ObjectStorageException e) {
+        } catch (BackendException | ObjectStorageException exe) {
             return false;
         }
     }
@@ -1019,14 +1019,14 @@ public class SismaAction extends SismaAbstractAction {
             if (salvaStep1(true)) {
                 getForm().getDatiGeneraliInput().getModificato().setValue("N");
             }
-        } catch (ObjectStorageException e) {
-            log.error(e.getMessage());
+        } catch (BackendException | ObjectStorageException exe) {
+            log.error(exe.getMessage());
         }
         forwardToPublisher(getLastPublisher());
     }
 
     private boolean salvaStep1(boolean salvataggioDaTastoBozza)
-            throws EMFError, ObjectStorageException {
+            throws EMFError, ObjectStorageException, BackendException {
         if (getForm().getDatiGeneraliOutput().getTi_stato_out().getValue() != null
                 && (getForm().getDatiGeneraliOutput().getTi_stato_out().getValue()
                         .equals(PigSisma.TiStato.BOZZA.name()))
@@ -1155,8 +1155,8 @@ public class SismaAction extends SismaAbstractAction {
                 sismaEjb.cancellaSisma(idSisma);
                 getForm().getSismaList().getTable().remove(riga);
                 getMessageBox().addInfo("Progetto cancellato con successo");
-            } catch (ObjectStorageException e) {
-                log.error(e.getMessage());
+            } catch (BackendException | ObjectStorageException exe) {
+                log.error(exe.getMessage());
             }
         } else {
             PigErrore err = messaggiHelper.retrievePigErrore("PING-ERRSISMA24");
@@ -1177,7 +1177,7 @@ public class SismaAction extends SismaAbstractAction {
                 result.put("codice", -1);
                 result.put("messaggio", mex);
             }
-        } catch (JSONException | ObjectStorageException ex) {
+        } catch (JSONException | BackendException | ObjectStorageException ex) {
             //
         }
         redirectToAjax(result);

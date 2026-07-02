@@ -79,7 +79,18 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
                 PigStrumentiUrbanistici.TiStato.IN_VERSAMENTO,
                 PigStrumentiUrbanistici.TiStato.COMPLETATO);
 
-        String queryStr = "SELECT s, p FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato p WHERE ((s.tiStato IN :set AND s.flInviatoAEnte = '1') OR ( s.tiStato = 'VERSATO')) ";
+        String queryStr = "SELECT s, p FROM PigStrumentiUrbanistici s JOIN s.pigStrumUrbPianoStato p WHERE ((s.tiStato IN :set AND s.flInviatoAEnte = '1')";
+
+        if (rDTO.isNmStato()) {
+            set = EnumSet.of(TiStato.valueOf(rDTO.getNmStato()));
+            if (rDTO.getNmStato().equals(TiStato.VERSATO.name())) {
+                queryStr += " OR ( s.tiStato = 'VERSATO')) ";
+            } else {
+                queryStr += ") ";
+            }
+        } else {
+            queryStr += " OR ( s.tiStato = 'VERSATO')) ";
+        }
         return findSU(queryStr, rDTO, idVers, set);
     }
 
@@ -751,7 +762,7 @@ public class StrumentiUrbanisticiHelper extends GenericHelper {
     }
 
     public boolean controllaUnivocitaDatiUfficioUrbanistica(String cdKey, BigDecimal idPuc,
-            String cdRepertorio, BigDecimal annoProtocollo, String cdProtocollo) {
+            String cdRepertorio, BigDecimal annoProtocollo, BigDecimal cdProtocollo) {
         Query query = getEntityManager().createQuery("SELECT su FROM PigStrumentiUrbanistici su "
                 + "WHERE su.cdKey <> :cdKey AND (su.idPuc = :idPuc "
                 + "OR (su.cdRepertorio = :cdRepertorio AND su.annoProtocollo = :annoProtocollo "

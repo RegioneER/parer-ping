@@ -13,8 +13,6 @@
 
 package it.eng.sacerasi.web.servlet;
 
-import software.amazon.awssdk.utils.IoUtils;
-import it.eng.parer.objectstorage.helper.SalvataggioBackendHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -25,13 +23,17 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
+import it.eng.parer.objectstorage.helper.BackendHelper;
+import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CreateMultipartUploadResponse;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
-import it.eng.parer.objectstorage.dto.ObjectStorageBackend;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
+import software.amazon.awssdk.utils.IoUtils;
 
 /**
  *
@@ -47,10 +49,10 @@ public class S3UploadSessionSisma implements Serializable {
     private String keyName = null;
     private Date dataInizio = null;
     private Date dataFine = null;
-    private SalvataggioBackendHelper salvataggioBackendHelper;
+    private transient BackendHelper backendHelper;
     private List<CompletedPart> partETags = null;
-    private CreateMultipartUploadRequest initRequest = null;
-    private CreateMultipartUploadResponse initResponse = null;
+    private transient CreateMultipartUploadRequest initRequest = null;
+    private transient CreateMultipartUploadResponse initResponse = null;
     private ObjectStorageBackend config;
 
     public BigDecimal getIdSisma() {
@@ -69,42 +71,42 @@ public class S3UploadSessionSisma implements Serializable {
         return dataFine;
     }
 
-    public S3UploadSessionSisma(SalvataggioBackendHelper salvataggioBackendHelper,
-            BigDecimal idSisma, String keyName, ObjectStorageBackend config) {
+    public S3UploadSessionSisma(BackendHelper backendHelper, BigDecimal idSisma, String keyName,
+            ObjectStorageBackend config) {
         this.idSisma = idSisma;
         this.bucketName = config.getBucket();
         this.keyName = keyName;
-        this.salvataggioBackendHelper = salvataggioBackendHelper;
+        this.backendHelper = backendHelper;
         this.config = config;
     }
 
     public boolean existsOnOS() {
-        return salvataggioBackendHelper.doesObjectExist(this.config, this.keyName);
+        return backendHelper.doesS3ObjectExist(this.config, this.keyName);
     }
 
     private void start() {
         dataInizio = new Date();
-        log.info(String.format("Inizio UploadMultipart to S3 [%s]", dataInizio));
+        log.info("Inizio UploadMultipart to S3 [{}]", dataInizio);
         // Create a list of ETag objects. You retrieve ETags for each object part uploaded,
         // then, after each individual part has been uploaded, pass the list of ETags to
         // the request to complete the upload.
-        partETags = new ArrayList<CompletedPart>();
+        partETags = new ArrayList<>();
         // Initiate the multipart upload.
         initRequest = CreateMultipartUploadRequest.builder().bucket(bucketName).key(keyName)
                 .build();
-        initResponse = salvataggioBackendHelper.initiateMultipartUpload(initRequest, config);
+        initResponse = backendHelper.initiateS3MultipartUpload(initRequest, config);
         log.info("Multipart Upload Sisma a S3 Inizializzato.");
     }
 
     private void stop() {
-        software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest compRequest = software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest
-                .builder().uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
+        CompleteMultipartUploadRequest compRequest = CompleteMultipartUploadRequest.builder()
+                .uploadId(initResponse.uploadId()).bucket(bucketName).key(keyName)
                 .multipartUpload(CompletedMultipartUpload.builder().parts(partETags).build())
                 .build();
 
-        salvataggioBackendHelper.completeMultipartUpload(compRequest, config);
+        backendHelper.completeS3MultipartUpload(compRequest, config);
         dataFine = new Date();
-        log.info(String.format("Fine Sisma UploadMultipart to S3 [%s]", dataFine));
+        log.info("Fine Sisma UploadMultipart to S3 [{}]", dataFine);
     }
 
     /*
@@ -122,14 +124,13 @@ public class S3UploadSessionSisma implements Serializable {
         } catch (IOException ex) {
             log.error("Errore caricamento chunk su S3!", ex);
         }
-        log.info(String.format("Inizio l'update del chunk Sisma [%d] di [%d].", chunk, chunks));
+        log.info("Inizio l'update del chunk Sisma [{}] di [{}].", chunk, chunks);
         // Create the request to upload a part.
         UploadPartRequest uploadRequest = UploadPartRequest.builder().bucket(bucketName)
                 .key(keyName).uploadId(initResponse.uploadId()).partNumber(chunk + 1).build();
         // Upload the part and add the response's ETag to our list.
-        UploadPartResponse uploadResult = salvataggioBackendHelper.uploadPart(uploadRequest, bytes,
-                config);
-        log.info(String.format("Upload del chunk Sisma [%d] OK.", chunk, chunks));
+        UploadPartResponse uploadResult = backendHelper.uploadS3Part(uploadRequest, bytes, config);
+        log.info("Upload del chunk Sisma [{}] OK.", chunk);
         partETags.add(
                 CompletedPart.builder().partNumber(chunk + 1).eTag(uploadResult.eTag()).build());
         if (isLastPart) {

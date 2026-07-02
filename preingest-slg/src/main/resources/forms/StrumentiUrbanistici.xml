@@ -142,11 +142,11 @@
     <!-- MEV 30026 -->
     <Fields Name="DatiUfficioUrbanistica" Description="Dati Ufficio Urbanistica" >
         <Input Name="id_puc" Type="INTEGER" Description="* Identificativo PUC" />
-        <Input Name="nr_burert" Type="STRING" Description="* Numero BURERT" />
+        <Input Name="nr_burert" Type="INTEGER" Description="* Numero BURERT" />
         <Input Name="dt_burert" Type="DATE" Description="* Data BURERT" />
         <ComboBox Name="cd_repertorio" Type="STRING" Description="* Repertorio" />
         <ComboBox Name="anno_protocollo" Type="STRING" Description="* Anno protocollo" />
-        <Input Name="cd_protocollo" Type="STRING" Description="* Numero protocollo" MaxLength="20"/>
+        <Input Name="cd_protocollo" Type="INTEGER" Description="* Numero protocollo" MaxLength="20"/>
         <Input Name="dt_protocollo" Type="DATE" Description="* Data protocollo" />
         <Input Name="classifica_urb" Type="STRING" Description="Classifica" MaxLength="100" />
         <ComboBox Name="anno_fascicolo" Type="STRING" Description="Anno fascicolo" />

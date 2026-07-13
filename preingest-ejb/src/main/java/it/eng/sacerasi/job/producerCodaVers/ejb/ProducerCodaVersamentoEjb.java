@@ -14,15 +14,13 @@
 package it.eng.sacerasi.job.producerCodaVers.ejb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.sacerasi.common.Constants;
 import it.eng.sacerasi.common.Constants.NomiJob;
 import it.eng.sacerasi.common.Constants.StatoSessioneIngest;
 import it.eng.sacerasi.common.Constants.StatoUnitaDocObject;
 import it.eng.sacerasi.common.Constants.TipiRegLogJob;
-import it.eng.sacerasi.entity.PigObject;
-import it.eng.sacerasi.entity.PigSessioneIngest;
-import it.eng.sacerasi.entity.PigUnitaDocObject;
-import it.eng.sacerasi.entity.PigUnitaDocSessione;
+import it.eng.sacerasi.entity.*;
 import it.eng.sacerasi.exception.JMSSendException;
 import it.eng.sacerasi.job.coda.dto.Payload;
 import it.eng.sacerasi.job.coda.ejb.PrioritaEjb;
@@ -37,6 +35,8 @@ import javax.annotation.Resource;
 import javax.ejb.*;
 import javax.interceptor.Interceptors;
 import javax.jms.JMSException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +53,8 @@ public class ProducerCodaVersamentoEjb {
 
     private static final String LOG_PREFIX = "PCV ::";
     Logger log = LoggerFactory.getLogger(ProducerCodaVersamentoEjb.class);
+    @PersistenceContext(unitName = "SacerAsiJPA")
+    private EntityManager entityManager;
     @Resource
     private SessionContext context;
     @EJB
@@ -100,11 +102,16 @@ public class ProducerCodaVersamentoEjb {
         final int numMaxDicomXgiorno = Integer.parseInt(
                 configurationHelper.getValoreParamApplicByApplic(Constants.NUM_MAX_DICOM_XGIORNO));
         // MEV#18661 Determina il numero di studi dicom versati nella data odierna + il numero di
-        // StudiDicom in stato
-        // IN_CODA_VERS
+        // StudiDicom in stato IN_CODA_VERS
         final Counter dicomProcessati = new Counter(
                 codaHelper.contaStudiDicomVersatiOggiEInCodaVers());
         final Counter udProcessate = new Counter(0);
+
+        // Parametro broker: JMS (embedded JBoss) oppure KAFKA (outbox → JDBC Source Connector)
+        final boolean useKafka = Constants.BrokerType.KAFKA.name().equalsIgnoreCase(
+                configurationHelper.getValoreParamApplicByApplic(Constants.PRODUCER_BROKER_TYPE));
+        log.info("{} broker selezionato: {}", LOG_PREFIX, useKafka ? "KAFKA" : "JMS");
+
         // MAC#31076 - ottengo la lista degli oggetti IN_ATTESA_VERS
         try (Stream<PigObject> oggetti = codaHelper.retrieveObjectsByStateAndContentType(
                 StatoSessioneIngest.IN_ATTESA_VERS, Constants.TipoContenutoTipoOggetto.UD)) {
@@ -173,9 +180,17 @@ public class ProducerCodaVersamentoEjb {
                     String urlServVers = configurationHelper.getValoreParamApplicByTipoObj(
                             "DS_URL_SERV_VERS", idAmbienteVers, idVers, idTipoObject);
                     try {
-                        newProducerCodaVersEjbRef1.manageUnitaDoc(unitaDoc.getIdUnitaDocObject(),
-                                unitaDocSessione.getIdUnitaDocSessione(), urlServVers,
-                                isLastUdInObj, infoLogUd);
+                        if (useKafka) {
+                            newProducerCodaVersEjbRef1.manageUnitaDocOutboxPattern(
+                                    unitaDoc.getIdUnitaDocObject(),
+                                    unitaDocSessione.getIdUnitaDocSessione(), urlServVers,
+                                    isLastUdInObj, infoLogUd);
+                        } else {
+                            newProducerCodaVersEjbRef1.manageUnitaDoc(
+                                    unitaDoc.getIdUnitaDocObject(),
+                                    unitaDocSessione.getIdUnitaDocSessione(), urlServVers,
+                                    isLastUdInObj, infoLogUd);
+                        }
                     } catch (JMSException | JsonProcessingException | JMSSendException e) {
                         throw new ObjectProcessException(e);
                     }
@@ -224,7 +239,8 @@ public class ProducerCodaVersamentoEjb {
         } catch (JMSSendException ex) {
             log.error(infoLogUd
                     + " :: errore nell'inserimento in coda della unità documentaria con id '"
-                    + unitaDocId + "'", ex);
+                    + unitaDocId
+                    + "'", ex);
             this.handleSendError(payload.getSessionId().longValue(), unitaDocId);
             throw ex;
         }
@@ -252,6 +268,91 @@ public class ProducerCodaVersamentoEjb {
                     "{} :: ho finito di processare le ud dell'oggetto '{}': aggiorno lo stato dell'oggetto e della sua ultima sessione in IN_CODA_VERS",
                     infoLogUd, object.getIdObject());
         }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void manageUnitaDocOutboxPattern(long unitaDocId, long unitaDocSessioneId,
+            String urlServVers,
+            boolean isLastUdInObj, String infoLogUd)
+            throws JsonProcessingException {
+        log.debug("PCV :: manageUnitaDoc processo ud id = {}", unitaDocId);
+        PigUnitaDocObject unitaDoc = codaHelper.findLockPigUnitaDocObjectById(unitaDocId);
+        PigUnitaDocSessione unitaDocSessione = codaHelper
+                .findLockPigUnitaDocSessioneById(unitaDocSessioneId);
+        Payload payload = this.buildPayload(unitaDoc, unitaDocSessioneId, urlServVers);
+        String queueToUse = codaHelper.selectQueue(unitaDoc.getNiSizeFileByte());
+        log.debug("{} :: dimensione file  = {} coda '{}' selezionata", infoLogUd,
+                unitaDoc.getNiSizeFileByte(),
+                queueToUse);
+        try {
+            log.debug("{} :: inserimento outbox event", infoLogUd);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String payloadStr = mapper.writeValueAsString(payload);
+
+            // Outbox Pattern: inserimento atomico nella stessa transazione JTA del DB.
+            // Il JDBC Source Connector legge la tabella e pubblica su Kafka.
+            PigOutboxEvent outboxEvent = new PigOutboxEvent();
+            outboxEvent.setAggregateType(queueToUse);
+            outboxEvent.setAggregateId(String.valueOf(unitaDoc.getIdUnitaDocObject()));
+            outboxEvent.setType("VERSAMENTO");
+            outboxEvent.setPayload(payloadStr);
+            entityManager.persist(outboxEvent);
+
+            log.debug("{} :: outbox event {} inserito", infoLogUd, outboxEvent.getId());
+        } catch (JsonProcessingException ex) {
+            log.error("{} :: payload non serializzabile per la UD con id '{}'",
+                    infoLogUd, unitaDocId, ex);
+            // handleSendError in TX separata: il TransactionInterceptor marca rollback
+            // sulla TX corrente al rethrow, quindi va eseguito in modo indipendente.
+            context.getBusinessObject(ProducerCodaVersamentoEjb.class)
+                    .handleSendErrorInNewTx(payload.getSessionId().longValue(), unitaDocId);
+            throw ex;
+        } catch (Exception ex) {
+            log.error("{} :: errore nell'inserimento outbox event per la UD con id '{}'",
+                    infoLogUd, unitaDocId, ex);
+            // stessa logica: TX corrente andrà in rollback, handleSendError in TX separata.
+            context.getBusinessObject(ProducerCodaVersamentoEjb.class)
+                    .handleSendErrorInNewTx(payload.getSessionId().longValue(), unitaDocId);
+            throw ex;
+        }
+
+        // MEV 27407
+        Date dtStato = new Date();
+
+        // setto lo stato dell'UD inserita nella coda a IN_CODA_VERS
+        unitaDoc.setTiStatoUnitaDocObject(Constants.StatoUnitaDocObject.IN_CODA_VERS.name());
+        unitaDoc.setDtStato(dtStato);
+        unitaDocSessione
+                .setTiStatoUnitaDocSessione(Constants.StatoUnitaDocSessione.IN_CODA_VERS.name());
+        unitaDocSessione.setDtStato(dtStato);
+
+        log.debug("{} :: setto lo stato dell'UD '{}' inserita nella coda in IN_CODA_VERS",
+                infoLogUd, unitaDocId);
+        if (isLastUdInObj) {
+            // ho finito di processare le unità documentarie dell'oggetto corrente:
+            // aggiorno lo stato dell'oggetto e della sua ultima sessione assegnando IN_CODA_VERS
+            PigObject object = unitaDoc.getPigObject();
+            object.setTiStatoObject(Constants.StatoOggetto.IN_CODA_VERS.name());
+            codaHelper.updateLastSessionState(object,
+                    Constants.StatoSessioneIngest.IN_CODA_VERS.name());
+            log.debug(
+                    "{} :: ho finito di processare le ud dell'oggetto '{}': aggiorno lo stato dell'oggetto e della sua ultima sessione in IN_CODA_VERS",
+                    infoLogUd, object.getIdObject());
+        }
+    }
+
+    /**
+     * Persiste gli stati di errore in una TX separata (REQUIRES_NEW), indipendente dalla TX
+     * chiamante che sarà soggetta a rollback. Usato dal catch di
+     * {@link #manageUnitaDocOutboxPattern}.
+     *
+     * @param sessionId  id della sessione ingest
+     * @param unitaDocId id dell'unità documentaria
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void handleSendErrorInNewTx(long sessionId, long unitaDocId) {
+        handleSendError(sessionId, unitaDocId);
     }
 
     public void handleSendError(long sessionId, long unitaDocId) {

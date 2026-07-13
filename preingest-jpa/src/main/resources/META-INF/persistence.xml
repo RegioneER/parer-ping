@@ -51,6 +51,9 @@
             <property name="hibernate.id.new_generator_mappings" value="true"/>
             <property name="hibernate.session.events.log" value="false"/>
             <property name="hibernate.ejb.interceptor.session_scoped" value="it.eng.paginator.hibernate.OracleSqlInterceptor"/>
-        </properties>    
+            <!-- Binding the EntityManager and the EntityManagerFactory to JNDI -->
+            <property name="jboss.entity.manager.jndi.name" value="java:/MyEntityManager"/>
+            <property name="jboss.entity.manager.factory.jndi.name" value="java:/MyEntityManagerFactory"/>
+        </properties>
     </persistence-unit>
 </persistence>

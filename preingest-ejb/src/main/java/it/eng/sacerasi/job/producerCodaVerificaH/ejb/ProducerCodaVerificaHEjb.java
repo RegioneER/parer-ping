@@ -31,6 +31,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import it.eng.sacerasi.entity.PigOutboxEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,9 @@ import it.eng.sacerasi.entity.PigSessioneIngest;
 import it.eng.sacerasi.exception.ParerInternalError;
 import it.eng.sacerasi.job.ejb.JobLogger;
 import it.eng.sacerasi.job.preparaxml.dto.PayloadCdPrepXml;
+import it.eng.sacerasi.web.helper.ConfigurationHelper;
 import it.eng.sacerasi.ws.util.Costanti;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +78,8 @@ public class ProducerCodaVerificaHEjb {
     ProducerCodaVerificaHEjb me;
     @EJB
     private CommonDb commonDb;
+    @EJB
+    private ConfigurationHelper configurationHelper;
     //
     @Resource(mappedName = "jms/ProducerConnectionFactory")
     private ConnectionFactory connectionFactory;
@@ -83,17 +88,24 @@ public class ProducerCodaVerificaHEjb {
 
     public void produceQueue() throws ParerInternalError {
 
-        List<PigObject> tmpOggetti = null;
-        String rootFtpValue;
-
-        rootFtpValue = commonDb.getRootFtpParam();
-        tmpOggetti = getListaObjectDaVersPreHashSenzaPadre();
+        String rootFtpValue = commonDb.getRootFtpParam();
+        List<PigObject> tmpOggetti = getListaObjectDaVersPreHashSenzaPadre();
         tmpOggetti.addAll(getListaObjectDaVersPreHashConPadre());
         log.info("Producer Coda Verifica Hash:: oggetti da processare per il calcolo hash: {}",
                 tmpOggetti.size());
 
+        // Parametro broker: JMS (embedded JBoss) oppure KAFKA (outbox → JDBC Source Connector)
+        final boolean useKafka = Constants.BrokerType.KAFKA.name().equalsIgnoreCase(
+                configurationHelper.getValoreParamApplicByApplic(Constants.PRODUCER_BROKER_TYPE));
+        log.info("Producer Coda Verifica Hash:: broker selezionato: {}",
+                useKafka ? "KAFKA" : "JMS");
+
         for (PigObject tmpObject : tmpOggetti) {
-            me.inviaMessaggio(tmpObject, rootFtpValue);
+            if (useKafka) {
+                me.inviaMessaggioOutboxPattern(tmpObject, rootFtpValue);
+            } else {
+                me.inviaMessaggio(tmpObject, rootFtpValue);
+            }
         }
         jobLoggerEjb.writeAtomicLog(Constants.NomiJob.PRODUCER_CODA_VERIFICA_H,
                 Constants.TipiRegLogJob.FINE_SCHEDULAZIONE, null);
@@ -144,6 +156,50 @@ public class ProducerCodaVerificaHEjb {
         } catch (SecurityException | IllegalStateException | JsonProcessingException
                 | JMSException ex) {
             throw new ParerInternalError(ex);
+        }
+    }
+
+    public void inviaMessaggioOutboxPattern(PigObject pigObject, String rootFtpValue)
+            throws ParerInternalError {
+
+        try {
+            PayloadCdPrepXml tmpPayloadCdPrepXml = new PayloadCdPrepXml();
+            tmpPayloadCdPrepXml.setIdPigObject(pigObject.getIdObject());
+            tmpPayloadCdPrepXml
+                    .setIdLastSessioneIngest(pigObject.getIdLastSessioneIngest().longValue());
+            tmpPayloadCdPrepXml.setRootDirectory(rootFtpValue);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String payloadCdPrepXmlJson = mapper.writeValueAsString(tmpPayloadCdPrepXml);
+
+            log.debug("Inserimento outbox event per oggetto {} (sessione {})",
+                    pigObject.getIdObject(), pigObject.getIdLastSessioneIngest().longValue());
+
+            impostaLockStatoVerHash(pigObject.getIdLastSessioneIngest().longValue(),
+                    Constants.StatoVerificaHash.IN_CODA);
+
+            // Outbox Pattern: inserimento atomico nella stessa transazione JTA del DB.
+            // Il JDBC Source Connector legge la tabella e pubblica su Kafka.
+            PigOutboxEvent outboxEvent = new PigOutboxEvent();
+            outboxEvent.setAggregateType(SELETTORE_CODA);
+            outboxEvent.setAggregateId(String.valueOf(pigObject.getIdObject()));
+            outboxEvent.setType("VERIFICA_HASH");
+            outboxEvent.setPayload(payloadCdPrepXmlJson);
+            entityManager.persist(outboxEvent);
+
+            log.debug("Outbox event {} inserito per oggetto {} (sessione {})",
+                    outboxEvent.getId(), pigObject.getIdObject(),
+                    pigObject.getIdLastSessioneIngest().longValue());
+
+        } catch (SecurityException | IllegalStateException | JsonProcessingException ex) {
+            throw new ParerInternalError(ex);
+        } catch (Exception ex) {
+            // Errore imprevisto (es. PersistenceException): logghiamo il contesto
+            // dell'oggetto e rilanciamo; la TX è già marcata rollback dal container.
+            log.error(
+                    "Errore imprevisto nell'inserimento outbox event per oggetto {} (sessione {})",
+                    pigObject.getIdObject(), pigObject.getIdLastSessioneIngest().longValue(), ex);
+            throw ex;
         }
     }
 

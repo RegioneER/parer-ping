@@ -34,6 +34,25 @@ public class Constants {
     public static final String NUM_MAX_DICOM_XGIORNO = "NUM_MAX_DICOM_XGIORNO";
     public static final String NUM_FASCICOLI_CODA_VERS = "NUM_FASCICOLI_CODA_VERS";
 
+    /**
+     * Parametro applicativo che controlla il broker usato dai producer (coda versamento e verifica
+     * hash). Valori ammessi: {@code JMS} (broker embedded JBoss EAP) oppure {@code KAFKA} (broker
+     * remoto Kafka). Permette di abilitare il fallback a JMS senza modifiche al codice.
+     *
+     * @see BrokerType
+     */
+    public static final String PRODUCER_BROKER_TYPE = "PRODUCER_BROKER_TYPE";
+
+    /**
+     * Valori ammessi per il parametro {@link #PRODUCER_BROKER_TYPE}.
+     */
+    public enum BrokerType {
+        /** Broker JMS embedded JBoss EAP. */
+        JMS,
+        /** Broker Kafka remoto (outbox pattern via JDBC Source Connector). */
+        KAFKA
+    }
+
     public static final String ID_VERSATORE_AGENZIA = "ID_VERSATORE_AGENZIA";
     public static final String ID_UFFICIO_URBANISTICO = "ID_UFFICIO_URBANISTICO";
     public static final String URL_ALLINEA_ENTE_CONVENZ = "URL_ALLINEA_ENTE_CONVENZ";

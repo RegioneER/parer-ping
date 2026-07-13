@@ -19,7 +19,6 @@
     <sub-deployment name="sacerping-jboss-ejb-${project.version}.jar">
         <dependencies>
             <module name="deployment.XADisk.rar" export="true"/>
-            
             <!-- XFormer ws client per kettle -->
             <module name="org.apache.cxf" export="true" />
             <module name="org.apache.cxf.impl" export="true" />

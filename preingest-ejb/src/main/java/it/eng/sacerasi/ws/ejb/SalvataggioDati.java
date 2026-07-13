@@ -355,8 +355,9 @@ public class SalvataggioDati {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public RispostaControlli modificaOggetto(Long idOggetto, InvioOggettoAsincronoExt ioaExt,
-            Long idLastSession, String username, BigDecimal pgOggettoTrasf,
-            BigDecimal niUnitaDocAttese, String dsObject) {
+            Long idLastSession,
+            String username, BigDecimal pgOggettoTrasf, BigDecimal niUnitaDocAttese,
+            String dsObject) {
         RispostaControlli risp = new RispostaControlli();
         risp.setrBoolean(true);
 

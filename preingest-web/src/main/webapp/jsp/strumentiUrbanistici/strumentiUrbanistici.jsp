@@ -23,7 +23,7 @@
         <script type="text/javascript">
             $(function () {
                 $('.Download').each(function (indice) {
-                    var statoSu = $(this).parent().prev().prev().text();
+                    var statoSu = $(this).parent().prev().prev().prev().text();
                     // se non è bozza disabilita la cancellazione e la modifica!
                     if (statoSu != 'BOZZA') {
                         $(this).parent().next().next().next().empty(); // Disabilita Cancellazione

@@ -125,6 +125,7 @@
         <Input Type="STRING" Description="Output" Name="ds_path_output_ftp" Readonly="true" />
         <Input Type="STRING" Description="Trasformazioni" Name="ds_path_trasf" Readonly="true" />
         <Input Type="STRING" Description="Archivio" Name="ds_path_daversare_ftp" Readonly="true" />
+        <Input Type="STRING" Description="Area di staging" Name="ds_path_area_staging_ftp" Readonly="true" />
         
         <ComboBox Type="STRING" Description="Tipo corrispondenza" Name="ti_dich_vers" Trigger="true"  WithSearchComp="true"/>
         <ComboBox Type="INTEGER" Description="Ambiente/Ente/struttura Sacer" Name="id_organiz_iam"  WithSearchComp="true"/>
@@ -138,7 +139,8 @@
         <Button Name="logEventi" Description="Log eventi" Type="STRING"/>
         <Input Name="ds_file_xml_versatore" Description="File xml contenente la configurazione del versatore" Type="FILE" Required="true"/>
         <Input Type="STRING" Description="Stato cartelle versatore" Name="ti_stato_cartelle"/>
-        <Button Name="creaCartellaDaVersare" Description="Crea cartella DA_VERSARE" Type="STRING"/>
+        <Button Name="creaCartellaDaVersare" Description="Crea DA_VERSARE" Type="STRING"/>
+        <Button Name="creaCartellaPerAreaStaging" Description="Crea STAGING" Type="STRING"/>
     </Fields>
     
     <List Name="EnteConvenzOrgList" Description="Enti di appartenenza" >
@@ -150,7 +152,7 @@
         <Input Type="DATE" Description="Data fine validità" Name="dt_fine_val" Required="true"/>        
     </List>
     
-    <Fields Name="EnteConvenzionato" Description="Ente convenzionato"  WithSearchComp="true">
+    <Fields Name="EnteConvenzionato" Description="Ente convenzionato" WithSearchComp="true">
         <ComboBox Type="INTEGER" Description="Ambiente" Name="id_ambiente_ente_convenz" />
         <ComboBox Type="INTEGER" Description="Ente convenzionato" Name="id_ente_convenz" />
         <CheckBox Type="STRING" Description="Convenzionato" Name="convenzionato" Readonly="true"/>

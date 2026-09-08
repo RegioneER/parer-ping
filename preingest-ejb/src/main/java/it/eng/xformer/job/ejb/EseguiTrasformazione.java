@@ -170,7 +170,9 @@ public class EseguiTrasformazione {
         pigObjectsIds = jobHelper.selectPOIDFromQueue(Constants.Stato.DA_TRASFORMARE.name());
 
         // MEV 23539 - divido i pig object trovati per istanza a cui devono essere inviati
-        // e ne trasforamo uno per istanza di kettle.
+        // MEV 41085 - provo a inviare in trasformazione tutti gli oggetti, kettle gestisce la coda,
+        // quelli non inviati rimangono in DA_TRASFORMARE e saranno ripresi alla prossima
+        // invocazione del job.
         List<PigKSInstance> pigKSInstances = trasformazioniHelper.getPigKSInstances();
         for (PigKSInstance pigKSInstance : pigKSInstances) {
             List<Long> poIds = trasformazioniHelper
@@ -192,9 +194,6 @@ public class EseguiTrasformazione {
                                 workingDirectory + File.separator + po.getIdObject());
                         cleanTransformationDirectory(transformationDirectory);
                     }
-
-                    // Ne abbiamo trasformato uno, ora esci fino alla prossima invocazione del job.
-                    break;
                 } else {
                     logger.warn("Scartato pacchetto {} (Verifica hash non 'OK').",
                             po.getIdObject());

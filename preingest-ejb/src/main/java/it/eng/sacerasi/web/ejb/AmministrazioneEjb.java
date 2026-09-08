@@ -5953,4 +5953,46 @@ public class AmministrazioneEjb {
                     "Errore parsando xml di importazione del versatore: " + ex.getMessage());
         }
     }
+
+    // MEV 40936 Introduzione della cartella STAGING per il deposito di materiale da elaborare con
+    // le trasformazioni
+    public String creaCartellaPerAreaStaging(BigDecimal idVers) throws ParerUserError {
+        XADiskConnection xadConn = null;
+
+        PigVers vers = amministrazioneHelper.findById(PigVers.class, idVers);
+
+        String prefisso = configHelper.getValoreParamApplicByIdVers(
+                it.eng.sacerasi.common.Constants.DS_PREFISSO_PATH,
+                BigDecimal.valueOf(vers.getPigAmbienteVer().getIdAmbienteVers()),
+                BigDecimal.valueOf(vers.getIdVers()));
+
+        try {
+            File basePath = new File(configHelper
+                    .getValoreParamApplicByApplic(it.eng.xformer.common.Constants.ROOT_FTP)
+                    + File.separator + prefisso + vers.getNmVers());
+
+            xadConn = xadCf.getConnection();
+
+            if (!xadConn.fileExists(basePath)) {
+                xadConn.createFile(basePath, true);
+            }
+
+            File path = new File(basePath + "/STAGING/");
+            if (!xadConn.fileExists(path)) {
+                xadConn.createFile(path, true);
+            }
+
+            return prefisso + vers.getNmVers() + "/STAGING/";
+
+        } catch (Exception ex) {
+            log.error("Errore durante la creazione della cartella STAGING per il versatore "
+                    + vers.getNmVers() + " : " + ex.getMessage());
+            throw new ParerUserError(
+                    "Errore tecnico nella creazione della cartella STAGING per il versatore.");
+        } finally {
+            if (xadConn != null) {
+                xadConn.close();
+            }
+        }
+    }
 }

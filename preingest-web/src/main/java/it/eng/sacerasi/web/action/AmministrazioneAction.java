@@ -854,6 +854,19 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getForm().getVers().getCreaCartellaDaVersare().setHidden(false);
         }
 
+        // MEV 40936
+        getForm().getVers().getDs_path_area_staging_ftp()
+                .setValue(prefisso + versRowBean.getNmVers() + "/STAGING/");
+        getForm().getVers().getCreaCartellaPerAreaStaging().setViewMode();
+        getForm().getVers().getCreaCartellaPerAreaStaging().setHidden(true);
+
+        path = new File(basePath + "/STAGING/");
+        if (!path.exists() || !path.isDirectory()) {
+            getForm().getVers().getDs_path_area_staging_ftp().setValue("");
+            getForm().getVers().getCreaCartellaPerAreaStaging().setEditMode();
+            getForm().getVers().getCreaCartellaPerAreaStaging().setHidden(false);
+        }
+
         mostraNascondiFlagArchivioRestituitoCessato();
 
         loadListeVersatore(idVers);
@@ -1482,6 +1495,7 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
                 getForm().getVers().getDs_path_output_ftp().setViewMode();
                 getForm().getVers().getDs_path_trasf().setViewMode();
                 getForm().getVers().getDs_path_daversare_ftp().setViewMode();
+                getForm().getVers().getDs_path_area_staging_ftp().setViewMode();
                 populateComboVers();
                 setDateStandard();
 
@@ -7942,6 +7956,26 @@ public class AmministrazioneAction extends AmministrazioneAbstractAction {
             getForm().getVers().getDs_path_daversare_ftp().setValue(path);
             getForm().getVers().getCreaCartellaDaVersare().setViewMode();
             getForm().getVers().getCreaCartellaDaVersare().setHidden(true);
+        }
+
+        forwardToPublisher(Publisher.VERS_DETAIL);
+    }
+
+    @Override
+    public void creaCartellaPerAreaStaging() throws EMFError {
+        BigDecimal idVers = getForm().getVers().getId_vers().parse();
+        String path = "";
+
+        try {
+            path = amministrazioneEjb.creaCartellaPerAreaStaging(idVers);
+        } catch (ParerUserError ex) {
+            getMessageBox().addError(ex.getDescription());
+        }
+
+        if (!getMessageBox().hasError()) {
+            getForm().getVers().getDs_path_area_staging_ftp().setValue(path);
+            getForm().getVers().getCreaCartellaPerAreaStaging().setViewMode();
+            getForm().getVers().getCreaCartellaPerAreaStaging().setHidden(true);
         }
 
         forwardToPublisher(Publisher.VERS_DETAIL);
